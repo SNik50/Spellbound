@@ -23,11 +23,12 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public record GuideItem(ResourceLocation itemLoc, float scale, ElementPosition position) implements PageElement {
+public record GuideItem(ResourceLocation itemLoc, String tileName, float scale, ElementPosition position) implements PageElement {
     private static final ResourceLocation ITEM_TILE = CommonClass.customLocation("textures/gui/books/item_tile.png");
 
     public static final MapCodec<GuideItem> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("item").forGetter(GuideItem::itemLoc),
+            Codec.STRING.optionalFieldOf("tileName", "basic").forGetter(GuideItem::tileName),
             Codec.FLOAT.optionalFieldOf("scale", 1f).forGetter(GuideItem::scale),
             ElementPosition.CODEC.optionalFieldOf("position", ElementPosition.getDefault()).forGetter(GuideItem::position)
     ).apply(inst, GuideItem::new));
@@ -36,7 +37,7 @@ public record GuideItem(ResourceLocation itemLoc, float scale, ElementPosition p
     public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
         Item item = Minecraft.getInstance().level.registryAccess().registry(Registries.ITEM).get().get(itemLoc);
         if (item == null) return;
-        graphics.blit(ITEM_TILE, leftPos + position.xOffset(), topPos + position.yOffset(), 0, 0, (int) (48 * scale), (int) (46 * scale), (int) (48 * scale), (int) (46 * scale));
+        graphics.blit(CommonClass.customLocation("textures/gui/books/crafting_grids/medium/" + tileName + ".png"), leftPos + position.xOffset(), topPos + position.yOffset(), 0, 0, (int) (48 * scale), (int) (46 * scale), (int) (48 * scale), (int) (46 * scale));
         renderItem(graphics, item.getDefaultInstance(), leftPos + position.xOffset(), topPos + position.yOffset(), 1.3f * scale);
     }
 

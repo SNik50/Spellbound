@@ -30,12 +30,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-public record GuideRecipe(ResourceLocation recipeLoc, float scale, ElementPosition position) implements PageElement {
+public record GuideRecipe(ResourceLocation recipeLoc, String gridName, float scale, ElementPosition position) implements PageElement {
     private static final ResourceLocation LARGE_GRID = CommonClass.customLocation("textures/gui/books/large_crafting_grid.png");
     private static final ResourceLocation SMALL_GRID = CommonClass.customLocation("textures/gui/books/small_crafting_grid.png");
 
     public static final MapCodec<GuideRecipe> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("recipe").forGetter(GuideRecipe::recipeLoc),
+            Codec.STRING.optionalFieldOf("gridName", "basic").forGetter(GuideRecipe::gridName),
             Codec.FLOAT.optionalFieldOf("scale", 1f).forGetter(GuideRecipe::scale),
             ElementPosition.CODEC.optionalFieldOf("position", ElementPosition.getDefault()).forGetter(GuideRecipe::position)
     ).apply(inst, GuideRecipe::new));
@@ -56,7 +57,7 @@ public record GuideRecipe(ResourceLocation recipeLoc, float scale, ElementPositi
 
             boolean largeGrid = shapedRecipe.getWidth() > 2 || shapedRecipe.getHeight() > 2;
             if (largeGrid) {
-                graphics.blit(LARGE_GRID, leftPos + position.xOffset(), topPos + position.yOffset(), 0, 0, (int) (81F * scale), (int) (82F * scale), (int) (81 * scale), (int) (82 * scale));
+                graphics.blit(CommonClass.customLocation("textures/gui/books/crafting_grids/large/" + gridName + ".png"), leftPos + position.xOffset(), topPos + position.yOffset(), 0, 0, (int) (81F * scale), (int) (82F * scale), (int) (81 * scale), (int) (82 * scale));
 
                 for (int i = 1; i <= 9; i++) {
                     int slotXOffset = (i-1)%3 * (int) ( 23 * scale);
@@ -68,7 +69,7 @@ public record GuideRecipe(ResourceLocation recipeLoc, float scale, ElementPositi
                 }
             }
             else {
-                graphics.blit(SMALL_GRID, leftPos + position.xOffset(), topPos + position.yOffset(), 0, 0, (int) (60 * scale), (int) (58 * scale), (int) (60 * scale), (int) (58 * scale));
+                graphics.blit(CommonClass.customLocation("textures/gui/books/crafting_grids/medium/" + gridName + ".png"), leftPos + position.xOffset(), topPos + position.yOffset(), 0, 0, (int) (60 * scale), (int) (58 * scale), (int) (60 * scale), (int) (58 * scale));
 
                 for (int i = 1; i <= 4; i++) {
                     int slotXOffset = (i+1)%2 * ( (int) (23 * scale));

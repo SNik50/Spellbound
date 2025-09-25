@@ -30,6 +30,7 @@
     {
       "type": "spellbound:recipe",
       "recipe": "minecraft:anvil",
+      "gridName": "grimoire",
       "position": {
         "xOffset": 195,
         "yOffset": 125

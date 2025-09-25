@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.common.magic.acquisition.guides;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.ombremoon.spellbound.common.init.SBTriggers;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideImage;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideText;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.PageElement;
@@ -29,5 +30,6 @@ public record GuideBookPage(ResourceLocation id, ResourceLocation insertAfter, L
         for (PageElement element : elements) {
             element.render(graphics, leftPos + 47, topPos + 36, mouseX, mouseY, partialTick);
         }
+        SBTriggers.LEARN_SPELL.get().addPlayerListener();
     }
 }
