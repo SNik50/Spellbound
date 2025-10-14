@@ -104,7 +104,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     }
 
     @Override
-    public boolean isInitialized() {
+    public boolean isSpellCast() {
         return this.handler != null;
     }
 
@@ -115,6 +115,11 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
             this.skills = SpellUtil.getSkills(livingEntity);
         }
         super.onAddedToLevel();
+    }
+
+    @Override
+    public void onClientRemoval() {
+        this.handleFXRemoval();
     }
 
     public T getSpell() {

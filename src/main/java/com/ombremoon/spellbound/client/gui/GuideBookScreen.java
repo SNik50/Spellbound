@@ -2,14 +2,12 @@ package com.ombremoon.spellbound.client.gui;
 
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 

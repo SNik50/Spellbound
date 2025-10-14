@@ -51,7 +51,7 @@ public class HurtOwnerSensor<E extends Mob> extends PredicateSensor<DamageSource
         } else if (predicate().test(damageSource, entity)) {
             BrainUtils.setMemory(brain, SBMemoryTypes.HURT_OWNER.get(), damageSource);
 
-            if (damageSource.getEntity() instanceof LivingEntity attacker && attacker.isAlive() && attacker.level() == entity.level())
+            if (damageSource.getEntity() instanceof LivingEntity attacker && !attacker.is(owner) && attacker.isAlive() && attacker.level() == entity.level())
                 BrainUtils.setMemory(brain, SBMemoryTypes.HURT_OWNER_ENTITY.get(), attacker);
         } else {
             BrainUtils.withMemory(brain, SBMemoryTypes.HURT_OWNER_ENTITY.get(), attacker -> {

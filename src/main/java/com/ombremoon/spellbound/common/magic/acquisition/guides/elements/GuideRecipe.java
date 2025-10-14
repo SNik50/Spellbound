@@ -25,6 +25,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -41,8 +43,8 @@ public record GuideRecipe(ResourceLocation recipeLoc, float scale, ElementPositi
     ).apply(inst, GuideRecipe::new));
 
     @Override
-    public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
-        RecipeManager manager = Minecraft.getInstance().player.connection.getRecipeManager();
+    public void render(Level level, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
+        RecipeManager manager = level.getRecipeManager();
         Optional<RecipeHolder<?>> recipeOpt = manager.byKey(recipeLoc);
         if (recipeOpt.isEmpty()) return;
 

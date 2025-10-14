@@ -77,7 +77,7 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
     public void tick() {
         super.tick();
         if (!this.level().isClientSide) {
-            if (!this.hasOwner() || (this.isEnding() && this.tickCount >= this.getEndTick()) || (this.isInitialized() && this.spell != null && this.spell.isInactive))
+            if (!this.hasOwner() || (this.isEnding() && this.tickCount >= this.getEndTick())/* || (this.isInitialized() && this.spell != null && this.spell.isInactive)*/)
                 discard();
 
             if (this.spell != null)
@@ -104,7 +104,7 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
     }
 
     @Override
-    public boolean isInitialized() {
+    public boolean isSpellCast() {
         return this.handler != null;
     }
 
@@ -115,6 +115,11 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
             this.skills = SpellUtil.getSkills(livingEntity);
         }
         super.onAddedToLevel();
+    }
+
+    @Override
+    public void onClientRemoval() {
+        this.handleFXRemoval();
     }
 
     public T getSpell() {

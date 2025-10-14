@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.entity.spell;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.particle.EffectBuilder;
 import com.ombremoon.spellbound.common.world.entity.SpellEntity;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
@@ -51,18 +52,24 @@ public class WildMushroom extends SpellEntity<WildMushroomSpell> {
                 if (!level.isClientSide) {
                     List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(3), livingEntity -> !(livingEntity instanceof MiniMushroom || livingEntity instanceof GiantMushroom));
                     for (LivingEntity livingEntity : entities) {
-                        if (livingEntity.hurt(this.spellDamageSource(level), 4.0F) && (phase == 2 || owner instanceof GiantMushroom mush && mush.isInitialized())) {
-                            livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 60));
+                        if (livingEntity.hurt(this.spellDamageSource(level), 8.0F * this.getPhase()) && (phase > 2 || owner instanceof GiantMushroom mush && mush.hasOwner())) {
+                            livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 60, this.getPhase()));
                         }
                     }
                 } else {
                     this.addFX(
-                            EffectBuilder.Block.of(CommonClass.customLocation("mushroom_explosion"), BlockPos.containing(this.getX(), this.getY(), this.getZ()))
+                            EffectBuilder.Entity.of(CommonClass.customLocation("mushroom_explosion"), this.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                                    .setOffset(0.0, -0.25, 0.0)
                     );
                 }
             }
 
             if (!level.isClientSide && this.tickCount % 240 == 0) {
+                if (owner instanceof GiantMushroom mushroom && this.getPhase() >= 2) {
+                    MiniMushroom miniMushroom = new MiniMushroom(level, mushroom);
+                    miniMushroom.setPos(this.position());
+                    level.addFreshEntity(miniMushroom);
+                }
                 this.discard();
             }
         }

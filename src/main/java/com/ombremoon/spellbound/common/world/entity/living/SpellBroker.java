@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.entity.living;
 
+import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
 import com.ombremoon.spellbound.common.world.entity.SBMerchant;
 import com.ombremoon.spellbound.common.world.entity.SBMerchantType;
 import net.minecraft.sounds.SoundEvent;
@@ -26,16 +27,17 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTar
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.TargetOrRetaliate;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
+import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SpellBrokerEntity extends SBMerchant {
+public class SpellBroker extends SBMerchant {
     private int merchantLevel;
 
-    public SpellBrokerEntity(EntityType<? extends PathfinderMob> entityType, Level level) {
+    public SpellBroker(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
     }
 
@@ -55,7 +57,9 @@ public class SpellBrokerEntity extends SBMerchant {
     }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return Mob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.5).add(Attributes.FOLLOW_RANGE, 48.0);
+        return SBLivingEntity.createMobAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 0.3)
+                .add(Attributes.FOLLOW_RANGE, 48.0);
     }
 
     @Nullable
@@ -68,14 +72,14 @@ public class SpellBrokerEntity extends SBMerchant {
     }
 
     @Override
-    public List<? extends ExtendedSensor<? extends SBMerchant>> getSensors() {
+    public List<? extends ExtendedSensor<? extends SBLivingEntity>> getSensors() {
         return List.of(
-                new HurtBySensor<>()
+                new NearbyPlayersSensor<>()
         );
     }
 
     @Override
-    public BrainActivityGroup<? extends SBMerchant> getCoreTasks() {
+    public BrainActivityGroup<? extends SBLivingEntity> getCoreTasks() {
         return BrainActivityGroup.coreTasks(
                 new LookAtTarget<>(),
                 new WalkOrRunToWalkTarget<>()
@@ -83,13 +87,9 @@ public class SpellBrokerEntity extends SBMerchant {
     }
 
     @Override
-    public BrainActivityGroup<? extends SBMerchant> getIdleTasks() {
+    public BrainActivityGroup<? extends SBLivingEntity> getIdleTasks() {
         return BrainActivityGroup.idleTasks(
-                new FirstApplicableBehaviour<>(
-                        new TargetOrRetaliate<>()
-                                .attackablePredicate(target -> target.isAlive() &&
-                                        BrainUtils.hasMemory(this, MemoryModuleType.HURT_BY_ENTITY) &&
-                                        BrainUtils.getMemory(this, MemoryModuleType.HURT_BY_ENTITY) == target),
+                new FirstApplicableBehaviour(
                         new SetPlayerLookTarget<>(),
                         new SetRandomLookTarget<>()
                 ),
@@ -97,13 +97,6 @@ public class SpellBrokerEntity extends SBMerchant {
                         new SetRandomWalkTarget<>(),
                         new Idle<>().runFor(entity -> entity.getRandom().nextInt(30, 60))
                 )
-        );
-    }
-
-    @Override
-    public BrainActivityGroup<? extends SBMerchant> getFightTasks() {
-        return BrainActivityGroup.fightTasks(
-                new FleeTarget<>()
         );
     }
 

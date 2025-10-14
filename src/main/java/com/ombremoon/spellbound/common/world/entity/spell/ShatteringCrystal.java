@@ -64,9 +64,4 @@ public class ShatteringCrystal extends SpellEntity<ShatteringCrystalSpell> {
     public float getSpin(float partialTick) {
         return (this.tickCount + partialTick) / 40.0F + this.bobOffs;
     }
-
-    @Override
-    public boolean canBeCollidedWith() {
-        return true;
-    }
 }

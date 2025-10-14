@@ -34,7 +34,7 @@ public class LivingModel<T extends SBLivingEntity> extends GeoModel<T> {
 
     @Override
     public void setCustomAnimations(T animatable, long instanceId, AnimationState<T> animationState) {
-        GeoBone head = getAnimationProcessor().getBone("Head");
+        GeoBone head = getAnimationProcessor().getBone("head");
 
         if (head != null && !animatable.isDeadOrDying()) {
             EntityModelData data = animationState.getData(DataTickets.ENTITY_MODEL_DATA);

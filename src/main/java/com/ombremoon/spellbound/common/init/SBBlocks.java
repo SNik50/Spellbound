@@ -250,6 +250,7 @@ public class SBBlocks {
                     blockProperties()
                         .mapColor(MapColor.COLOR_PURPLE)
                         .strength(0.1F)
+                        .replaceable()
                         .sound(SoundType.MOSS_CARPET)
                         .pushReaction(PushReaction.DESTROY)
                         .randomTicks()));

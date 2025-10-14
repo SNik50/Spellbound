@@ -143,8 +143,8 @@ public class StormRiftSpell extends AnimatedSpell {
 
                             if (entity instanceof LivingEntity livingEntity) {
                                 stormRift.addCooldown(livingEntity);
-                                this.hurt(livingEntity, damage);
-                                this.drainMana(livingEntity, damage);
+                                this.hurt(stormRift, livingEntity, damage);
+                                this.consumeMana(livingEntity, damage);
                                 if (context.hasSkill(SBSkills.EVENT_HORIZON))
                                     this.quicklyPullTargets(level, stormRift, caster, livingEntity);
 
@@ -189,8 +189,8 @@ public class StormRiftSpell extends AnimatedSpell {
                                 BlockPos blockpos = new BlockPos(i1, j1, k1);
                                 if (level.getBlockState(blockpos).isAir()) {
                                     livingEntity.teleportTo(blockpos.getX(), blockpos.getY(), blockpos.getZ());
-                                    this.hurt(livingEntity, damage);
-                                    this.drainMana(livingEntity, 15);
+                                    this.hurt(stormRift, livingEntity, damage);
+                                    this.consumeMana(livingEntity, 15);
                                     break;
                                 }
                             }
@@ -283,7 +283,7 @@ public class StormRiftSpell extends AnimatedSpell {
 
             for (Entity entity : list) {
                 if (!isCaster(entity)) {
-                    if (entity instanceof LivingEntity target && this.hurt(target, DamageTypes.LIGHTNING_BOLT, 5.0F)) {
+                    if (entity instanceof LivingEntity target && this.hurt(entity, target, DamageTypes.LIGHTNING_BOLT, 5.0F)) {
                         target.setRemainingFireTicks(entity.getRemainingFireTicks() + 1);
                         if (target.getRemainingFireTicks() == 0)
                             target.igniteForSeconds(8.0F);

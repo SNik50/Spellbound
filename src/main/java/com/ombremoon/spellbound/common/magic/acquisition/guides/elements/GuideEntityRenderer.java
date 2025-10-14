@@ -7,11 +7,13 @@ import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.entity.EntityTickList;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
@@ -24,11 +26,9 @@ public record GuideEntityRenderer(ResourceLocation entityLoc, int scale, Element
     ).apply(inst, GuideEntityRenderer::new));
 
     @Override
-    public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
-        EntityType<?> entityType = Minecraft.getInstance().level.registryAccess().registry(Registries.ENTITY_TYPE).get().get(entityLoc);
-
-        if (entityType == null) return;
-        Entity entity = entityType.create(Minecraft.getInstance().level);
+    public void render(Level level, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
+        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(this.entityLoc);
+        Entity entity = entityType.create(level);
         if (!(entity instanceof LivingEntity livingEntity)) return;
 
         InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, leftPos + position.xOffset(), topPos + position.yOffset(), leftPos + (3*scale), topPos + (4*scale), scale, 0.25F, mouseX, mouseY, livingEntity);

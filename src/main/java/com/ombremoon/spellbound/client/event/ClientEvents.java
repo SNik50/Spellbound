@@ -10,6 +10,7 @@ import com.ombremoon.spellbound.client.particle.SparkParticle;
 import com.ombremoon.spellbound.client.renderer.blockentity.*;
 import com.ombremoon.spellbound.client.renderer.entity.LivingShadowRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.PlaceholderRenderer;
+import com.ombremoon.spellbound.client.renderer.entity.SpellBrokerRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.projectile.MushroomProjectileRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.spell.*;
 import com.ombremoon.spellbound.client.renderer.layer.FrozenLayer;
@@ -93,7 +94,7 @@ public class ClientEvents {
             event.registerEntityRenderer(SBEntities.HAIL.get(), HailRenderer::new);
             event.registerEntityRenderer(SBEntities.HEALING_BLOSSOM.get(), HealingBlossomRenderer::new);
 
-            event.registerEntityRenderer(SBEntities.SPELL_BROKER.get(), PlaceholderRenderer::new);
+            event.registerEntityRenderer(SBEntities.SPELL_BROKER.get(), SpellBrokerRenderer::new);
             event.registerEntityRenderer(SBEntities.VALKYR.get(), GenericLivingEntityRenderer::new);
             event.registerEntityRenderer(SBEntities.MINI_MUSHROOM.get(), MiniMushroomRenderer::new);
             event.registerEntityRenderer(SBEntities.GIANT_MUSHROOM.get(), GiantMushroomRenderer::new);

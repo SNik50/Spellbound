@@ -8,9 +8,11 @@ import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -23,8 +25,8 @@ public record GuideItemList(List<ItemListEntry> items, ItemListExtras extras, El
     ).apply(inst, GuideItemList::new));
 
     @Override
-    public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
-        Registry<Item> itemRegistry = Minecraft.getInstance().level.registryAccess().registry(Registries.ITEM).get();
+    public void render(Level level, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
+        Registry<Item> itemRegistry = BuiltInRegistries.ITEM;
         for (int i = 0; i < items.size(); i++) {
             ItemListEntry entry = items.get(i);
 

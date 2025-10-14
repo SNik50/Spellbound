@@ -20,12 +20,15 @@ public class ManaTearItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack itemStack = player.getItemInHand(usedHand);
-        AttributeInstance attributeInstance = player.getAttribute(SBAttributes.MAX_MANA);
-        attributeInstance.setBaseValue(attributeInstance.getBaseValue() + 100);
-        var caster = SpellUtil.getSpellHandler(player);
-        caster.awardMana((float) caster.getMaxMana());
-        player.awardStat(Stats.ITEM_USED.get(this));
-        itemStack.consume(1, player);
+        if (!level.isClientSide) {
+            AttributeInstance attributeInstance = player.getAttribute(SBAttributes.MAX_MANA);
+            attributeInstance.setBaseValue(attributeInstance.getBaseValue() + 100);
+            var caster = SpellUtil.getSpellHandler(player);
+            caster.awardMana((float) caster.getMaxMana());
+            player.awardStat(Stats.ITEM_USED.get(this));
+            itemStack.consume(1, player);
+        }
+
         return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide);
     }
 }

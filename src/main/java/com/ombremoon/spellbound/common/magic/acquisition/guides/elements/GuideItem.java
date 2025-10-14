@@ -14,6 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -21,6 +22,7 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public record GuideItem(ResourceLocation itemLoc, float scale, ElementPosition position) implements PageElement {
@@ -33,9 +35,8 @@ public record GuideItem(ResourceLocation itemLoc, float scale, ElementPosition p
     ).apply(inst, GuideItem::new));
 
     @Override
-    public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
-        Item item = Minecraft.getInstance().level.registryAccess().registry(Registries.ITEM).get().get(itemLoc);
-        if (item == null) return;
+    public void render(Level level, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
+        Item item = BuiltInRegistries.ITEM.get(this.itemLoc);
         graphics.blit(ITEM_TILE, leftPos + position.xOffset(), topPos + position.yOffset(), 0, 0, (int) (48 * scale), (int) (46 * scale), (int) (48 * scale), (int) (46 * scale));
         renderItem(graphics, item.getDefaultInstance(), leftPos + position.xOffset(), topPos + position.yOffset(), 1.3f * scale);
     }

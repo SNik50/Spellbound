@@ -26,6 +26,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.UnknownNullability;
 
 public class ShadowbondSpell extends AnimatedSpell {
@@ -48,7 +49,7 @@ public class ShadowbondSpell extends AnimatedSpell {
                             return true;
                         }
                     }
-                    return !context.isRecast() && context.getTarget() instanceof LivingEntity target && !spell.checkForCounterMagic(target);
+                    return !context.isRecast() && context.getTarget() instanceof LivingEntity target && !spell.checkForCounterMagic(target) && !target.getType().is(Tags.EntityTypes.BOSSES);
                 })
                 .instantCast()
                 .fullRecast()

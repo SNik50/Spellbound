@@ -137,7 +137,7 @@ public class HealingBlossomSpell extends AnimatedSpell {
         if (skills.hasSkill(SBSkills.THORNY_VINES) && (tickCount -8) % 31 == 0) {
             for (LivingEntity entity : effectedEntities) {
                 if (canAttack(entity))
-                    this.hurt(entity, SBDamageTypes.SB_GENERIC, 4f);
+                    this.hurt(blossom, entity, 4f);
             }
         } else if (skills.hasSkill(SBSkills.THORNY_VINES) && tickCount % 31 == 0) {
             for (LivingEntity entity : effectedEntities) {

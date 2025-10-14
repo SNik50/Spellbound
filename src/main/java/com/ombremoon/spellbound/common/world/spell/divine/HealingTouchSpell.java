@@ -121,7 +121,8 @@ public class HealingTouchSpell extends AnimatedSpell {
 
     @Override
     protected boolean shouldTickSpellEffect(SpellContext context) {
-        return tickCount % 20 == 0;
+        int i = 100 >> context.getSpellLevel() - 1;
+        return this.tickCount % i == 0;
     }
 
     private void onDamagePost(DamageEvent.Post event) {

@@ -65,7 +65,7 @@ public class ClientPayloadHandler {
                 AbstractSpell spell = payload.spellType().createSpell();
                 if (spell != null) {
                     CompoundTag nbt = payload.initTag();
-                    spell.clientInitSpell(player, level, player.getOnPos(), payload.castId(), payload.spellData(), nbt.getBoolean("isRecast"), nbt.getBoolean("forceReset"), nbt.getBoolean("shiftSpells"));
+                    spell.clientCastSpell(player, level, player.getOnPos(), payload.castId(), payload.spellData(), nbt.getBoolean("isRecast"), nbt.getBoolean("forceReset"), nbt.getBoolean("shiftSpells"));
                 }
             }
         });

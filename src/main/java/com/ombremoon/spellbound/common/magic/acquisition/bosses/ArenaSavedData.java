@@ -139,7 +139,8 @@ public class ArenaSavedData extends SavedData {
     public void destroyPortal(ServerLevel level) {
         DimensionCreator.get().markDimensionForUnregistration(level.getServer(), level.dimension());
         ServerLevel portalLevel = level.getServer().getLevel(this.portalCache.getPortalLevel());
-        this.portalCache.destroyPortal(portalLevel);
+        if (portalLevel != null)
+            this.portalCache.destroyPortal(portalLevel);
     }
 
     public PortalCache getPortalCache() {

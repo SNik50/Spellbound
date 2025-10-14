@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.datagen;
 
+import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBItems;
@@ -9,12 +10,15 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,6 +64,18 @@ public class ModTagProvider {
             for (Block block : blocks) {
                 tag(tag).add(BuiltInRegistries.BLOCK.getResourceKey(block).get());
             }
+        }
+    }
+
+    public static class EntityTypes extends EntityTypeTagsProvider {
+        public EntityTypes(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, provider, Constants.MOD_ID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.Provider provider) {
+            this.tag(Tags.EntityTypes.BOSSES)
+                    .add(SBEntities.GIANT_MUSHROOM.get());
         }
     }
 }

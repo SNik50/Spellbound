@@ -1,16 +1,15 @@
 package com.ombremoon.spellbound.common.world.entity.living.wildmushroom;
 
-import com.mojang.datafixers.util.Pair;
-import com.ombremoon.sentinellib.api.BoxUtil;
 import com.ombremoon.spellbound.client.particle.EffectBuilder;
+import com.ombremoon.spellbound.common.init.SBTags;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
 import com.ombremoon.spellbound.common.world.entity.behavior.attack.MushroomExplosion;
 import com.ombremoon.spellbound.common.world.entity.behavior.move.FollowSummoner;
 import com.ombremoon.spellbound.common.world.entity.behavior.sensor.HurtOwnerSensor;
 import com.ombremoon.spellbound.common.world.entity.behavior.sensor.OwnerAttackSenor;
+import com.ombremoon.spellbound.common.world.entity.behavior.target.ExtendedInvalidateAttackTarget;
 import com.ombremoon.spellbound.common.world.entity.behavior.target.ExtendedTargetOrRetaliate;
 import com.ombremoon.spellbound.common.world.spell.summon.WildMushroomSpell;
-import com.ombremoon.spellbound.common.init.SBDamageTypes;
 import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -21,25 +20,20 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ParticleUtils;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
-import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
-import net.tslat.smartbrainlib.api.core.behaviour.DelayedBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
@@ -53,11 +47,8 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTar
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyPlayersSensor;
-import net.tslat.smartbrainlib.object.MemoryTest;
 import net.tslat.smartbrainlib.util.BrainUtils;
-import net.tslat.smartbrainlib.util.EntityRetrievalUtil;
 import net.tslat.smartbrainlib.util.RandomUtil;
-import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.AnimationState;
 import software.bernie.geckolib.animation.*;
@@ -66,10 +57,15 @@ import java.util.List;
 
 public class MiniMushroom extends LivingMushroom {
     private static final EntityDataAccessor<Boolean> ENLARGED = SynchedEntityData.defineId(MiniMushroom.class, EntityDataSerializers.BOOLEAN);
-    private boolean isDazed;
+    private static final EntityDataAccessor<Boolean> DAZED = SynchedEntityData.defineId(MiniMushroom.class, EntityDataSerializers.BOOLEAN);
 
     public MiniMushroom(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
+    }
+
+    public MiniMushroom(Level level, GiantMushroom owner) {
+        super(SBEntities.MINI_MUSHROOM.get(), level);
+        this.setOwner(owner);
     }
 
     public static AttributeSupplier.Builder createMiniMushroomAttributes() {
@@ -83,6 +79,7 @@ public class MiniMushroom extends LivingMushroom {
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(ENLARGED, false);
+        builder.define(DAZED, false);
     }
 
     @Override
@@ -91,14 +88,17 @@ public class MiniMushroom extends LivingMushroom {
         if (!itemStack.is(Items.BONE_MEAL)) {
             return InteractionResult.PASS;
         } else {
-            if (player != this.getOwner()) {
-                if (!this.isDazed) {
+            if (!this.isSpellCast() && this.getOwner() instanceof GiantMushroom mushroom) {
+                if (!this.isDazed()) {
                     return InteractionResult.PASS;
                 }
 
+
+                this.setDazed(false);
                 this.enlarge();
                 this.setOwner(player);
                 itemStack.consume(1, player);
+                BrainUtils.setTargetOfEntity(this, mushroom);
                 return InteractionResult.sidedSuccess(this.level().isClientSide);
             } else {
                 var skills = SpellUtil.getSkills(player);
@@ -115,7 +115,7 @@ public class MiniMushroom extends LivingMushroom {
                         }
                     }
 
-                    ParticleUtils.spawnParticles(this.level(), blockPos, 15, 3.0, 1.0, false, ParticleTypes.HAPPY_VILLAGER);
+                    ParticleUtils.spawnParticles(this.level(), blockPos, 15, 1.0, 1.0, false, ParticleTypes.HAPPY_VILLAGER);
                     itemStack.consume(1, player);
                     return InteractionResult.sidedSuccess(this.level().isClientSide);
                 }
@@ -126,13 +126,24 @@ public class MiniMushroom extends LivingMushroom {
     @Override
     protected void tickDeath() {
         if (!this.level().isClientSide() && !this.isRemoved()) {
-            this.level().broadcastEntityEvent(this, (byte)60);
+            this.level().broadcastEntityEvent(this, (byte) 60);
             this.remove(Entity.RemovalReason.KILLED);
         }
     }
 
     @Override
     public void die(DamageSource damageSource) {
+        if (!this.level().isClientSide() && !this.isRemoved()) {
+            if (!this.isSpellCast()
+                    && this.getOwner() instanceof GiantMushroom mushroom
+                    && mushroom.getPhase() == 2
+                    && damageSource.is(SBTags.DamageTypes.SPELL_DAMAGE)) {
+                this.setDazed(true);
+                this.setHealth(4.0F);
+                return;
+            }
+        }
+
         super.die(damageSource);
         if (this.level().isClientSide) {
             Vec3 position = this.position();
@@ -161,23 +172,25 @@ public class MiniMushroom extends LivingMushroom {
     public List<? extends ExtendedSensor<? extends SBLivingEntity>> getSensors() {
         return ObjectArrayList.of(
                 new NearbyPlayersSensor<MiniMushroom>()
-                        .setRadius(10)
+                        .setRadius(32)
                         .setPredicate((player, mushroom) -> !mushroom.isAlliedTo(player)),
                 new HurtOwnerSensor<MiniMushroom>()
-                        .setPredicate((source, miniMushroom) -> !(source.getDirectEntity() != null && miniMushroom.isAlliedTo(source.getDirectEntity()))),
+                        .setPredicate((source, miniMushroom) -> !(source.getEntity() != null && miniMushroom.isAlliedTo(source.getEntity()))),
                 new OwnerAttackSenor<>(),
                 new HurtBySensor<MiniMushroom>()
-                        .setPredicate((source, miniMushroom) -> !(source.getDirectEntity() != null && miniMushroom.isAlliedTo(source.getDirectEntity())))
+                        .setPredicate((source, miniMushroom) -> !(source.getEntity() != null && miniMushroom.isAlliedTo(source.getEntity())))
         );
     }
 
     @Override
     public BrainActivityGroup<? extends SBLivingEntity> getCoreTasks() {
         return BrainActivityGroup.coreTasks(
-                new LookAtTarget<>(),
+                new LookAtTarget<MiniMushroom>()
+                        .stopIf(MiniMushroom::isDazed),
                 new FollowSummoner<>(),
                 new WalkOrRunToWalkTarget<MiniMushroom>()
-                        .stopIf(MiniMushroom::isExploding)
+                        .startCondition(miniMushroom -> !miniMushroom.isDazed())
+                        .stopIf(miniMushroom -> miniMushroom.isExploding() || miniMushroom.isDazed())
         );
     }
 
@@ -201,7 +214,8 @@ public class MiniMushroom extends LivingMushroom {
     @Override
     public BrainActivityGroup<? extends SBLivingEntity> getFightTasks() {
         return BrainActivityGroup.fightTasks(
-                new InvalidateAttackTarget<MiniMushroom>(),
+                new ExtendedInvalidateAttackTarget<MiniMushroom>()
+                        .invalidateIf((miniMushroom, livingEntity) -> miniMushroom.isDazed()),
                 new SetWalkTargetToAttackTarget<>()
                         .speedMod((miniMushroom, livingEntity) -> 1.5F),
                 new MushroomExplosion<MiniMushroom>(30)
@@ -215,7 +229,15 @@ public class MiniMushroom extends LivingMushroom {
 
                             return 3.0F;
                         })
+                        .explosionDamage(miniMushroom -> {
+                            if (miniMushroom.getOwner() instanceof GiantMushroom mushroom) {
+                                return 8.0F * mushroom.getPhase();
+                            }
+
+                            return 12.0F;
+                        })
                         .shouldDiscard()
+                        .stopIf(MiniMushroom::isDazed)
         );
     }
 
@@ -227,9 +249,17 @@ public class MiniMushroom extends LivingMushroom {
         this.entityData.set(ENLARGED, true);
     }
 
+    public boolean isDazed() {
+        return this.entityData.get(DAZED);
+    }
+
+    public void setDazed(boolean dazed) {
+        this.entityData.set(DAZED, dazed);
+    }
+
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, CONTROLLER, 7, this::miniMushroomController));
+        controllers.add(new AnimationController<>(this, MOVEMENT, 7, this::miniMushroomController));
         controllers.add(new AnimationController<>(this, EXPLOSION, 0, state -> PlayState.STOP)
                 .triggerableAnim("explode", RawAnimation.begin().thenPlay("explode")));
     }
@@ -245,63 +275,5 @@ public class MiniMushroom extends LivingMushroom {
             data.setAnimation(RawAnimation.begin().thenLoop("idle"));
         }
         return PlayState.CONTINUE;
-    }
-
-    public static class Explode extends DelayedBehaviour<MiniMushroom> {
-        private static final MemoryTest MEMORY_REQUIREMENTS = MemoryTest.builder(1).hasMemory(MemoryModuleType.ATTACK_TARGET);
-
-        @Nullable
-        protected LivingEntity target = null;
-
-        public Explode() {
-            super(30);
-        }
-
-        @Override
-        protected List<Pair<MemoryModuleType<?>, MemoryStatus>> getMemoryRequirements() {
-            return MEMORY_REQUIREMENTS;
-        }
-
-        @Override
-        protected boolean checkExtraStartConditions(ServerLevel level, MiniMushroom entity) {
-            this.target = BrainUtils.getTargetOfEntity(entity);
-
-            return entity.getSensing().hasLineOfSight(this.target) && entity.distanceToSqr(this.target) <= 4;
-        }
-
-        @Override
-        protected void start(MiniMushroom entity) {
-            entity.triggerAnim("explode", "explode");
-            entity.setExploding(true);
-        }
-
-        @Override
-        protected void stop(MiniMushroom entity) {
-            entity.setExploding(false);
-        }
-
-        @Override
-        protected void doDelayedAction(MiniMushroom entity) {
-            boolean flag = entity.spell != null;
-            int radius = 3;
-            if (entity.getOwner() instanceof LivingEntity livingEntity) {
-                var skills = SpellUtil.getSkills(livingEntity);
-                radius = skills.hasSkill(SBSkills.VILE_INFLUENCE) ? 5 : 3;
-            }
-
-            for (LivingEntity target : EntityRetrievalUtil.getEntities(entity, radius, radius, radius, LivingEntity.class, livingEntity -> !entity.isAlliedTo(livingEntity))) {
-                if (flag) {
-                    entity.spell.hurt(target);
-                } else {
-                    target.hurt(BoxUtil.damageSource(entity.level(), SBDamageTypes.SB_GENERIC, entity), 4.0F);
-                }
-
-                target.addEffect(new MobEffectInstance(MobEffects.POISON, 60));
-            }
-
-            entity.discard();
-            if (entity.spell != null)
-                entity.spell.endSpell();
-        }
     }
 }

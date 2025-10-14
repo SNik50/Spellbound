@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -42,13 +43,15 @@ public class PortalCache {
     }
 
     public void destroyPortal(ServerLevel level) {
-        BlockPos pos = this.portalPos.offset(-4, 0, -4);
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 5; j++) {
-                BlockPos blockPos1 = pos.offset(i, 0, j);
-                BlockState blockState = level.getBlockState(blockPos1);
-                if (blockState.is(SBBlocks.SUMMON_STONE.get()) || blockState.is(SBBlocks.SUMMON_PORTAL.get()))
-                    level.setBlock(blockPos1, Blocks.AIR.defaultBlockState(), 3);
+        if (this.portalPos != null) {
+            BlockPos pos = this.portalPos.offset(-4, 0, -4);
+            for (int i = 0; i < 5; i++) {
+                for (int j = 0; j < 5; j++) {
+                    BlockPos blockPos1 = pos.offset(i, 0, j);
+                    BlockState blockState = level.getBlockState(blockPos1);
+                    if (blockState.is(SBBlocks.SUMMON_STONE.get()) || blockState.is(SBBlocks.SUMMON_PORTAL.get()))
+                        level.setBlock(blockPos1, Blocks.AIR.defaultBlockState(), 3);
+                }
             }
         }
 
@@ -71,7 +74,7 @@ public class PortalCache {
         nbt.putInt("PortalId", this.arenaID);
 
         if (this.portalPos != null)
-            BlockPos.CODEC.encodeStart(NbtOps.INSTANCE, this.portalPos).resultOrPartial(LOGGER::error).ifPresent(tag -> nbt.put("PortalPos", tag));
+            nbt.put("PortalPos", NbtUtils.writeBlockPos(this.portalPos));
 
         if (this.portalLevel != null)
             nbt.putString("PortalLevel", this.portalLevel.location().toString());
@@ -88,8 +91,7 @@ public class PortalCache {
             if (nbt.contains("PortalId", 99))
                 this.arenaID = nbt.getInt("PortalId");
 
-            if (nbt.get("PortalPos") != null)
-                BlockPos.CODEC.parse(NbtOps.INSTANCE, nbt.get("PortalPos")).resultOrPartial(LOGGER::error).ifPresent(blockPos -> this.portalPos = blockPos);
+            NbtUtils.readBlockPos(compoundTag, "PortalPos").ifPresent(blockPos -> this.portalPos = blockPos);
 
             if (nbt.contains("PortalLevel", 8))
                 this.portalLevel = ResourceKey.create(Registries.DIMENSION, ResourceLocation.parse(nbt.getString("PortalLevel")));

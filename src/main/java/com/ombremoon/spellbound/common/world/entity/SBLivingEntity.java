@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.world.entity;
 
 import com.ombremoon.spellbound.client.particle.EffectCache;
+import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.nbt.CompoundTag;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.Tags;
 import net.tslat.smartbrainlib.api.SmartBrainOwner;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
 import net.tslat.smartbrainlib.api.core.navigation.SmoothGroundNavigation;
@@ -23,8 +25,9 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public abstract class SBLivingEntity extends PathfinderMob implements SmartBrainOwner<SBLivingEntity>, GeoEntity, FXEmitter, Loggable {
-    protected static final String CONTROLLER = "controller";
+    protected static final String MOVEMENT = "Movement";
     private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(SBLivingEntity.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> BOSS_PHASE = SynchedEntityData.defineId(SBLivingEntity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final EffectCache effectCache = new EffectCache();
 
@@ -44,8 +47,18 @@ public abstract class SBLivingEntity extends PathfinderMob implements SmartBrain
     @Override
     public void aiStep() {
         super.aiStep();
-        if (this.level().isClientSide)
+        if (!this.level().isClientSide) {
+            if (this.isBoss()) {
+
+            }
+        } else {
             this.handleFXRemoval();
+        }
+    }
+
+    @Override
+    protected PathNavigation createNavigation(Level level) {
+        return new SmoothGroundNavigation(this, this.level());
     }
 
     @Override
@@ -56,6 +69,11 @@ public abstract class SBLivingEntity extends PathfinderMob implements SmartBrain
     @Override
     public boolean isAlliedTo(Entity entity) {
         return entity instanceof LivingEntity livingEntity && (this.isOwner(livingEntity) || SpellUtil.IS_ALLIED.test(this.getOwner(), livingEntity)) || super.isAlliedTo(entity);
+    }
+
+    @Override
+    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+        return !this.isBoss() && this.getOwner() != null;
     }
 
     @Nullable
@@ -76,14 +94,67 @@ public abstract class SBLivingEntity extends PathfinderMob implements SmartBrain
         return owner != null && owner.is(entity);
     }
 
+    public int getPhase() {
+        return this.entityData.get(BOSS_PHASE);
+    }
+
+    public void setPhase(int phase) {
+        this.entityData.set(BOSS_PHASE, phase);
+    }
+
+    protected boolean isBoss() {
+        return this.getType().is(Tags.EntityTypes.BOSSES);
+    }
+
+    protected SpellMastery getBossLevel() {
+        return SpellMastery.NOVICE;
+    }
+
+    protected int getMaxBossPhases() {
+        return 1;
+    }
+
     protected boolean hidesBossPhases() {
         return false;
+    }
+
+    protected float getBossProgress() {
+        int phase = this.getPhase();
+        int maxPhases = this.getMaxBossPhases();
+        float progress = this.getPhaseProgress(phase);
+        boolean flag = progress <= 0.0F && phase < maxPhases;
+        if (flag) {
+            this.setPhase(phase + 1);
+        }
+
+        if (this.hidesBossPhases()) {
+            if (flag) {
+                return 1.0F;
+            }
+
+            return progress;
+        } else {
+            return this.getHealth() / this.getMaxHealth();
+        }
+    }
+
+    protected float getCurrentPhaseThreshold(int phase) {
+        return getPhaseThreshold() * (this.getMaxBossPhases() - phase);
+    }
+
+    protected float getPhaseThreshold() {
+        return this.getMaxHealth() / this.getMaxBossPhases();
+    }
+
+    protected float getPhaseProgress(int phase) {
+        return (this.getHealth() - this.getCurrentPhaseThreshold(phase)) / this.getPhaseThreshold();
     }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
         builder.define(OWNER_ID, 0);
+        builder.define(BOSS_PHASE, 1);
     }
 
     @Override
@@ -92,17 +163,15 @@ public abstract class SBLivingEntity extends PathfinderMob implements SmartBrain
         Entity entity = this.getOwner();
         if (entity != null)
             compound.putInt("SpellboundOwner", this.getOwner().getId());
+
+        compound.putInt("BossPhase", this.getPhase());
     }
 
     @Override
     public void readAdditionalSaveData(CompoundTag compound) {
         super.readAdditionalSaveData(compound);
         this.setOwner(compound.getInt("SpellboundOwner"));
-    }
-
-    @Override
-    protected PathNavigation createNavigation(Level level) {
-        return new SmoothGroundNavigation(this, this.level());
+        this.setPhase(compound.getInt("BossPhase"));
     }
 
     @Override

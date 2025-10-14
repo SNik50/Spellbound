@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.ElementPosition;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public record GuideImage(ResourceLocation loc, int width, int height, ElementPosition position) implements PageElement {
@@ -17,7 +18,7 @@ public record GuideImage(ResourceLocation loc, int width, int height, ElementPos
     ).apply(inst, GuideImage::new));
 
     @Override
-    public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
+    public void render(Level level, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
         graphics.blit(loc, leftPos + position.xOffset(), topPos + position.yOffset(), 0, 0, width, height, width, height);
     }
 

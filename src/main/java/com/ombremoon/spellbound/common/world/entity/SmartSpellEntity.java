@@ -17,10 +17,11 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.Tags;
 import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
 import net.tslat.smartbrainlib.api.core.navigation.SmoothGroundNavigation;
-import net.tslat.smartbrainlib.registry.SBLMemoryTypes;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -33,7 +34,6 @@ import java.util.function.Predicate;
 public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLivingEntity implements ISpellEntity<T> {
     private static final EntityDataAccessor<String> SPELL_TYPE = SynchedEntityData.defineId(SmartSpellEntity.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> SPELL_ID = SynchedEntityData.defineId(SmartSpellEntity.class, EntityDataSerializers.INT);
-    private static final EntityDataAccessor<Integer> BOSS_PHASE = SynchedEntityData.defineId(SmartSpellEntity.class, EntityDataSerializers.INT);
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected T spell;
     protected SpellHandler handler;
@@ -53,7 +53,6 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
         super.defineSynchedData(builder);
         builder.define(SPELL_TYPE, "");
         builder.define(SPELL_ID, -1);
-        builder.define(BOSS_PHASE, 1);
     }
 
     @Override
@@ -75,14 +74,14 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
     public void tick() {
         super.tick();
         if (!this.level().isClientSide) {
-            if ((this.wasSummoned() && !this.hasOwner()) || (this.isInitialized() && (this.spell == null ||  this.spell.isInactive)))
+            if ((this.wasSummoned() && !this.hasOwner()) || (this.isSpellCast() && (this.spell == null ||  this.spell.isInactive)))
                 discard();
         }
     }
 
-    protected boolean isAttacking() {
+    public boolean isAttacking() {
         Brain<?> brain = this.getBrain();
-        return !BrainUtils.hasMemory(brain, MemoryModuleType.ATTACK_COOLING_DOWN);
+        return BrainUtils.hasMemory(brain, MemoryModuleType.ATTACK_COOLING_DOWN);
     }
 
     protected void startAttack(int cooldownTicks) {
@@ -92,8 +91,11 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
     public boolean hurtTarget(LivingEntity target, float hurtAmount) {
         boolean flag;
         if (this.spell != null) {
-            flag = this.spell.hurt(target, hurtAmount);
+            flag = this.spell.hurt(this, target, hurtAmount);
         } else {
+            if (target.isAlliedTo(this))
+                return false;
+
             DamageSource source = this.damageSources().mobAttack(this);
             flag = target.hurt(source, hurtAmount);
         }
@@ -104,8 +106,11 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
     public boolean hurtTarget(LivingEntity target, DamageSource source, float hurtAmount) {
         boolean flag;
         if (this.spell != null) {
-            flag = this.spell.hurt(target, source, hurtAmount);
+            flag = this.spell.hurt(this, target, source, hurtAmount);
         } else {
+            if (target.isAlliedTo(this))
+                return false;
+
             flag = target.hurt(source, hurtAmount);
         }
 
@@ -122,15 +127,31 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
     }
 
     @Override
-    public boolean isInitialized() {
+    protected float getDamageAfterArmorAbsorb(DamageSource damageSource, float damageAmount) {
+        if (this.isBoss()) {
+            int i = (this.getBossLevel().ordinal() + 1) * 5;
+            int j = 25 - i;
+            float f = damageAmount * (float)j;
+            damageAmount = Math.max(f / 25.0F, 0.0F);
+        }
+        return super.getDamageAfterArmorAbsorb(damageSource, damageAmount);
+    }
+
+    @Override
+    public boolean isInvulnerableTo(DamageSource source) {
+        return source.is(Tags.DamageTypes.IS_PHYSICAL) && this.getBossLevel().ordinal() > 2 || super.isInvulnerableTo(source);
+    }
+
+    @Override
+    public boolean isSpellCast() {
         return this.handler != null;
     }
 
     @Override
     public void onAddedToLevel() {
-        if (this.getOwner() instanceof LivingEntity livingEntity) {
-            this.handler = SpellUtil.getSpellHandler(livingEntity);
-            this.skills = SpellUtil.getSkills(livingEntity);
+        if (this.getOwner() instanceof Player player /*or instanceof SpellCaster*/) {
+            this.handler = SpellUtil.getSpellHandler(player);
+            this.skills = SpellUtil.getSkills(player);
         }
         super.onAddedToLevel();
     }
@@ -180,14 +201,6 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
     protected boolean isOwnersTarget(LivingEntity entity) {
         if (!this.hasData(SBData.TARGET_ID)) return false;
         return entity.getId() == this.getData(SBData.TARGET_ID);
-    }
-
-    public int getPhase() {
-        return this.entityData.get(BOSS_PHASE);
-    }
-
-    public void setPhase(int phase) {
-        this.entityData.set(BOSS_PHASE, phase);
     }
 
     @Override

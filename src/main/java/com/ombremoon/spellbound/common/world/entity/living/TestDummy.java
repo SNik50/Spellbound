@@ -57,7 +57,7 @@ public class TestDummy extends SBLivingEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, CONTROLLER, 5, this::testDummyMotionController));
+        controllers.add(new AnimationController<>(this, MOVEMENT, 5, this::testDummyMotionController));
     }
 
     protected <T extends GeoAnimatable> PlayState testDummyMotionController(AnimationState<T> data) {

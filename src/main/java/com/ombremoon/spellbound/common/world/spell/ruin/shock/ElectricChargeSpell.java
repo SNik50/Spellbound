@@ -102,7 +102,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
                 if (handler.isChargingOrChannelling()) {
                     incrementTick();
                     if (!level.isClientSide && this.tickCount % 20 == 0)
-                        drainMana(context.getCaster(), 3);
+                        consumeMana(context.getCaster(), 3);
                 } else {
                     for (Integer entityId : this.entityIds) {
                         Entity entity = level.getEntity(entityId);

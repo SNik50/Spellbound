@@ -158,11 +158,6 @@ public class Valkyr extends SBLivingEntity implements NeutralMob {
     }
 
     @Override
-    public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-        return false;
-    }
-
-    @Override
     public @NotNull PathNavigation getNavigation() {
         return isInFlight() ? this.flightNav : this.groundNav;
     }
@@ -274,7 +269,7 @@ public class Valkyr extends SBLivingEntity implements NeutralMob {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-        controllers.add(new AnimationController<>(this, CONTROLLER, 5, this::valkyrMotionController));
+        controllers.add(new AnimationController<>(this, MOVEMENT, 5, this::valkyrMotionController));
     }
 
     protected <T extends GeoAnimatable> PlayState valkyrMotionController(AnimationState<T> data) {

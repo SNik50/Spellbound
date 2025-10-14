@@ -11,10 +11,15 @@ import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,6 +32,10 @@ import java.util.function.BiPredicate;
 public class SpellUtil {
     public static final BiPredicate<Entity, LivingEntity> CAN_ATTACK_ENTITY = (entity, livingEntity) -> (!livingEntity.isAlliedTo(entity) || livingEntity.is(entity)) && !livingEntity.hasEffect(SBEffects.COUNTER_MAGIC) && !(livingEntity instanceof OwnableEntity ownable && ownable.getOwner() == (entity));
     public static final BiPredicate<Entity, LivingEntity> IS_ALLIED = (entity, livingEntity) -> entity != null && livingEntity.isAlliedTo(entity) || (livingEntity instanceof OwnableEntity ownable && ownable.getOwner() == entity);
+
+    public static DamageSource damageSource(Level level, ResourceKey<DamageType> damageType, Entity ownerEntity, Entity attackEntity) {
+        return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(damageType), attackEntity, ownerEntity);
+    }
 
     public static SpellHandler getSpellHandler(LivingEntity livingEntity) {
         var handler = livingEntity.getData(SBData.SPELL_HANDLER);

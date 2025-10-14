@@ -5,6 +5,8 @@ import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -31,18 +33,16 @@ public class DebugItem extends Item implements Loggable {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
+        BlockPos blockPos = context.getClickedPos();
         Player player = context.getPlayer();
         if (!level.isClientSide) {
-            
+            log(level.getBlockState(blockPos).getShape(level, blockPos).max(Direction.Axis.Y));
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     private void ombreDebug(Level level, Player player, InteractionHand usedHand, SpellHandler spellHandler, SkillHolder skillHolder) {
         if (!level.isClientSide) {
-            ArenaSavedData data = ArenaSavedData.get((ServerLevel) level);
-            log(data.getPortalCache().getOwner());
-            log(data.getCurrentBossFight());
 //            ((EntityBasedBossFight.Instance)data.getCurrentBossFight()).initializeWinCondition((ServerLevel) level, ((EntityBasedBossFight.Instance) data.getCurrentBossFight()).getBossFight());
         } else {
 //            SBShaders.HEAT_DISTORTION_SHADER.toggleShader();

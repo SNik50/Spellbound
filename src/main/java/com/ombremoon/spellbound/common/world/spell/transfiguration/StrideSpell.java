@@ -141,7 +141,7 @@ public class StrideSpell extends AnimatedSpell {
                     if (!isCaster(living) && !living.isAlliedTo(caster) && (caster.isSprinting() || flag && !living.is(caster.getVehicle()))) {
                         living.knockback(0.4, caster.getX() - living.getX(), caster.getZ() - living.getZ());
                         living.hurtMarked = true;
-                        this.hurt(living, SBDamageTypes.SB_GENERIC, 1.5F);
+                        this.hurt(living, 1.5F);
                     }
                 }
             }

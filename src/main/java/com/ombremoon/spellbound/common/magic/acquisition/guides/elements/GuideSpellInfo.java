@@ -22,6 +22,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -39,9 +40,8 @@ public record GuideSpellInfo(ResourceLocation spellLoc, SpellInfoExtras extras, 
     ).apply(inst, GuideSpellInfo::new));
 
     @Override
-    public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
-        Registry<SpellType<?>> spellRegistry = Minecraft.getInstance().level.registryAccess().registry(SBSpells.SPELL_TYPE_REGISTRY_KEY).get();
-        SpellType<?> spellType = spellRegistry.get(spellLoc);
+    public void render(Level level, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
+        SpellType<?> spellType = SBSpells.REGISTRY.get(this.spellLoc);
         if (spellType == null) {
             Constants.LOG.warn("Error parsing spell info. Spell {} not found in registry.", spellLoc);
             return;

@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 
 import java.util.*;
 
-public abstract class SBMerchant extends PathfinderMob implements Merchant, SmartBrainOwner<SBMerchant> {
+public abstract class SBMerchant extends SBLivingEntity implements Merchant {
     @Nullable
     private Player tradingPlayer;
     public MerchantOffers trades = new MerchantOffers();
@@ -215,16 +215,5 @@ public abstract class SBMerchant extends PathfinderMob implements Merchant, Smar
     @Override
     public boolean isClientSide() {
         return this.level().isClientSide;
-    }
-
-    @Override
-    protected Brain.Provider<?> brainProvider() {
-        return new SmartBrainProvider<>(this);
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-        tickBrain(this);
     }
 }

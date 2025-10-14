@@ -20,7 +20,7 @@ public class ServerPayloadHandler {
         if (!level.isClientSide) {
             var handler = SpellUtil.getSpellHandler(context.player());
             AbstractSpell spell = handler.getCurrentlyCastSpell();
-            spell.initSpell(context.player());
+            spell.castSpell(context.player());
 //            handler.setCurrentlyCastingSpell(null);
         }
     }
@@ -58,7 +58,8 @@ public class ServerPayloadHandler {
     public static void handleNetworkCastReset(final CastResetPayload payload, final IPayloadContext context) {
         var handler = SpellUtil.getSpellHandler(context.player());
         AbstractSpell spell = handler.getCurrentlyCastSpell();
-        spell.onCastReset(spell.getCastContext());
+        if (spell != null)
+            spell.onCastReset(spell.getCastContext());
     }
 
     public static void handleNetworkUpdateChoice(final UpdateChoicePayload payload, final IPayloadContext context) {

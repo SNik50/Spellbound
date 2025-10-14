@@ -13,6 +13,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public record GuideText(String translationKey, TextExtras extras, ElementPositio
     ).apply(inst, GuideText::new));
 
     @Override
-    public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
+    public void render(Level level, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
         Font font = Minecraft.getInstance().font;
 
         List<FormattedCharSequence> lines = font.split(Component.translatable(translationKey), extras.maxLineLength());

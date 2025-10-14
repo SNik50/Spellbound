@@ -18,6 +18,7 @@ import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.magic.tree.UpgradeTree;
 import com.ombremoon.spellbound.main.ConfigHandler;
 import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.main.Keys;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -34,6 +35,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.UnknownNullability;
@@ -191,9 +193,12 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      * @param mana The amount of mana received
      */
     public void awardMana(float mana) {
-        this.caster.setData(SBData.MANA, Mth.clamp(caster.getData(SBData.MANA) + mana, 0, this.getMaxMana()));
-        if (this.caster instanceof Player player && !player.level().isClientSide)
-            PayloadHandler.syncMana(player);
+        Level level = this.caster.level();
+        if (!level.isClientSide && level.getGameRules().getBoolean(Keys.CONSUME_MANA)) {
+            this.caster.setData(SBData.MANA, Mth.clamp(caster.getData(SBData.MANA) + mana, 0, this.getMaxMana()));
+            if (this.caster instanceof Player player)
+                PayloadHandler.syncMana(player);
+        }
     }
 
     /**

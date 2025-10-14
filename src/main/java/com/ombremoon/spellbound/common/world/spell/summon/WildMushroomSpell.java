@@ -50,7 +50,7 @@ public class WildMushroomSpell extends SummonSpell {
                         WildMushroomSpell mushroomSpell = mushroom.getSpell();
                         MiniMushroom miniMushroom = mushroomSpell.summonEntity(context, SBEntities.MINI_MUSHROOM.get(), mushroom.position());
                         mushroomSpell.setMiniMushroom(miniMushroom.getId());
-                        mushroomSpell.setRemainingTicks(24000);
+                        mushroomSpell.setRemainingTicks(1200);
                         mushroom.discard();
                         return false;
                     }

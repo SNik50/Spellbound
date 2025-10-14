@@ -90,7 +90,7 @@ public class StormstrikeSpell extends AnimatedSpell {
 
                 if (inWater && !target.isInWaterOrBubble()) return;
 
-                this.hurt(target, SBDamageTypes.RUIN_SHOCK, 5.0F);
+                this.hurt(target, 5.0F);
             }
         }
     }

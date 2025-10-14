@@ -8,6 +8,7 @@ import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public record GuideTextList(List<String> list, TextListExtras extras, ElementPos
     ).apply(inst, GuideTextList::new));
 
     @Override
-    public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
+    public void render(Level level, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
         for (int i = 0; i < list.size(); i++) {
 
             int maxRows = extras.maxRows();

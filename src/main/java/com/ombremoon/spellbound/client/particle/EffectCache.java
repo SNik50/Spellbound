@@ -15,8 +15,10 @@ public class EffectCache {
 
     public void addFX(EffectBuilder<?> builder) {
         var fx = builder.build();
-        this.cache.put(fx.fx.getFxLocation(), fx);
-        fx.start();
+        if (fx != null) {
+            this.cache.put(fx.fx.getFxLocation(), fx);
+            fx.start();
+        }
     }
 
     public FXEffectExecutor removeFX(FXEffectExecutor fx) {

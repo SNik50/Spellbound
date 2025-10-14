@@ -32,7 +32,7 @@ public record GuideItemRenderer(ResourceLocation itemLoc, ElementPosition positi
     ).apply(inst, GuideItemRenderer::new));
 
     @Override
-    public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
+    public void render(Level level, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
 
     }
 

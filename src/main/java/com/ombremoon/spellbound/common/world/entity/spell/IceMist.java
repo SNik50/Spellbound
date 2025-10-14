@@ -40,7 +40,7 @@ public class IceMist extends SpellEntity<ShatteringCrystalSpell> {
                 List<Entity> entityList = this.level().getEntities(owner, this.getBoundingBox());
                 for (Entity entity : entityList) {
                     if (entity instanceof LivingEntity livingEntity && this.tickCount % 20 == 0) {
-                        spell.hurt(livingEntity, 2);
+                        spell.hurt(this, livingEntity, 2);
                         livingEntity.setIsInPowderSnow(true);
                     }
                 }

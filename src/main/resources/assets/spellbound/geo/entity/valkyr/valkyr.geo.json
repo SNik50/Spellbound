@@ -253,7 +253,7 @@
 					]
 				},
 				{
-					"name": "Head",
+					"name": "head",
 					"parent": "Torso",
 					"pivot": [0, 30.66667, -2.55556],
 					"cubes": [
@@ -373,7 +373,7 @@
 				},
 				{
 					"name": "Cover",
-					"parent": "Head",
+					"parent": "head",
 					"pivot": [0.5, 34.5, -1],
 					"cubes": [
 						{
@@ -435,7 +435,7 @@
 				},
 				{
 					"name": "BackCover",
-					"parent": "Head",
+					"parent": "head",
 					"pivot": [0, 32.26856, 2.03033],
 					"cubes": [
 						{
@@ -456,7 +456,7 @@
 				},
 				{
 					"name": "Hair00",
-					"parent": "Head",
+					"parent": "head",
 					"pivot": [0, 29.5, 3],
 					"cubes": [
 						{

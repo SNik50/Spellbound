@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.common.world.entity.projectile;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
 import com.ombremoon.spellbound.common.world.entity.spell.WildMushroom;
 import com.ombremoon.spellbound.common.init.SBEntities;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -77,8 +79,8 @@ public class MushroomProjectile extends Projectile implements GeoEntity {
             if (this.getOwner() instanceof GiantMushroom mushroom) {
                 Entity entity = result.getEntity();
                 DamageSource damagesource = mushroom.spellDamageSource(level);
-                if (entity instanceof LivingEntity livingEntity && livingEntity.hurt(damagesource, 3.0F)) {
-                    livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 60));
+                if (entity instanceof LivingEntity livingEntity && mushroom.hurtTarget(livingEntity, damagesource, 6.0F * mushroom.getPhase())) {
+                    livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 60, mushroom.getPhase()));
                 }
             }
 
@@ -94,7 +96,7 @@ public class MushroomProjectile extends Projectile implements GeoEntity {
             Entity entity = this.getOwner();
             if (entity instanceof GiantMushroom mushroom && result.getDirection() == Direction.UP) {
                 WildMushroom wildMushroom = new WildMushroom(level, mushroom);
-                wildMushroom.setPos(result.getBlockPos().above().getBottomCenter());
+                wildMushroom.setPos(result.getLocation());
                 level.addFreshEntity(wildMushroom);
             }
 

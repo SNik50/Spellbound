@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.ombremoon.spellbound.common.init.SBPageElements;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
@@ -26,7 +26,7 @@ public interface PageElement {
      * @param mouseY the y position of the mouse
      * @param partialTick the current partial tick value
      */
-    void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick);
+    void render(Level level, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick);
 
     /**
      * The Codec for the datapack entry for this element

@@ -7,7 +7,7 @@ public class BossFights {
 
     public static final EntityBasedBossFight.Builder WILD_MUSHROOM = EntityBasedBossFight.newBuilder()
             .spell(CommonClass.customLocation("wild_mushroom"))
-            .withBoss(SBEntities.VALKYR)
+            .withBoss(SBEntities.GIANT_MUSHROOM)
             .scanTo(-100, 70, 100)
             .spawnAt(-35, 65, 35);
 }

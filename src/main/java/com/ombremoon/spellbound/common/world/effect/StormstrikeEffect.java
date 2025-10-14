@@ -90,7 +90,7 @@ public class StormstrikeEffect extends SBEffect {
                 }
             }
         } else {
-            livingEntity.hurt(BoxUtil.damageSource(livingEntity.level(), SBDamageTypes.RUIN_SHOCK, null), damage);
+            livingEntity.hurt(SpellUtil.damageSource(livingEntity.level(), SBDamageTypes.RUIN_SHOCK, null, null), damage);
         }
         return true;
     }
