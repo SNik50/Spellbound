@@ -182,9 +182,11 @@ public class HealingBlossomSpell extends AnimatedSpell {
 
     @Override
     protected void onSpellStop(SpellContext context) {
-        HealingBlossom blossom = getBlossom(context);
-        if (blossom != null)
-            blossom.setEndTick(20);
+        if (!context.getLevel().isClientSide) {
+            HealingBlossom blossom = getBlossom(context);
+            if (blossom != null)
+                blossom.setEndTick(20);
+        }
     }
 
     private void onDamagePre(DamageEvent.Pre pre) {
