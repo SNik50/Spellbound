@@ -1274,10 +1274,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
                 if (prevSpell != null) {
                     if (this.fullRecast) {
-                        this.castId = 1;
-
                         if (!prevSpell.skipEndOnRecast(prevSpell.context) && !prevSpell.equals(this))
                             prevSpell.endSpell();
+
+                        this.castId = 1;
                     } else {
                         this.castId = prevSpell.castId + 1;
                     }
