@@ -42,7 +42,7 @@ public class SBEntities {
 
     //Summon Entities
     //public static final Supplier<EntityType<TotemSpiritEntity>> TOTEM_SPIRIT = registerMob("totem_spirit", TotemSpiritEntity::new, MobCategory.CREATURE, 1f, 1f, 8, LivingShadow::createLivingShadowAttributes, false);
-    public static final Supplier<EntityType<MiniMushroom>> MINI_MUSHROOM = registerMob("mini_mushroom", MiniMushroom::new, MobCategory.MONSTER, 1f, 1f, 8, MiniMushroom::createMiniMushroomAttributes, false);
+    public static final Supplier<EntityType<MiniMushroom>> MINI_MUSHROOM = registerMob("mini_mushroom", MiniMushroom::new, MobCategory.MONSTER, 1f, 1f, 8, MiniMushroom::createMiniMushroomAttributes);
     public static final Supplier<EntityType<GiantMushroom>> GIANT_MUSHROOM = registerMob("giant_mushroom", GiantMushroom::new, MobCategory.MONSTER, 4.6F, 6.0F, 3.5F, 8, GiantMushroom::createGiantMushroomAttributes, false);
     public static final Supplier<EntityType<MushroomProjectile>> MUSHROOM_PROJECTILE = registerEntity("mushroom_projectile", MushroomProjectile::new, 0.7F, 0.7F);
 
