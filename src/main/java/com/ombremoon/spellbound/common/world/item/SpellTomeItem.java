@@ -31,12 +31,7 @@ public class SpellTomeItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack itemStack = player.getItemInHand(usedHand);
-        String resLocString = itemStack.get(SBData.SPELL);
-        if (resLocString == null) return fail(player, itemStack);
-        ResourceLocation resLoc = ResourceLocation.tryParse(resLocString);
-        if (resLoc == null) return fail(player, itemStack);
-
-        SpellType<?> spell = SBSpells.REGISTRY.get(resLoc);
+        SpellType<?> spell = itemStack.get(SBData.SPELL);
         if (!level.isClientSide) {
             var handler = SpellUtil.getSpellHandler(player);
             if (handler.getSpellList().contains(spell)) {
@@ -60,39 +55,30 @@ public class SpellTomeItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        String resLocString = stack.get(SBData.SPELL);
-        if (resLocString == null) {
+        SpellType<?> spellType = stack.get(SBData.SPELL);
+        if (spellType == null) {
             tooltipComponents.add(Component.translatable("chat.spelltome.nospell").withStyle(ChatFormatting.GRAY));
-            return;
-        }
-        ResourceLocation resLoc = ResourceLocation.tryParse(resLocString);
-        if (resLoc == null) {
-            tooltipComponents.add(Component.translatable("chat.spelltome.nospell").withStyle(ChatFormatting.GRAY));
-            return;
-        }
-        SpellType<?> spell = SBSpells.REGISTRY.get(resLoc);
-        if (spell == null) {
-            tooltipComponents.add(Component.translatable("chat.spelltome.nospell").withStyle(ChatFormatting.GRAY));
-            return;
-        }
-        if (spell.getRootSkill() == null) {
-            tooltipComponents.add(spell.createSpell().getDescription().withStyle(ChatFormatting.GRAY));
             return;
         }
 
-        tooltipComponents.add(spell.createSpell().getName().withStyle(ChatFormatting.GRAY));
+        if (spellType.getRootSkill() == null) {
+            tooltipComponents.add(spellType.createSpell().getDescription().withStyle(ChatFormatting.GRAY));
+            return;
+        }
+
+        tooltipComponents.add(spellType.createSpell().getName().withStyle(ChatFormatting.GRAY));
         tooltipComponents.add(Component.empty());
         if (!Screen.hasShiftDown()) {
             tooltipComponents.add(Component.translatable("tooltip.spellbound.holdshift").withStyle(ChatFormatting.BLUE));
         } else {
-            tooltipComponents.add(spell.getRootSkill().getDescription()
+            tooltipComponents.add(spellType.getRootSkill().getDescription()
                     .withStyle(ChatFormatting.BLUE));
         }
     }
 
     public static ItemStack createWithSpell(SpellType<?> spellType) {
         ItemStack tome = new ItemStack(SBItems.SPELL_TOME.get());
-        tome.set(SBData.SPELL, spellType.location().toString());
+        tome.set(SBData.SPELL, spellType);
 
         return tome;
     }

@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.mojang.serialization.Codec;
+import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
@@ -76,8 +77,8 @@ public class SBData {
             "effect_heal_target", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
 
     //Components
-    public static final Supplier<DataComponentType<String>> SPELL = COMPONENT_TYPES.registerComponentType("spells",
-            builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+    public static final Supplier<DataComponentType<SpellType<?>>> SPELL = COMPONENT_TYPES.registerComponentType("spells",
+            builder -> builder.persistent(SBSpells.REGISTRY.byNameCodec()).networkSynchronized(ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)));
     public static final Supplier<DataComponentType<Integer>> RUNE_INDEX = COMPONENT_TYPES.registerComponentType("rune_type",
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
     public static final Supplier<DataComponentType<List<Integer>>> RUNES = COMPONENT_TYPES.registerComponentType("runes",

@@ -49,16 +49,10 @@ public class Spellbound {
         for (SpellPath spellPath : SpellPath.values()) {
             if (!spellPath.isSubPath()) {
                 ItemProperties.register(SBItems.SPELL_TOME.get(), CommonClass.customLocation(spellPath.getSerializedName()), (stack, level, entity, seed) -> {
-                    String path = stack.get(SBData.SPELL);
-                    if (path != null) {
-                        ResourceLocation location = ResourceLocation.tryParse(path);
-                        if (location != null) {
-                            SpellType<?> spellType = SBSpells.REGISTRY.get(location);
-                            if (spellType != null) {
-                                SpellPath spellPath1 = spellType.getPath();
-                                return spellPath == spellPath1 ? 1.0F : 0.0F;
-                            }
-                        }
+                    SpellType<?> spellType = stack.get(SBData.SPELL);
+                    if (spellType != null) {
+                        SpellPath spellPath1 = spellType.getPath();
+                        return spellPath == spellPath1 ? 1.0F : 0.0F;
                     }
 
                     return 0.0F;

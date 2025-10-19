@@ -20,6 +20,7 @@ public class CommonClass {
         SBEntities.register(modEventBus);
         SBFeatures.register(modEventBus);
         SBItems.register(modEventBus);
+        SBLootFunctions.register(modEventBus);
         SBMemoryTypes.register(modEventBus);
         SBMultiblockSerializers.register(modEventBus);
         SBPageElements.register(modEventBus);
