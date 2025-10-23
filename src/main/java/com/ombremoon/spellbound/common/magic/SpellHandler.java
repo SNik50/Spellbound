@@ -5,7 +5,6 @@ import com.google.common.collect.Multimap;
 import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBEffects;
-import com.ombremoon.spellbound.common.magic.acquisition.bosses.PortalCache;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerDivineActions;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.ChanneledSpell;
@@ -84,7 +83,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      */
     public void sync() {
         if (this.caster instanceof Player player && !this.isClientSide())
-            PayloadHandler.syncSpellsToClient(player);
+            PayloadHandler.syncHandlerToClient(player);
     }
 
     /**
@@ -111,8 +110,11 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         this.glowEntities.clear();
         this.skillBuffs.forEach((skillBuff, integer) -> this.removeSkillBuff(skillBuff));
 
-        if (!this.isClientSide())
+        if (!this.isClientSide()) {
             this.getDivineActions();
+            if (this.caster instanceof Player player)
+                PayloadHandler.syncMana(player);
+        }
 
         this.initialized = true;
     }
@@ -184,11 +186,15 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         } else if (currentMana < amount) {
             return false;
         } else {
-            if (forceConsume)
+            if (forceConsume && this.shouldConsumeMana())
                 this.awardMana(-amount);
 
             return true;
         }
+    }
+
+    private boolean shouldConsumeMana() {
+        return this.level.getGameRules().getBoolean(Keys.CONSUME_MANA);
     }
 
     /**
@@ -196,8 +202,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      * @param mana The amount of mana received
      */
     public void awardMana(float mana) {
-        Level level = this.caster.level();
-        if (!this.isClientSide() && level.getGameRules().getBoolean(Keys.CONSUME_MANA)) {
+        if (!this.isClientSide()) {
             this.caster.setData(SBData.MANA, Mth.clamp(caster.getData(SBData.MANA) + mana, 0, this.getMaxMana()));
             if (this.caster instanceof Player player)
                 PayloadHandler.syncMana(player);

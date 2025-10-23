@@ -89,12 +89,16 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new HandleAnimationPayload(player.getUUID().toString(), animation, animationSpeed, stopAnimation));
     }
 
-    public static void updateSpells(Player player, SpellType<?> spellType, int castId,CompoundTag initTag, @Nullable CompoundTag spellData) {
-        PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new UpdateSpellsPayload(player.getUUID().toString(), spellType, castId, initTag, spellData));
+    public static void updateSpells(LivingEntity entity, SpellType<?> spellType, int castId,CompoundTag initTag, @Nullable CompoundTag spellData) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new UpdateSpellsPayload(entity.getId(), spellType, castId, initTag, spellData));
     }
 
-    public static void setSpellTicks(ServerPlayer player, SpellType<?> spellType, int castId, int ticks) {
-        PacketDistributor.sendToPlayer(player, new UpdateSpellTicksPayload(player.getId(), spellType, castId, ticks));
+    public static void shiftSpell(LivingEntity entity, SpellType<?> spellType, int shiftId, int castId) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new UpdateSpellIdPayload(entity.getId(), spellType, shiftId, castId));
+    }
+
+    public static void setSpellTicks(LivingEntity entity, SpellType<?> spellType, int castId, int ticks) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new UpdateSpellTicksPayload(entity.getId(), spellType, castId, ticks));
     }
 
     public static void updateSkillBuff(ServerPlayer player, SkillBuff<?> skillBuff, int duration, boolean removeBuff) {
@@ -109,12 +113,12 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayer((ServerPlayer) player, new ChargeOrChannelPayload(isChargingOrChanneling));
     }
 
-    public static void endSpell(Player player, SpellType<?> spellType, int castId) {
-        PacketDistributor.sendToPlayer((ServerPlayer) player, new EndSpellPayload(spellType, castId));
+    public static void endSpell(LivingEntity entity, SpellType<?> spellType, int castId) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new EndSpellPayload(entity.getId(), spellType, castId));
     }
 
-    public static void syncSpellsToClient(Player player) {
-        PacketDistributor.sendToPlayer((ServerPlayer) player, new SyncSpellPayload(SpellUtil.getSpellHandler(player).serializeNBT(player.level().registryAccess())));
+    public static void syncHandlerToClient(Player player) {
+        PacketDistributor.sendToPlayer((ServerPlayer) player, new SyncSpellHandlerPayload(SpellUtil.getSpellHandler(player).serializeNBT(player.level().registryAccess())));
     }
 
     public static void syncSkillsToClient(Player player) {
@@ -184,6 +188,11 @@ public class PayloadHandler {
                 ClientPayloadHandler::handleClientUpdateSpells
         );
         registrar.playToClient(
+                UpdateSpellIdPayload.TYPE,
+                UpdateSpellIdPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleClientShiftSpell
+        );
+        registrar.playToClient(
                 UpdateSpellTicksPayload.TYPE,
                 UpdateSpellTicksPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleClientUpdateSpellTicks
@@ -199,8 +208,8 @@ public class PayloadHandler {
                 ClientPayloadHandler::handleClientUpdateCooldowns
         );
         registrar.playToClient(
-                SyncSpellPayload.TYPE,
-                SyncSpellPayload.STREAM_CODEC,
+                SyncSpellHandlerPayload.TYPE,
+                SyncSpellHandlerPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleClientSpellSync
         );
         registrar.playToClient(

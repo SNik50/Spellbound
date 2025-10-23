@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public class EffectCache {
-    public final Map<ResourceLocation, FXEffectExecutor> cache = new Object2ObjectOpenHashMap<>();
+    private final Map<ResourceLocation, FXEffectExecutor> cache = new Object2ObjectOpenHashMap<>();
 
     public void addFX(EffectBuilder<?> builder) {
         var fx = builder.build();
@@ -28,6 +28,10 @@ public class EffectCache {
         return this.cache.get(location);
     }
 
+    public boolean isEmpty() {
+        return this.cache.isEmpty();
+    }
+
     public void handleFXRemoval() {
         for (var effect : this.cache.values()) {
             removeFX(effect, false);
@@ -40,7 +44,7 @@ public class EffectCache {
             removeFX(effect, removeObjects);
     }
 
-    public void removeFX(FXEffectExecutor effect, boolean removeObjects) {
+    protected void removeFX(FXEffectExecutor effect, boolean removeObjects) {
         var runtime = effect.getRuntime();
         if (runtime != null && runtime.isAlive()) {
             List<? extends FXEffectExecutor> currentEffects = null;

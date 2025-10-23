@@ -112,7 +112,9 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     public int tickCount = 0;
     public boolean isInactive = false;
     public boolean init = false;
-    private int castId = 0;
+    public int castId = 0;
+    private int shiftId = 0;
+    private boolean idDirty;
 
     /**
      * <p>
@@ -426,6 +428,11 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         if (!this.level.isClientSide) {
             if (this.spellData.isDirty() || this.tickCount % this.updateInterval == 0)
                 this.sendDirtySpellData();
+
+            if (this.idDirty) {
+                PayloadHandler.shiftSpell(this.caster, this.spellType, this.shiftId, this.castId);
+                this.idDirty = false;
+            }
         } else {
             this.handleFXRemoval();
         }
@@ -450,8 +457,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.isInactive = true;
         this.tickCount = 0;
         this.handleFXRemoval();
-        if (!level.isClientSide && this.caster instanceof Player player)
-            PayloadHandler.endSpell(player, spellType(), this.castId);
+        if (!level.isClientSide)
+            PayloadHandler.endSpell(this.caster, spellType(), this.castId);
     }
 
     /**
@@ -490,7 +497,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     public void onCastStart(SpellContext context) {
         if (!context.getLevel().isClientSide) {
             this.spellData.set(CAST_POS, context.getBlockPos());
-            this.sendDirtySpellData();
         } else {
             context.getSpellHandler().setStationaryTicks(this.stationaryTicks);
         }
@@ -539,8 +545,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      */
     public void setRemainingTicks(int ticks) {
         this.tickCount = Mth.clamp(this.getDuration() - ticks, 0, this.getDuration());
-        if (!this.level.isClientSide && this.caster instanceof Player player)
-            PayloadHandler.setSpellTicks((ServerPlayer) player, this.spellType, this.castId, this.tickCount);
+        if (!this.level.isClientSide)
+            PayloadHandler.setSpellTicks(this.caster, this.spellType, this.castId, this.tickCount);
     }
 
     public int getRemainingTime() {
@@ -1293,10 +1299,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
             if (!SpellUtil.canCastSpell(caster, this) || !(this.castPredicate.test(this.context, this) && RandomUtil.percentChance(getCastChance()))) {
                 onCastReset(this.context);
-                if (caster instanceof Player player) {
-                    CompoundTag initTag = this.initTag(this.isRecast, true, shiftSpells);
-                    PayloadHandler.updateSpells(player, this.spellType, this.castId, initTag, nbt);
-                }
+                CompoundTag initTag = this.initTag(this.isRecast, true, shiftSpells);
+                PayloadHandler.updateSpells(caster, this.spellType, this.castId, initTag, nbt);
+//                if (caster instanceof Player player) {
+//                }
 
                 return;
             }
@@ -1307,10 +1313,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
                 shiftSpells = true;
             }
 
+            CompoundTag initTag = this.initTag(this.isRecast, false, shiftSpells);
+            PayloadHandler.updateSpells(caster, this.spellType, this.castId, initTag, nbt);
+            awardXp(this.manaCost * this.xpModifier);
             if (caster instanceof Player player) {
-                CompoundTag initTag = this.initTag(this.isRecast, false, shiftSpells);
-                PayloadHandler.updateSpells(player, this.spellType, this.castId, initTag, nbt);
-                awardXp(this.manaCost * this.xpModifier);
                 player.awardStat(SBStats.SPELLS_CAST.get());
             }
 
@@ -1411,7 +1417,9 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
         for (int i = 0; i < list.size(); i++) {
             AbstractSpell spell = list.get(i);
+            spell.shiftId = spell.castId;
             spell.castId = i + 1;
+            spell.idDirty = true;
         }
 
         this.castId = list.size() + 1;
@@ -1437,8 +1445,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         }
 
         if (!this.level.isClientSide) {
-            this.sendDirtySpellData();
-
             float mana = getManaCost();
             handler.consumeMana(mana, true);
         }

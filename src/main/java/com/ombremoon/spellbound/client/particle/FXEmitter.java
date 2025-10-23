@@ -17,6 +17,10 @@ public interface FXEmitter {
         cache.handleFXRemoval();
     }
 
+    default void removeFX(ResourceLocation location) {
+        removeFX(location, true);
+    }
+
     default void removeFX(ResourceLocation location, boolean removeObjects) {
         EffectCache cache = this.getFXCache();
         cache.removeFX(location, removeObjects);

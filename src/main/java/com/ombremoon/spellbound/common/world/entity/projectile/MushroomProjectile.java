@@ -1,9 +1,13 @@
 package com.ombremoon.spellbound.common.world.entity.projectile;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.ombremoon.spellbound.client.particle.EffectBuilder;
+import com.ombremoon.spellbound.common.init.SBEntities;
+import com.ombremoon.spellbound.common.world.entity.SpellProjectile;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
 import com.ombremoon.spellbound.common.world.entity.spell.WildMushroom;
-import com.ombremoon.spellbound.common.init.SBEntities;
-import net.minecraft.core.BlockPos;
+import com.ombremoon.spellbound.common.world.spell.summon.WildMushroomSpell;
+import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
@@ -14,22 +18,16 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.event.EventHooks;
 import net.tslat.smartbrainlib.util.RandomUtil;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class MushroomProjectile extends Projectile implements GeoEntity {
+public class MushroomProjectile extends SpellProjectile<WildMushroomSpell> {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private boolean primaryProjectile;
 
@@ -37,7 +35,7 @@ public class MushroomProjectile extends Projectile implements GeoEntity {
         super(entityType, level);
     }
 
-    public MushroomProjectile(Level level, GiantMushroom thrower) {
+    public MushroomProjectile(Level level, LivingEntity thrower) {
         this(SBEntities.MUSHROOM_PROJECTILE.get(), level);
         this.setOwner(thrower);
         this.setPos(
@@ -47,6 +45,24 @@ public class MushroomProjectile extends Projectile implements GeoEntity {
         );
     }
 
+    @Override
+    public void onAddedToLevel() {
+        super.onAddedToLevel();
+        if (this.level().isClientSide) {
+            this.addFX(EffectBuilder.Entity.of(
+                    CommonClass.customLocation("toxic_projectile"),
+                    this.getId(),
+                    EntityEffectExecutor.AutoRotate.LOOK)
+                    .setRotation(180, 180, 0)
+                    .setOffset(0, -0.5, 0));
+        }
+    }
+
+    @Override
+    public void onClientRemoval() {
+        this.removeFX(CommonClass.customLocation("toxic_projectile"), false);
+    }
+
     protected double getDefaultGravity() {
         return 0.12;
     }
@@ -54,21 +70,9 @@ public class MushroomProjectile extends Projectile implements GeoEntity {
     @Override
     public void tick() {
         super.tick();
-        Vec3 vec3 = this.getDeltaMovement();
-        HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
-        if (hitresult.getType() != HitResult.Type.MISS && !EventHooks.onProjectileImpact(this, hitresult))
-            this.hitTargetOrDeflectSelf(hitresult);
-        double d0 = this.getX() + vec3.x;
-        double d1 = this.getY() + vec3.y;
-        double d2 = this.getZ() + vec3.z;
-        this.updateRotation();
-        if (this.isInWaterOrBubble()) {
+        if (this.isInWaterOrBubble())
             this.discard();
-        } else {
-            this.setDeltaMovement(vec3.scale(0.99F));
-            this.applyGravity();
-            this.setPos(d0, d1, d2);
-        }
+
     }
 
     @Override
@@ -87,6 +91,8 @@ public class MushroomProjectile extends Projectile implements GeoEntity {
 
                 this.discard();
             }
+        } else {
+            this.removeFX(CommonClass.customLocation("toxic_projectile"), false);
         }
     }
 
@@ -116,9 +122,11 @@ public class MushroomProjectile extends Projectile implements GeoEntity {
                     level.addFreshEntity(wildMushroom);
                 }
             }
-
-            this.discard();
+        } else {
+            this.removeFX(CommonClass.customLocation("toxic_projectile"));
         }
+
+        this.discard();
     }
 
     public boolean isPrimaryProjectile() {
@@ -127,10 +135,6 @@ public class MushroomProjectile extends Projectile implements GeoEntity {
 
     public void setPrimaryProjectile(boolean primaryProjectile) {
         this.primaryProjectile = primaryProjectile;
-    }
-
-    @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
     }
 
     @Override

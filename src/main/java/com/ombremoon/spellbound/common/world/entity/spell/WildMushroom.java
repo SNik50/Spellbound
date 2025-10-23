@@ -67,10 +67,6 @@ public class WildMushroom extends SpellEntity<WildMushroomSpell> {
                             EffectBuilder.Entity.of(CommonClass.customLocation("mushroom_explosion"), this.getId(), EntityEffectExecutor.AutoRotate.NONE)
                                     .setOffset(0.0, -0.25, 0.0)
                     );
-//                    this.addFX(
-//                            EffectBuilder.Entity.of(CommonClass.customLocation("claw_slash"), this.getId(), EntityEffectExecutor.AutoRotate.NONE)
-//                                    .setScale(0.5, 0.5, 0.5)
-//                    );
                 }
             }
 

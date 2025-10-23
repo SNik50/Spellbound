@@ -80,9 +80,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
         double d2 = this.getZ() + vec3.z;
         this.updateRotation();
         float f = 0.99F;
-        if (this.level().getBlockStates(this.getBoundingBox()).noneMatch(state -> state.isAir() || state.is(Blocks.WATER))) {
-            this.discard();
-        } else if (this.isInWaterOrBubble()) {
+        if (this.isInWaterOrBubble()) {
             f = 0.89F;
         }
         this.setDeltaMovement(vec3.scale(f));
@@ -96,8 +94,6 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
         if (!this.level().isClientSide) {
             if (this.spell != null)
                 this.spell.onProjectileHitEntity(this, spell.getContext(), result);
-        } else {
-            this.handleFXRemoval();
         }
     }
 
@@ -129,11 +125,6 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
             this.skills = SpellUtil.getSkills(livingEntity);
         }
         super.onAddedToLevel();
-    }
-
-    @Override
-    public void onClientRemoval() {
-        this.handleFXRemoval();
     }
 
     public T getSpell() {

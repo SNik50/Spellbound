@@ -7,14 +7,14 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record SyncSpellPayload(CompoundTag tag) implements CustomPacketPayload {
-    public static final CustomPacketPayload.Type<SyncSpellPayload> TYPE =
+public record SyncSpellHandlerPayload(CompoundTag tag) implements CustomPacketPayload {
+    public static final CustomPacketPayload.Type<SyncSpellHandlerPayload> TYPE =
             new CustomPacketPayload.Type<>(CommonClass.customLocation("client_spell_sync"));
 
-    public static final StreamCodec<ByteBuf, SyncSpellPayload> STREAM_CODEC = StreamCodec.composite(
+    public static final StreamCodec<ByteBuf, SyncSpellHandlerPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.COMPOUND_TAG,
-            SyncSpellPayload::tag,
-            SyncSpellPayload::new
+            SyncSpellHandlerPayload::tag,
+            SyncSpellHandlerPayload::new
     );
 
     @Override
