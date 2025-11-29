@@ -24,6 +24,9 @@
       "position": {
         "xOffset": 167,
         "yOffset": 5
+      },
+      "extras": {
+        "pageScrap": "spellbound:test_scrap"
       }
     },
 
@@ -34,6 +37,9 @@
       "position": {
         "xOffset": 195,
         "yOffset": 125
+      },
+      "extras": {
+        "pageScrap": "spellbound:anvil"
       }
     }
   ]

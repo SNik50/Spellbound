@@ -18,7 +18,7 @@ public record GuideImage(ResourceLocation loc, int width, int height, ElementPos
 
     @Override
     public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
-        graphics.blit(loc, leftPos + position.xOffset(), topPos + position.yOffset(), 0, 0, width, height, width, height);
+        //graphics.blit(loc, leftPos + position.xOffset(), topPos + position.yOffset(), 0, 0, width, height, width, height);
     }
 
     @Override

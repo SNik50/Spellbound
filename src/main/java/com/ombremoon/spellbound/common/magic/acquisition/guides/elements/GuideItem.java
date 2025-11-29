@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.ElementPosition;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.ItemExtras;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
@@ -14,29 +15,38 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public record GuideItem(ResourceLocation itemLoc, String tileName, float scale, ElementPosition position) implements PageElement {
+public record GuideItem(ResourceLocation itemLoc, String tileName, float scale, ElementPosition position, ItemExtras extras) implements PageElement {
     private static final ResourceLocation ITEM_TILE = CommonClass.customLocation("textures/gui/books/item_tile.png");
 
     public static final MapCodec<GuideItem> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("item").forGetter(GuideItem::itemLoc),
             Codec.STRING.optionalFieldOf("tileName", "basic").forGetter(GuideItem::tileName),
             Codec.FLOAT.optionalFieldOf("scale", 1f).forGetter(GuideItem::scale),
-            ElementPosition.CODEC.optionalFieldOf("position", ElementPosition.getDefault()).forGetter(GuideItem::position)
+            ElementPosition.CODEC.optionalFieldOf("position", ElementPosition.getDefault()).forGetter(GuideItem::position),
+            ItemExtras.CODEC.optionalFieldOf("extras", ItemExtras.getDefault()).forGetter(GuideItem::extras)
     ).apply(inst, GuideItem::new));
 
     @Override
     public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
-        Item item = Minecraft.getInstance().level.registryAccess().registry(Registries.ITEM).get().get(itemLoc);
+        Registry<Item> registry = Minecraft.getInstance().level.registryAccess().registry(Registries.ITEM).get();
+
+        RandomSource rand = Minecraft.getInstance().level.getRandom();
+        rand.setSeed(Math.floorDiv(Minecraft.getInstance().player.tickCount, 10));
+
+        Item item = extras.hasScrap() ? registry.get(itemLoc) : registry.getRandom(rand).get().value();
         if (item == null) return;
+
         graphics.blit(CommonClass.customLocation("textures/gui/books/crafting_grids/medium/" + tileName + ".png"), leftPos + position.xOffset(), topPos + position.yOffset(), 0, 0, (int) (48 * scale), (int) (46 * scale), (int) (48 * scale), (int) (46 * scale));
         renderItem(graphics, item.getDefaultInstance(), leftPos + position.xOffset(), topPos + position.yOffset(), 1.3f * scale);
     }

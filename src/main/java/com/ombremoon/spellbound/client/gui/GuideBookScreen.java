@@ -32,6 +32,11 @@ public class GuideBookScreen extends Screen {
     }
 
     @Override
+    public boolean isPauseScreen() {
+        return false;
+    }
+
+    @Override
     protected void init() {
         this.leftPos = (this.width - WIDTH) / 2;
         this.topPos = (this.height - HEIGHT) / 2;
@@ -57,11 +62,21 @@ public class GuideBookScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (currentPage > 0 && (mouseX >= this.leftPos + 41 && mouseX <= this.leftPos + 56 && mouseY >= this.topPos + 230 && mouseY <= this.topPos + 243)) {
-            currentPage--;
+            while (currentPage > 0) {
+                currentPage--;
+                if (pages.get(currentPage).isVisible()) break;
+            }
+
             this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             return true;
         } else if (currentPage < lastPage && mouseX >= this.leftPos + 354 && mouseX <= this.leftPos + 370 && mouseY >= this.topPos + 230 && mouseY <= this.topPos + 243) {
-            currentPage++;
+            for (int i = currentPage; i < lastPage; i++) {
+                if (pages.get(i).isVisible()) {
+                    currentPage = i;
+                    break;
+                }
+            }
+
             this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             return true;
         }

@@ -6,6 +6,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.ElementPosition;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.RecipeExtras;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
@@ -30,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-public record GuideRecipe(ResourceLocation recipeLoc, String gridName, float scale, ElementPosition position) implements PageElement {
+public record GuideRecipe(ResourceLocation recipeLoc, String gridName, float scale, ElementPosition position, RecipeExtras extras) implements PageElement {
     private static final ResourceLocation LARGE_GRID = CommonClass.customLocation("textures/gui/books/large_crafting_grid.png");
     private static final ResourceLocation SMALL_GRID = CommonClass.customLocation("textures/gui/books/small_crafting_grid.png");
 
@@ -38,7 +39,8 @@ public record GuideRecipe(ResourceLocation recipeLoc, String gridName, float sca
             ResourceLocation.CODEC.fieldOf("recipe").forGetter(GuideRecipe::recipeLoc),
             Codec.STRING.optionalFieldOf("gridName", "basic").forGetter(GuideRecipe::gridName),
             Codec.FLOAT.optionalFieldOf("scale", 1f).forGetter(GuideRecipe::scale),
-            ElementPosition.CODEC.optionalFieldOf("position", ElementPosition.getDefault()).forGetter(GuideRecipe::position)
+            ElementPosition.CODEC.optionalFieldOf("position", ElementPosition.getDefault()).forGetter(GuideRecipe::position),
+            RecipeExtras.CODEC.optionalFieldOf("extras", RecipeExtras.getDefault()).forGetter(GuideRecipe::extras)
     ).apply(inst, GuideRecipe::new));
 
     @Override
@@ -59,6 +61,7 @@ public record GuideRecipe(ResourceLocation recipeLoc, String gridName, float sca
             if (largeGrid) {
                 graphics.blit(CommonClass.customLocation("textures/gui/books/crafting_grids/large/" + gridName + ".png"), leftPos + position.xOffset(), topPos + position.yOffset(), 0, 0, (int) (81F * scale), (int) (82F * scale), (int) (81 * scale), (int) (82 * scale));
 
+                if (!extras.hasScrap()) return;
                 for (int i = 1; i <= 9; i++) {
                     int slotXOffset = (i-1)%3 * (int) ( 23 * scale);
                     int slotYOffset = 1;
@@ -71,6 +74,7 @@ public record GuideRecipe(ResourceLocation recipeLoc, String gridName, float sca
             else {
                 graphics.blit(CommonClass.customLocation("textures/gui/books/crafting_grids/medium/" + gridName + ".png"), leftPos + position.xOffset(), topPos + position.yOffset(), 0, 0, (int) (60 * scale), (int) (58 * scale), (int) (60 * scale), (int) (58 * scale));
 
+                if (!extras.hasScrap()) return;
                 for (int i = 1; i <= 4; i++) {
                     int slotXOffset = (i+1)%2 * ( (int) (23 * scale));
                     int slotYOffset = i > 2 ? ( int)(23 * scale) : 0;

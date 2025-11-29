@@ -5,7 +5,10 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.ElementPosition;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.TextExtras;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,7 +32,7 @@ public record GuideText(String translationKey, TextExtras extras, ElementPositio
     public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
         Font font = Minecraft.getInstance().font;
 
-        List<FormattedCharSequence> lines = font.split(Component.translatable(translationKey), extras.maxLineLength());
+        List<FormattedCharSequence> lines = font.split(Component.translatable(translationKey).withStyle(extras.isHidden()), extras.maxLineLength());
         for (int i = 0; i < lines.size(); i++) {
             graphics.drawString(font, lines.get(i), leftPos + position.xOffset(), topPos + position.yOffset() + (i * 9), extras.colour(), extras.dropShadow());
         }

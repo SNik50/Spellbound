@@ -25,7 +25,7 @@ import java.util.*;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
 public class GuideBookManager extends SimpleJsonResourceReloadListener {
-    private static final ResourceLocation FIRST_PAGE = CommonClass.customLocation("first_page_dont_use");
+    private static final ResourceLocation FIRST_PAGE = CommonClass.customLocation("default");
     private static final Logger LOGGER = Constants.LOG;
     private static final Gson GSON = new GsonBuilder().create();
     private static Map<ResourceLocation, List<GuideBookPage>> BOOKS = new HashMap<>();
@@ -94,6 +94,7 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
      * @return A sorted list of pages
      */
     private List<GuideBookPage> sortPages(List<Pair<ResourceLocation, GuideBookPage>> book) {
+        //ID, Page
         List<Pair<ResourceLocation, GuideBookPage>> result = new ArrayList<>();
 
         for (Pair<ResourceLocation, GuideBookPage> pair : book) {

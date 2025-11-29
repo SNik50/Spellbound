@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.ElementPosition;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.TextListExtras;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -34,8 +35,9 @@ public record GuideTextList(List<String> list, TextListExtras extras, ElementPos
                 yOffset = (i >= maxRows ? (i % maxRows) : i) * extras.rowGap();
             }
 
+
             graphics.drawString(Minecraft.getInstance().font,
-                    Component.literal(extras.bulletPoint()).append(Component.translatable(list.get(i))),
+                    Component.literal(extras.bulletPoint()).append(Component.translatable(list.get(i))).withStyle(extras.isHidden()),
                     leftPos - 10 + position.xOffset() + xOffset,
                     topPos + position.yOffset() + 6 + yOffset,
                     extras.textColour(),

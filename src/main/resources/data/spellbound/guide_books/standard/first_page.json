@@ -138,7 +138,8 @@
         }
       ],
       "extras": {
-        "maxRows": 10
+        "maxRows": 10,
+        "pageScrap": "spellbound:empty"
       },
       "position": {
         "yOffset": 0,

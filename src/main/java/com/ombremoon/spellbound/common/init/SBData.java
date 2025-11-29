@@ -9,7 +9,9 @@ import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.tree.UpgradeTree;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.IEventBus;
@@ -76,7 +78,20 @@ public class SBData {
     public static final Supplier<AttachmentType<Integer>> EFFECT_HEAL_TARGET = ATTACHMENT_TYPES.register(
             "effect_heal_target", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<List<ResourceLocation>>> BOOK_SCRAPS = ATTACHMENT_TYPES.register(
-            "book_scraps", () -> AttachmentType.<List<ResourceLocation>>builder(() -> new ArrayList<ResourceLocation>()).serialize(ResourceLocation.CODEC.listOf()).copyOnDeath().build()
+            "book_scraps", () -> AttachmentType.<List<ResourceLocation>>builder(() -> new ArrayList<ResourceLocation>())
+                    .serialize(ResourceLocation.CODEC.listOf())
+                    .sync(StreamCodec.<RegistryFriendlyByteBuf, List<ResourceLocation>>of((buf, list) -> {
+                        buf.writeInt(list.size());
+                        for (ResourceLocation res : list) buf.writeUtf(res.toString());
+                    }, (buf) -> {
+                        List<ResourceLocation> list = new ArrayList<>();
+                        int length = buf.readInt();
+                        for (int i = 0; i < length; i++) list.add(ResourceLocation.parse(buf.readUtf()));
+
+                        return list;
+                    }))
+                    .copyOnDeath()
+                    .build()
     );
 
     //Components

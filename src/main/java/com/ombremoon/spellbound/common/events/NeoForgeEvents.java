@@ -90,6 +90,8 @@ public class NeoForgeEvents {
                 if (!player.level().isClientSide) {
                     handler.sync();
 
+                    //PayloadHandler.setScraps((ServerPlayer) player, player.getData(SBData.BOOK_SCRAPS));
+
                     var holder = SpellUtil.getSkills(player);
                     holder.sync();
 

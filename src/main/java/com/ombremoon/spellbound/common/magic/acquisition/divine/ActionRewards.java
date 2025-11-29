@@ -73,13 +73,13 @@ public record ActionRewards(int experience, int judgement, List<ResourceLocation
                 }
             }
 
-            for (ResourceLocation location : this.bookScraps) {
-                SpellUtil.grantScrap(player, location);
-            }
-
             if (flag) {
                 player.containerMenu.broadcastChanges();
             }
+        }
+
+        for (ResourceLocation location : this.bookScraps) {
+            SpellUtil.grantScrap(player, location);
         }
     }
 

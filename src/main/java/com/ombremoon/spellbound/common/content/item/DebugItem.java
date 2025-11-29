@@ -1,12 +1,18 @@
 package com.ombremoon.spellbound.common.content.item;
 
+import com.lowdragmc.lowdraglib2.graphprocessor.data.parameter.ExposedParameter;
+import com.mojang.logging.LogUtils;
 import com.ombremoon.spellbound.common.content.world.multiblock.MultiblockManager;
+import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -25,7 +31,8 @@ public class DebugItem extends Item implements Loggable {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         var handler = SpellUtil.getSpellHandler(player);
         var skillHandler = SpellUtil.getSkills(player);
-        ombreDebug(level, player, usedHand, handler, skillHandler);
+        duckDebug(level, player, usedHand, handler, skillHandler);
+        //ombreDebug(level, player, usedHand, handler, skillHandler);
         return super.use(level, player, usedHand);
     }
 
@@ -58,6 +65,12 @@ public class DebugItem extends Item implements Loggable {
         } else {
 //            SBShaders.HEAT_DISTORTION_SHADER.toggleShader();
 
+        }
+    }
+
+    private void duckDebug(Level level, Player player, InteractionHand hand, SpellHandler spellHandler, SkillHolder skillHolder) {
+        for (ResourceLocation loc : player.getData(SBData.BOOK_SCRAPS)) {
+            Constants.LOG.debug(loc.toString());
         }
     }
 }

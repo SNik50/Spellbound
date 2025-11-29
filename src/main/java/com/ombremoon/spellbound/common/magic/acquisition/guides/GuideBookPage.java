@@ -8,6 +8,8 @@ import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideIm
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideText;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.PageElement;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -19,10 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public record GuideBookPage(ResourceLocation id, ResourceLocation insertAfter, List<PageElement> elements) {
+public record GuideBookPage(ResourceLocation id, ResourceLocation pageScrap, ResourceLocation insertAfter, List<PageElement> elements) {
     public static final Codec<GuideBookPage> CODEC = RecordCodecBuilder.<GuideBookPage>create(inst -> inst.group(
             ResourceLocation.CODEC.fieldOf("id").forGetter(GuideBookPage::id),
-            ResourceLocation.CODEC.optionalFieldOf("insertAfter", CommonClass.customLocation("first_page_dont_use")).forGetter(GuideBookPage::insertAfter),
+            ResourceLocation.CODEC.optionalFieldOf("pageScrap", CommonClass.customLocation("default")).forGetter(GuideBookPage::pageScrap),
+            ResourceLocation.CODEC.optionalFieldOf("insertAfter", CommonClass.customLocation("default")).forGetter(GuideBookPage::insertAfter),
             PageElement.CODEC.listOf().optionalFieldOf("elements", new ArrayList<>()).forGetter(GuideBookPage::elements)
     ).apply(inst, GuideBookPage::new));
 
@@ -30,5 +33,9 @@ public record GuideBookPage(ResourceLocation id, ResourceLocation insertAfter, L
         for (PageElement element : elements) {
             element.render(graphics, leftPos + 47, topPos + 36, mouseX, mouseY, partialTick);
         }
+    }
+
+    public boolean isVisible() {
+        return pageScrap().equals(CommonClass.customLocation("default")) || SpellUtil.hasScrap(Minecraft.getInstance().player, pageScrap());
     }
 }

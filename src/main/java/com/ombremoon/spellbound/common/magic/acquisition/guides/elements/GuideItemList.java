@@ -5,15 +5,21 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.ElementPosition;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.ItemListExtras;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.RandomSequence;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Random;
 
 public record GuideItemList(List<ItemListEntry> items, ItemListExtras extras, ElementPosition position) implements PageElement {
     public static final MapCodec<GuideItemList> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
@@ -25,6 +31,8 @@ public record GuideItemList(List<ItemListEntry> items, ItemListExtras extras, El
     @Override
     public void render(GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
         Registry<Item> itemRegistry = Minecraft.getInstance().level.registryAccess().registry(Registries.ITEM).get();
+        RandomSource rand = Minecraft.getInstance().level.getRandom();
+        rand.setSeed(Math.floorDiv(Minecraft.getInstance().player.tickCount, 10));
         for (int i = 0; i < items.size(); i++) {
             ItemListEntry entry = items.get(i);
 
@@ -39,8 +47,15 @@ public record GuideItemList(List<ItemListEntry> items, ItemListExtras extras, El
                 yOffset = (i >= maxRows ? (i % maxRows) : i) * extras.rowGap();
             }
 
-            GuideItem.renderItem(graphics, itemRegistry.get(entry.itemLoc()).getDefaultInstance(), leftPos - 10 + position.xOffset() + xOffset, topPos + position.yOffset() - 8 + yOffset, 1f);
-            graphics.drawString(Minecraft.getInstance().font, String.valueOf(entry.count()), leftPos - 10 + position.xOffset() + xOffset + extras.countGap(), topPos + position.yOffset() + 6 + yOffset, extras.textColour(), extras.dropShadow());
+            ItemStack item = extras.isVisible() ? itemRegistry.get(entry.itemLoc()).getDefaultInstance() : itemRegistry.getRandom(rand).get().value().getDefaultInstance();
+
+            GuideItem.renderItem(graphics, item, leftPos - 10 + position.xOffset() + xOffset, topPos + position.yOffset() - 8 + yOffset, 1f);
+            graphics.drawString(Minecraft.getInstance().font,
+                    Component.literal(String.valueOf(entry.count)).withStyle(extras.isVisible() ? ChatFormatting.RESET : ChatFormatting.OBFUSCATED),
+                    leftPos - 10 + position.xOffset() + xOffset + extras.countGap(),
+                    topPos + position.yOffset() + 6 + yOffset,
+                    extras.textColour(),
+                    extras.dropShadow());
         }
     }
 

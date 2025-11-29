@@ -10,6 +10,7 @@ import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
+import com.ombremoon.spellbound.networking.PayloadHandler;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -20,10 +21,7 @@ import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiPredicate;
 
 public class SpellUtil {
@@ -204,13 +202,17 @@ public class SpellUtil {
         return entity.is(owner);
     }
 
-    public static void grantScrap(ServerPlayer player, ResourceLocation scrap) {
-        ArrayList<ResourceLocation> bookScraps = (ArrayList<ResourceLocation>) player.getData(SBData.BOOK_SCRAPS);
+    public static void grantScrap(Player player, ResourceLocation scrap) {
+        List<ResourceLocation> bookScraps = new ArrayList<>(player.getData(SBData.BOOK_SCRAPS));
         if (bookScraps.contains(scrap)) return;
 
         bookScraps.add(scrap);
         //Send toast
         player.sendSystemMessage(Component.literal("Book scrap acquired"));
         player.setData(SBData.BOOK_SCRAPS, bookScraps);
+    }
+
+    public static boolean hasScrap(Player player, ResourceLocation scrap) {
+        return player.getData(SBData.BOOK_SCRAPS).contains(scrap);
     }
 }
