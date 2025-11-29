@@ -19,6 +19,10 @@ public record SpellPredicate(Optional<ResourceLocation> spell) {
         return new SpellPredicate(spell);
     }
 
+    public static SpellPredicate spell(SpellType<?> spell) {
+        return new SpellPredicate(Optional.ofNullable(SBSpells.REGISTRY.getKey(spell)));
+    }
+
     public boolean matches(SpellType<?> spell) {
         return this.spell.isPresent() && SBSpells.REGISTRY.getKey(spell).equals(this.spell.get());
     }

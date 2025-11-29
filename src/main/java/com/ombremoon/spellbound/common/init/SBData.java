@@ -18,6 +18,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import software.bernie.geckolib.util.Color;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -74,6 +75,9 @@ public class SBData {
             "interact_heal_target", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Integer>> EFFECT_HEAL_TARGET = ATTACHMENT_TYPES.register(
             "effect_heal_target", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
+    public static final Supplier<AttachmentType<List<ResourceLocation>>> BOOK_SCRAPS = ATTACHMENT_TYPES.register(
+            "book_scraps", () -> AttachmentType.<List<ResourceLocation>>builder(() -> new ArrayList<ResourceLocation>()).serialize(ResourceLocation.CODEC.listOf()).copyOnDeath().build()
+    );
 
     //Components
     public static final Supplier<DataComponentType<String>> SPELL = COMPONENT_TYPES.registerComponentType("spells",

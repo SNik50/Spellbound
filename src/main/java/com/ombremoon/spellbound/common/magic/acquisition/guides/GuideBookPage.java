@@ -30,6 +30,5 @@ public record GuideBookPage(ResourceLocation id, ResourceLocation insertAfter, L
         for (PageElement element : elements) {
             element.render(graphics, leftPos + 47, topPos + 36, mouseX, mouseY, partialTick);
         }
-        SBTriggers.LEARN_SPELL.get().addPlayerListener();
     }
 }

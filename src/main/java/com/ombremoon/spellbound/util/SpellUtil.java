@@ -11,13 +11,16 @@ import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -199,5 +202,15 @@ public class SpellUtil {
         Entity entity = getOwner(summon);
         if (entity == null) return false;
         return entity.is(owner);
+    }
+
+    public static void grantScrap(ServerPlayer player, ResourceLocation scrap) {
+        ArrayList<ResourceLocation> bookScraps = (ArrayList<ResourceLocation>) player.getData(SBData.BOOK_SCRAPS);
+        if (bookScraps.contains(scrap)) return;
+
+        bookScraps.add(scrap);
+        //Send toast
+        player.sendSystemMessage(Component.literal("Book scrap acquired"));
+        player.setData(SBData.BOOK_SCRAPS, bookScraps);
     }
 }

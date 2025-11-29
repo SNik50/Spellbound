@@ -3,7 +3,12 @@ package com.ombremoon.spellbound.common.magic.acquisition.guides.triggers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.init.SBSpells;
+import com.ombremoon.spellbound.common.init.SBTriggers;
+import com.ombremoon.spellbound.common.magic.acquisition.divine.ActionCriterion;
+import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.CuredZombieVillagerTrigger;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.SimpleTrigger;
+import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.SpecialTrigger;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
@@ -35,6 +40,11 @@ public class LearnSpellTrigger extends SimpleTrigger<LearnSpellTrigger.Instance>
                         SpellPredicate.CODEC.optionalFieldOf("spell").forGetter(Instance::spell)
                 ).apply(instance, Instance::new)
         );
+
+        public static ActionCriterion<Instance> learnSpell(SpellPredicate spellPredicate) {
+            return SBTriggers.LEARN_SPELL.get()
+                    .createCriterion(new Instance(Optional.empty(), Optional.ofNullable(spellPredicate)));
+        }
 
         public boolean matches(ServerPlayer player, SpellType<?> spell) {
             return this.spell.get().matches(spell) &&
