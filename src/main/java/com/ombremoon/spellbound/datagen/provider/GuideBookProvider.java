@@ -46,9 +46,4 @@ public abstract class GuideBookProvider implements DataProvider {
             return CompletableFuture.allOf(list.toArray(CompletableFuture[]::new));
         });
     }
-
-    @Override
-    public final String getName() {
-        return "Guide Books";
-    }
 }

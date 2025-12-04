@@ -1,0 +1,58 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 64,
+      "image": "spellbound:textures/gui/books/images/spellbound_logo.png",
+      "position": {
+        "xOffset": 40,
+        "yOffset": 20
+      },
+      "width": 64
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "link": "https://discord.gg/hagCkhVwfb",
+        "underline": true
+      },
+      "position": {
+        "xOffset": 55,
+        "yOffset": 100
+      },
+      "translation": "guide.basic.discord"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "link": "https://github.com/MoonBase-Mods/Spellbound/issues",
+        "underline": true
+      },
+      "position": {
+        "xOffset": 42,
+        "yOffset": 115
+      },
+      "translation": "guide.basic.bugs"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 20
+      },
+      "translation": "item.spellbound.studies_in_the_arcane"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 40
+      },
+      "translation": "guide.basic.blurb"
+    }
+  ],
+  "id": "spellbound:studies_in_the_arcane"
+}

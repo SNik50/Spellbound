@@ -20,6 +20,8 @@ public class GuideImageRenderer implements IPageElementRenderer<GuideImage> {
                 element.width(), element.height(),
                 element.width(), element.height());
 
+        if (!element.extras().enableCorners()) return;
+
         graphics.blit(CommonClass.customLocation("textures/gui/books/image_borders/grimoire_corner.png"),
                 leftPos + element.position().xOffset()-2,
                 topPos + element.position().yOffset()-2,

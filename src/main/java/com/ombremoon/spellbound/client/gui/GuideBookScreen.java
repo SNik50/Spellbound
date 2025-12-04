@@ -1,9 +1,14 @@
 package com.ombremoon.spellbound.client.gui;
 
+import com.mojang.datafixers.util.Pair;
 import com.ombremoon.spellbound.client.gui.guide_renderers.ElementRenderDispatcher;
+import com.ombremoon.spellbound.client.gui.guide_renderers.IPageElementRenderer;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.IPageElement;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.special.IClickable;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.special.IHoverable;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.special.IInteractable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -18,6 +23,9 @@ import java.util.List;
 public class GuideBookScreen extends Screen {
     private static final int WIDTH = 415;
     private static final int HEIGHT = 287;
+
+    private static final int PAGE_X_OFFSET = 46;
+    private static final int PAGE_Y_OFFSET = 36;
 
     private ResourceLocation bookId;
     private ResourceLocation bookTexture;
@@ -55,13 +63,20 @@ public class GuideBookScreen extends Screen {
     public void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
         guiGraphics.blit(this.bookTexture, this.leftPos, this.topPos, 0, 0, WIDTH, HEIGHT, WIDTH, HEIGHT);
+        int renderLeft = this.leftPos + PAGE_X_OFFSET;
+        int renderTop = this.topPos + PAGE_Y_OFFSET;
 
         for (IPageElement element : pages.get(currentPage).elements()) {
-            ElementRenderDispatcher.renderElement(element, guiGraphics, this.leftPos + 46, this.topPos + 36, mouseX, mouseY, partialTick);
+            ElementRenderDispatcher.renderElement(element, guiGraphics, renderLeft, renderTop, mouseX, mouseY, partialTick);
+
+            if (element instanceof IInteractable interactable
+                    && ElementRenderDispatcher.isHovering(element, mouseX, mouseY, renderLeft, renderTop)) {
+
+                if (interactable instanceof IHoverable)
+                    ElementRenderDispatcher.handleHover(element, guiGraphics, renderLeft, renderTop, mouseX, mouseY, partialTick);
+            }
         }
     }
-
-
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -83,6 +98,13 @@ public class GuideBookScreen extends Screen {
 
             this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             return true;
+        }
+
+        for (IPageElement element : this.pages.get(currentPage).elements()) {
+            if (element instanceof IClickable && ElementRenderDispatcher.isHovering(element, (int) mouseX, (int) mouseY, this.leftPos + PAGE_X_OFFSET, this.topPos + PAGE_Y_OFFSET)) {
+                ElementRenderDispatcher.handleClick(element);
+                return true;
+            }
         }
 
         return false;

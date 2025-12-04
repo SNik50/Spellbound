@@ -10,6 +10,10 @@
     },
     {
       "type": "spellbound:text",
+      "extras": {
+        "hoverText": "Testing this lol",
+        "link": "https://www.google.com/"
+      },
       "position": {
         "xOffset": 169,
         "yOffset": 50

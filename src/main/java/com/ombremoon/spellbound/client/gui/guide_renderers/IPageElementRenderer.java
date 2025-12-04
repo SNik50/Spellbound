@@ -1,6 +1,8 @@
 package com.ombremoon.spellbound.client.gui.guide_renderers;
 
+import com.mojang.datafixers.util.Pair;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.IPageElement;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.special.IClickable;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -29,5 +31,13 @@ public interface IPageElementRenderer<T extends IPageElement> {
 
     default boolean isVisible(ResourceLocation scrap) {
         return scrap.equals(CommonClass.customLocation("default")) || Minecraft.getInstance().player.isCreative() || SpellUtil.hasScrap(Minecraft.getInstance().player, scrap);
+    }
+
+    default void handleClick(T element) {}
+
+    default void handleHover(T element, GuiGraphics guiGraphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {}
+
+    default boolean isHovering(int mouseX, int mouseY, int leftPos, int topPos, T element) {
+        return false;
     }
 }

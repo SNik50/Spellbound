@@ -635,11 +635,13 @@ public class PageBuilder {
         private int height;
         private ElementPosition position;
         private ResourceLocation pageScrap;
+        private boolean enableCorners;
 
         private Image(ResourceLocation image) {
             this.image = image;
             this.position = ElementPosition.getDefault();
             this.pageScrap = GuideBookManager.FIRST_PAGE;
+            this.enableCorners = true;
         }
 
         /**
@@ -649,6 +651,15 @@ public class PageBuilder {
          */
         public static Image of(ResourceLocation image) {
             return new Image(image);
+        }
+
+        /**
+         * Disables the corners that are placed on corner of the image
+         * @return this
+         */
+        public Image disableCorners() {
+            this.enableCorners = false;
+            return this;
         }
 
         /**
@@ -686,7 +697,7 @@ public class PageBuilder {
         }
 
         public GuideImage build() {
-            return new GuideImage(image, width, height, position);
+            return new GuideImage(image, width, height, position, new GuideImageExtras(enableCorners));
         }
     }
 
@@ -787,6 +798,11 @@ public class PageBuilder {
         private int lineGap;
         private boolean dropShadow;
         private boolean textWrapping;
+        private String link;
+        private boolean unlockForLink;
+        private boolean underline;
+        private boolean bold;
+        private String hoverText;
 
         private Text(String translation) {
             this.translation = translation;
@@ -797,6 +813,11 @@ public class PageBuilder {
             this.lineGap = 9;
             this.dropShadow = false;
             this.textWrapping = true;
+            this.link = "";
+            this.unlockForLink = true;
+            this.underline = false;
+            this.bold = false;
+            this.hoverText = "";
         }
 
         /**
@@ -825,6 +846,53 @@ public class PageBuilder {
          */
         public Text maxLineLength(int length) {
             this.maxLineLength = length;
+            return this;
+        }
+
+        /**
+         * Set a link to be opened when the user clicks on the link
+         * @param link The link to open in users browser
+         * @return this
+         */
+        public Text setLink(String link) {
+            this.link = link;
+            return this;
+        }
+
+        /**
+         * Makes it so the user can open the link without the element being unlocked>
+         * @return this
+         */
+        public Text openLinkWithoutUnlock() {
+            this.unlockForLink = false;
+            return this;
+        }
+
+        /**
+         * Underlines the text
+         * @return this
+         */
+        public Text underline() {
+            this.underline = true;
+            return this;
+        }
+
+        /**
+         * Makes the text bold
+         * @return this
+         */
+        public Text bold() {
+            this.bold = true;
+            return this;
+        }
+
+        /**
+         * Gives text that appears when the user hovers over the element
+         * @param translationKey the translation key for the hover text
+         * @return this
+         */
+        public Text hoverText(String translationKey) {
+            this.hoverText = translationKey;
             return this;
         }
 
@@ -881,7 +949,7 @@ public class PageBuilder {
             return new GuideText(
                     translation,
                     new TextExtras(
-                            pageScrap, colour, maxLineLength, lineGap, dropShadow, textWrapping
+                            pageScrap, colour, maxLineLength, lineGap, dropShadow, textWrapping, link, unlockForLink, underline, bold, hoverText
                     ),
                     position
             );
