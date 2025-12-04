@@ -40,7 +40,7 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
     protected Map<ResourceLocation, JsonElement> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
         Map<ResourceLocation, JsonElement> map = new HashMap();
 
-        scanDirectory(resourceManager, "", map);
+        scanDirectory(resourceManager, "guide_books", GSON, map);
         scanDirectory(resourceManager, "standard", map);
         scanDirectory(resourceManager, "ruin", map);
         scanDirectory(resourceManager, "divine", map);

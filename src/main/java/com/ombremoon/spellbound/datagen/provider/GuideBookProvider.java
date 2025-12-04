@@ -22,7 +22,7 @@ public abstract class GuideBookProvider implements DataProvider {
     public static final int PAGE_TWO_START = 167;
 
     public GuideBookProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
-        this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "guide_book");
+        this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "guide_books");
         this.registries = registries;
     }
 
@@ -49,6 +49,6 @@ public abstract class GuideBookProvider implements DataProvider {
 
     @Override
     public final String getName() {
-        return "Guide Book";
+        return "Guide Books";
     }
 }

@@ -20,7 +20,7 @@ public class SBPageElements {
     public static final Supplier<MapCodec<? extends IPageElement>> TEXT = PAGE_ELEMENTS.register("text", () -> GuideText.CODEC);
     public static final Supplier<MapCodec<? extends IPageElement>> IMAGE = PAGE_ELEMENTS.register("image", () -> GuideImage.CODEC);
     public static final Supplier<MapCodec<? extends IPageElement>> ENTITY_RENDERER = PAGE_ELEMENTS.register("entity_renderer", () -> GuideEntityRenderer.CODEC);
-    public static final Supplier<MapCodec<? extends IPageElement>> ITEM = PAGE_ELEMENTS.register("item", () -> GuideItem.CODEC);
+    public static final Supplier<MapCodec<? extends IPageElement>> ITEM = PAGE_ELEMENTS.register("item", () -> GuideStaticItem.CODEC);
     public static final Supplier<MapCodec<? extends IPageElement>> RECIPE = PAGE_ELEMENTS.register("recipe", () -> GuideRecipe.CODEC);
     public static final Supplier<MapCodec<? extends IPageElement>> ITEM_LIST = PAGE_ELEMENTS.register("item_list", () -> GuideItemList.CODEC);
     public static final Supplier<MapCodec<? extends IPageElement>> ITEM_RENDERER = PAGE_ELEMENTS.register("item_renderer", () -> GuideItemRenderer.CODEC);

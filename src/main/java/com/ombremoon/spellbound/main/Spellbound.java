@@ -1,7 +1,7 @@
 package com.ombremoon.spellbound.main;
 
 import com.ombremoon.spellbound.client.gui.guide_renderers.*;
-import com.ombremoon.spellbound.client.gui.guide_renderers.GuideItemRenderer;
+import com.ombremoon.spellbound.client.gui.guide_renderers.GuideStaticItemRenderer;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.*;
@@ -94,11 +94,12 @@ public class Spellbound {
     private void registerElementRenderers() {
         ElementRenderDispatcher.register(GuideEntityRenderer.class, new GuideEntityRendererRenderer());
         ElementRenderDispatcher.register(GuideImage.class, new GuideImageRenderer());
-        ElementRenderDispatcher.register(GuideItem.class, new GuideItemRenderer());
+        ElementRenderDispatcher.register(GuideStaticItem.class, new GuideStaticItemRenderer());
         ElementRenderDispatcher.register(GuideItemList.class, new GuideItemListRenderer());
         ElementRenderDispatcher.register(GuideRecipe.class, new GuideRecipeRenderer());
         ElementRenderDispatcher.register(GuideSpellInfo.class, new GuideSpellInfoRenderer());
         ElementRenderDispatcher.register(GuideText.class, new GuideTextRenderer());
         ElementRenderDispatcher.register(GuideTextList.class, new GuideTextListRenderer());
+        ElementRenderDispatcher.register(GuideItemRenderer.class, new GuideItemRendererRenderer());
     }
 }

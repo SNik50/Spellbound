@@ -33,6 +33,11 @@
         "xOffset": 165,
         "yOffset": 65
       }
+    },
+
+    {
+      "type": "spellbound:item_renderer",
+      "item": "minecraft:diamond"
     }
   ]
 }

@@ -2,7 +2,7 @@ package com.ombremoon.spellbound.client.gui.guide_renderers;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideItem;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideStaticItem;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
@@ -18,10 +18,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 
-public class GuideItemRenderer implements IPageElementRenderer<GuideItem> {
+public class GuideStaticItemRenderer implements IPageElementRenderer<GuideStaticItem> {
 
     @Override
-    public void render(GuideItem element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
+    public void render(GuideStaticItem element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
         Registry<Item> registry = Minecraft.getInstance().level.registryAccess().registry(Registries.ITEM).get();
 
         RandomSource rand = Minecraft.getInstance().level.getRandom();
@@ -35,11 +35,11 @@ public class GuideItemRenderer implements IPageElementRenderer<GuideItem> {
                 topPos + element.position().yOffset(),
                 0,
                 0,
-                (int) (48 * element.scale()),
-                (int) (46 * element.scale()),
-                (int) (48 * element.scale()),
-                (int) (46 * element.scale()));
-        renderItem(graphics, item.getDefaultInstance(), leftPos + element.position().xOffset(), topPos + element.position().yOffset(), 1.3f * element.scale());
+                (int) (48 * element.extras().scale()),
+                (int) (46 * element.extras().scale()),
+                (int) (48 * element.extras().scale()),
+                (int) (46 * element.extras().scale()));
+        renderItem(graphics, item.getDefaultInstance(), leftPos + element.position().xOffset(), topPos + element.position().yOffset(), 1.3f * element.extras().scale());
     }
 
     public static void renderItem(GuiGraphics graphics, ItemStack stack, int x, int y, float scale) {

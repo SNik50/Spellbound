@@ -34,7 +34,7 @@ public class GuideItemListRenderer implements IPageElementRenderer<GuideItemList
 
             ItemStack item = isVisible(element.extras().pageScrap()) ? itemRegistry.get(entry.itemLoc()).getDefaultInstance() : itemRegistry.getRandom(rand).get().value().getDefaultInstance();
 
-            GuideItemRenderer.renderItem(graphics, item, leftPos - 10 + element.position().xOffset() + xOffset, topPos + element.position().yOffset() - 8 + yOffset, 1f);
+            GuideStaticItemRenderer.renderItem(graphics, item, leftPos - 10 + element.position().xOffset() + xOffset, topPos + element.position().yOffset() - 8 + yOffset, 1f);
             graphics.drawString(Minecraft.getInstance().font,
                     Component.literal(String.valueOf(entry.count())).withStyle(isVisible(element.extras().pageScrap()) ? ChatFormatting.RESET : ChatFormatting.OBFUSCATED),
                     leftPos - 10 + element.position().xOffset() + xOffset + element.extras().countGap(),
