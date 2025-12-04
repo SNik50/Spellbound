@@ -6,8 +6,6 @@ import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.*;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.*;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
-import com.ombremoon.spellbound.datagen.provider.GuideBookProvider;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -672,16 +670,15 @@ public class PageBuilder {
         }
     }
 
-    //TODO: move scale to extras
     //Builder for GuideItem
-    public static class Item {
+    public static class StaticItem {
         private final ResourceLocation item;
         private String tile;
         private float scale;
         private ElementPosition position;
         private ResourceLocation pageScrap;
 
-        private Item(net.minecraft.world.item.Item item) {
+        private StaticItem(net.minecraft.world.item.Item item) {
             this.item = BuiltInRegistries.ITEM.getKey(item);
             this.tile = Recipe.SpellboundGrids.BASIC.name().toLowerCase();
             this.scale = 1f;
@@ -694,8 +691,8 @@ public class PageBuilder {
          * @param item The item to display
          * @return new GuideItem builder
          */
-        public static Item of(net.minecraft.world.item.Item item) {
-            return new Item(item);
+        public static StaticItem of(net.minecraft.world.item.Item item) {
+            return new StaticItem(item);
         }
 
         /**
@@ -703,9 +700,9 @@ public class PageBuilder {
          * @param tile The name of the grid to use, not including textures/... or .png
          * @return this
          * @see Recipe.SpellboundGrids
-         * @see Item#tile(Recipe.SpellboundGrids)
+         * @see StaticItem#tile(Recipe.SpellboundGrids)
          */
-        public Item tile(String tile) {
+        public StaticItem tile(String tile) {
             this.tile = tile;
             return this;
         }
@@ -715,7 +712,7 @@ public class PageBuilder {
          * @param tile the tile to use
          * @return this
          */
-        public Item tile(Recipe.SpellboundGrids tile) {
+        public StaticItem tile(Recipe.SpellboundGrids tile) {
             return this.tile(tile.name().toLowerCase());
         }
 
@@ -724,7 +721,7 @@ public class PageBuilder {
          * @param scale multiplier value
          * @return this
          */
-        public Item scale(float scale) {
+        public StaticItem scale(float scale) {
             this.scale = scale;
             return this;
         }
@@ -735,7 +732,7 @@ public class PageBuilder {
          * @param y the y offset from top of the book
          * @return this
          */
-        public Item position(int x, int y) {
+        public StaticItem position(int x, int y) {
             this.position = new ElementPosition(x, y);
             return this;
         }
@@ -745,18 +742,17 @@ public class PageBuilder {
          * @param scrap The id for the page scrap
          * @return this
          */
-        public Item setRequiredScrap(ResourceLocation scrap) {
+        public StaticItem setRequiredScrap(ResourceLocation scrap) {
             this.pageScrap = scrap;
             return this;
         }
 
-        public GuideItem build() {
-            return new GuideItem(
+        public GuideStaticItem build() {
+            return new GuideStaticItem(
                     item,
                     tile,
-                    scale,
                     position,
-                    new ItemExtras(pageScrap)
+                    new StaticItemExtras(pageScrap, scale)
             );
         }
     }
@@ -872,6 +868,7 @@ public class PageBuilder {
         }
     }
 
+    //Builder for GuideTextList
     public static class TextList {
         private List<String> entries;
         private ElementPosition position;
@@ -1005,6 +1002,72 @@ public class PageBuilder {
                             textColour,
                             bulletPoint
                     ), position
+            );
+        }
+    }
+
+    //Builder for GuideItemRenderer
+    public static class ItemRenderer {
+        private final ResourceLocation item;
+        private ElementPosition position;
+        private ResourceLocation pageScrap;
+        private float scale;
+
+        private ItemRenderer(Item item) {
+            this.item = BuiltInRegistries.ITEM.getKey(item);
+            this.position = ElementPosition.getDefault();
+            this.pageScrap = GuideBookManager.FIRST_PAGE;
+            this.scale = 25f;
+        }
+
+        /**
+         * Creates a new builder for an ItemRenderer element
+         * @param item the item to render
+         * @return new ItemRenderer builder
+         */
+        public static ItemRenderer of(Item item) {
+            return new ItemRenderer(item);
+        }
+
+        /**
+         * Sets the position the element appears on the page
+         * @param x the x offset from left of the book
+         * @param y the y offset from top of the book
+         * @return this
+         */
+        public ItemRenderer position(int x, int y) {
+            this.position = new ElementPosition(x, y);
+            return this;
+        }
+
+        /**
+         * Sets the page scrap required to unlock this element. Will be obfuscated if not unlocked
+         * @param scrap The id for the page scrap
+         * @return this
+         */
+        public ItemRenderer setRequiredScrap(ResourceLocation scrap) {
+            this.pageScrap = scrap;
+            return this;
+        }
+
+        /**
+         * Sets the scale to be used for the item, defaults to 25
+         * @param scale multiplier scalar
+         * @return this
+         */
+        public ItemRenderer scale(float scale) {
+            this.scale = scale;
+            return this;
+        }
+
+        public GuideItemRenderer build() {
+            return new GuideItemRenderer(
+                    item,
+                    position,
+                    new ItemRendererExtras(
+                            pageScrap,
+                            scale
+                    )
             );
         }
     }
