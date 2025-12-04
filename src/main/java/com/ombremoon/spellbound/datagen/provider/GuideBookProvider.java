@@ -51,30 +51,4 @@ public abstract class GuideBookProvider implements DataProvider {
     public final String getName() {
         return "Guide Book";
     }
-
-    public static class Builder {
-        private ResourceLocation location;
-        private ResourceLocation bookId;
-        private ResourceLocation pageScrap;
-        private ResourceLocation insertAfter;
-        private List<IPageElement> elements;
-
-        private Builder(ResourceLocation bookId) {
-            this.bookId = bookId;
-        }
-
-        public Builder bookPage(ResourceLocation bookId) {
-            return new Builder(bookId);
-        }
-
-        public Builder setRequiredScrap(ResourceLocation pageScrap) {
-            this.pageScrap = pageScrap;
-            return this;
-        }
-
-        public Builder setPreviousPage(ResourceLocation page) {
-            this.insertAfter = page;
-            return this;
-        }
-    }
 }
