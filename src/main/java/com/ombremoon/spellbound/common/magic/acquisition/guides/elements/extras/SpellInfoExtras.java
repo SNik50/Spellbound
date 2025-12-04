@@ -20,10 +20,10 @@ public record SpellInfoExtras(int colour, int lineGap, boolean dropShadow, boole
             Codec.INT.optionalFieldOf("duration", 1).forGetter(SpellInfoExtras::duration),
             Codec.INT.optionalFieldOf("manaCost", 1).forGetter(SpellInfoExtras::manaCost),
             Codec.INT.optionalFieldOf("manaPerTick", 1).forGetter(SpellInfoExtras::manaPerTick),
-            Codec.BOOL.optionalFieldOf("alwaysShow", true).forGetter(SpellInfoExtras::alwaysShow)
+            Codec.BOOL.optionalFieldOf("alwaysShow", false).forGetter(SpellInfoExtras::alwaysShow)
     ).apply(inst, SpellInfoExtras::new));
 
     public static SpellInfoExtras getDefault() {
-        return new SpellInfoExtras(0xFFFFFF, 10, false, true, 1, 1, 1, 1, 1, true);
+        return new SpellInfoExtras(0xFFFFFF, 10, false, true, 1, 1, 1, 1, 1, false);
     }
 }

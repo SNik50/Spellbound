@@ -26,11 +26,10 @@ import java.util.*;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
 public class GuideBookManager extends SimpleJsonResourceReloadListener {
-    private static final ResourceLocation FIRST_PAGE = CommonClass.customLocation("default");
+    public static final ResourceLocation FIRST_PAGE = CommonClass.customLocation("default");
     private static final Logger LOGGER = Constants.LOG;
     private static final Gson GSON = new GsonBuilder().create();
     private static Map<ResourceLocation, List<GuideBookPage>> BOOKS = new HashMap<>();
-    private static Map<ResourceLocation, JsonElement> PAGE_JSONS = new HashMap<>();
 
     public GuideBookManager() {
         super(GSON, "guide_books");
@@ -41,6 +40,7 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
     protected Map<ResourceLocation, JsonElement> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
         Map<ResourceLocation, JsonElement> map = new HashMap();
 
+        scanDirectory(resourceManager, "", map);
         scanDirectory(resourceManager, "standard", map);
         scanDirectory(resourceManager, "ruin", map);
         scanDirectory(resourceManager, "divine", map);
@@ -106,7 +106,7 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
 
             pages.put(id, page);
             inDegree.put(id, 0);
-            if (page.insertAfter().equals(CommonClass.customLocation("default"))) continue;
+            if (page.insertAfter().equals(FIRST_PAGE)) continue;
 
             parentToChildren.computeIfAbsent(page.insertAfter(), k -> new ArrayList<>()).add(id);
             inDegree.put(id, inDegree.get(id) + 1);
