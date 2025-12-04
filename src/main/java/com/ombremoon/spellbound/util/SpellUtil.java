@@ -11,11 +11,13 @@ import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
+import com.ombremoon.spellbound.networking.PayloadHandler;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
@@ -221,9 +223,12 @@ public class SpellUtil {
         if (bookScraps.contains(scrap)) return;
 
         bookScraps.add(scrap);
-        //Send toast
         player.sendSystemMessage(Component.literal("Book scrap acquired"));
         player.setData(SBData.BOOK_SCRAPS, bookScraps);
+
+        if (player instanceof ServerPlayer serverPlayer) {
+            PayloadHandler.sendScrapToast(serverPlayer, scrap);
+        }
     }
 
     public static boolean hasScrap(Player player, ResourceLocation scrap) {

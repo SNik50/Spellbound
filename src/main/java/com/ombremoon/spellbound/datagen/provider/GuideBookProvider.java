@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 public abstract class GuideBookProvider implements DataProvider {
     private final PackOutput.PathProvider pathProvider;
     private final CompletableFuture<HolderLookup.Provider> registries;
-    public static final int PAGE_TWO_START = 167;
+    public static final int PAGE_TWO_START = 169;
 
     public GuideBookProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
         this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "guide_books");

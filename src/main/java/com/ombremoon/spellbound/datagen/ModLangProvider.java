@@ -84,6 +84,9 @@ public class ModLangProvider extends LanguageProvider {
     protected void manualEntries() {
         skillDescriptions();
         guideContents();
+
+        add("spellbound.toast.scrap_unlocked", "New book entry unlocked");
+
         add("chat.spelltome.awardxp", "Spell already known. +10 spells XP.");
         add("chat.spelltome.nospell", "This spells tome is blank.");
         add("chat.spelltome.spellunlocked", "Spell unlocked: %1$s");
@@ -116,7 +119,8 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.ruin.v1_p3.keystones", "Dammit, I just cant figure out how to empower these keystones. Maybe given more time I'll be able to figure it out...\n\nFor now im shifting my focus to looking for other spell casters that can hopefully shine a light on how to manipulate the arcane in these lands.\n\nI will begin my search within the forests and perhaps if I'm feeling adventurous I might try the End...");
         add("guide.ruin.v1_p3.spell_broker", "Well, I found a reclusive fellow hold up in this tower. As strange as he was he seemed knowledgeable in destructive magic and I purchased a few books from him.\n\nI'll document what I can of my findings from these books until I can crack keystones.");
         add("guide.ruin.solar_ray.title", "Solar Ray");
-        add("guide.ruin.solar_ray.spell_lore", "This spell hsa taken a while to understand but it allows me to channel the energy of the sun itself into a powerful beam of fire!");
+        add("guide.ruin.solar_ray.spell_lore", "This spell has taken a while to understand but it allows me to channel the energy of the sun itself into a powerful beam of fire!");
+        add("guide.ruin.solar_ray.stat_lore", "After multiple revisions of this tome I have managed to gather some data on the impact the spell has on its target as well as on the caster themselves. Perhaps this will help someone else who learns the spell.");
     }
 
     protected void skillDescriptions() {

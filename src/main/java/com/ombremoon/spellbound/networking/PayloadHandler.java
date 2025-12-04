@@ -160,6 +160,10 @@ public class PayloadHandler {
         sendToAll(server, new UpdateMultiblocksPayload(multiblocks));
     }
 
+    public static void sendScrapToast(ServerPlayer player, ResourceLocation scrap) {
+        PacketDistributor.sendToPlayer(player, new ScrapToastPayload(scrap));
+    }
+
 /*    public static void changeHailLevel(ServerLevel level, float hailLevel) {
         PacketDistributor.sendToPlayersInDimension(level, new ChangeHailLevelPayload(hailLevel));
     }*/
@@ -324,6 +328,12 @@ public class PayloadHandler {
                         ClientPayloadHandler::handleClientChargeOrChannel,
                         ServerPayloadHandler::handleNetworkChargeOrChannel
                 )
+        );
+
+        registrar.playToClient(
+                ScrapToastPayload.TYPE,
+                ScrapToastPayload.STREAM_CODEC,
+                ScrapToastPayload::handle
         );
     }
 }

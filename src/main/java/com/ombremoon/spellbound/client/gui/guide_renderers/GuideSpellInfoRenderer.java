@@ -34,7 +34,7 @@ public class GuideSpellInfoRenderer implements IPageElementRenderer<GuideSpellIn
         }
 
         SpellInfoExtras extras = element.extras();
-        boolean shouldShow = extras.alwaysShow() || SpellUtil.getSpellHandler(Minecraft.getInstance().player).getSpellList().contains(spellType);
+        boolean shouldShow = extras.alwaysShow() || Minecraft.getInstance().player.isCreative() || SpellUtil.getSpellHandler(Minecraft.getInstance().player).getSpellList().contains(spellType);
 
         AbstractSpell spell = spellType.createSpellWithData(Minecraft.getInstance().player);
         float baseDamage = spell.getBaseDamage();

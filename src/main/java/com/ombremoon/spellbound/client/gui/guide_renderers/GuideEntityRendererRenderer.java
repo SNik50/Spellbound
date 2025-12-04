@@ -5,15 +5,18 @@ import com.lowdragmc.lowdraglib2.client.renderer.IRenderer;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideEntityRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -30,6 +33,7 @@ public class GuideEntityRendererRenderer implements IPageElementRenderer<GuideEn
     @Override
     public void render(GuideEntityRenderer element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
         EntityType<?> entityType = Minecraft.getInstance().level.registryAccess().registry(Registries.ENTITY_TYPE).get().get(element.entityLoc());
+        entityType = SBEntities.SOLAR_RAY.get();
 
         if (entityType == null) {
             LOGGER.warn("Entity could not be found {}", element.entityLoc());
@@ -49,22 +53,27 @@ public class GuideEntityRendererRenderer implements IPageElementRenderer<GuideEn
                 topPos + element.position().yOffset(),
                 element.extras().scale(),
                 entity, isVisible(element.extras().pageScrap()),
+                new Quaternionf()
+                        .rotateX((float) Math.toRadians(element.extras().xRot()))
+                        .rotateY((float) Math.toRadians(element.extras().yRot()))
+                        .rotateZ((float) Math.toRadians(element.extras().zRot())),
                 element.extras().followMouse(), mouseX, mouseY);
     }
 
     public static void renderEntityInInventory(GuiGraphics guiGraphics, float x, float y, float scale, Entity entity, boolean isVisible) {
-        renderEntityInInventory(guiGraphics, x, y, scale, entity, isVisible, false, 0, 0);
+        renderEntityInInventory(guiGraphics, x, y, scale, entity, isVisible, new Quaternionf(), false, 0, 0);
     }
 
-    public static void renderEntityInInventory(GuiGraphics guiGraphics, float x, float y, float scale, Entity entity, boolean isVisible, boolean followsMouse, int mouseX, int mouseY) {
-        renderEntityInInventory(guiGraphics,x, y, scale, entity, isVisible, followsMouse, mouseX, mouseY, false, 0);
+    public static void renderEntityInInventory(GuiGraphics guiGraphics, float x, float y, float scale, Entity entity, boolean isVisible, Quaternionf mul,  boolean followsMouse, int mouseX, int mouseY) {
+        renderEntityInInventory(guiGraphics,x, y, scale, entity, isVisible, mul, followsMouse, mouseX, mouseY, false);
     }
 
-    public static void renderEntityInInventory(GuiGraphics guiGraphics, float x, float y, float scale, Entity entity, boolean isVisible, boolean followsMouse, int mouseX, int mouseY, boolean rotates, int rotateSpeed) {
+    public static void renderEntityInInventory(GuiGraphics guiGraphics, float x, float y, float scale, Entity entity, boolean isVisible, Quaternionf mul, boolean followsMouse, int mouseX, int mouseY, boolean rotates) {
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
 
         poseStack.translate(x, y, 50);
+        poseStack.mulPose(mul);
 
         if (followsMouse) {
             float f = (float)(x + x + entity.getBbWidth()) / 2.0F;
@@ -92,8 +101,9 @@ public class GuideEntityRendererRenderer implements IPageElementRenderer<GuideEn
         EntityRenderDispatcher dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         MultiBufferSource.BufferSource buffers = Minecraft.getInstance().renderBuffers().bufferSource();
 
-        Lighting.setupForFlatItems();
-
+        if (!isVisible) {
+            RenderSystem.setShaderColor(0f, 0f, 0f, 1f);  // force black, no alpha
+        }
 
         if (entity instanceof ItemEntity itemEntity) {
             ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
@@ -107,13 +117,21 @@ public class GuideEntityRendererRenderer implements IPageElementRenderer<GuideEn
                     0);
         } else {
             dispatcher.setRenderShadow(false);
-            dispatcher.render(entity, 0, 0, 0, 0, 0, poseStack, buffers, isVisible ? 15728880 : 0);
+            dispatcher.render(entity,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    poseStack,
+                    buffers,
+                    isVisible ? 15728880 : 0);
             buffers.endBatch();
             dispatcher.setRenderShadow(true);
         }
 
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
-        Lighting.setupFor3DItems();
 
         poseStack.popPose();
     }

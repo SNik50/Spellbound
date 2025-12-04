@@ -1,0 +1,21 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 182,
+        "yOffset": 20
+      },
+      "translation": "item.spellbound.grimoire_of_annihilation"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 169,
+        "yOffset": 50
+      },
+      "translation": "guide.ruin.v1_p1.description"
+    }
+  ],
+  "id": "spellbound:grimoire_of_annihilation"
+}

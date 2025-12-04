@@ -201,6 +201,9 @@ public class PageBuilder {
         private boolean followMouse;
         private int scale;
         private ResourceLocation pageScrap;
+        private int xRot;
+        private int yRot;
+        private int zRot;
 
         private EntityRenderer(EntityType<?> entity) {
             this.entity = BuiltInRegistries.ENTITY_TYPE.getKey(entity);
@@ -226,6 +229,20 @@ public class PageBuilder {
          */
         public EntityRenderer followsMouse() {
             this.followMouse = true;
+            return this;
+        }
+
+        /**
+         * The rotation to put on the entity being rendered. Defaults to no rotation
+         * @param xRot Rotation on X axis in degrees
+         * @param yRot Rotation on Y axis in degrees
+         * @param zRot Rotation on Z axis in degrees
+         * @return
+         */
+        public EntityRenderer setRotations(int xRot, int yRot, int zRot) {
+            this.xRot = xRot;
+            this.yRot = yRot;
+            this.zRot = zRot;
             return this;
         }
 
@@ -266,7 +283,10 @@ public class PageBuilder {
                     new EntityRendererExtras(
                             pageScrap,
                             followMouse,
-                            scale
+                            scale,
+                            xRot,
+                            yRot,
+                            zRot
                     ), position
             );
         }

@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.datagen;
 
 import com.ombremoon.spellbound.common.init.SBEntities;
+import com.ombremoon.spellbound.common.init.SBPageScraps;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.datagen.provider.GuideBookProvider;
@@ -92,17 +93,25 @@ public class ModGuideBookProvider extends GuideBookProvider {
                 .addElements(
                         PageBuilder.Text
                                 .of("guide.ruin.solar_ray.title")
+                                .position(5, 0)
                                 .build(),
                         PageBuilder.EntityRenderer
                                 .of(SBEntities.SOLAR_RAY.get())
-                                .position(20, 40).build(),
+                                .setRequiredScrap(SBPageScraps.UNLOCKED_SOLAR_RAY)
+                                .setRotations(0, 70, 10)
+                                .scale(12)
+                                .position(33, 90).build(),
                         PageBuilder.Text
                                 .of("guide.ruin.solar_ray.spell_lore")
-                                .position(0, 60)
+                                .position(0, 120)
+                                .build(),
+                        PageBuilder.Text
+                                .of("guide.ruin.solar_ray.stat_lore")
+                                .position(PAGE_TWO_START, 20)
                                 .build(),
                         PageBuilder.SpellInfo
                                 .of(SBSpells.SOLAR_RAY.get())
-                                .position(PAGE_TWO_START, 65)
+                                .position(PAGE_TWO_START, 110)
                                 .build()
                 ).save(writer, SOLAR_RAY);
     }

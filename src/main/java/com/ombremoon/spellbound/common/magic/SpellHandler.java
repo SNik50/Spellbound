@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBEffects;
+import com.ombremoon.spellbound.common.init.SBTriggers;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerDivineActions;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.ChanneledSpell;
@@ -249,6 +250,9 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
             this.upgradeTree.update(player, spellType.getSkills());
             sync();
             this.skillHolder.sync();
+
+            if (player instanceof ServerPlayer serverPlayer)
+                SBTriggers.LEARN_SPELL.get().trigger(serverPlayer, spellType);
         }
     }
 

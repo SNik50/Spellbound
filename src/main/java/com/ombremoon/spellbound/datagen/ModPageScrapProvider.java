@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.datagen;
 
+import com.ombremoon.spellbound.common.init.SBPageScraps;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.ActionHolder;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.ActionRewards;
@@ -26,9 +27,9 @@ public class ModPageScrapProvider extends DivineActionProvider {
         DivineAction.Builder.divineAction()
                 .addCriterion("learn_spell",
                         LearnSpellTrigger.Instance.learnSpell(
-                                SpellPredicate.spell(SBSpells.HEALING_BLOSSOM.get())))
-                .rewards(ActionRewards.Builder.bookScrap(CommonClass.customLocation("test_scrap")))
-                .save(writer, CommonClass.customLocation("test_scrap"));
+                                SpellPredicate.spell(SBSpells.SOLAR_RAY.get())))
+                .rewards(ActionRewards.Builder.bookScrap(SBPageScraps.UNLOCKED_SOLAR_RAY))
+                .save(writer, SBPageScraps.UNLOCKED_SOLAR_RAY);
     }
 
     @Override

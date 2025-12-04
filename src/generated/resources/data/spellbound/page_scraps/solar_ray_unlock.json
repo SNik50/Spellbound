@@ -3,7 +3,7 @@
     "learn_spell": {
       "conditions": {
         "spell": {
-          "spell": "spellbound:healing_blossom"
+          "spell": "spellbound:solar_ray"
         }
       },
       "trigger": "spellbound:learn_spell"
@@ -16,7 +16,7 @@
   ],
   "rewards": {
     "book_scraps": [
-      "spellbound:test_scrap"
+      "spellbound:solar_ray_unlock"
     ]
   }
 }

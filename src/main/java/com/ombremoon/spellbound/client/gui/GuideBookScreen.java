@@ -57,7 +57,7 @@ public class GuideBookScreen extends Screen {
         guiGraphics.blit(this.bookTexture, this.leftPos, this.topPos, 0, 0, WIDTH, HEIGHT, WIDTH, HEIGHT);
 
         for (IPageElement element : pages.get(currentPage).elements()) {
-            ElementRenderDispatcher.renderElement(element, guiGraphics, this.leftPos + 47, this.topPos + 36, mouseX, mouseY, partialTick);
+            ElementRenderDispatcher.renderElement(element, guiGraphics, this.leftPos + 46, this.topPos + 36, mouseX, mouseY, partialTick);
         }
     }
 
@@ -66,22 +66,20 @@ public class GuideBookScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (currentPage > 0 && (mouseX >= this.leftPos + 41 && mouseX <= this.leftPos + 56 && mouseY >= this.topPos + 230 && mouseY <= this.topPos + 243)) {
-            currentPage--;
-//            while (currentPage > 0) {
-//                currentPage--;
-//                //if (pages.get(currentPage).isVisible()) break;
-//            }
+            while (currentPage > 0) {
+                currentPage--;
+                if (pages.get(currentPage).isVisible(minecraft.player)) break;
+            }
 
             this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             return true;
         } else if (currentPage < lastPage && mouseX >= this.leftPos + 354 && mouseX <= this.leftPos + 370 && mouseY >= this.topPos + 230 && mouseY <= this.topPos + 243) {
-//            for (int i = currentPage; i < lastPage; i++) {
-//                if (pages.get(i).isVisible()) {
-//                    currentPage = i;
-//                    break;
-//                }
-//            }
-            currentPage++;
+            for (int i = currentPage+1; i <= lastPage; i++) {
+                if (pages.get(i).isVisible(minecraft.player)) {
+                    currentPage = i;
+                    break;
+                }
+            }
 
             this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             return true;

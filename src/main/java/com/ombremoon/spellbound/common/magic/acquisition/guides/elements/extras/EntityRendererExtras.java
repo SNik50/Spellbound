@@ -5,14 +5,17 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.resources.ResourceLocation;
 
-public record EntityRendererExtras(ResourceLocation pageScrap, boolean followMouse, int scale) implements IElementExtra {
+public record EntityRendererExtras(ResourceLocation pageScrap, boolean followMouse, int scale, int xRot, int yRot, int zRot) implements IElementExtra {
     public static final Codec<EntityRendererExtras> CODEC = RecordCodecBuilder.create(inst -> inst.group(
             ResourceLocation.CODEC.optionalFieldOf("pageScrap", CommonClass.customLocation("default")).forGetter(EntityRendererExtras::pageScrap),
             Codec.BOOL.optionalFieldOf("followMouse", false).forGetter(EntityRendererExtras::followMouse),
-            Codec.INT.optionalFieldOf("scale", 25).forGetter(EntityRendererExtras::scale)
+            Codec.INT.optionalFieldOf("scale", 25).forGetter(EntityRendererExtras::scale),
+            Codec.INT.optionalFieldOf("xRot", 0).forGetter(EntityRendererExtras::xRot),
+            Codec.INT.optionalFieldOf("yRot", 0).forGetter(EntityRendererExtras::yRot),
+            Codec.INT.optionalFieldOf("zRot", 0).forGetter(EntityRendererExtras::zRot)
     ).apply(inst, EntityRendererExtras::new));
 
     public static EntityRendererExtras getDefault() {
-        return new EntityRendererExtras(CommonClass.customLocation("default"), false, 25);
+        return new EntityRendererExtras(CommonClass.customLocation("default"), false, 25, 0, 0,0);
     }
 }

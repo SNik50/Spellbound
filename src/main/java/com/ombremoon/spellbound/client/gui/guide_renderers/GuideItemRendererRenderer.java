@@ -10,6 +10,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.joml.Quaternionf;
 
 public class GuideItemRendererRenderer implements IPageElementRenderer<GuideItemRenderer> {
     ItemEntity entity;
@@ -34,9 +35,10 @@ public class GuideItemRendererRenderer implements IPageElementRenderer<GuideItem
                 element.extras().scale(),
                 entity,
                 isVisible(element.extras().pageScrap()),
+                new Quaternionf(),
                 false,
                 0,0,
-                true, 1
+                true
         );
     }
 
