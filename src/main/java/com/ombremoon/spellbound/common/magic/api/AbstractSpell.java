@@ -543,8 +543,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      */
     public void setRemainingTicks(int ticks) {
         this.tickCount = Mth.clamp(this.getDuration() - ticks, 0, this.getDuration());
-        if (!this.level.isClientSide)
-            PayloadHandler.setSpellTicks(this.caster, this.spellType, this.castId, this.tickCount);
+        if (!this.level.isClientSide) PayloadHandler.setSpellTicks(this.caster, this.spellType, this.castId, this.tickCount);
     }
 
     public int getRemainingTime() {

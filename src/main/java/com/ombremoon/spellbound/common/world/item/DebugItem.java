@@ -2,9 +2,11 @@ package com.ombremoon.spellbound.common.world.item;
 
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBPageScraps;
+import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.entity.projectile.MushroomProjectile;
+import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormRiftSpell;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.Loggable;
@@ -55,15 +57,8 @@ public class DebugItem extends Item implements Loggable {
     }
 
     private void ombreDebug(Level level, Player player, InteractionHand usedHand, SpellHandler spellHandler, SkillHolder skillHolder) {
-        if (!level.isClientSide) {
-            MushroomProjectile projectile = new MushroomProjectile(level, player);
-            projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 2.5F, 1.0F);
-            level.addFreshEntity(projectile);
-//            ((EntityBasedBossFight.Instance)data.getCurrentBossFight()).initializeWinCondition((ServerLevel) level, ((EntityBasedBossFight.Instance) data.getCurrentBossFight()).getBossFight());
-        } else {
-//            SBShaders.HEAT_DISTORTION_SHADER.toggleShader();
-
-        }
+        StormRiftSpell spell = SBSpells.STORM_RIFT.get().createSpell();
+        StormRiftSpell spell1 = SBSpells.STORM_RIFT.get().createSpell();
     }
 
     private void duckDebug(Level level, Player player, InteractionHand hand, SpellHandler spellHandler, SkillHolder skillHolder) {

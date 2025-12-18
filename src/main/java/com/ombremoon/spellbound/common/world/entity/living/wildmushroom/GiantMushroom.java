@@ -126,7 +126,7 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
         if (!level.isClientSide) {
             if (!this.onGround()) {
                 this.jumpMultiplier = Mth.clamp(this.fallDistance * 0.35F, 3.0F, 22.0F);
-                if (this.isBouncing() && this.getY() - this.yo < -0.4000000059604645F) {
+                if (this.isBouncing() && this.getY() - this.yo < -0.2000000059604645F) {
                     triggerAnim(BOUNCE, "fall");
                 }
             } else if (this.isBouncingAndAirborne() && this.onGround()) {
@@ -474,7 +474,7 @@ public class GiantMushroom extends LivingMushroom implements RangedAttackMob {
         controllers.add(new AnimationController<>(this, MOVEMENT, 7, this::giantMushroomController));
         controllers.add(new AnimationController<>(this, EXPLOSION, 0, state -> PlayState.STOP)
                 .triggerableAnim("explode", RawAnimation.begin().thenPlay("explode")));
-        controllers.add(new AnimationController<>(this, BOUNCE, 0, state -> PlayState.STOP)
+        controllers.add(new AnimationController<>(this, BOUNCE, 2, state -> PlayState.STOP)
                 .triggerableAnim("jump", RawAnimation.begin().thenPlayAndHold("jump_start"))
                 .triggerableAnim("fall", RawAnimation.begin().thenPlay("jump_fall_transition").thenLoop("falling_idle"))
                 .triggerableAnim("land", RawAnimation.begin().thenPlay("jump_land")));

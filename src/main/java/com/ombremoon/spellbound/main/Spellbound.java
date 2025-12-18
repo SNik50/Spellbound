@@ -6,6 +6,7 @@ import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.*;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
+import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
 import dev.kosmx.playerAnim.api.layered.IAnimation;
@@ -13,6 +14,7 @@ import dev.kosmx.playerAnim.api.layered.ModifierLayer;
 import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -21,6 +23,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
+import org.jetbrains.annotations.Nullable;
 
 //TODO: General - Discuss with Duck about bobHurt in GameRenderer
 //TODO: General - Discuss with Duck about Followers
