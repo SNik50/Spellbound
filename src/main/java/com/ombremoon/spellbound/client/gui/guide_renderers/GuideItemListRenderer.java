@@ -12,12 +12,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class GuideItemListRenderer implements IPageElementRenderer<GuideItemList> {
+    private final RandomSource rand;
+
+    public GuideItemListRenderer() {
+        this.rand = RandomSource.create(42L);
+    }
 
     @Override
     public void render(GuideItemList element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
         Registry<Item> itemRegistry = Minecraft.getInstance().level.registryAccess().registry(Registries.ITEM).get();
-        RandomSource rand = Minecraft.getInstance().level.getRandom();
-        rand.setSeed(Math.floorDiv(Minecraft.getInstance().player.tickCount, 10));
+
         for (int i = 0; i < element.items().size(); i++) {
             GuideItemList.ItemListEntry entry = element.items().get(i);
 

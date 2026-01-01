@@ -9,7 +9,7 @@
     },
     {
       "type": "spellbound:entity_renderer",
-      "entity": "spellbound:solar_ray",
+      "entities": [],
       "extras": {
         "pageScrap": "spellbound:solar_ray_unlock",
         "scale": 12,

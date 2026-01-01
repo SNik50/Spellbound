@@ -17,8 +17,15 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 
 public class GuideStaticItemRenderer implements IPageElementRenderer<GuideStaticItem> {
+    private RandomSource rand;
+
+    public GuideStaticItemRenderer() {
+        this.rand = RandomSource.create(42L);
+    }
 
     @Override
     public void render(GuideStaticItem element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
@@ -75,5 +82,4 @@ public class GuideStaticItemRenderer implements IPageElementRenderer<GuideStatic
             pose.popPose();
         }
     }
-
 }

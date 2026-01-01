@@ -1,16 +1,16 @@
 package com.ombremoon.spellbound.common.magic.acquisition.bosses;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.ombremoon.spellbound.common.world.item.SpellTomeItem;
 import com.ombremoon.spellbound.common.init.SBBossFights;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
-import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.common.world.item.SpellTomeItem;
 import com.ombremoon.spellbound.main.Keys;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
@@ -23,6 +23,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -33,19 +34,17 @@ import java.util.function.Supplier;
 public class EntityBasedBossFight extends BossFight {
     public static final Codec<EntityBasedBossFight> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                    BuiltInRegistries.ENTITY_TYPE.byNameCodec().listOf().fieldOf("bosses").forGetter(bossFight -> bossFight.bosses),
+                    BossSpawn.CODEC.listOf().fieldOf("bosses").forGetter(bossFight -> bossFight.bosses),
                     SBSpells.REGISTRY.byNameCodec().fieldOf("spell").forGetter(bossFight -> bossFight.spell),
-                    BlockPos.CODEC.fieldOf("blockScanStart").forGetter(bossFight -> bossFight.blockScanStart),
-                    BlockPos.CODEC.fieldOf("blockScanEnd").forGetter(bossFight -> bossFight.blockScanEnd),
                     Vec3.CODEC.fieldOf("playerSpawnOffset").forGetter(bossFight -> bossFight.playerSpawnOffset),
                     DimensionData.CODEC.fieldOf("dimensionData").forGetter(bossFight -> bossFight.dimensionData)
             ).apply(instance, EntityBasedBossFight::new)
     );
 
-    private final List<EntityType<?>> bosses;
+    private final List<BossSpawn> bosses;
 
-    public EntityBasedBossFight(List<EntityType<?>> bosses, SpellType<?> spell, BlockPos blockScanStart, BlockPos blockScanEnd, Vec3 playerSpawnOffset, DimensionData dimensionData) {
-        super(spell, blockScanStart, blockScanEnd, playerSpawnOffset, dimensionData);
+    public EntityBasedBossFight(List<BossSpawn> bosses, SpellType<?> spell, Vec3 playerSpawnOffset, DimensionData dimensionData) {
+        super(spell, playerSpawnOffset, dimensionData);
         this.bosses = bosses;
     }
 
@@ -72,15 +71,12 @@ public class EntityBasedBossFight extends BossFight {
 
         @Override
         public boolean initializeWinCondition(ServerLevel level, EntityBasedBossFight bossFight) {
-            BlockPos origin = ORIGIN;
-            BlockPos scanStart = origin.offset(bossFight.blockScanStart);
-            BlockPos scanEnd = origin.offset(bossFight.blockScanEnd);
-
-            AABB bossScanArea = AABB.encapsulatingFullBlocks(scanStart, scanEnd);
-            List<LivingEntity> bosses = level.getEntitiesOfClass(LivingEntity.class, bossScanArea);
-            for (LivingEntity boss : bosses) {
-                if (bossFight.bosses.contains(boss.getType()))
-                    this.bosses.add(boss.getId());
+            for (BossSpawn boss : bossFight.bosses) {
+                Vec3 offset = boss.spawnOffset;
+                Entity entity = boss.boss.spawn(level, ORIGIN.offset((int) offset.x, (int) offset.y, (int) offset.z), MobSpawnType.EVENT);
+                if (entity != null) {
+                    this.bosses.add(entity.getId());
+                }
             }
 
             return this.bosses.size() == bossFight.bosses.size();
@@ -143,10 +139,8 @@ public class EntityBasedBossFight extends BossFight {
     }
 
     public static class Builder implements BossFightBuilder<EntityBasedBossFight> {
-        private final List<Supplier<? extends EntityType<?>>> bosses = new ObjectArrayList<>();
+        private final List<Pair<Supplier<? extends EntityType<?>>, Vec3>> bosses = new ObjectArrayList<>();
         private ResourceLocation spell;
-        private BlockPos blockScanStart = BlockPos.ZERO;
-        private BlockPos blockScanEnd = BlockPos.ZERO;
         private Vec3 playerSpawnOffset = Vec3.ZERO;
 
         public Builder spell(ResourceLocation spell) {
@@ -154,38 +148,37 @@ public class EntityBasedBossFight extends BossFight {
             return this;
         }
 
-        public Builder withBoss(Supplier<? extends EntityType<?>> entity) {
-            this.bosses.add(entity);
+        public Builder withBoss(Supplier<? extends EntityType<?>> entity, int x, int y, int z) {
+            this.bosses.add(Pair.of(entity, new Vec3(x, y, z)));
             return this;
         }
 
-        public Builder scanFrom(int x, int y, int z) {
-            this.blockScanStart = new BlockPos(x, y, z);
-            return this;
-        }
-
-        public Builder scanTo(int x, int y, int z) {
-            this.blockScanEnd = new BlockPos(x, y, z);
-            return this;
-        }
-
-        public Builder spawnAt(int x, int y, int z) {
+        public Builder spawnPlayerAt(int x, int y, int z) {
             this.playerSpawnOffset = new Vec3(x, y, z);
             return this;
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public EntityBasedBossFight build() {
-            List<EntityType<?>> bosses = (List<EntityType<?>>) this.bosses.stream().map(Supplier::get).toList();
+            List<BossSpawn> bosses = this.bosses.stream().map(pair -> {
+                EntityType<?> type = pair.getFirst().get();
+                return new BossSpawn(type, pair.getSecond());
+            }).toList();
             SpellType<?> spell = SBSpells.REGISTRY.get(this.spell);
             return new EntityBasedBossFight(
                     bosses,
                     spell,
-                    this.blockScanStart,
-                    this.blockScanEnd,
                     this.playerSpawnOffset,
                     new DimensionData(Keys.EMPTY_BIOME, DimensionData.Weather.CLEAR));
         }
+    }
+
+    record BossSpawn(EntityType<?> boss, Vec3 spawnOffset) {
+        private static final Codec<BossSpawn> CODEC = RecordCodecBuilder.create(
+                instance -> instance.group(
+                        BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("boss").forGetter(BossSpawn::boss),
+                        Vec3.CODEC.fieldOf("offset").forGetter(BossSpawn::spawnOffset)
+                ).apply(instance, BossSpawn::new)
+        );
     }
 }

@@ -22,7 +22,7 @@ public class GuideRecipeRenderer implements IPageElementRenderer<GuideRecipe> {
 
     @Override
     public void render(GuideRecipe element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
-        RecipeManager manager = Minecraft.getInstance().player.connection.getRecipeManager();
+        RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
         Optional<RecipeHolder<?>> recipeOpt = manager.byKey(element.recipeLoc());
         if (recipeOpt.isEmpty()) return;
 
