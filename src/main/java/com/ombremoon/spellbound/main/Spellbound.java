@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.main;
 
 import com.ombremoon.spellbound.client.gui.guide_renderers.*;
+import com.ombremoon.spellbound.client.gui.guide_renderers.GuideEntityRenderer;
 import com.ombremoon.spellbound.client.gui.guide_renderers.GuideStaticItemRenderer;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
@@ -92,15 +93,15 @@ public class Spellbound {
     }
 
     private void registerElementRenderers() {
-        ElementRenderDispatcher.register(GuideEntityRenderer.class, new GuideEntityRendererRenderer());
-        ElementRenderDispatcher.register(GuideImage.class, new GuideImageRenderer());
-        ElementRenderDispatcher.register(GuideStaticItem.class, new GuideStaticItemRenderer());
-        ElementRenderDispatcher.register(GuideItemList.class, new GuideItemListRenderer());
-        ElementRenderDispatcher.register(GuideRecipe.class, new GuideRecipeRenderer());
-        ElementRenderDispatcher.register(GuideSpellInfo.class, new GuideSpellInfoRenderer());
-        ElementRenderDispatcher.register(GuideText.class, new GuideTextRenderer());
-        ElementRenderDispatcher.register(GuideTextList.class, new GuideTextListRenderer());
-        ElementRenderDispatcher.register(GuideItemRenderer.class, new GuideItemRendererRenderer());
-        ElementRenderDispatcher.register(GuideSpellBorder.class, new GuideSpellBorderRenderer());
+        ElementRenderDispatcher.register(GuideEntityElement.class, new GuideEntityRenderer());
+        ElementRenderDispatcher.register(GuideImageElement.class, new GuideImageRenderer());
+        ElementRenderDispatcher.register(GuideStaticItemElement.class, new GuideStaticItemRenderer());
+        ElementRenderDispatcher.register(GuideItemListElement.class, new GuideItemListRenderer());
+        ElementRenderDispatcher.register(GuideRecipeElement.class, new GuideRecipeRenderer());
+        ElementRenderDispatcher.register(GuideSpellInfoElement.class, new GuideSpellInfoRenderer());
+        ElementRenderDispatcher.register(GuideTextElement.class, new GuideTextRenderer());
+        ElementRenderDispatcher.register(GuideTextListElement.class, new GuideTextListRenderer());
+        ElementRenderDispatcher.register(GuideItemElement.class, new GuideItemRenderer());
+        ElementRenderDispatcher.register(GuideSpellBorderElement.class, new GuideSpellBorderRenderer());
     }
 }

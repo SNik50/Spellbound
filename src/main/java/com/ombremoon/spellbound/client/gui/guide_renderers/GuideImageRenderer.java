@@ -1,14 +1,14 @@
 package com.ombremoon.spellbound.client.gui.guide_renderers;
 
 import com.mojang.math.Axis;
-import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideImage;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideImageElement;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.client.gui.GuiGraphics;
 
-public class GuideImageRenderer implements IPageElementRenderer<GuideImage> {
+public class GuideImageRenderer implements IPageElementRenderer<GuideImageElement> {
 
     @Override
-    public void render(GuideImage element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
+    public void render(GuideImageElement element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
 
 
 

@@ -1,13 +1,12 @@
 package com.ombremoon.spellbound.client.gui.guide_renderers;
 
-import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideSpellBorder;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideSpellBorderElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.renderer.RenderType;
 
-public class GuideSpellBorderRenderer implements IPageElementRenderer<GuideSpellBorder> {
+public class GuideSpellBorderRenderer implements IPageElementRenderer<GuideSpellBorderElement> {
     @Override
-    public void render(GuideSpellBorder element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
+    public void render(GuideSpellBorderElement element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
         topPos = topPos + element.topGap();
 
         graphics.blit(

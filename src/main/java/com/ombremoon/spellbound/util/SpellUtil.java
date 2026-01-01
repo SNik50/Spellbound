@@ -220,7 +220,7 @@ public class SpellUtil {
 
     public static void grantScrap(Player player, ResourceLocation scrap) {
         List<ResourceLocation> bookScraps = new ArrayList<>(player.getData(SBData.BOOK_SCRAPS));
-        if (bookScraps.contains(scrap)) return;
+//        if (bookScraps.contains(scrap)) return;
 
         bookScraps.add(scrap);
         player.sendSystemMessage(Component.literal("Book scrap acquired"));

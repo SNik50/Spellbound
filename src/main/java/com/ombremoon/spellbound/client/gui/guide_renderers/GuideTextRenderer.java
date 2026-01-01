@@ -1,8 +1,6 @@
 package com.ombremoon.spellbound.client.gui.guide_renderers;
 
-import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideText;
-import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.IPageElement;
-import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideTextElement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -10,24 +8,19 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.*;
-import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.util.FormattedCharSequence;
-import org.apache.logging.log4j.core.pattern.PatternFormatter;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class GuideTextRenderer implements IPageElementRenderer<GuideText> {
+public class GuideTextRenderer implements IPageElementRenderer<GuideTextElement> {
     private int maxWidth = 0;
     private int height = 0;
 
     @Override
-    public void render(GuideText element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
+    public void render(GuideTextElement element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
         Font font = Minecraft.getInstance().font;
 
         boolean visible = isVisible(element.extras().pageScrap());
@@ -53,7 +46,7 @@ public class GuideTextRenderer implements IPageElementRenderer<GuideText> {
     }
 
     @Override
-    public void handleClick(GuideText element, Screen screen) {
+    public void handleClick(GuideTextElement element, Screen screen) {
         if (element.extras().link().isBlank()) return;
         Minecraft minecraft = Minecraft.getInstance();
         String url = element.extras().link();
@@ -77,7 +70,7 @@ public class GuideTextRenderer implements IPageElementRenderer<GuideText> {
     }
 
     @Override
-    public void handleHover(GuideText element, GuiGraphics guiGraphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
+    public void handleHover(GuideTextElement element, GuiGraphics guiGraphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {
         if (element.extras().hoverText().isBlank()) return;
 
         guiGraphics.drawString(Minecraft.getInstance().font,
@@ -88,7 +81,7 @@ public class GuideTextRenderer implements IPageElementRenderer<GuideText> {
     }
 
     @Override
-    public boolean isHovering(int mouseX, int mouseY, int leftPos, int topPos, GuideText element) {
+    public boolean isHovering(int mouseX, int mouseY, int leftPos, int topPos, GuideTextElement element) {
         int startX = leftPos + element.position().xOffset();
         int startY = topPos + element.position().yOffset();
         return mouseX > startX && mouseX < startX + this.maxWidth

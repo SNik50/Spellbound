@@ -20,6 +20,7 @@ public class ModGuideBookProvider extends GuideBookProvider {
     //Books
     private static final ResourceLocation GRIMOIRE = loc("grimoire_of_annihilation");
     private static final ResourceLocation BASIC = loc("studies_in_the_arcane");
+    private static final ResourceLocation TRANSFIG = loc("studies_in_the_arcane");
 
     //Pages
     private static final ResourceLocation RUIN_P1 = loc("sb_ruin_v1_p1");
@@ -129,7 +130,8 @@ public class ModGuideBookProvider extends GuideBookProvider {
                                 .position(5, 0)
                                 .build(),
                         PageBuilder.EntityRenderer
-                                .of(SBEntities.SOLAR_RAY.get())
+                                .of()
+                                .addEntity(SBEntities.SOLAR_RAY.get())
                                 .setRequiredScrap(SBPageScraps.UNLOCKED_SOLAR_RAY)
                                 .setRotations(0, 70, 10)
                                 .scale(12)
@@ -147,6 +149,15 @@ public class ModGuideBookProvider extends GuideBookProvider {
                                 .position(PAGE_TWO_START, 110)
                                 .build()
                 ).save(writer, SOLAR_RAY);
+
+        //Transfig Rituals
+        //Name
+        //Description
+        //Tier
+        //Activation Time
+        //Duration
+        //Render
+        //Pedestal + Swapping Items
     }
 
     private static ResourceLocation loc(String path) {

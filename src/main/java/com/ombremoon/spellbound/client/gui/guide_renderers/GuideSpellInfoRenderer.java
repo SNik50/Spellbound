@@ -2,7 +2,7 @@ package com.ombremoon.spellbound.client.gui.guide_renderers;
 
 import com.mojang.datafixers.util.Pair;
 import com.ombremoon.spellbound.common.init.SBSpells;
-import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideSpellInfo;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideSpellInfoElement;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.ElementPosition;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.extras.SpellInfoExtras;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
@@ -19,13 +19,13 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuideSpellInfoRenderer implements IPageElementRenderer<GuideSpellInfo> {
+public class GuideSpellInfoRenderer implements IPageElementRenderer<GuideSpellInfoElement> {
     private static final ResourceLocation DATA_SPRITE = ResourceLocation.withDefaultNamespace("advancements/title_box");
     private static final ResourceLocation TITLE_BOX_SPRITE = ResourceLocation.withDefaultNamespace("advancements/box_unobtained");
     private static final Component HIDDEN = Component.literal("???").withStyle(ChatFormatting.OBFUSCATED);
 
     @Override
-    public void render(GuideSpellInfo element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
+    public void render(GuideSpellInfoElement element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
         Registry<SpellType<?>> spellRegistry = Minecraft.getInstance().level.registryAccess().registry(SBSpells.SPELL_TYPE_REGISTRY_KEY).get();
         SpellType<?> spellType = spellRegistry.get(element.spellLoc());
         if (spellType == null) {
@@ -82,15 +82,15 @@ public class GuideSpellInfoRenderer implements IPageElementRenderer<GuideSpellIn
 
     }
 
-    private void drawString(String key, int value, int elementCount, int leftPos, int topPos, GuiGraphics graphics, GuideSpellInfo element) {
+    private void drawString(String key, int value, int elementCount, int leftPos, int topPos, GuiGraphics graphics, GuideSpellInfoElement element) {
         graphics.drawString(Minecraft.getInstance().font, Component.translatable("guide.element.spell_info." + key, value), leftPos + element.position().xOffset() + 4, topPos + 17 + element.position().yOffset() + (elementCount * element.extras().lineGap()), element.extras().colour(), element.extras().dropShadow());
     }
 
-    private void drawString(String key, Component value, int elementCount, int leftPos, int topPos, GuiGraphics graphics, GuideSpellInfo element) {
+    private void drawString(String key, Component value, int elementCount, int leftPos, int topPos, GuiGraphics graphics, GuideSpellInfoElement element) {
         graphics.drawString(Minecraft.getInstance().font, Component.translatable("guide.element.spell_info." + key, value), leftPos + element.position().xOffset() + 4, topPos + 17 + element.position().yOffset() + (elementCount * element.extras().lineGap()), element.extras().colour(), element.extras().dropShadow());
     }
 
-    private void drawString(String key, float value, int elementCount, int leftPos, int topPos, GuiGraphics graphics, GuideSpellInfo element) {
+    private void drawString(String key, float value, int elementCount, int leftPos, int topPos, GuiGraphics graphics, GuideSpellInfoElement element) {
         graphics.drawString(Minecraft.getInstance().font, Component.translatable("guide.element.spell_info." + key, value), leftPos + element.position().xOffset() + 4, topPos + 17 + element.position().yOffset() + (elementCount * element.extras().lineGap()), element.extras().colour(), element.extras().dropShadow());
     }
 

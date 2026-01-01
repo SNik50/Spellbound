@@ -1,15 +1,15 @@
 package com.ombremoon.spellbound.client.gui.guide_renderers;
 
-import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideTextList;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideTextListElement;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
-public class GuideTextListRenderer implements IPageElementRenderer<GuideTextList> {
+public class GuideTextListRenderer implements IPageElementRenderer<GuideTextListElement> {
 
     @Override
-    public void render(GuideTextList element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
+    public void render(GuideTextListElement element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
         for (int i = 0; i < element.list().size(); i++) {
 
             int maxRows = element.extras().maxRows();

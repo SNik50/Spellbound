@@ -79,6 +79,10 @@ public class PlayerDivineActions implements Loggable {
         }
     }
 
+    private boolean isPageScrap(ActionHolder holder) {
+        return PageScrapManager.getAllActions().contains(holder);
+    }
+
     public void award(ActionHolder action, String key) {
         var progress = this.getOrStartProgress(action);
         boolean flag2 = progress.isDone();
@@ -89,7 +93,9 @@ public class PlayerDivineActions implements Loggable {
             this.unregisterListeners(action);
             if (!flag2 && progress.isDone()) {
                 action.value().rewards().grant(this.player);
-                this.recentActions.put(action, this.player.tickCount + 600);
+                if (!this.isPageScrap(action))
+                    this.recentActions.put(action, this.player.tickCount + 600);
+
                 for (String s : progress.getCompletedCriteria()) {
                     this.revoke(action, s);
                 }

@@ -2,18 +2,15 @@ package com.ombremoon.spellbound.client.gui.guide_renderers;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideRecipe;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideRecipeElement;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.recipebook.GhostRecipe;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.NonNullList;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -23,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class GuideRecipeRenderer implements IPageElementRenderer<GuideRecipe> {
+public class GuideRecipeRenderer implements IPageElementRenderer<GuideRecipeElement> {
 
     @Override
-    public void render(GuideRecipe element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
+    public void render(GuideRecipeElement element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
         RecipeManager manager = Minecraft.getInstance().player.connection.getRecipeManager();
         Optional<RecipeHolder<?>> recipeOpt = manager.byKey(element.recipeLoc());
         if (recipeOpt.isEmpty()) return;

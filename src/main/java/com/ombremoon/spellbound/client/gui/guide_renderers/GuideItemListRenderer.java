@@ -1,7 +1,8 @@
 package com.ombremoon.spellbound.client.gui.guide_renderers;
 
-import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideItemList;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.elements.GuideItemListElement;
 import com.ombremoon.spellbound.client.gui.guide_renderers.GuideRecipeRenderer.SBGhostItem;
+import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -10,23 +11,22 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
+import net.tslat.smartbrainlib.util.RandomUtil;
 
-public class GuideItemListRenderer implements IPageElementRenderer<GuideItemList> {
+public class GuideItemListRenderer implements IPageElementRenderer<GuideItemListElement> {
     private final RandomSource rand;
 
     public GuideItemListRenderer() {
-        this.rand = Minecraft.getInstance().level.getRandom();
-        rand.setSeed(Math.floorDiv(Minecraft.getInstance().player.tickCount, 10));
+        this.rand = RandomSource.create(42L);
     }
 
 
     @Override
-    public void render(GuideItemList element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
+    public void render(GuideItemListElement element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
         Registry<Item> itemRegistry = Minecraft.getInstance().level.registryAccess().registry(Registries.ITEM).get();
 
         for (int i = 0; i < element.items().size(); i++) {
-            GuideItemList.ItemListEntry entry = element.items().get(i);
+            GuideItemListElement.ItemListEntry entry = element.items().get(i);
 
             int maxRows = element.extras().maxRows();
             int xOffset;
@@ -41,7 +41,7 @@ public class GuideItemListRenderer implements IPageElementRenderer<GuideItemList
 
             SBGhostItem ghostItem = new SBGhostItem(GuideUtil.buildIngredient(entry.items()), xOffset, yOffset);
 
-            GuideUtil.renderItem(graphics,
+            RenderUtil.renderItem(graphics,
                     isVisible(element.extras().pageScrap()) ? ghostItem.getItem(tickCount) : itemRegistry.getRandom(rand).get().value().getDefaultInstance(),
                     leftPos - 10 + element.position().xOffset() + xOffset,
                     topPos + element.position().yOffset() - 8 + yOffset, 1f

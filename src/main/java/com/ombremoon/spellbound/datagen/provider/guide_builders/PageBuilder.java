@@ -9,7 +9,6 @@ import com.ombremoon.spellbound.common.magic.api.SpellType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.ArrayList;
@@ -116,7 +115,7 @@ public class PageBuilder {
          * Creates a new GuideRecipe builder for the given recipe
          * @param recipe The recipe to display
          * @return new GuideRecipe builder
-         * @see GuideRecipe
+         * @see GuideRecipeElement
          */
         public static Recipe of(ResourceLocation recipe) {
             return new Recipe(recipe);
@@ -178,8 +177,8 @@ public class PageBuilder {
          * Turns the given data into a GuideRecipe element
          * @return constructed GuideRecipe
          */
-        public GuideRecipe build() {
-            return new GuideRecipe(recipe, gridName, scale, position, new RecipeExtras(pageScrap));
+        public GuideRecipeElement build() {
+            return new GuideRecipeElement(recipe, gridName, scale, position, new RecipeExtras(pageScrap));
         }
 
         /**
@@ -219,7 +218,7 @@ public class PageBuilder {
         /**
          * Creates a new EntityRenderer builder using a given entity
          * @return new GuideEntityRenderer builder
-         * @see GuideEntityRenderer
+         * @see GuideEntityElement
          */
         public static EntityRenderer of() {
             return new EntityRenderer();
@@ -298,8 +297,8 @@ public class PageBuilder {
             return this;
         }
 
-        public GuideEntityRenderer build() {
-            return new GuideEntityRenderer(
+        public GuideEntityElement build() {
+            return new GuideEntityElement(
                     entity,
                     new EntityRendererExtras(
                             pageScrap,
@@ -316,7 +315,7 @@ public class PageBuilder {
 
     //Builder for a GuideItemList
     public static class ItemList {
-        private List<GuideItemList.ItemListEntry> entries;
+        private List<GuideItemListElement.ItemListEntry> entries;
         private ElementPosition position;
         private ResourceLocation pageScrap;
         private int maxRows;
@@ -353,7 +352,7 @@ public class PageBuilder {
          * @return this
          */
         public ItemList addEntry(Ingredient ingredient, int count) {
-            this.entries.add(new GuideItemList.ItemListEntry(
+            this.entries.add(new GuideItemListElement.ItemListEntry(
                     List.of(ingredient), count));
             return this;
         }
@@ -365,7 +364,7 @@ public class PageBuilder {
          * @return this
          */
         public ItemList addEntry(List<Ingredient> ingredient, int count) {
-            this.entries.add(new GuideItemList.ItemListEntry(
+            this.entries.add(new GuideItemListElement.ItemListEntry(
                     ingredient, count));
             return this;
         }
@@ -468,8 +467,8 @@ public class PageBuilder {
             return this;
         }
 
-        public GuideItemList build() {
-            return new GuideItemList(
+        public GuideItemListElement build() {
+            return new GuideItemListElement(
                     entries,
                     new ItemListExtras(
                             pageScrap,
@@ -628,8 +627,8 @@ public class PageBuilder {
             return this;
         }
 
-        public GuideSpellInfo build() {
-            return new GuideSpellInfo(
+        public GuideSpellInfoElement build() {
+            return new GuideSpellInfoElement(
                     spell,
                     new SpellInfoExtras(
                             textColour,
@@ -739,8 +738,8 @@ public class PageBuilder {
             return this;
         }
 
-        public GuideImage build() {
-            return new GuideImage(image, width, height, position, new GuideImageExtras(enableCorners));
+        public GuideImageElement build() {
+            return new GuideImageElement(image, width, height, position, new GuideImageExtras(enableCorners));
         }
     }
 
@@ -832,8 +831,8 @@ public class PageBuilder {
             return this;
         }
 
-        public GuideStaticItem build() {
-            return new GuideStaticItem(
+        public GuideStaticItemElement build() {
+            return new GuideStaticItemElement(
                     ingredients,
                     tile,
                     position,
@@ -1006,8 +1005,8 @@ public class PageBuilder {
             return this;
         }
 
-        public GuideText build() {
-            return new GuideText(
+        public GuideTextElement build() {
+            return new GuideTextElement(
                     translation,
                     new TextExtras(
                             pageScrap, colour, maxLineLength, lineGap, dropShadow, textWrapping, link, unlockForLink, underline, bold, hoverText, italic
@@ -1139,8 +1138,8 @@ public class PageBuilder {
             return this;
         }
 
-        public GuideTextList build() {
-            return new GuideTextList(
+        public GuideTextListElement build() {
+            return new GuideTextListElement(
                     entries,
                     new TextListExtras(
                             pageScrap,
@@ -1220,8 +1219,8 @@ public class PageBuilder {
             return this;
         }
 
-        public GuideItemRenderer build() {
-            return new GuideItemRenderer(
+        public GuideItemElement build() {
+            return new GuideItemElement(
                     item,
                     position,
                     new ItemRendererExtras(

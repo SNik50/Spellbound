@@ -10,6 +10,7 @@ import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.SimpleT
 import com.ombremoon.spellbound.common.magic.acquisition.divine.triggers.SpecialTrigger;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.CriterionValidator;
