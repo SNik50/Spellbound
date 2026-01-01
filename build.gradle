@@ -155,6 +155,20 @@ repositories {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
     }
+    maven {
+        url "https://maven.latvian.dev/releases"
+        content {
+            includeGroup "dev.latvian.mods"
+            includeGroup "dev.latvian.apps"
+        }
+    }
+
+    maven {
+        url "https://jitpack.io"
+        content {
+            includeGroup "com.github.rtyley"
+        }
+    }
     flatDir {
         dir 'libs'
     }
@@ -168,6 +182,7 @@ dependencies {
     implementation "net.tslat.smartbrainlib:SmartBrainLib-neoforge-${project.minecraft_version}:${project.sbl_version}"
     implementation("local:sentinellib:1.2.0-test")
 
+    runtimeOnly "dev.latvian.mods:kubejs-neoforge:2101.7.2-build.351"
     runtimeOnly "maven.modrinth:sodium:mc1.21.1-0.6.13-neoforge"
     runtimeOnly "maven.modrinth:iris:1.8.12+1.21.1-neoforge"
 
@@ -175,8 +190,8 @@ dependencies {
     runtimeOnly "mezz.jei:jei-1.21.1-neoforge:19.22.1.316"
     compileOnly "dev.emi:emi-neoforge:1.1.22+1.21.1:api"
     runtimeOnly "dev.emi:emi-neoforge:1.1.22+1.21.1"
-    jarJar(implementation("com.lowdragmc.photon:photon-neoforge-1.21.1:2.0.6"))
-    jarJar(implementation("com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.0.4"))
+    jarJar(implementation("com.lowdragmc.photon:photon-neoforge-1.21.1:2.1.2"))
+    jarJar(implementation("com.lowdragmc.ldlib2:ldlib2-neoforge-1.21.1:2.1.4"))
 }
 
 jarJar.enabled(true)
