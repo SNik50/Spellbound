@@ -88,7 +88,7 @@ public interface SBGuidePages {
                                         .position(PAGE_TWO_START_X + 13, 20)
                                         .build(),
                                 PageBuilder.Text
-                                        .ofTranslatable("guide.grimoire_of_annihilation.v1_p1.description")
+                                        .ofTranslatable("guide.ruin.v1_p1.description")
                                         .hoverText("Testing this lol")
                                         .setLink("https://www.google.com/")
                                         .position(PAGE_TWO_START_X, 50)
@@ -107,11 +107,11 @@ public interface SBGuidePages {
                                         .setDimensions(140, 74)
                                         .build(),
                                 PageBuilder.Text
-                                        .ofTranslatable("guide.grimoire_of_annihilation.v1_p2.ruin_portal")
+                                        .ofTranslatable("guide.ruin.v1_p2.ruin_portal")
                                         .position(0, 80)
                                         .build(),
                                 PageBuilder.Text
-                                        .ofTranslatable("guide.grimoire_of_annihilation.v1_p2.keystone")
+                                        .ofTranslatable("guide.ruin.v1_p2.keystone")
                                         .position(PAGE_TWO_START_X, 5)
                                         .build(),
                                 PageBuilder.Recipe
@@ -129,7 +129,7 @@ public interface SBGuidePages {
                         .setPreviousPage(RUIN_P2)
                         .addElements(
                                 PageBuilder.Text
-                                        .ofTranslatable("guide.grimoire_of_annihilation.v1_p3.keystones")
+                                        .ofTranslatable("guide.ruin.v1_p3.keystones")
                                         .build(),
                                 PageBuilder.Image
                                         .of(loc("textures/gui/books/images/broker_tower.png"))
@@ -137,7 +137,7 @@ public interface SBGuidePages {
                                         .position(PAGE_TWO_START_X, 0)
                                         .build(),
                                 PageBuilder.Text
-                                        .ofTranslatable("guide.grimoire_of_annihilation.v1_p3.spell_broker")
+                                        .ofTranslatable("guide.ruin.v1_p3.spell_broker")
                                         .position(PAGE_TWO_START_X, 95)
                                         .build()
                         )
