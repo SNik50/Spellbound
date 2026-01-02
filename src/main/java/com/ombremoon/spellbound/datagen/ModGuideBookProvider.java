@@ -10,6 +10,8 @@ import com.ombremoon.spellbound.datagen.provider.guide_builders.PageBuilder;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.concurrent.CompletableFuture;
@@ -28,7 +30,8 @@ public class ModGuideBookProvider extends GuideBookProvider {
     private static final ResourceLocation SOLAR_RAY = loc("solar_ray_page");
 
     private static final ResourceLocation TRANSFIG_P1 = loc("sb_transfig_v1_p1");
-    private static final ResourceLocation SHADOW_GATE = loc("shadow_gate_page");
+    private static final ResourceLocation SHADOW_GATE_ACQ = loc("shadow_gate_page_acq_1");
+    private static final ResourceLocation SHADOW_GATE_ACQ_2 = loc("shadow_gate_page_acq_2");
 
     private static final ResourceLocation BASIC_P1 = loc("sb_basic_v1_p1");
 
@@ -49,23 +52,23 @@ public class ModGuideBookProvider extends GuideBookProvider {
                                 .disableCorners()
                                 .build(),
                         PageBuilder.Text
-                                .of("guide.basic.discord")
+                                .ofTranslatable("guide.basic.discord")
                                 .position(55, 100)
                                 .setLink("https://discord.gg/hagCkhVwfb")
                                 .underline()
                                 .build(),
                         PageBuilder.Text
-                                .of("guide.basic.bugs")
+                                .ofTranslatable("guide.basic.bugs")
                                 .position(42, 115)
                                 .setLink("https://github.com/MoonBase-Mods/Spellbound/issues")
                                 .underline().build(),
                         PageBuilder.Text
-                                .of("item.spellbound.studies_in_the_arcane")
-                                .position(PAGE_TWO_START, 20)
+                                .ofTranslatable("item.spellbound.studies_in_the_arcane")
+                                .position(PAGE_TWO_START_X, 20)
                                 .build(),
                         PageBuilder.Text
-                                .of("guide.basic.blurb")
-                                .position(PAGE_TWO_START, 40)
+                                .ofTranslatable("guide.basic.blurb")
+                                .position(PAGE_TWO_START_X, 40)
                                 .build()
                 ).save(writer, BASIC_P1);
 
@@ -74,14 +77,14 @@ public class ModGuideBookProvider extends GuideBookProvider {
                 .forBook(RUIN)
                 .addElements(
                         PageBuilder.Text
-                                .of("item.spellbound.grimoire_of_annihilation")
-                                .position(PAGE_TWO_START + 13, 20)
+                                .ofTranslatable("item.spellbound.grimoire_of_annihilation")
+                                .position(PAGE_TWO_START_X + 13, 20)
                                 .build(),
                         PageBuilder.Text
-                                .of("guide.ruin.v1_p1.description")
+                                .ofTranslatable("guide.ruin.v1_p1.description")
                                 .hoverText("Testing this lol")
                                 .setLink("https://www.google.com/")
-                                .position(PAGE_TWO_START, 50)
+                                .position(PAGE_TWO_START_X, 50)
                                 .build()
                 ).save(writer, RUIN_P1);
         PageBuilder
@@ -93,12 +96,12 @@ public class ModGuideBookProvider extends GuideBookProvider {
                                 .setDimensions(140, 74)
                                 .build(),
                         PageBuilder.Text
-                                .of("guide.ruin.v1_p2.ruin_portal")
+                                .ofTranslatable("guide.ruin.v1_p2.ruin_portal")
                                 .position(0, 80)
                                 .build(),
                         PageBuilder.Text
-                                .of("guide.ruin.v1_p2.keystone")
-                                .position(PAGE_TWO_START, 5)
+                                .ofTranslatable("guide.ruin.v1_p2.keystone")
+                                .position(PAGE_TWO_START_X, 5)
                                 .build(),
                         PageBuilder.Recipe
                                 .of(ResourceLocation.withDefaultNamespace("crafting_table"))
@@ -111,16 +114,16 @@ public class ModGuideBookProvider extends GuideBookProvider {
                 .setPreviousPage(RUIN_P2)
                 .addElements(
                         PageBuilder.Text
-                                .of("guide.ruin.v1_p3.keystones")
+                                .ofTranslatable("guide.ruin.v1_p3.keystones")
                                 .build(),
                         PageBuilder.Image
                                 .of(loc("textures/gui/books/images/broker_tower.png"))
                                 .setDimensions(150, 87)
-                                .position(PAGE_TWO_START, 0)
+                                .position(PAGE_TWO_START_X, 0)
                                 .build(),
                         PageBuilder.Text
-                                .of("guide.ruin.v1_p3.spell_broker")
-                                .position(PAGE_TWO_START, 95)
+                                .ofTranslatable("guide.ruin.v1_p3.spell_broker")
+                                .position(PAGE_TWO_START_X, 95)
                                 .build()
                 ).save(writer, RUIN_P3);
         PageBuilder
@@ -128,7 +131,7 @@ public class ModGuideBookProvider extends GuideBookProvider {
                 .setPreviousPage(RUIN_P3)
                 .addElements(
                         PageBuilder.Text
-                                .of("spells.spellbound.solar_ray")
+                                .ofTranslatable("spells.spellbound.solar_ray")
                                 .position(5, 0)
                                 .build(),
                         PageBuilder.EntityRenderer
@@ -139,16 +142,16 @@ public class ModGuideBookProvider extends GuideBookProvider {
                                 .scale(12)
                                 .position(33, 90).build(),
                         PageBuilder.Text
-                                .of("guide.ruin.solar_ray.spell_lore")
+                                .ofTranslatable("guide.ruin.solar_ray.spell_lore")
                                 .position(0, 120)
                                 .build(),
                         PageBuilder.Text
-                                .of("guide.ruin.solar_ray.stat_lore")
-                                .position(PAGE_TWO_START, 20)
+                                .ofTranslatable("guide.ruin.solar_ray.stat_lore")
+                                .position(PAGE_TWO_START_X, 20)
                                 .build(),
                         PageBuilder.SpellInfo
                                 .of(SBSpells.SOLAR_RAY.get())
-                                .position(PAGE_TWO_START, 110)
+                                .position(PAGE_TWO_START_X, 110)
                                 .build()
                 ).save(writer, SOLAR_RAY);
 
@@ -156,14 +159,14 @@ public class ModGuideBookProvider extends GuideBookProvider {
                 .forBook(TRANSFIG)
                 .addElements(
                         PageBuilder.Text
-                                .of("item.spellbound.architects_lexicon")
-                                .position(PAGE_TWO_START + 13, 20)
+                                .ofTranslatable("item.spellbound.architects_lexicon")
+                                .position(PAGE_TWO_START_X + 13, 20)
                                 .build(),
                         PageBuilder.Text
-                                .of("guide.transfig.v1_p1.description")
+                                .ofTranslatable("guide.transfig.v1_p1.description")
                                 .hoverText("Testing this lol")
                                 .setLink("https://www.google.com/")
-                                .position(PAGE_TWO_START, 50)
+                                .position(PAGE_TWO_START_X, 50)
                                 .build()
                 ).save(writer, TRANSFIG_P1);
         PageBuilder
@@ -171,21 +174,50 @@ public class ModGuideBookProvider extends GuideBookProvider {
                 .setPreviousPage(TRANSFIG_P1)
                 .addElements(
                         PageBuilder.Text
-                                .of("spells.spellbound.shadow_gate")
-                                .position(5, 0)
+                                .ofTranslatable("ritual.spellbound.create_shadow_gate")
+                                .position(PAGE_START_CENTER_X, PAGE_START_DOUBLE_Y)
+                                .centered()
+                                .bold()
+                                .build(),
+                        PageBuilder.Text
+                                .ofTranslatable("spellbound.create_shadow_gate.description")
+                                .position(0, 35)
+                                .italic()
+                                .build(),
+                        PageBuilder.Text
+                                .ofLiteral("-------------------------")
+                                .position(-5, 55)
+                                .italic()
+                                .build(),
+                        PageBuilder.TextList
+                                .of()
+                                .addEntry(translatable("spellbound.ritual.tier_two"))
+                                .addEntry(translatable("spellbound.ritual.activation_time", Integer.toString(20)))
+                                .addEntry(translatable("spellbound.ritual.duration").append(translatable("spellbound.ritual.not_applicable")))
+                                .position(10, 65)
+                                .build(),
+                        PageBuilder.Text
+                                .ofTranslatable("spellbound.ritual.materials")
+                                .position(PAGE_TWO_START_CENTER_X, PAGE_START_Y)
+                                .centered()
+                                .underline()
                                 .build(),
                         PageBuilder.RitualRenderer
                                 .of(SBRituals.CREATE_MYSTIC_ARMOR)
                                 .build()
-                ).save(writer, SHADOW_GATE);
-        //Transfig Rituals
-        //Name
-        //Description
-        //Tier
-        //Activation Time
-        //Duration
-        //Render
-        //Pedestal + Swapping Items
+                ).save(writer, SHADOW_GATE_ACQ);
+    }
+
+    private static MutableComponent translatable(String text) {
+        return Component.translatable(text);
+    }
+
+    private static MutableComponent translatable(String text, String append) {
+        return Component.translatable(text, append);
+    }
+
+    private static MutableComponent literal(String text) {
+        return Component.literal(text);
     }
 
     private static ResourceLocation loc(String path) {

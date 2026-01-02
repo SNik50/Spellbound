@@ -31,7 +31,6 @@ public class TransfigurationRitual {
     public static final int DEFAULT_RITUAL_DURATION = 5;
     public static final Codec<TransfigurationRitual> DIRECT_CODEC = RecordCodecBuilder.create(
             p_344998_ -> p_344998_.group(
-                            ComponentSerialization.CODEC.fieldOf("description").forGetter(TransfigurationRitual::description),
                             RitualDefinition.CODEC.fieldOf("definition").forGetter(TransfigurationRitual::definition),
                             Value.CODEC
                                     .listOf()
@@ -53,15 +52,13 @@ public class TransfigurationRitual {
     );
     public static final Codec<Holder<TransfigurationRitual>> CODEC = RegistryFixedCodec.create(Keys.RITUAL);
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<TransfigurationRitual>> STREAM_CODEC = ByteBufCodecs.holderRegistry(Keys.RITUAL);
-    private final Component description;
     private final RitualDefinition definition;
     private final NonNullList<Value> materials;
     private final List<RitualEffect> effects;
     final Map<Ingredient, Integer> ingredients = new Object2IntOpenHashMap<>();
     final Set<Item> filteredItems = new ObjectOpenHashSet<>();
 
-    TransfigurationRitual(Component description, RitualDefinition definition, NonNullList<Value> materials, List<RitualEffect> effects) {
-        this.description = description;
+    TransfigurationRitual(RitualDefinition definition, NonNullList<Value> materials, List<RitualEffect> effects) {
         this.definition = definition;
         this.materials = materials;
         this.effects = effects;
@@ -138,10 +135,6 @@ public class TransfigurationRitual {
         return true;
     }
 
-    public Component description() {
-        return this.description;
-    }
-
     public RitualDefinition definition() {
         return this.definition;
     }
@@ -189,10 +182,8 @@ public class TransfigurationRitual {
             return this;
         }
 
-        public TransfigurationRitual build(ResourceLocation location) {
-            return new TransfigurationRitual(
-                    Component.translatable(Util.makeDescriptionId("ritual", location)), this.definition, this.materials, this.effects
-            );
+        public TransfigurationRitual build() {
+            return new TransfigurationRitual(this.definition, this.materials, this.effects);
         }
     }
 

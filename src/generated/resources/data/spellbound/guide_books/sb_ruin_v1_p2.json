@@ -11,7 +11,9 @@
       "position": {
         "yOffset": 80
       },
-      "translation": "guide.ruin.v1_p2.ruin_portal"
+      "translation": {
+        "translate": "guide.ruin.v1_p2.ruin_portal"
+      }
     },
     {
       "type": "spellbound:text",
@@ -19,7 +21,9 @@
         "xOffset": 169,
         "yOffset": 5
       },
-      "translation": "guide.ruin.v1_p2.keystone"
+      "translation": {
+        "translate": "guide.ruin.v1_p2.keystone"
+      }
     },
     {
       "type": "spellbound:recipe",

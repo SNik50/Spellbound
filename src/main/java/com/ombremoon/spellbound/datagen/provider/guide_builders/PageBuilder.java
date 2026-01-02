@@ -9,6 +9,7 @@ import com.ombremoon.spellbound.client.gui.guide.elements.extras.*;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -846,7 +847,7 @@ public class PageBuilder {
 
     //Builder for GuideText
     public static class Text {
-        private String translation;
+        private Component text;
         private ElementPosition position;
         private ResourceLocation pageScrap;
         private int colour;
@@ -854,6 +855,7 @@ public class PageBuilder {
         private int lineGap;
         private boolean dropShadow;
         private boolean textWrapping;
+        private boolean centered;
         private String link;
         private boolean unlockForLink;
         private boolean underline;
@@ -861,8 +863,8 @@ public class PageBuilder {
         private String hoverText;
         private boolean italic;
 
-        private Text(String translation) {
-            this.translation = translation;
+        private Text(Component text) {
+            this.text = text;
             this.position = ElementPosition.getDefault();
             this.pageScrap = GuideBookManager.FIRST_PAGE;
             this.colour = 0;
@@ -870,6 +872,7 @@ public class PageBuilder {
             this.lineGap = 9;
             this.dropShadow = false;
             this.textWrapping = true;
+            this.centered = false;
             this.link = "";
             this.unlockForLink = true;
             this.underline = false;
@@ -879,12 +882,21 @@ public class PageBuilder {
         }
 
         /**
-         * Creates a new GuideText builder for a given translation key
-         * @param translationKey The key for the translation, not the translation itself
+         * Creates a new GuideText builder for a given string literal
+         * @param literal The component text
          * @return new GuideText builder
          */
-        public static Text of(String translationKey) {
-            return new Text(translationKey);
+        public static Text ofLiteral(String literal) {
+            return new Text(Component.literal(literal));
+        }
+
+        /**
+         * Creates a new GuideText builder for a given translation key
+         * @param translationKey The component translation key
+         * @return new GuideText builder
+         */
+        public static Text ofTranslatable(String translationKey) {
+            return new Text(Component.translatable(translationKey));
         }
 
         /**
@@ -988,6 +1000,15 @@ public class PageBuilder {
         }
 
         /**
+         * Wraps texts around a midpoint
+         * @return this
+         */
+        public Text centered() {
+            this.centered = true;
+            return this;
+        }
+
+        /**
          * Sets the position the element appears on the page
          * @param x the x offset from left of the book
          * @param y the y offset from top of the book
@@ -1010,9 +1031,9 @@ public class PageBuilder {
 
         public GuideTextElement build() {
             return new GuideTextElement(
-                    translation,
+                    text,
                     new TextExtras(
-                            pageScrap, colour, maxLineLength, lineGap, dropShadow, textWrapping, link, unlockForLink, underline, bold, hoverText, italic
+                            pageScrap, colour, maxLineLength, lineGap, dropShadow, textWrapping, centered, link, unlockForLink, underline, bold, hoverText, italic
                     ),
                     position
             );
@@ -1021,7 +1042,7 @@ public class PageBuilder {
 
     //Builder for GuideTextList
     public static class TextList {
-        private List<String> entries;
+        private List<Component> entries;
         private ElementPosition position;
         private ResourceLocation pageScrap;
         private int maxRows;
@@ -1056,7 +1077,7 @@ public class PageBuilder {
          * @param text The list entry
          * @return this
          */
-        public TextList addEntry(String text) {
+        public TextList addEntry(Component text) {
             this.entries.add(text);
             return this;
         }
@@ -1237,6 +1258,7 @@ public class PageBuilder {
     //Builder for GuideRitualRenderer
     public static class RitualRenderer {
         private ResourceKey<TransfigurationRitual> ritual;
+        private boolean leftPage = false;
 
         /**
          * Creates a new builder for a RitualRenderer element
@@ -1253,8 +1275,13 @@ public class PageBuilder {
             return this;
         }
 
+        public RitualRenderer leftPage() {
+            this.leftPage = true;
+            return this;
+        }
+
         public TransfigurationRitualElement build() {
-            return new TransfigurationRitualElement(this.ritual);
+            return new TransfigurationRitualElement(this.ritual, this.leftPage);
         }
     }
 }

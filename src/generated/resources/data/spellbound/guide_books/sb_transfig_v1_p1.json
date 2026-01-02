@@ -6,7 +6,9 @@
         "xOffset": 182,
         "yOffset": 20
       },
-      "translation": "item.spellbound.architects_lexicon"
+      "translation": {
+        "translate": "item.spellbound.architects_lexicon"
+      }
     },
     {
       "type": "spellbound:text",
@@ -18,7 +20,9 @@
         "xOffset": 169,
         "yOffset": 50
       },
-      "translation": "guide.transfig.v1_p1.description"
+      "translation": {
+        "translate": "guide.transfig.v1_p1.description"
+      }
     }
   ],
   "id": "spellbound:architects_lexicon"

@@ -86,6 +86,7 @@ public class ModLangProvider extends LanguageProvider {
     protected void manualEntries() {
         skillDescriptions();
         guideContents();
+        ritualContents();
 
         add("spellbound.toast.scrap_unlocked", "New book entry unlocked");
 
@@ -132,6 +133,19 @@ public class ModLangProvider extends LanguageProvider {
 
         //Transfig
         add("guide.transfig.v1_p1.description", "This book shall document my discoveries throughout my adventures into the arcane and how I can manipulate the world around me through the powers of transfiguration.");
+    }
+
+    protected void ritualContents() {
+        add("spellbound.ritual.tier_one", "Tier: 1");
+        add("spellbound.ritual.tier_two", "Tier: 2");
+        add("spellbound.ritual.tier_three", "Tier: 3");
+        add("spellbound.ritual.activation_time", "Activation Time: %s");
+        add("spellbound.ritual.duration", "Duration: ");
+        add("spellbound.ritual.not_applicable", "N/A");
+
+        add("ritual.spellbound.create_shadow_gate", "Create Spell Tome:\nShadow Gate");
+        add("spellbound.create_shadow_gate.description", "Creates a Shadow Gate spell tome");
+        add("spellbound.ritual.materials", "Ritual Materials");
     }
 
     protected void skillDescriptions() {

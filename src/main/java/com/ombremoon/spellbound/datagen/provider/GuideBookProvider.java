@@ -15,7 +15,11 @@ import java.util.function.BiConsumer;
 public abstract class GuideBookProvider implements DataProvider {
     private final PackOutput.PathProvider pathProvider;
     private final CompletableFuture<HolderLookup.Provider> registries;
-    public static final int PAGE_TWO_START = 169;
+    public static final int PAGE_TWO_START_X = 169;
+    public static final int PAGE_START_Y = 8;
+    public static final int PAGE_START_DOUBLE_Y = 4;
+    public static final int PAGE_START_CENTER_X = 72;
+    public static final int PAGE_TWO_START_CENTER_X = 247;
 
     public GuideBookProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> registries) {
         this.pathProvider = packOutput.createPathProvider(PackOutput.Target.DATA_PACK, "guide_books");

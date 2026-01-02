@@ -23,7 +23,9 @@
         "xOffset": 55,
         "yOffset": 100
       },
-      "translation": "guide.basic.discord"
+      "translation": {
+        "translate": "guide.basic.discord"
+      }
     },
     {
       "type": "spellbound:text",
@@ -35,7 +37,9 @@
         "xOffset": 42,
         "yOffset": 115
       },
-      "translation": "guide.basic.bugs"
+      "translation": {
+        "translate": "guide.basic.bugs"
+      }
     },
     {
       "type": "spellbound:text",
@@ -43,7 +47,9 @@
         "xOffset": 169,
         "yOffset": 20
       },
-      "translation": "item.spellbound.studies_in_the_arcane"
+      "translation": {
+        "translate": "item.spellbound.studies_in_the_arcane"
+      }
     },
     {
       "type": "spellbound:text",
@@ -51,7 +57,9 @@
         "xOffset": 169,
         "yOffset": 40
       },
-      "translation": "guide.basic.blurb"
+      "translation": {
+        "translate": "guide.basic.blurb"
+      }
     }
   ],
   "id": "spellbound:studies_in_the_arcane"

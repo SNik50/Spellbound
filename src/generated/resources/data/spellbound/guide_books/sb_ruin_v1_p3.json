@@ -2,7 +2,9 @@
   "elements": [
     {
       "type": "spellbound:text",
-      "translation": "guide.ruin.v1_p3.keystones"
+      "translation": {
+        "translate": "guide.ruin.v1_p3.keystones"
+      }
     },
     {
       "type": "spellbound:image",
@@ -19,7 +21,9 @@
         "xOffset": 169,
         "yOffset": 95
       },
-      "translation": "guide.ruin.v1_p3.spell_broker"
+      "translation": {
+        "translate": "guide.ruin.v1_p3.spell_broker"
+      }
     }
   ],
   "id": "spellbound:grimoire_of_annihilation",

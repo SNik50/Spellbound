@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.client.gui.guide;
 
 import com.ombremoon.spellbound.client.gui.guide.elements.GuideTextElement;
+import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -32,8 +33,7 @@ public class GuideTextRenderer implements IPageElementRenderer<GuideTextElement>
         style = style.withUnderlined(element.extras().underline());
 
         List<FormattedCharSequence> lines = font.split(
-                Component.translatable(
-                        element.translationKey())
+                ((MutableComponent)element.text())
                         .withStyle(style),
                 element.extras().maxLineLength());
         this.height = lines.size() * font.lineHeight;
@@ -41,7 +41,11 @@ public class GuideTextRenderer implements IPageElementRenderer<GuideTextElement>
         for (int i = 0; i < lines.size(); i++) {
             int width = font.width(lines.get(i));
             if (this.maxWidth < width) this.maxWidth = width;
-            graphics.drawString(font, lines.get(i), leftPos + element.position().xOffset(), topPos + element.position().yOffset() + (i * font.lineHeight), element.extras().colour(), element.extras().dropShadow());
+            if (element.extras().centered()) {
+                RenderUtil.drawCenteredString(graphics, font, lines.get(i), leftPos + element.position().xOffset(), topPos + element.position().yOffset() + (i * font.lineHeight), element.extras().colour(), element.extras().dropShadow());
+            } else {
+                graphics.drawString(font, lines.get(i), leftPos + element.position().xOffset(), topPos + element.position().yOffset() + (i * font.lineHeight), element.extras().colour(), element.extras().dropShadow());
+            }
         }
     }
 

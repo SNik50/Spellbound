@@ -73,7 +73,7 @@ public interface SBRituals {
     }
 
     private static void register(BootstrapContext<TransfigurationRitual> context, ResourceKey<TransfigurationRitual> key, TransfigurationRitual.Builder builder) {
-        context.register(key, builder.build(key.location()));
+        context.register(key, builder.build());
     }
 
     private static ResourceKey<TransfigurationRitual> key(String name) {

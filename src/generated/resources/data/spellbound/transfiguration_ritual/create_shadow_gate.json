@@ -4,9 +4,6 @@
     "startupTime": 100,
     "tier": 2
   },
-  "description": {
-    "translate": "ritual.spellbound.create_shadow_gate"
-  },
   "effects": [
     {
       "type": "spellbound:create_spell_tome",

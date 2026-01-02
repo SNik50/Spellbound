@@ -5,7 +5,9 @@
       "position": {
         "xOffset": 5
       },
-      "translation": "spells.spellbound.solar_ray"
+      "translation": {
+        "translate": "spells.spellbound.solar_ray"
+      }
     },
     {
       "type": "spellbound:entity_renderer",
@@ -28,7 +30,9 @@
       "position": {
         "yOffset": 120
       },
-      "translation": "guide.ruin.solar_ray.spell_lore"
+      "translation": {
+        "translate": "guide.ruin.solar_ray.spell_lore"
+      }
     },
     {
       "type": "spellbound:text",
@@ -36,7 +40,9 @@
         "xOffset": 169,
         "yOffset": 20
       },
-      "translation": "guide.ruin.solar_ray.stat_lore"
+      "translation": {
+        "translate": "guide.ruin.solar_ray.stat_lore"
+      }
     },
     {
       "type": "spellbound:spell_info",

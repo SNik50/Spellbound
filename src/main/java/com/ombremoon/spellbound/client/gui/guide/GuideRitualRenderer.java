@@ -17,19 +17,21 @@ public class GuideRitualRenderer implements IPageElementRenderer<Transfiguration
 
     @Override
     public void render(TransfigurationRitualElement element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
+        int itemOffset = element.leftPage() ? 23 : 195;
+        int numberOffset = element.leftPage() ? 8 : 83;
         ItemStack item = SBBlocks.TRANSFIGURATION_DISPLAY.get().asItem().getDefaultInstance();
-        RenderUtil.renderItem(graphics, item, leftPos - 25, topPos + 20, 5.3F);
+        RenderUtil.renderItem(graphics, item, leftPos + itemOffset - 48, topPos + 20, 5.3F);
 
         TransfigurationRitual ritual = RitualHelper.getRitualFor(Minecraft.getInstance().level, element.ritual());
         ItemStack stack = new GuideGhostItem(buildIngredientFromValues(ritual.materials()), 30, 30).getItem(tickCount, 50.0F);
-        RenderUtil.renderItem(graphics, stack, leftPos + 31, topPos + 22, 2.3F, 175);
+        RenderUtil.renderItem(graphics, stack, leftPos + itemOffset + 9, topPos + 22, 2.3F, 200);
         PoseStack poseStack = graphics.pose();
         poseStack.pushPose();
         poseStack.scale(2.3F, 2.3F, 2.3F);
-        poseStack.translate(0.0F, 0.0F, 176);
+        poseStack.translate(0.0F, 0.0F, 250);
         graphics.drawString(Minecraft.getInstance().font,
                 Component.literal(String.valueOf(stack.getCount())).withStyle(ChatFormatting.WHITE),
-                leftPos + 8,
+                leftPos + numberOffset,
                 topPos + 23,
                 0,
                 true);

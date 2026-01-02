@@ -26,7 +26,8 @@ public class GuideTextListRenderer implements IPageElementRenderer<GuideTextList
 
             graphics.drawString(Minecraft.getInstance().font,
                     Component.literal(element.extras().bulletPoint())
-                            .append(Component.translatable(element.list().get(i)))
+                            .append(" ")
+                            .append(element.list().get(i))
                             .withStyle(isVisible(element.extras().pageScrap()) ? ChatFormatting.RESET : ChatFormatting.OBFUSCATED),
                     leftPos - 10 + element.position().xOffset() + xOffset,
                     topPos + element.position().yOffset() + 6 + yOffset,
