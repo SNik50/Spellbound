@@ -139,12 +139,16 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.ritual.tier_one", "Tier: 1");
         add("spellbound.ritual.tier_two", "Tier: 2");
         add("spellbound.ritual.tier_three", "Tier: 3");
-        add("spellbound.ritual.activation_time", "Activation Time: %s");
-        add("spellbound.ritual.duration", "Duration: ");
-        add("spellbound.ritual.not_applicable", "N/A");
+        add("spellbound.ritual.activation_time", "Activation Time: %s seconds");
+        add("spellbound.ritual.duration", "Duration: %s seconds");
+        add("spellbound.ritual.duration_not_applicable", "Duration: N/A");
 
+        add("ritual.spellbound.create_stride", "Create Spell Tome:\nStride");
+        add("ritual.spellbound.create_stride.description", "Creates a Stride spell tome");
         add("ritual.spellbound.create_shadow_gate", "Create Spell Tome:\nShadow Gate");
-        add("spellbound.create_shadow_gate.description", "Creates a Shadow Gate spell tome");
+        add("ritual.spellbound.create_shadow_gate.description", "Creates a Shadow Gate spell tome");
+        add("ritual.spellbound.create_mystic_armor", "Create Spell Tome:\nMystic Armor");
+        add("ritual.spellbound.create_mystic_armor.description", "Creates a Mystic Armor spell tome");
         add("spellbound.ritual.materials", "Ritual Materials");
     }
 

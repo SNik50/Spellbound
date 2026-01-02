@@ -23,7 +23,7 @@
         "yOffset": 35
       },
       "translation": {
-        "translate": "spellbound.create_shadow_gate.description"
+        "translate": "ritual.spellbound.create_shadow_gate.description"
       }
     },
     {
@@ -46,16 +46,11 @@
         {
           "translate": "spellbound.ritual.activation_time",
           "with": [
-            "20"
+            "10"
           ]
         },
         {
-          "extra": [
-            {
-              "translate": "spellbound.ritual.not_applicable"
-            }
-          ],
-          "translate": "spellbound.ritual.duration"
+          "translate": "spellbound.ritual.duration_not_applicable"
         }
       ],
       "position": {
@@ -80,9 +75,9 @@
     {
       "type": "spellbound:ritual",
       "leftPage": false,
-      "ritual": "spellbound:create_mystic_armor"
+      "ritual": "spellbound:create_shadow_gate"
     }
   ],
   "id": "spellbound:architects_lexicon",
-  "insertAfter": "spellbound:sb_transfig_v1_p1"
+  "insertAfter": "spellbound:stride_page_acq"
 }

@@ -7,6 +7,7 @@ import com.ombremoon.spellbound.client.gui.guide.elements.special.Transfiguratio
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.client.gui.guide.elements.*;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
@@ -34,6 +35,7 @@ public class Spellbound {
         modEventBus.addListener((DataPackRegistryEvent.NewRegistry event) -> {
             event.dataPackRegistry(Keys.RITUAL, TransfigurationRitual.DIRECT_CODEC, TransfigurationRitual.DIRECT_CODEC);
             event.dataPackRegistry(Keys.MULTIBLOCKS, Multiblock.CODEC);
+            event.dataPackRegistry(Keys.GUIDE_BOOK, GuideBookPage.CODEC, GuideBookPage.CODEC);
         });
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::clientSetup);

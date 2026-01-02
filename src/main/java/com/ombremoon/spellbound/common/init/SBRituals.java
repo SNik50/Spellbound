@@ -4,6 +4,7 @@ import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.Transfi
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.effects.CreateItem;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.effects.CreateSpellTome;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -32,7 +33,7 @@ public interface SBRituals {
         register(
                 context,
                 CREATE_SHADOW_GATE,
-                TransfigurationRitual.ritual(2)
+                TransfigurationRitual.ritual(2, 200, 1)
                         .requires(Ingredient.of(Items.IRON_DOOR), 2)
                         .requires(Ingredient.of(Items.ENDER_PEARL), 2)
                         .requires(Ingredient.of(Items.FEATHER), 2)
@@ -45,7 +46,7 @@ public interface SBRituals {
         register(
                 context,
                 CREATE_MYSTIC_ARMOR,
-                TransfigurationRitual.ritual(2)
+                TransfigurationRitual.ritual(2, 200, 1)
                         .requires(Ingredient.of(Items.DIAMOND_CHESTPLATE))
                         .requires(Ingredient.of(Items.CACTUS))
                         .requires(Ingredient.of(Items.OBSIDIAN), 2)
@@ -74,6 +75,7 @@ public interface SBRituals {
 
     private static void register(BootstrapContext<TransfigurationRitual> context, ResourceKey<TransfigurationRitual> key, TransfigurationRitual.Builder builder) {
         context.register(key, builder.build());
+        Constants.LOG.info("");
     }
 
     private static ResourceKey<TransfigurationRitual> key(String name) {

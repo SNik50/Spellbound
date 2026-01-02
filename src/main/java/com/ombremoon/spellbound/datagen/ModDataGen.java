@@ -24,10 +24,10 @@ public class ModDataGen {
 
         boolean includeServer = event.includeServer();
         boolean includeClient = event.includeClient();
+        event.createDatapackRegistryObjects(DatapackRegistriesProvider.BUILDER);
         generator.addProvider(includeServer, new ModRecipeProvider(packOutput, lookupProvider));
         generator.addProvider(includeServer, new ModLootTableProvider(packOutput, lookupProvider));
         generator.addProvider(includeServer, new ModSoundProvider(packOutput, existingFileHelper));
-        event.createDatapackRegistryObjects(DatapackRegistriesProvider.BUILDER);
         generator.addProvider(includeServer, new ModTagProvider.Blocks(packOutput, event.getLookupProvider(), existingFileHelper));
         generator.addProvider(includeServer, new ModTagProvider.Items(packOutput, event.getLookupProvider(), existingFileHelper));
         generator.addProvider(includeServer, new ModTagProvider.EntityTypes(packOutput, event.getLookupProvider(), existingFileHelper));
@@ -35,7 +35,6 @@ public class ModDataGen {
         generator.addProvider(includeServer, new ModGlobalLootModifiersProvider(packOutput, lookupProvider));
         generator.addProvider(includeServer, new ModDivineActionProvider(packOutput, lookupProvider));
         generator.addProvider(includeServer, new ModPageScrapProvider(packOutput, lookupProvider));
-        generator.addProvider(includeServer, new ModGuideBookProvider(packOutput, lookupProvider));
         generator.addProvider(includeServer, new ModMultiblockProvider(packOutput, lookupProvider));
         generator.addProvider(includeClient, new ModItemModelProvider(packOutput, existingFileHelper));
         generator.addProvider(includeClient, new ModBlockStateProvider(packOutput, existingFileHelper));

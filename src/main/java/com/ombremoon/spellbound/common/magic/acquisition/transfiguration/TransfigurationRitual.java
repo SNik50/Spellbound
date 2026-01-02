@@ -28,7 +28,7 @@ import net.minecraft.world.level.Level;
 import java.util.*;
 
 public class TransfigurationRitual {
-    public static final int DEFAULT_RITUAL_DURATION = 5;
+    public static final int DEFAULT_RITUAL_DURATION = 1;
     public static final Codec<TransfigurationRitual> DIRECT_CODEC = RecordCodecBuilder.create(
             p_344998_ -> p_344998_.group(
                             RitualDefinition.CODEC.fieldOf("definition").forGetter(TransfigurationRitual::definition),

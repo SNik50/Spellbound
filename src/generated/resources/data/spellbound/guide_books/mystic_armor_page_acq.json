@@ -1,0 +1,83 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 4
+      },
+      "translation": {
+        "translate": "ritual.spellbound.create_mystic_armor"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "italic": true
+      },
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "ritual.spellbound.create_mystic_armor.description"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "italic": true
+      },
+      "position": {
+        "xOffset": -5,
+        "yOffset": 55
+      },
+      "translation": "-------------------------"
+    },
+    {
+      "type": "spellbound:text_list",
+      "list": [
+        {
+          "translate": "spellbound.ritual.tier_two"
+        },
+        {
+          "translate": "spellbound.ritual.activation_time",
+          "with": [
+            "10"
+          ]
+        },
+        {
+          "translate": "spellbound.ritual.duration_not_applicable"
+        }
+      ],
+      "position": {
+        "xOffset": 10,
+        "yOffset": 65
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "centered": true,
+        "underline": true
+      },
+      "position": {
+        "xOffset": 247,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "spellbound.ritual.materials"
+      }
+    },
+    {
+      "type": "spellbound:ritual",
+      "leftPage": false,
+      "ritual": "spellbound:create_mystic_armor"
+    }
+  ],
+  "id": "spellbound:architects_lexicon",
+  "insertAfter": "spellbound:shadow_gate_page_acq"
+}

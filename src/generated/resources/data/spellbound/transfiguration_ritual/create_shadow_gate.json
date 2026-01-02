@@ -1,7 +1,7 @@
 {
   "definition": {
-    "duration": 5,
-    "startupTime": 100,
+    "duration": 1,
+    "startupTime": 200,
     "tier": 2
   },
   "effects": [

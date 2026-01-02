@@ -57,8 +57,8 @@ public class PageBuilder {
      * @return this
      * @implNote This does not guarantee it goes straight after this page, just that it will be somewhere after it
      */
-    public PageBuilder setPreviousPage(ResourceLocation page) {
-        this.insertAfter = page;
+    public PageBuilder setPreviousPage(ResourceKey<GuideBookPage> page) {
+        this.insertAfter = page.location();
         return this;
     }
 
@@ -86,7 +86,7 @@ public class PageBuilder {
      * Constructs the GuideBookPage
      * @return GuideBookPage built using data provided
      */
-    private GuideBookPage build() {
+    public GuideBookPage build() {
         return new GuideBookPage(bookId, pageScrap, insertAfter, elements);
     }
 
