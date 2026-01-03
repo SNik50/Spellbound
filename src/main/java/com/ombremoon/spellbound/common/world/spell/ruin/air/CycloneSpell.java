@@ -1,7 +1,7 @@
 /*
-package com.ombremoon.spellbound.common.world.spell.ruin.air;
+package com.ombremoon.spellbound.common.world.path.ruin.air;
 
-import com.ombremoon.spellbound.common.world.entity.spell.Cyclone;
+import com.ombremoon.spellbound.common.world.entity.path.Cyclone;
 import com.ombremoon.spellbound.common.init.SBDataTypes;
 import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.init.SBSkills;

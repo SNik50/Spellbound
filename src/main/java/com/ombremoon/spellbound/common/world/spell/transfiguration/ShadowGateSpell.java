@@ -34,7 +34,6 @@ import java.util.List;
 public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
     private static Builder<ShadowGateSpell> createShadowGateBuilder() {
         return createSimpleSpellBuilder(ShadowGateSpell.class)
-                .mastery(SpellMastery.ADEPT)
                 .manaCost(25)
                 .duration(1200)
                 .castCondition((context, spell) -> {

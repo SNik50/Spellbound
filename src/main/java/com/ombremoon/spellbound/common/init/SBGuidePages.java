@@ -1,17 +1,20 @@
 package com.ombremoon.spellbound.common.init;
 
+import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
+import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.datagen.provider.guide_builders.PageBuilder;
 import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.main.ConfigHandler;
 import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+
+import java.util.function.Supplier;
 
 public interface SBGuidePages {
     int PAGE_TWO_START_X = 169;
@@ -22,17 +25,20 @@ public interface SBGuidePages {
 
     //Books
     ResourceLocation BASIC = loc("studies_in_the_arcane");
-    ResourceLocation TRANSFIG = loc("architects_lexicon");
     ResourceLocation RUIN = loc("grimoire_of_annihilation");
+    ResourceLocation TRANSFIG = loc("architects_lexicon");
+    ResourceLocation SUMMON = loc("the_necronomicon");
+    ResourceLocation DIVINE = loc("sanctified_codex");
+    ResourceLocation DECEPTION = loc("swindlers_guide");
 
     //Ruin Book
-    ResourceKey<GuideBookPage> RUIN_P1 = key("sb_ruin_v1_p1");
+    ResourceKey<GuideBookPage> RUIN_COVER_PAGE = key("ruin_cover_page");
     ResourceKey<GuideBookPage> RUIN_P2 = key("sb_ruin_v1_p2");
     ResourceKey<GuideBookPage> RUIN_P3 = key("sb_ruin_v1_p3");
     ResourceKey<GuideBookPage> SOLAR_RAY = key("solar_ray_page");
 
     //Transfig Book
-    ResourceKey<GuideBookPage> TRANSFIG_P1 = key("sb_transfig_v1_p1");
+    ResourceKey<GuideBookPage> TRANSFIG_COVER_PAGE = key("transfig_cover_page");
     ResourceKey<GuideBookPage> STRIDE_INFO = key("stride_page_info");
     ResourceKey<GuideBookPage> STRIDE_ACQ = key("stride_page_acq");
     ResourceKey<GuideBookPage> SHADOW_GATE_INFO = key("shadow_gate_page_info");
@@ -40,13 +46,22 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> MYSTIC_ARMOR_INFO = key("mystic_armor_page_info");
     ResourceKey<GuideBookPage> MYSTIC_ARMOR_ACQ = key("mystic_armor_page_acq");
 
+    //Summon Book
+    ResourceKey<GuideBookPage> SUMMON_COVER_PAGE = key("summon_cover_page");
+
+    //Divine Book
+    ResourceKey<GuideBookPage> DIVINE_COVER_PAGE = key("divine_cover_page");
+
+    //Deception Book
+    ResourceKey<GuideBookPage> DECEPTION_COVER_PAGE = key("deception_cover_page");
+
     //Basic Book
-    ResourceKey<GuideBookPage> BASIC_P1 = key("sb_basic_v1_p1");
+    ResourceKey<GuideBookPage> BASIC_COVER_PAGE = key("basic_cover_page");
 
     static void bootstrap(BootstrapContext<GuideBookPage> context) {
         register(
                 context,
-                BASIC_P1,
+                BASIC_COVER_PAGE,
                 PageBuilder
                         .forBook(BASIC)
                         .addElements(
@@ -77,30 +92,15 @@ public interface SBGuidePages {
                                         .build()
                         )
         );
-        register(
-                context,
-                RUIN_P1,
-                PageBuilder
-                        .forBook(RUIN)
-                        .addElements(
-                                PageBuilder.Text
-                                        .ofTranslatable("item.spellbound.grimoire_of_annihilation")
-                                        .position(PAGE_TWO_START_X + 13, 20)
-                                        .build(),
-                                PageBuilder.Text
-                                        .ofTranslatable("guide.ruin.v1_p1.description")
-                                        .hoverText("Testing this lol")
-                                        .setLink("https://www.google.com/")
-                                        .position(PAGE_TWO_START_X, 50)
-                                        .build()
-                        )
-        );
+
+        //Ruin
+        createCoverPage(context, RUIN, RUIN_COVER_PAGE, SpellPath.RUIN);
         register(
                 context,
                 RUIN_P2,
                 PageBuilder
                         .forBook(RUIN)
-                        .setPreviousPage(RUIN_P1)
+                        .setPreviousPage(RUIN_COVER_PAGE)
                         .addElements(
                                 PageBuilder.Image
                                         .of(CommonClass.customLocation("textures/gui/books/images/ruin_portal.png"))
@@ -142,47 +142,35 @@ public interface SBGuidePages {
                                         .build()
                         )
         );
-        createSpellPage(context, SOLAR_RAY, RUIN_P3, RUIN, SBSpells.SOLAR_RAY.get());
+        createSpellPage(context, SOLAR_RAY, RUIN_P3, RUIN, SBSpells.SOLAR_RAY);
 
-        register(
-                context,
-                TRANSFIG_P1,
-                PageBuilder
-                        .forBook(TRANSFIG)
-                        .addElements(
-                                PageBuilder.Image
-                                        .of(loc("textures/gui/paths/transfiguration.png"))
-                                        .setDimensions(150, 150)
-                                        .position(0, 25)
-                                        .disableCorners()
-                                        .build(),
-                                PageBuilder.Text
-                                        .ofTranslatable("item.spellbound.architects_lexicon")
-                                        .position(PAGE_TWO_START_CENTER_X, PAGE_START_Y)
-                                        .centered()
-                                        .build(),
-                                PageBuilder.Text
-                                        .ofTranslatable("guide.transfig.v1_p1.description")
-                                        .position(PAGE_TWO_START_CENTER_X, 65)
-                                        .centered()
-                                        .build()
-                        )
-        );
-        createSpellPage(context, STRIDE_INFO, TRANSFIG_P1, TRANSFIG, SBSpells.STRIDE.get());
+        //Transfiguration
+        createCoverPage(context, TRANSFIG, TRANSFIG_COVER_PAGE, SpellPath.TRANSFIGURATION);
+        createSpellPage(context, STRIDE_INFO, TRANSFIG_COVER_PAGE, TRANSFIG, SBSpells.STRIDE);
         createRitualPage(context, STRIDE_ACQ, STRIDE_INFO, SBRituals.CREATE_STRIDE, 5, 0, RitualTier.ONE);
-        createSpellPage(context, SHADOW_GATE_INFO, STRIDE_ACQ, TRANSFIG, SBSpells.SHADOW_GATE.get());
+        createSpellPage(context, SHADOW_GATE_INFO, STRIDE_ACQ, TRANSFIG, SBSpells.SHADOW_GATE);
         createRitualPage(context, SHADOW_GATE_ACQ, SHADOW_GATE_INFO, SBRituals.CREATE_SHADOW_GATE, 10, 0, RitualTier.TWO);
-        createSpellPage(context, MYSTIC_ARMOR_INFO, SHADOW_GATE_ACQ, TRANSFIG, SBSpells.MYSTIC_ARMOR.get());
+        createSpellPage(context, MYSTIC_ARMOR_INFO, SHADOW_GATE_ACQ, TRANSFIG, SBSpells.MYSTIC_ARMOR);
         createRitualPage(context, MYSTIC_ARMOR_ACQ, MYSTIC_ARMOR_INFO, SBRituals.CREATE_MYSTIC_ARMOR, 10, 0, RitualTier.TWO);
+
+        //Summon
+        createCoverPage(context, SUMMON, SUMMON_COVER_PAGE, SpellPath.SUMMONS);
+
+        //Divine
+        createCoverPage(context, DIVINE, DIVINE_COVER_PAGE, SpellPath.DIVINE);
+
+        //Deception
+        createCoverPage(context, DECEPTION, DECEPTION_COVER_PAGE, SpellPath.DECEPTION);
     }
 
-    private static void createSpellPage(BootstrapContext<GuideBookPage> context,
+    private static <T extends AbstractSpell> void createSpellPage(BootstrapContext<GuideBookPage> context,
                                         ResourceKey<GuideBookPage> currentPage,
                                         ResourceKey<GuideBookPage> prevPage,
                                         ResourceLocation book,
-                                        SpellType<?> spell
+                                        Supplier<SpellType<T>> spell
     ) {
-        String translations = "guide." + spell.getPath().name() + "." + spell.location().getPath() + ".";
+        SpellType<?> spellType = spell.get();
+        String translations = "guide." + spellType.getPath().name() + "." + spellType.location().getPath() + ".";
 
 
         register(context,
@@ -192,16 +180,16 @@ public interface SBGuidePages {
                         .setPreviousPage(prevPage)
                         .addElements(
                                 PageBuilder.Text
-                                        .ofTranslatable("spells.spellbound." + spell.location().getPath())
-                                        .position(PAGE_START_CENTER_X, PAGE_START_DOUBLE_Y)
+                                        .ofTranslatable("spells.spellbound." + spellType.location().getPath())
+                                        .position(PAGE_START_CENTER_X, PAGE_START_Y)
                                         .centered()
                                         .bold()
                                         .build(),
                                 PageBuilder.SpellBorder
-                                        .of(spell)
+                                        .of(spellType)
                                         .build(),
                                 PageBuilder.Image
-                                        .of(CommonClass.customLocation("textures/gui/books/images/spells/" + spell.location().getPath() + ".png"))
+                                        .of(CommonClass.customLocation("textures/gui/books/images/spells/" + spellType.location().getPath() + ".png"))
                                         .setDimensions(140, 74)
                                         .position(0, 40)
                                         .build(),
@@ -219,11 +207,46 @@ public interface SBGuidePages {
                                         .position(PAGE_TWO_START_X, 68)
                                         .build(),
                                 PageBuilder.SpellInfo
-                                        .of(spell)
+                                        .of(spellType)
                                         .alwaysShow()
                                         .position(PAGE_TWO_START_X, 195)
                                         .build()
                         ));
+    }
+
+    private static void createCoverPage(BootstrapContext<GuideBookPage> context,
+                                         ResourceLocation forBook,
+                                         ResourceKey<GuideBookPage> currentPage,
+                                         SpellPath path
+    ) {
+        register(
+                context,
+                currentPage,
+                PageBuilder
+                        .forBook(forBook)
+                        .addElements(
+                                PageBuilder.Image
+                                        .of(loc("textures/gui/paths/" + path.getSerializedName() + ".png"))
+                                        .setDimensions(150, 150)
+                                        .position(0, 25)
+                                        .disableCorners()
+                                        .build(),
+                                PageBuilder.SpellBorder
+                                        .of(path)
+                                        .setPosition(PAGE_TWO_START_X, 0)
+                                        .build(),
+                                PageBuilder.Text
+                                        .ofTranslatable("item.spellbound." + forBook.getPath())
+                                        .position(PAGE_TWO_START_CENTER_X, PAGE_START_Y)
+                                        .centered()
+                                        .build(),
+                                PageBuilder.Text
+                                        .ofTranslatable("guide." + path.getSerializedName() + ".cover_page")
+                                        .position(PAGE_TWO_START_CENTER_X, 65)
+                                        .centered()
+                                        .build()
+                        )
+        );
     }
 
     private static void createRitualPage(BootstrapContext<GuideBookPage> context,
@@ -251,6 +274,9 @@ public interface SBGuidePages {
                                     .ofTranslatable("ritual.spellbound." + key.location().getPath() + ".description")
                                     .position(0, 35)
                                     .italic()
+                                    .build(),
+                            PageBuilder.SpellBorder
+                                    .of(SpellPath.TRANSFIGURATION)
                                     .build(),
                             PageBuilder.Text
                                     .ofLiteral("-------------------------")

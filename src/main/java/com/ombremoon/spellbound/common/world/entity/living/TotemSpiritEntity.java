@@ -6,7 +6,7 @@ import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.common.world.entity.SmartSpellEntity;
 import com.ombremoon.spellbound.common.world.entity.behavior.ApplySurroundingEffectBehavior;
 import com.ombremoon.spellbound.common.world.entity.behavior.DelayedLeapAtTarget;
-import com.ombremoon.spellbound.common.world.spell.summon.SpiritTotemSpell;
+import com.ombremoon.spellbound.common.world.path.summon.SpiritTotemSpell;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.init.SBSkills;
@@ -32,7 +32,7 @@ import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.CustomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.AvoidEntity;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FollowOwner;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
+import net.tslat.smartbrainlib.api.core.behaviour.custom.pathTexture.SetWalkTargetToAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.TargetOrRetaliate;
@@ -50,7 +50,7 @@ public class TotemSpiritEntity extends SmartSpellEntity<SpiritTotemSpell> {
     private static final EntityDataAccessor<Boolean> IS_CAT = SynchedEntityData.defineId(TotemSpiritEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> IS_HEALING = SynchedEntityData.defineId(TotemSpiritEntity.class, EntityDataSerializers.BOOLEAN);
 
-    private SpiritTotemSpell spell;
+    private SpiritTotemSpell path;
     private int healingCooldown = 0;
     private int formSwapCooldown = 200;
     private boolean isTwin = false;
@@ -120,9 +120,9 @@ public class TotemSpiritEntity extends SmartSpellEntity<SpiritTotemSpell> {
         this.isTwin = isTwin;
     }
 
-    public void initSpell(SkillHolder skills, SpiritTotemSpell spell) {
+    public void initSpell(SkillHolder skills, SpiritTotemSpell path) {
         this.skills = skills;
-        this.spell = spell;
+        this.path = path;
     }
 
     public void setHealing(boolean healing) {
@@ -166,7 +166,7 @@ public class TotemSpiritEntity extends SmartSpellEntity<SpiritTotemSpell> {
 //            spells.getSummons().remove(this.getId());
 //            spells.getSummons().add(entity.getId());
         } else {
-            spell.endSpell();
+            path.endSpell();
         }
     }
 

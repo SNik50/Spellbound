@@ -54,11 +54,6 @@ public abstract class AnimatedSpell extends AbstractSpell {
         protected Function<SpellContext, String> castAnimation = context -> "simple_cast";
         protected Function<SpellContext, String> failAnimation = context -> "spell_fail";
 
-        public Builder<T> mastery(SpellMastery mastery) {
-            this.spellMastery = mastery;
-            return this;
-        }
-
         public Builder<T> manaCost(int manaCost) {
             this.manaCost = manaCost;
             return this;

@@ -38,7 +38,7 @@ public class LearnSpellTrigger extends SimpleTrigger<LearnSpellTrigger.Instance>
         public static final Codec<Instance> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(
                         EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(Instance::player),
-                        SpellPredicate.CODEC.optionalFieldOf("spell").forGetter(Instance::spell)
+                        SpellPredicate.CODEC.optionalFieldOf("path").forGetter(Instance::spell)
                 ).apply(instance, Instance::new)
         );
 

@@ -40,7 +40,6 @@ public class WildMushroomSpell extends SummonSpell {
 
     public static Builder<WildMushroomSpell> createMushroomBuilder() {
         return createSummonBuilder(WildMushroomSpell.class)
-                .mastery(SpellMastery.ADEPT)
                 .duration(240)
                 .manaCost(30)
                 .baseDamage(4.0F)

@@ -39,7 +39,6 @@ public class HealingBlossomSpell extends AnimatedSpell {
 
     private static Builder<HealingBlossomSpell> createHealingBlossomSpell() {
         return createSimpleSpellBuilder(HealingBlossomSpell.class)
-                .mastery(SpellMastery.EXPERT)
                 .manaCost(45)
                 .duration(400)
                 .castTime(20)

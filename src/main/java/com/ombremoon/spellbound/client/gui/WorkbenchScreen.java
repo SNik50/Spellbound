@@ -319,12 +319,12 @@ public class WorkbenchScreen extends Screen {
         }
 
         if (isHovering(4, 142, 20, 20, mouseX, mouseY)) {
-            guiGraphics.renderTooltip(minecraft.font, Component.literal("The amount of skill points for the selected spell."), mouseX, mouseY);
+            guiGraphics.renderTooltip(minecraft.font, Component.literal("The amount of skill points for the selected path."), mouseX, mouseY);
         }
 
         if (isHovering(101, 5, 144, 5, mouseX, mouseY)) {
             int level = this.skillHolder.getPathLevel(this.spellPath);
-            Component component = Component.translatable("spellbound.path." + this.spellPath.getSerializedName()).append(" ").append(Component.translatable("spellbound.path.level")).append(": " + level);
+            Component component = Component.translatable("spellbound.pathTexture." + this.spellPath.getSerializedName()).append(" ").append(Component.translatable("spellbound.path.level")).append(": " + level);
             guiGraphics.renderTooltip(minecraft.font, component, mouseX, mouseY);
         }
     }

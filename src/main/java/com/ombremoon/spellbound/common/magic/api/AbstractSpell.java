@@ -82,7 +82,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     protected static final float HURT_XP_MODIFIER = 0.01F;
     protected static final float HEAL_MODIFIER = 0.25F;
     private final SpellType<?> spellType;
-    private final SpellMastery spellMastery;
     private final int manaCost;
     private final int duration;
     private final float baseDamage;
@@ -131,7 +130,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     public AbstractSpell(SpellType<?> spellType, Builder<? extends AbstractSpell> builder) {
         this.spellType = spellType;
-        this.spellMastery = builder.spellMastery;
         this.manaCost = builder.manaCost;
         this.duration = builder.duration;
         this.baseDamage = builder.baseDamage;
@@ -160,7 +158,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     public SpellMastery getSpellMastery() {
-        return this.spellMastery;
+        return this.spellType().getMastery();
     }
 
     public float getManaCost() {
@@ -237,7 +235,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Returns the resource location of the current spell's spell type.
+     * Returns the resource location of the current path's path type.
      * @return The spells type's resource location
      */
     public ResourceLocation location() {
@@ -317,16 +315,16 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Returns the spells path of the spells.
-     * @return The spells path
+     * Returns the spells pathTexture of the spells.
+     * @return The spells pathTexture
      */
     public SpellPath getPath() {
         return this.spellType().getPath();
     }
 
     /**
-     * Returns the sub path of the spells if present.
-     * @return The spells sub path
+     * Returns the sub pathTexture of the spells if present.
+     * @return The spells sub pathTexture
      */
     public SpellPath getSubPath() {
         if (this.spellType.getPath() != SpellPath.RUIN || this.spellType.getPath().isSubPath())
@@ -336,7 +334,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Returns the {@link SpellContext} for the spell
+     * Returns the {@link SpellContext} for the path
      * @return The casting specific spells context
      */
     public final SpellContext getContext() {
@@ -537,8 +535,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Sets the amount of ticks the spell will continue to tick
-     * @param ticks The amount of ticks left for the spell
+     * Sets the amount of ticks the path will continue to tick
+     * @param ticks The amount of ticks left for the path
      */
     public void setRemainingTicks(int ticks) {
         this.tickCount = Mth.clamp(this.getDuration() - ticks, 0, this.getDuration());
@@ -616,7 +614,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Hurts the target entity, taking spell level, potency, and magic resistance into account. Suitable for modded damage types.
+     * Hurts the target entity, taking path level, potency, and magic resistance into account. Suitable for modded damage types.
      * @param ownerEntity The damage causing entity
      * @param targetEntity The hurt entity
      * @param damageType The damage type
@@ -651,7 +649,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Hurts the target entity. The damage type is determined by the sub-path of the spell.
+     * Hurts the target entity. The damage type is determined by the sub-pathTexture of the path.
      * @param targetEntity The hurt entity
      * @param hurtAmount The amount of damage the entity takes
      * @return Whether the entity takes damage or not
@@ -673,7 +671,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Hurts the target entity by the pre-defined base damage of the spell. The damage type is determined by the sub-path of the spell.
+     * Hurts the target entity by the pre-defined base damage of the path. The damage type is determined by the sub-pathTexture of the path.
      * @param targetEntity The hurt entity
      * @return Whether the entity takes damage or not
      */
@@ -686,7 +684,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Calculates damage based on spell level, path level, potency, and judgement (if Divine)
+     * Calculates damage based on path level, pathTexture level, potency, and judgement (if Divine)
      * @param ownerEntity The damage causing entity
      * @param amount The damage amount
      * @return The damage taking all modifiers into account
@@ -706,7 +704,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Calculates the final damage dealt after taking spell level, path level, potency, and magic resistance into account
+     * Calculates the final damage dealt after taking path level, pathTexture level, potency, and magic resistance into account
      * @param ownerEntity The damage causing entity
      * @param targetEntity The hurt entity
      * @param damageAmount The damage amount
@@ -740,8 +738,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Heals the target, scaling with spell level, potency, and judgement.
-     * Will not work if caster's judgement does not correspond with the type of heal spell
+     * Heals the target, scaling with path level, potency, and judgement.
+     * Will not work if caster's judgement does not correspond with the type of heal path
      * @param healEntity The entity being healed
      * @param amount The base heal amount
      */
@@ -987,7 +985,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Checks whether the entity is the caster of this spell.
+     * Checks whether the entity is the caster of this path.
      * @param entity The entity
      * @return If the living entity is the caster
      */
@@ -1079,7 +1077,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     /**
      * Plays an animation for the player. This is called server-side for all players to see the animation
      * @param player The player performing the animation
-     * @param animationName The animation path location
+     * @param animationName The animation pathTexture location
      */
     protected void playAnimation(Player player, String animationName) {
         if (!player.level().isClientSide) {
@@ -1329,9 +1327,9 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @param caster The casting living entity
      * @param level The current level
      * @param blockPos The block position the caster is in when the cast timer ends
-     * @param isRecast Whether the spell was already active upon casting
-     * @param castId The specific numeric id for the spell instance
-     * @param forceReset Whether the spell failed casting on the server
+     * @param isRecast Whether the path was already active upon casting
+     * @param castId The specific numeric id for the path instance
+     * @param forceReset Whether the path failed casting on the server
      */
     public void clientCastSpell(LivingEntity caster, Level level, BlockPos blockPos, int castId, CompoundTag spellData, boolean isRecast, boolean forceReset, boolean shiftSpells) {
         this.level = level;
@@ -1361,7 +1359,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Initializes spells data before activation. Will not activate the spell.
+     * Initializes spells data before activation. Will not activate the path.
      * @param caster The casting living entity
      * @param level The current level
      * @param blockPos The block position the caster is in when the cast timer ends
@@ -1489,7 +1487,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @param <T> Type extends AbstractSpell to give access to private fields in a static context
      */
     public static class Builder<T extends AbstractSpell> {
-        protected SpellMastery spellMastery = SpellMastery.NOVICE;
         protected int duration = 10;
         protected int manaCost;
         protected float baseDamage;
@@ -1503,16 +1500,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         protected boolean hasLayer;
         protected Predicate<SpellContext> negativeScaling = context -> false;
         protected int updateInterval = 3;
-
-        /**
-         * Sets the mastery level of the spells.
-         * @param mastery The mana cost
-         * @return The spells builder
-         */
-        public Builder<T> mastery(SpellMastery mastery) {
-            this.spellMastery = mastery;
-            return this;
-        }
 
         /**
          * Sets the mana cost of the spells.
@@ -1535,7 +1522,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         }
 
         /**
-         * Sets the base damage of the spell (if applicable). Should only be used for Ruin spells.
+         * Sets the base damage of the path (if applicable). Should only be used for Ruin spells.
          * @param baseDamage The duration
          * @return The spells builder
          */
@@ -1545,7 +1532,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         }
 
         /**
-         * Sets the amount of xp scaled from the spell's mana cost gained by the caster.
+         * Sets the amount of xp scaled from the path's mana cost gained by the caster.
          * @param modifier The scaling amount
          * @return The spells builder
          */
@@ -1628,7 +1615,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         }
 
         /**
-         * Must be set to render the layer set by this spell.
+         * Must be set to render the layer set by this path.
          * @return The spells builder
          */
         public Builder<T> hasLayer() {
@@ -1637,7 +1624,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         }
 
         /**
-         * Determines if a spell should scale with negative judgement. Should only be used for Divine spells.
+         * Determines if a path should scale with negative judgement. Should only be used for Divine spells.
          * @return The spells builder
          */
         public Builder<T> negativeScaling(Predicate<SpellContext> negativeScaling) {

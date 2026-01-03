@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.magic.api;
 
+import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -29,11 +30,13 @@ public class SpellType<S extends AbstractSpell> {
     private final SpellPath path;
     @Nullable
     private final SpellPath subPath;
+    private final SpellMastery mastery;
     private final Set<Holder<Skill>> availableSkills;
 
-    public SpellType(ResourceLocation resourceLocation, SpellPath path, @Nullable SpellPath subPath, Set<Holder<Skill>> skills, SpellFactory<S> factory) {
+    public SpellType(ResourceLocation resourceLocation, SpellPath path, @Nullable SpellPath subPath, SpellMastery mastery, Set<Holder<Skill>> skills, SpellFactory<S> factory) {
         this.path = path;
         this.subPath = subPath;
+        this.mastery = mastery;
         this.availableSkills = skills;
         this.factory = factory;
         this.resourceLocation = resourceLocation;
@@ -55,6 +58,10 @@ public class SpellType<S extends AbstractSpell> {
 
     public SpellPath getIdentifiablePath() {
         return this.getSubPath() != null ? this.getSubPath() : this.getPath();
+    }
+
+    public SpellMastery getMastery() {
+        return this.mastery;
     }
 
     public ResourceLocation getTexture() {
@@ -98,6 +105,7 @@ public class SpellType<S extends AbstractSpell> {
         private final SpellFactory<T> factory;
         private SpellPath path;
         private SpellPath subPath;
+        private SpellMastery mastery;
         private final Set<Holder<Skill>> availableSkills = new ObjectOpenHashSet<>();
 
         public Builder(String resourceLocation, SpellFactory<T> factory) {
@@ -118,6 +126,11 @@ public class SpellType<S extends AbstractSpell> {
             return this;
         }
 
+        public Builder<T> setMastery(SpellMastery mastery) {
+            this.mastery = mastery;
+            return this;
+        }
+
         @SafeVarargs
         public final Builder<T> skills(Holder<Skill>... skills) {
             this.availableSkills.addAll(Arrays.stream(skills).toList());
@@ -125,7 +138,7 @@ public class SpellType<S extends AbstractSpell> {
         }
 
         public SpellType<T> build() {
-            return new SpellType<>(resourceLocation, path, subPath, availableSkills, factory);
+            return new SpellType<>(resourceLocation, path, subPath, mastery, availableSkills, factory);
         }
     }
 }

@@ -2,8 +2,8 @@
   "criteria": {
     "learn_spell": {
       "conditions": {
-        "spell": {
-          "spell": "spellbound:solar_ray"
+        "path": {
+          "path": "spellbound:solar_ray"
         }
       },
       "trigger": "spellbound:learn_spell"

@@ -2,16 +2,15 @@ package com.ombremoon.spellbound.datagen;
 
 import com.google.common.collect.ImmutableMap;
 import com.ombremoon.spellbound.common.init.SBBlocks;
-import com.ombremoon.spellbound.common.magic.SpellPath;
-import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
+import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.BlockItem;
@@ -23,7 +22,6 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -63,7 +61,7 @@ public class ModLangProvider extends LanguageProvider {
 
     protected void pathLang() {
         for (SpellPath path : SpellPath.values()) {
-            add("spellbound.path." + path.getSerializedName(), checkReplace(path.getSerializedName()));
+            add("spellbound.pathTexture." + path.getSerializedName(), checkReplace(path.getSerializedName()));
         }
     }
 
@@ -125,7 +123,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.basic.blurb", "Welcome fellow Magi! I present to you the first in many books documenting my exploration into the arcane. This book will act as a guideline introducing you to the different paths of magic I have discovered and how they can be used.");
 
         //Ruin
-        add("guide.ruin.v1_p1.description", "This book shall document my discoveries throughout my adventures into the arcane and how I can bend it to my will to harness the powers of ruin.");
+        add("guide.ruin.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can bend it to my will to destroy my enemies by harnessing the powers of ruin.");
         add("guide.ruin.v1_p2.ruin_portal", "During my adventures I have come across these strange portals that seem like they have been damaged by some kind of destructive magic.\n\nPerhaps its possible to repair, if I can just figure out where these portals lead...");
         add("guide.ruin.v1_p2.keystone", "HAHA! Success! These portals are more than I first thought.\n\nIt seems they lead to unknown pocket dimensions. From my research I have deduced the destination depends on these keystones,\n\nI have jotted down a recipe but they seem to need a catalyst to be powered.");
         add("guide.ruin.v1_p3.keystones", "Dammit, I just cant figure out how to empower these keystones. Maybe given more time I'll be able to figure it out...\n\nFor now im shifting my focus to looking for other spell casters that can hopefully shine a light on how to manipulate the arcane in these lands.\n\nI will begin my search within the forests and perhaps if I'm feeling adventurous I might try the End...");
@@ -137,7 +135,7 @@ public class ModLangProvider extends LanguageProvider {
                 "I was mistaken... This spell isn't channelling energy from the sun, but a Sun God! This is a realm im not coming back to...");
 
         //Transfig
-        add("guide.transfig.v1_p1.description", "This book shall document my discoveries throughout my adventures into the arcane and how I can manipulate the world around me through the powers of transfiguration.");
+        add("guide.transfiguration.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can manipulate the world around me through the study of transfiguration.");
 
         addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.STRIDE.get(),
                 "Revamps the way your body conserves energy granting an increase in the casters movement speed.",
@@ -151,6 +149,15 @@ public class ModLangProvider extends LanguageProvider {
                 "Grants the caster a magically charged shield, reducing incoming spell damage based on level.",
                  "Uh oh seems like I have angered a few too many Magi. Im trying to throw together what ever I can hoping i can protect my self a little more consistantly.",
                 "Well i was trying to make myself absorb their mana and while that didn't completely work I have managed to reduce the impact of their spells.");
+
+        //Summon
+        add("guide.summons.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can increase my strength through numbers with the rites of summoning.");
+
+        //Divine
+        add("guide.divine.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can call upon divine forces to aid myself and allies and harm foes.");
+
+        //Deception
+        add("guide.deception.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can utilize the shadows to my advantage with the art of deception.");
     }
 
     private void addSpellContents(SpellPath path, SpellType<?> spell, String description, String lore, String bossLore) {

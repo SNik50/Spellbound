@@ -16,7 +16,7 @@ public class ConfigHandler {
 
         Common(ModConfigSpec.Builder builder) {
             maxSpellLevel = builder
-                    .comment("The maximum number of levels any spell can obtain.")
+                    .comment("The maximum number of levels any path can obtain.")
                     .translation("spellbound.config.maxSpellLevel")
                     .defineInRange("maxSpellLevel", 5, 1, 10);
 

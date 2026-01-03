@@ -19,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
 public record CreateSpellTome(SpellType<?> spell, int tier) implements RitualEffect {
     public static final MapCodec<CreateSpellTome> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
-                    SBSpells.REGISTRY.byNameCodec().fieldOf("spell").forGetter(CreateSpellTome::spell),
+                    SBSpells.REGISTRY.byNameCodec().fieldOf("path").forGetter(CreateSpellTome::spell),
                     ExtraCodecs.intRange(1, 3).fieldOf("tier").forGetter(CreateSpellTome::tier)
             ).apply(instance, CreateSpellTome::new)
     );

@@ -19,7 +19,7 @@ import java.util.function.BiFunction;
 import java.util.function.Predicate;
 
 /**
- * Used to modify certain attributes (specifically mana, duration, potency, or cast chance) of a spell or category of spells. Spell modifiers must be registered in the *insert event here* and used as parameters for {@link ModifierSkill}s.
+ * Used to modify certain attributes (specifically mana, duration, potency, or cast chance) of a path or category of spells. Spell modifiers must be registered in the *insert event here* and used as parameters for {@link ModifierSkill}s.
  * @see SkillBuff#SPELL_MODIFIER
  * @param id The resource location of the spells modifier
  * @param modifierType The type of attribute that modifier affects
@@ -32,7 +32,7 @@ public record SpellModifier(ResourceLocation id, ModifierType modifierType, Pred
             .comapFlatMap(
                     location -> {
                         if (!MODIFIER_REGISTRY.containsKey(location)) {
-                            return DataResult.error(() -> "Tried to serialize unregistered spell modifier: " + location);
+                            return DataResult.error(() -> "Tried to serialize unregistered path modifier: " + location);
                         } else  {
                             return DataResult.success(SpellModifier.getTypeFromLocation(location));
                         }
@@ -54,7 +54,7 @@ public record SpellModifier(ResourceLocation id, ModifierType modifierType, Pred
     public static final SpellModifier SYNTHESIS = registerModifier("synthesis", ModifierType.MANA, spell -> spell == SBSpells.WILD_MUSHROOM.get(), 0F);
     public static final SpellModifier ENDURANCE = registerModifier("endurance", ModifierType.DURATION, spell -> spell == SBSpells.STRIDE.get(), 2F);
     public static final SpellModifier FORESIGHT = registerModifier("foresight", ModifierType.MANA, spell -> spell == SBSpells.MYSTIC_ARMOR.get(), 0.85F);
-//    public static final SpellModifier GALE_FORCE = registerModifier("gale_force", ModifierType.DURATION, spell -> spell == SBSpells.CYCLONE.get(), 2F);
+//    public static final SpellModifier GALE_FORCE = registerModifier("gale_force", ModifierType.DURATION, path -> path == SBSpells.CYCLONE.get(), 2F);
     public static final SpellModifier RESIDUAL_DISRUPTION = registerModifier("residual_disruption", ModifierType.CAST_CHANCE, spell -> true, 0.5F);
     public static final SpellModifier UNFOCUSED = registerModifier("unfocused", ModifierType.POTENCY, spell -> true, 0.8F);
 

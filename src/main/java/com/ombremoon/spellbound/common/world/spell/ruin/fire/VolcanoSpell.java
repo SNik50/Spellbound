@@ -1,5 +1,5 @@
 /*
-package com.ombremoon.spellbound.common.world.spell.ruin.fire;
+package com.ombremoon.spellbound.common.world.path.ruin.fire;
 
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellContext;

@@ -20,24 +20,24 @@ public class SpellboundCommand {
     public SpellboundCommand(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
         dispatcher.register(Commands.literal("spellbound")
                 .then(Commands.literal("grantpoint")
-                        .then(Commands.argument("spell", ResourceArgument.resource(context, SBSpells.SPELL_TYPE_REGISTRY_KEY))
+                        .then(Commands.argument("path", ResourceArgument.resource(context, SBSpells.SPELL_TYPE_REGISTRY_KEY))
                                 .then(Commands.argument("points", IntegerArgumentType.integer())
                                         .executes(cmdContext -> grantSkillPoint(cmdContext.getSource(),
-                                                ResourceArgument.getResource(cmdContext, "spell", SBSpells.SPELL_TYPE_REGISTRY_KEY),
+                                                ResourceArgument.getResource(cmdContext, "path", SBSpells.SPELL_TYPE_REGISTRY_KEY),
                                                 IntegerArgumentType.getInteger(cmdContext, "points"))))))
                 .then(Commands.literal("grantpoint")
-                        .then(Commands.argument("spell", ResourceArgument.resource(context, SBSpells.SPELL_TYPE_REGISTRY_KEY))
+                        .then(Commands.argument("path", ResourceArgument.resource(context, SBSpells.SPELL_TYPE_REGISTRY_KEY))
                                 .executes(cmdContext -> grantSkillPoint(cmdContext.getSource(),
-                                        ResourceArgument.getResource(cmdContext, "spell", SBSpells.SPELL_TYPE_REGISTRY_KEY),
+                                        ResourceArgument.getResource(cmdContext, "path", SBSpells.SPELL_TYPE_REGISTRY_KEY),
                                         1))))
                 .then(Commands.literal("mana")
                         .then(Commands.argument("add", IntegerArgumentType.integer())
                                 .executes(cmdContext -> addMana(cmdContext.getSource(), IntegerArgumentType.getInteger(cmdContext, "add")))))
                 .then(Commands.literal("set_level")
-                        .then(Commands.argument("spell", ResourceArgument.resource(context, SBSpells.SPELL_TYPE_REGISTRY_KEY))
+                        .then(Commands.argument("path", ResourceArgument.resource(context, SBSpells.SPELL_TYPE_REGISTRY_KEY))
                                 .then(Commands.argument("level", IntegerArgumentType.integer(0, 5))
                                         .executes(cmdContext -> setSpellLevel(cmdContext.getSource(),
-                                                ResourceArgument.getResource(cmdContext, "spell", SBSpells.SPELL_TYPE_REGISTRY_KEY),
+                                                ResourceArgument.getResource(cmdContext, "path", SBSpells.SPELL_TYPE_REGISTRY_KEY),
                                                 IntegerArgumentType.getInteger(cmdContext, "level")))))));
     }
 

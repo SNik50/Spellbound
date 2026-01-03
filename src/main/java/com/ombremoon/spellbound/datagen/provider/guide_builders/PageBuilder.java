@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.datagen.provider.guide_builders;
 
 import com.ombremoon.spellbound.client.gui.guide.elements.TransfigurationRitualElement;
 import com.ombremoon.spellbound.common.init.SBSpells;
+import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
@@ -16,10 +17,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.crafting.Ingredient;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class PageBuilder {
     private ResourceLocation bookId;
@@ -520,8 +524,8 @@ public class PageBuilder {
         }
 
         /**
-         * Creates a SpellInfo builder using a given spell
-         * @param spellType the spell to show stats on
+         * Creates a SpellInfo builder using a given path
+         * @param spellType the path to show stats on
          * @return new SpellInfo builder
          */
         public static SpellInfo of(SpellType<?> spellType) {
@@ -625,7 +629,7 @@ public class PageBuilder {
         }
 
         /**
-         * Makes the stats show regardless of if the spell is unlocked or not
+         * Makes the stats show regardless of if the path is unlocked or not
          * @return this
          */
         public SpellInfo alwaysShow() {
@@ -677,16 +681,19 @@ public class PageBuilder {
 
     //Builder for SpellBorder
     public static class SpellBorder {
-        private final ResourceLocation spell;
+        private final SpellPath path;
+        private final Optional<SpellMastery> mastery;
         private int colour;
         private ElementPosition position;
         private ResourceLocation pathTexture;
 
-        private SpellBorder(ResourceLocation spell) {
-            SpellType<?> spellType = SBSpells.REGISTRY.get(spell);
-            SpellPath path = spellType.getPath();
+        private SpellBorder(SpellType<?> spellType) {
+            this(spellType.getPath(), spellType.getMastery());
+        }
 
-            this.spell = spell;
+        private SpellBorder(SpellPath path, @Nullable SpellMastery mastery) {
+            this.path = path;
+            this.mastery = Optional.ofNullable(mastery);
             this.position = ElementPosition.getDefault();
             this.pathTexture = CommonClass.customLocation("textures/gui/paths/" + path.name().toLowerCase() + ".png");
             this.colour = switch (path) {
@@ -700,16 +707,35 @@ public class PageBuilder {
         }
 
         /**
-         * Creates a spell border builder defaulting all values based on the spell
-         * @param spell The spell the border is for
+         * Creates a path border builder defaulting all values based on the path
+         * @param spell The path the border is for
          * @return new SpellBorder builder
          */
         public static SpellBorder of(SpellType<?> spell) {
-            return new SpellBorder(SBSpells.REGISTRY.getKey(spell));
+            return new SpellBorder(spell);
         }
 
         /**
-         * Sets the colour used in text and lines, should be relevant to path
+         * Creates a path border builder defaulting all values based on the path
+         * @param path The path the border is for
+         * @param mastery The mastery the border is for, if there is one
+         * @return new SpellBorder builder
+         */
+        public static SpellBorder of(SpellPath path, SpellMastery mastery) {
+            return new SpellBorder(path, mastery);
+        }
+
+        /**
+         * Creates a path border builder defaulting all values based on the path
+         * @param path The path the border is for
+         * @return new SpellBorder builder
+         */
+        public static SpellBorder of(SpellPath path) {
+            return of(path, null);
+        }
+
+        /**
+         * Sets the colour used in text and lines, should be relevant to pathTexture
          * @param colour The colour to use
          * @return this
          */
@@ -730,7 +756,7 @@ public class PageBuilder {
         }
 
         /**
-         * Sets the symbol used to represent the spell path
+         * Sets the symbol used to represent the path pathTexture
          * @param texture The location of the texture
          * @return this
          */
@@ -745,7 +771,7 @@ public class PageBuilder {
          */
         public GuideSpellBorderElement build() {
             return new GuideSpellBorderElement(
-                    spell, colour, position, pathTexture
+                    this.path, this.mastery, colour, position, pathTexture
             );
         }
     }

@@ -36,7 +36,7 @@ public class EntityBasedBossFight extends BossFight {
     public static final Codec<EntityBasedBossFight> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     BossSpawn.CODEC.listOf().fieldOf("bosses").forGetter(bossFight -> bossFight.bosses),
-                    SBSpells.REGISTRY.byNameCodec().fieldOf("spell").forGetter(bossFight -> bossFight.spell),
+                    SBSpells.REGISTRY.byNameCodec().fieldOf("path").forGetter(bossFight -> bossFight.spell),
                     Vec3.CODEC.fieldOf("playerSpawnOffset").forGetter(bossFight -> bossFight.playerSpawnOffset),
                     DimensionData.CODEC.fieldOf("dimensionData").forGetter(bossFight -> bossFight.dimensionData)
             ).apply(instance, EntityBasedBossFight::new)

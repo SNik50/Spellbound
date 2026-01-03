@@ -41,7 +41,6 @@ import java.util.List;
 public class StormRiftSpell extends AnimatedSpell {
     public static Builder<StormRiftSpell> createStormRiftBuilder() {
         return createSimpleSpellBuilder(StormRiftSpell.class)
-                .mastery(SpellMastery.MASTER)
                 .manaCost(50)
                 .duration(500)
                 .baseDamage(8)

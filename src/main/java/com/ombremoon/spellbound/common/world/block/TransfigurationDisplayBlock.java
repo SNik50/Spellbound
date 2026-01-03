@@ -35,7 +35,7 @@ public class TransfigurationDisplayBlock extends BaseEntityBlock {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         BlockEntity entity = level.getBlockEntity(pos);
-        if (entity instanceof TransfigurationDisplayBlockEntity display) {
+        if (entity instanceof TransfigurationDisplayBlockEntity display && !display.active) {
             if (display.currentItem == null) {
                 return InteractionResult.CONSUME;
             } else {
@@ -61,8 +61,8 @@ public class TransfigurationDisplayBlock extends BaseEntityBlock {
             if (stack.isEmpty()) {
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             } else if (display.currentItem != null) {
-                return ItemInteractionResult.CONSUME;
-            } else {
+                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            } else if (!display.active) {
                 display.setItem(stack.copyWithCount(1));
                 level.sendBlockUpdated(pos, state, state, 3);
                 level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
@@ -71,7 +71,7 @@ public class TransfigurationDisplayBlock extends BaseEntityBlock {
             }
         }
 
-        return ItemInteractionResult.FAIL;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

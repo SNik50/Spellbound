@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public record GuideSpellInfoElement(ResourceLocation spellLoc, SpellInfoExtras extras, ElementPosition position) implements IPageElement {
 
     public static final MapCodec<GuideSpellInfoElement> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            ResourceLocation.CODEC.fieldOf("spell").forGetter(GuideSpellInfoElement::spellLoc),
+            ResourceLocation.CODEC.fieldOf("path").forGetter(GuideSpellInfoElement::spellLoc),
             SpellInfoExtras.CODEC.optionalFieldOf("extras", SpellInfoExtras.getDefault()).forGetter(GuideSpellInfoElement::extras),
             ElementPosition.CODEC.optionalFieldOf("position", ElementPosition.getDefault()).forGetter(GuideSpellInfoElement::position)
     ).apply(inst, GuideSpellInfoElement::new));

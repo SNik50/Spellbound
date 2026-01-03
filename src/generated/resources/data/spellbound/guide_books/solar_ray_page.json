@@ -8,7 +8,7 @@
       },
       "position": {
         "xOffset": 72,
-        "yOffset": 4
+        "yOffset": 8
       },
       "translation": {
         "translate": "spells.spellbound.solar_ray"
@@ -17,8 +17,9 @@
     {
       "type": "spellbound:spell_border",
       "colour": -10678496,
-      "pathTexture": "spellbound:textures/gui/paths/ruin.png",
-      "spell": "spellbound:solar_ray"
+      "mastery": "expert",
+      "path": "ruin",
+      "pathTexture": "spellbound:textures/gui/paths/ruin.png"
     },
     {
       "type": "spellbound:image",
@@ -60,11 +61,14 @@
     },
     {
       "type": "spellbound:spell_info",
+      "extras": {
+        "alwaysShow": true
+      },
+      "path": "spellbound:solar_ray",
       "position": {
         "xOffset": 169,
         "yOffset": 195
-      },
-      "spell": "spellbound:solar_ray"
+      }
     }
   ],
   "id": "spellbound:grimoire_of_annihilation",

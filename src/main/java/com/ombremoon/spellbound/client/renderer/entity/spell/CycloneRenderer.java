@@ -3,7 +3,7 @@ package com.ombremoon.spellbound.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.ombremoon.spellbound.client.renderer.types.OutlineSpellRenderer;
-import com.ombremoon.spellbound.common.world.entity.spell.Cyclone;
+import com.ombremoon.spellbound.common.world.entity.path.Cyclone;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 
 public class CycloneRenderer extends OutlineSpellRenderer<Cyclone> {

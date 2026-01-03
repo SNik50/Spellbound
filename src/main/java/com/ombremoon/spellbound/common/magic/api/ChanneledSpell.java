@@ -104,11 +104,6 @@ public abstract class ChanneledSpell extends AnimatedSpell {
             this.castType = CastType.CHANNEL;
         }
 
-        public Builder<T> mastery(SpellMastery mastery) {
-            this.spellMastery = mastery;
-            return this;
-        }
-
         public Builder<T> manaCost(int manaCost) {
             this.manaCost = manaCost;
             return this;

@@ -28,7 +28,6 @@ import java.util.List;
 public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
     private static Builder<PurgeMagicSpell> createPurgeMagicBuilder() {
         return createSimpleSpellBuilder(PurgeMagicSpell.class)
-                .mastery(SpellMastery.ADEPT)
                 .duration(10)
                 .manaCost(27)
                 .castCondition((context, purgeMagicSpell) -> {

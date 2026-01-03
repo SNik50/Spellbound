@@ -1,5 +1,5 @@
 /*
-package com.ombremoon.spellbound.common.world.spell.summon;
+package com.ombremoon.spellbound.common.world.path.summon;
 
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellContext;

@@ -66,10 +66,6 @@ public class TransfigurationRitual {
         materials.forEach(value -> ingredients.put(value.ingredient, value.count));
     }
 
-    /*public boolean matches(TransfigurationMultiblock multiblock, List<ItemStack> items) {
-        return this.definition.tier == multiblock.getRings() && this.hasRequiredMaterials(items) && this.hasValidEffects(multiblock);
-    }*/
-
     public boolean matches(TransfigurationMultiblock input, List<ItemStack> items) {
         if (items.size() < this.materials.size() || items.size() > this.materials.size()) {
             return false;

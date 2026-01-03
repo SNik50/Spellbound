@@ -8,7 +8,7 @@
       },
       "position": {
         "xOffset": 72,
-        "yOffset": 4
+        "yOffset": 8
       },
       "translation": {
         "translate": "spells.spellbound.stride"
@@ -17,8 +17,9 @@
     {
       "type": "spellbound:spell_border",
       "colour": -14396391,
-      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png",
-      "spell": "spellbound:stride"
+      "mastery": "novice",
+      "path": "transfiguration",
+      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
     },
     {
       "type": "spellbound:image",
@@ -60,13 +61,16 @@
     },
     {
       "type": "spellbound:spell_info",
+      "extras": {
+        "alwaysShow": true
+      },
+      "path": "spellbound:stride",
       "position": {
         "xOffset": 169,
         "yOffset": 195
-      },
-      "spell": "spellbound:stride"
+      }
     }
   ],
   "id": "spellbound:architects_lexicon",
-  "insertAfter": "spellbound:sb_transfig_v1_p1"
+  "insertAfter": "spellbound:transfig_cover_page"
 }

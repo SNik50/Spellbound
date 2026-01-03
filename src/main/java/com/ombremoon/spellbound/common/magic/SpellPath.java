@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.magic;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,6 +14,7 @@ public enum SpellPath implements StringRepresentable {
     FROST(0x4F9CC8, true, "frost", EffectManager.Effect.FROST),
     SHOCK(0x9543C9, true, "shock", EffectManager.Effect.SHOCK);
 
+    public static final Codec<SpellPath> CODEC = StringRepresentable.fromEnum(SpellPath::values);
     private final int color;
     private final boolean isSubPath;
     private final String name;

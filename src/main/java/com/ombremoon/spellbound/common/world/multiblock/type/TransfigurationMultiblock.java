@@ -27,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,14 +72,8 @@ public class TransfigurationMultiblock extends StandardMultiblock {
 
     @Override
     public void onActivate(Player player, Level level, MultiblockPattern pattern) {
-        BlockPos origin = pattern.frontBottomLeft();
         BlockPos pedestal = this.getPedestalPosition(pattern);
-        List<TransfigurationDisplayBlockEntity> displays = this.displayPositions
-                .stream()
-                .map(index -> index.toPos(pattern.facing(), origin))
-                .map(level::getBlockEntity).filter(Objects::nonNull)
-                .map(blockEntity -> (TransfigurationDisplayBlockEntity) blockEntity)
-                .toList();
+        List<TransfigurationDisplayBlockEntity> displays = this.createDisplayList(level, pattern);
         List<ItemStack> items = createItemList(displays);
         Optional<TransfigurationRitual> optional = RitualHelper.getRitualFor(level, this, items);
         if (optional.isPresent()) {
@@ -97,6 +92,20 @@ public class TransfigurationMultiblock extends StandardMultiblock {
         } else {
             clearMultiblock(player, level, pattern);
         }
+    }
+
+    private List<TransfigurationDisplayBlockEntity> createDisplayList(Level level, MultiblockPattern pattern) {
+        List<TransfigurationDisplayBlockEntity> displays = new ArrayList<>();
+        BlockPos origin = pattern.frontBottomLeft();
+        for (MultiblockIndex index : this.displayPositions) {
+            BlockPos blockPos = index.toPos(pattern.facing(), origin);
+            BlockEntity entity = level.getBlockEntity(blockPos);
+            if (entity instanceof TransfigurationDisplayBlockEntity display) {
+                displays.add(display);
+            }
+        }
+
+        return displays;
     }
 
     private List<ItemStack> createItemList(List<TransfigurationDisplayBlockEntity> displays) {

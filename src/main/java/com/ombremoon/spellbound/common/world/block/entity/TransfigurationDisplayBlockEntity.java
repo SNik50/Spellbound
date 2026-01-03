@@ -1,13 +1,17 @@
 package com.ombremoon.spellbound.common.world.block.entity;
 
+import com.mojang.datafixers.kinds.Const;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.ombremoon.spellbound.common.world.multiblock.TransfigurationMultiblockPart;
 import com.ombremoon.spellbound.common.init.SBBlockEntities;
+import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -68,6 +72,10 @@ public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblock
 
             display.rot += f2 * 0.4F;
             display.itemTick++;
+
+            if (display.spiralTick > 0) {
+                resetDisplay(display);
+            }
         } else if (display.pedestalPos != null) {
             initSpiral(display, display.pedestalPos);
         } else {
@@ -78,6 +86,7 @@ public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblock
     public static void serverTick(Level level, BlockPos pos, BlockState state, TransfigurationDisplayBlockEntity display) {
         if (display.active)
             tickItems(display);
+
     }
 
     private static void tickItems(TransfigurationDisplayBlockEntity display) {
@@ -89,6 +98,7 @@ public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblock
 
     private static void resetDisplay(TransfigurationDisplayBlockEntity display) {
         display.setItem(null);
+        Constants.LOG.info("{}", display.level);
         display.centerDistX = 0;
         display.centerDistY = 0;
         display.centerDistZ = 0;
@@ -166,6 +176,8 @@ public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblock
         if (tag.contains("CurrentItem", 10)) {
             DataResult<ItemStack> dataResult = ItemStack.CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("CurrentItem")));
             dataResult.resultOrPartial(LOGGER::error).ifPresent(this::setItem);
+        } else {
+            this.currentItem = null;
         }
 
         this.pedestalPos = BlockPos.containing(tag.getInt("CenterX"), tag.getInt("CenterY"), tag.getInt("CenterZ"));

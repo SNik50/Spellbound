@@ -139,7 +139,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     }
 
     /**
-     * Handles ticking logic for the spell handler. Called every tick on both the client and the server.
+     * Handles ticking logic for the path handler. Called every tick on both the client and the server.
      */
     public void tick() {
         activeSpells.forEach((spellType, spell) -> spell.tick());
@@ -314,7 +314,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     }
 
     /**
-     * Replaces an {@link AbstractSpell} in the active spells map. This is only called is the spells has {@link AbstractSpell#fullRecast} checked in the builder method. Recast spells will all call {@link AbstractSpell#endSpell()} unless they have {@link AbstractSpell#skipEndOnRecast(SpellContext)} checked in the spell builder.
+     * Replaces an {@link AbstractSpell} in the active spells map. This is only called is the spells has {@link AbstractSpell#fullRecast} checked in the builder method. Recast spells will all call {@link AbstractSpell#endSpell()} unless they have {@link AbstractSpell#skipEndOnRecast(SpellContext)} checked in the path builder.
      * @param spell
      */
     public void recastSpell(AbstractSpell spell) {
@@ -491,7 +491,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     /**
      * Plays an animation for the player. This is called server-side for all players to see the animation
      * @param player The player performing the animation
-     * @param animationName The animation path location
+     * @param animationName The animation pathTexture location
      */
     public void playAnimation(Player player, String animationName, float animationSpeed) {
         if (!player.level().isClientSide)

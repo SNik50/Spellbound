@@ -1,9 +1,9 @@
 /*
-package com.ombremoon.spellbound.common.world.entity.spell;
+package com.ombremoon.spellbound.common.world.entity.path;
 
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.common.world.entity.SpellEntity;
-import com.ombremoon.spellbound.common.world.spell.ruin.air.CycloneSpell;
+import com.ombremoon.spellbound.common.world.path.ruin.air.CycloneSpell;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
@@ -148,14 +148,14 @@ public class Cyclone extends SpellEntity<CycloneSpell> {
         this.checkInsideBlocks();
         Entity owner = this.getOwner();
         if (owner instanceof LivingEntity && this.skills != null && this.handler != null) {
-            CycloneSpell spell = this.getSpell();
-            if (spell != null) {
-                if (spell.isInactive)
+            CycloneSpell path = this.getSpell();
+            if (path != null) {
+                if (path.isInactive)
                     discard();
 
                 double range = 5 + this.getStacks() * 2.5;
                 if (skills.hasSkill(SBSkills.VORTEX.value()))
-                    this.checkCycloneCollision(spell);
+                    this.checkCycloneCollision(path);
 
                 if (skills.hasSkill(SBSkills.FALLING_DEBRIS.value())) {
                     if (!this.level().isClientSide)
@@ -164,11 +164,11 @@ public class Cyclone extends SpellEntity<CycloneSpell> {
 
                 List<Entity> caughtList = this.level().getEntities(this, this.getBoundingBox(), entity -> {
                     if (entity instanceof LivingEntity livingEntity)
-                        return !spell.checkForCounterMagic(livingEntity);
+                        return !path.checkForCounterMagic(livingEntity);
                     return !(entity instanceof SpellEntity);
                 });
                 List<Entity> pullList = this.level().getEntities(this, this.getBoundingBox().inflate(range), entity -> {
-                    if (entity instanceof LivingEntity livingEntity && spell.checkForCounterMagic(livingEntity))
+                    if (entity instanceof LivingEntity livingEntity && path.checkForCounterMagic(livingEntity))
                         return false;
                     return !(entity instanceof SpellEntity);
                 });
@@ -232,8 +232,8 @@ public class Cyclone extends SpellEntity<CycloneSpell> {
 
                             if (entity.tickCount % 20 == 0 && entity instanceof LivingEntity livingEntity) {
                                 if (skills.hasSkill(SBSkills.FROSTFRONT.value())) {
-                                    spell.hurt(livingEntity, SBDamageTypes.RUIN_FROST, 4.0F);
-                                    spell.addSkillBuff(
+                                    path.hurt(livingEntity, SBDamageTypes.RUIN_FROST, 4.0F);
+                                    path.addSkillBuff(
                                             livingEntity,
                                             SBSkills.PURSUIT,
                                             BuffCategory.HARMFUL,
@@ -243,7 +243,7 @@ public class Cyclone extends SpellEntity<CycloneSpell> {
                                 }
 
                                 if (skills.hasSkill(SBSkills.STATIC_CHARGE.value()))
-                                    spell.hurt(livingEntity, SBDamageTypes.RUIN_SHOCK, 4.0F);
+                                    path.hurt(livingEntity, SBDamageTypes.RUIN_SHOCK, 4.0F);
                             }
                         }
                     }
@@ -262,18 +262,18 @@ public class Cyclone extends SpellEntity<CycloneSpell> {
         }
     }
 
-    private void checkCycloneCollision(CycloneSpell spell) {
+    private void checkCycloneCollision(CycloneSpell path) {
         List<Cyclone> cyclones = this.level().getEntitiesOfClass(Cyclone.class, this.getBoundingBox());
         int maxCyclones = skills.hasSkill(SBSkills.MAELSTROM.value()) ? 6 : 3;
         if (!cyclones.isEmpty()) {
             for (Cyclone cyclone1 : cyclones) {
-                if (spell != null && cyclone1 != null && !cyclone1.is(this) && (cyclone1.getStacks() < this.getStacks() || this.getId() > cyclone1.getId()) && this.getStacks() < maxCyclones && !this.hasGrown()) {
+                if (path != null && cyclone1 != null && !cyclone1.is(this) && (cyclone1.getStacks() < this.getStacks() || this.getId() > cyclone1.getId()) && this.getStacks() < maxCyclones && !this.hasGrown()) {
                     if (cyclone1.getControllingPassenger() instanceof LivingEntity livingEntity)
                         livingEntity.startRiding(this);
 
                     this.incrementStacks(cyclone1);
                     this.growthTick = 20;
-                    spell.setRemainingTicks(spell.getDuration());
+                    path.setRemainingTicks(path.getDuration());
                     cyclone1.discard();
                 }
             }

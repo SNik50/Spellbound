@@ -88,7 +88,7 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
     //Novice - mid tier
     //Apprentice - Needs netherite
     //Adept - Magic puzzle mechanic
-    //Expert - Requires spell damage
+    //Expert - Requires path damage
     //Master - Soulslike
     @Override
     public void tick() {

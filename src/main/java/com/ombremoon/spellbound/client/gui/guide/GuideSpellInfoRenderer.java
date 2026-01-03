@@ -29,7 +29,7 @@ public class GuideSpellInfoRenderer implements IPageElementRenderer<GuideSpellIn
         Registry<SpellType<?>> spellRegistry = Minecraft.getInstance().level.registryAccess().registry(SBSpells.SPELL_TYPE_REGISTRY_KEY).get();
         SpellType<?> spellType = spellRegistry.get(element.spellLoc());
         if (spellType == null) {
-            LOGGER.warn("Error parsing spell info. Spell {} not found in registry.", element.spellLoc());
+            LOGGER.warn("Error parsing path info. Spell {} not found in registry.", element.spellLoc());
             return;
         }
 

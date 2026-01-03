@@ -11,7 +11,7 @@ import java.util.Optional;
 public record SpellPredicate(Optional<ResourceLocation> spell) {
     public static final Codec<SpellPredicate> CODEC = RecordCodecBuilder.create(
             inst -> inst.group(
-                    ResourceLocation.CODEC.optionalFieldOf("spell").forGetter(SpellPredicate::spell)
+                    ResourceLocation.CODEC.optionalFieldOf("path").forGetter(SpellPredicate::spell)
             ).apply(inst, SpellPredicate::new));
 
     public static SpellPredicate spell(Optional<ResourceLocation> spell) {

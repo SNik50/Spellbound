@@ -7,7 +7,7 @@
   "effects": [
     {
       "type": "spellbound:create_spell_tome",
-      "spell": "spellbound:stride",
+      "path": "spellbound:stride",
       "tier": 1
     }
   ],

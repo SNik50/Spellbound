@@ -99,7 +99,6 @@ public class SolarRaySpell extends ChanneledSpell {
 
     public static Builder<SolarRaySpell> createSolarRayBuilder() {
         return createChannelledSpellBuilder(SolarRaySpell.class)
-                .mastery(SpellMastery.EXPERT)
                 .manaCost(40)
                 .manaTickCost(10)
                 .baseDamage(3)

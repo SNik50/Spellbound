@@ -120,11 +120,6 @@ public abstract class SummonSpell extends AnimatedSpell {
             this.summonCast();
         }
 
-        public Builder<T> mastery(SpellMastery mastery) {
-            this.spellMastery = mastery;
-            return this;
-        }
-
         public Builder<T> manaCost(int manaCost) {
             this.manaCost = manaCost;
             return this;

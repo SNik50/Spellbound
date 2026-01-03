@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.world.block;
 
 import com.mojang.serialization.MapCodec;
 import com.ombremoon.spellbound.common.world.block.entity.PedestalBlockEntity;
+import com.ombremoon.spellbound.common.world.block.entity.TransfigurationDisplayBlockEntity;
 import com.ombremoon.spellbound.common.world.item.RitualTalismanItem;
 import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
