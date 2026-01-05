@@ -68,16 +68,6 @@ public class PageBuilder {
     }
 
     /**
-     * Adds a page element to the page
-     * @param element The element to add
-     * @return this
-     */
-    public PageBuilder addElement(IPageElement element) {
-        this.elements.add(element);
-        return this;
-    }
-
-    /**
      * Adds multiple elements to the page
      * @param elements The elements to add
      * @return this
@@ -95,17 +85,8 @@ public class PageBuilder {
         return new GuideBookPage(bookId, pageScrap, insertAfter, elements);
     }
 
-    /**
-     * Writes the page to a file
-     * @param writer the json writer
-     * @param pageName Name/Location of the file
-     */
-    public void save(BiConsumer<ResourceLocation, GuideBookPage> writer, ResourceLocation pageName) {
-        writer.accept(pageName, build());
-    }
-
     //Builder for a GuideRecipe
-    public static class Recipe {
+    public static class Recipe implements PageBuilderType {
         private final ResourceLocation recipe;
         private String gridName;
         private float scale;
@@ -204,15 +185,15 @@ public class PageBuilder {
     }
 
     //Builder for a GuideEntityRenderer
-    public static class EntityRenderer {
+    public static class EntityRenderer implements PageBuilderType {
         private List<ResourceLocation> entity;
         private ElementPosition position;
         private boolean followMouse;
-        private int scale;
+        private float scale;
         private ResourceLocation pageScrap;
-        private int xRot;
-        private int yRot;
-        private int zRot;
+        private float xRot;
+        private float yRot;
+        private float zRot;
         private boolean animated;
 
         private EntityRenderer() {
@@ -268,7 +249,7 @@ public class PageBuilder {
          * @param zRot Rotation on Z axis in degrees
          * @return
          */
-        public EntityRenderer setRotations(int xRot, int yRot, int zRot) {
+        public EntityRenderer setRotations(float xRot, float yRot, float zRot) {
             this.xRot = xRot;
             this.yRot = yRot;
             this.zRot = zRot;
@@ -280,7 +261,7 @@ public class PageBuilder {
          * @param scale multiplicative scalar
          * @return this
          */
-        public EntityRenderer scale(int scale) {
+        public EntityRenderer scale(float scale) {
             this.scale = scale;
             return this;
         }
@@ -323,7 +304,7 @@ public class PageBuilder {
     }
 
     //Builder for a GuideItemList
-    public static class ItemList {
+    public static class ItemList implements PageBuilderType {
         private List<GuideItemListElement.ItemListEntry> entries;
         private ElementPosition position;
         private ResourceLocation pageScrap;
@@ -493,7 +474,7 @@ public class PageBuilder {
     }
 
     //Builder for GuideSpellInfo
-    public static class SpellInfo {
+    public static class SpellInfo implements PageBuilderType {
         private ResourceLocation spell;
         private ElementPosition position;
         private int textColour;
@@ -679,7 +660,7 @@ public class PageBuilder {
     }
 
     //Builder for SpellBorder
-    public static class SpellBorder {
+    public static class SpellBorder implements PageBuilderType {
         private final SpellPath path;
         private final Optional<SpellMastery> mastery;
         private int colour;
@@ -777,7 +758,7 @@ public class PageBuilder {
 
     //TODO: Obfuscation
     //Builder for GuideImage
-    public static class Image {
+    public static class Image implements PageBuilderType {
         private final ResourceLocation image;
         private int width;
         private int height;
@@ -850,7 +831,7 @@ public class PageBuilder {
     }
 
     //Builder for GuideItem
-    public static class StaticItem {
+    public static class StaticItem implements PageBuilderType {
         private final List<Ingredient> ingredients;
         private String tile;
         private float scale;
@@ -869,12 +850,10 @@ public class PageBuilder {
 
         /**
          * Creates a new GuideItem builder for a given item
-         * @param item The item to display
          * @return new GuideItem builder
          */
-        public static StaticItem of(Ingredient item) {
-            StaticItem builder = new StaticItem();
-            return builder.addItem(item);
+        public static StaticItem of() {
+            return new StaticItem();
         }
 
         /**
@@ -959,7 +938,7 @@ public class PageBuilder {
     }
 
     //Builder for GuideText
-    public static class Text {
+    public static class Text implements PageBuilderType {
         private Component text;
         private ElementPosition position;
         private ResourceLocation pageScrap;
@@ -1173,7 +1152,7 @@ public class PageBuilder {
     }
 
     //Builder for GuideTooltipRenderer
-    public static class Tooltip {
+    public static class Tooltip implements PageBuilderType {
         private final List<Component> tooltips = new ArrayList<>();
         private ElementPosition position;
         private int width, height;
@@ -1230,7 +1209,7 @@ public class PageBuilder {
     }
 
     //Builder for GuideTextList
-    public static class TextList {
+    public static class TextList implements PageBuilderType {
         private List<Component> entries;
         private ElementPosition position;
         private ResourceLocation pageScrap;
@@ -1368,7 +1347,7 @@ public class PageBuilder {
     }
 
     //Builder for GuideItemRenderer
-    public static class ItemRenderer {
+    public static class ItemRenderer implements PageBuilderType {
         private final List<Ingredient> item;
         private ElementPosition position;
         private ResourceLocation pageScrap;
@@ -1445,7 +1424,7 @@ public class PageBuilder {
     }
 
     //Builder for GuideRitualRenderer
-    public static class RitualRenderer {
+    public static class RitualRenderer implements PageBuilderType {
         private ResourceKey<TransfigurationRitual> ritual;
         private boolean leftPage = false;
 
@@ -1473,4 +1452,6 @@ public class PageBuilder {
             return new TransfigurationRitualElement(this.ritual, this.leftPage);
         }
     }
+
+    public interface PageBuilderType {}
 }
