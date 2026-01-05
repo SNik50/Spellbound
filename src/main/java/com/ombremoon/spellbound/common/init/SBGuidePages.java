@@ -11,6 +11,7 @@ import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.ChatFormatting;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -20,6 +21,9 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.function.Supplier;
 
@@ -59,6 +63,7 @@ public interface SBGuidePages {
 
     //Divine Book
     ResourceKey<GuideBookPage> DIVINE_COVER_PAGE = key("divine_cover_page");
+    ResourceKey<GuideBookPage> HEALING_TOUCH_ACTIONS = key("healing_touch_actions");
 
     //Deception Book
     ResourceKey<GuideBookPage> DECEPTION_COVER_PAGE = key("deception_cover_page");
@@ -167,6 +172,87 @@ public interface SBGuidePages {
 
         //Divine
         createCoverPage(context, DIVINE, DIVINE_COVER_PAGE, SpellPath.DIVINE);
+        register(
+                context,
+                HEALING_TOUCH_ACTIONS,
+                PageBuilder
+                        .forBook(DIVINE)
+                        .addElements(
+                                PageBuilder.Text
+                                        .of(translatable("guide.divine.divine_actions").append(translatable("spells.spellbound.healing_touch")))
+                                        .position(PAGE_START_CENTER_X, PAGE_START_DOUBLE_Y)
+                                        .centered()
+                                        .bold()
+                                        .build(),
+                                PageBuilder.SpellBorder
+                                        .of(SpellPath.DIVINE)
+                                        .build(),
+                                PageBuilder.Text
+                                        .ofTranslatable("divine_action.healing_touch.heal_mob_to_full")
+                                        .position(0, 40)
+                                        .maxLineLength(100)
+                                        .build(),
+                                PageBuilder.Text
+                                        .ofTranslatable("divine_action.healing_touch.apply_blessed_bandages")
+                                        .position(54, 93)
+                                        .maxLineLength(100)
+                                        .build(),
+                                PageBuilder.Text
+                                        .ofTranslatable("divine_action.healing_touch.purify_shrine")
+                                        .position(0, 150)
+                                        .maxLineLength(100)
+                                        .build(),
+                                PageBuilder.Text
+                                        .ofTranslatable("divine_action.healing_touch.lore")
+                                        .position(PAGE_TWO_START_X, 5)
+                                        .build(),
+                                PageBuilder.Tooltip
+                                        .of()
+                                        .addTooltip(literal("Shepherd").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD, ChatFormatting.UNDERLINE))
+                                        .addTooltip(literal(""))
+                                        .addTooltip(literal("Judgement: "))
+                                        .addTooltip(literal("Cooldown: "))
+                                        .position(0, 40)
+                                        .dimensions(100, 40)
+                                        .build(),
+                                PageBuilder.Tooltip
+                                        .of()
+                                        .addTooltip(literal("TBD").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD, ChatFormatting.UNDERLINE))
+                                        .addTooltip(literal(""))
+                                        .addTooltip(literal("Judgement: "))
+                                        .addTooltip(literal("Cooldown: "))
+                                        .position(54, 93)
+                                        .dimensions(100, 40)
+                                        .build(),
+                                PageBuilder.Tooltip
+                                        .of()
+                                        .addTooltip(literal("TBD").withStyle(ChatFormatting.YELLOW, ChatFormatting.BOLD, ChatFormatting.UNDERLINE))
+                                        .addTooltip(literal(""))
+                                        .addTooltip(literal("Judgement: "))
+                                        .addTooltip(literal("Cooldown: "))
+                                        .position(0, 150)
+                                        .dimensions(100, 40)
+                                        .build(),
+                                PageBuilder.StaticItem
+                                        .of(Ingredient.of(Blocks.ZOMBIE_HEAD))
+                                        .position(77, 7)
+                                        .scale(2)
+                                        .disableBackground()
+                                        .build(),
+                                PageBuilder.StaticItem
+                                        .of(Ingredient.of(Items.SHEEP_SPAWN_EGG))
+                                        .position(-26, 64)
+                                        .scale(2)
+                                        .disableBackground()
+                                        .build(),
+                                PageBuilder.StaticItem
+                                        .of(Ingredient.of(Items.WITHER_ROSE))
+                                        .position(77, 110)
+                                        .scale(2)
+                                        .disableBackground()
+                                        .build()
+                        )
+        );
 
         //Deception
         createCoverPage(context, DECEPTION, DECEPTION_COVER_PAGE, SpellPath.DECEPTION);
@@ -342,6 +428,9 @@ public interface SBGuidePages {
                                     .centered()
                                     .bold()
                                     .build(),
+                            PageBuilder.SpellBorder
+                                    .of(SpellPath.TRANSFIGURATION)
+                                    .build(),
                             PageBuilder.Text
                                     .ofTranslatable("ritual.spellbound." + key.location().getPath() + ".description")
                                     .position(0, 35)
@@ -413,5 +502,9 @@ public interface SBGuidePages {
         public String getName() {
             return this.name;
         }
+    }
+
+    enum RendererType {
+        ITEM, STATIC_ITEM, ENTITY, IMAGE
     }
 }

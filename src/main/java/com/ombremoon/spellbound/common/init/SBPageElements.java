@@ -19,6 +19,7 @@ public class SBPageElements {
     public static final DeferredRegister<MapCodec<? extends IPageElement>> PAGE_ELEMENTS = DeferredRegister.create(REGISTRY, Constants.MOD_ID);
 
     public static final Supplier<MapCodec<? extends IPageElement>> TEXT = PAGE_ELEMENTS.register("text", () -> GuideTextElement.CODEC);
+    public static final Supplier<MapCodec<? extends IPageElement>> TOOLTIP = PAGE_ELEMENTS.register("tooltip", () -> GuideTooltipElement.CODEC);
     public static final Supplier<MapCodec<? extends IPageElement>> IMAGE = PAGE_ELEMENTS.register("image", () -> GuideImageElement.CODEC);
     public static final Supplier<MapCodec<? extends IPageElement>> ENTITY_RENDERER = PAGE_ELEMENTS.register("entity_renderer", () -> GuideEntityElement.CODEC);
     public static final Supplier<MapCodec<? extends IPageElement>> ITEM = PAGE_ELEMENTS.register("item", () -> GuideStaticItemElement.CODEC);

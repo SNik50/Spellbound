@@ -28,6 +28,17 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 //TODO: General - Discuss with Duck about bobHurt in GameRenderer
 //TODO: General - Discuss with Duck about Followers
 
+//Add judgement requirement for divine spell acquisition
+//Add recent action cooldown for divine spell acquisition
+
+//Catalysts
+//Ruin - Doubles Status Build Up
+//Transfig
+//Summons - Have 1 extra summon
+//Light Divine - Gain Judgement From Casting
+//Dark Divine - Lost Judgement From Casting
+//Deception - More Potency/Reduced Mana Cost in Darkness
+
 @Mod(Constants.MOD_ID)
 public class Spellbound {
 
@@ -105,6 +116,7 @@ public class Spellbound {
         ElementRenderDispatcher.register(GuideTextElement.class, new GuideTextRenderer());
         ElementRenderDispatcher.register(GuideTextListElement.class, new GuideTextListRenderer());
         ElementRenderDispatcher.register(GuideItemElement.class, new GuideItemRenderer());
+        ElementRenderDispatcher.register(GuideTooltipElement.class, new GuideTooltipRenderer());
         ElementRenderDispatcher.register(GuideSpellBorderElement.class, new GuideSpellBorderRenderer());
         ElementRenderDispatcher.register(TransfigurationRitualElement.class, new GuideRitualRenderer());
     }

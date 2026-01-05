@@ -28,15 +28,17 @@ public class GuideStaticItemRenderer implements IPageElementRenderer<GuideStatic
                 ? new GuideGhostItem(buildIngredient(element.item()), 0, 0).getItem(tickCount)
                 : registry.getRandom(rand).get().value().getDefaultInstance();
 
-        graphics.blit(CommonClass.customLocation("textures/gui/books/crafting_grids/medium/" + element.tileName() + ".png"),
-                leftPos + element.position().xOffset(),
-                topPos + element.position().yOffset(),
-                0,
-                0,
-                (int) (48 * element.extras().scale()),
-                (int) (46 * element.extras().scale()),
-                (int) (48 * element.extras().scale()),
-                (int) (46 * element.extras().scale()));
+        if (!element.extras().disableBackground()) {
+            graphics.blit(CommonClass.customLocation("textures/gui/books/crafting_grids/medium/" + element.tileName() + ".png"),
+                    leftPos + element.position().xOffset(),
+                    topPos + element.position().yOffset(),
+                    0,
+                    0,
+                    (int) (48 * element.extras().scale()),
+                    (int) (46 * element.extras().scale()),
+                    (int) (48 * element.extras().scale()),
+                    (int) (46 * element.extras().scale()));
+        }
 
         RenderUtil.renderItem(graphics, item, leftPos + element.position().xOffset(), topPos + element.position().yOffset(), 1.3f * element.extras().scale());
     }

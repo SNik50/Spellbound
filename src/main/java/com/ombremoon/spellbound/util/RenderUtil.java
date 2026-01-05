@@ -64,6 +64,12 @@ public class RenderUtil {
         guiGraphics.drawString(font, text, x - font.width(text) / 2, y, color, dropShadow);
     }
 
+    public static boolean isHovering(int leftPos, int topPos, int pX, int pY, int pWidth, int pHeight, double pMouseX, double pMouseY) {
+        double d0 = pMouseX - (double)(leftPos + pX);
+        double d1 = pMouseY - (double)(topPos + pY);
+        return d0 >= 0 && d1 >= 0 && d0 < pWidth && d1 < pHeight;
+    }
+
     public static void openWorkbench() {
         Minecraft.getInstance().setScreen(new WorkbenchScreen(Component.translatable("screen.spellbound.workbench")));
     }

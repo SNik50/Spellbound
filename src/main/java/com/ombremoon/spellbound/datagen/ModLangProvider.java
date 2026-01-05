@@ -85,6 +85,7 @@ public class ModLangProvider extends LanguageProvider {
         skillDescriptions();
         guideContents();
         ritualContents();
+        divineActionContents();
 
         add("spellbound.toast.scrap_unlocked", "New book entry unlocked");
 
@@ -155,6 +156,7 @@ public class ModLangProvider extends LanguageProvider {
 
         //Divine
         add("guide.divine.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can call upon divine forces to aid myself and allies and harm foes.");
+        add("guide.divine.divine_actions", "Divine Actions:\n");
 
         //Deception
         add("guide.deception.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can utilize the shadows to my advantage with the art of deception.");
@@ -181,6 +183,13 @@ public class ModLangProvider extends LanguageProvider {
         add("ritual.spellbound.create_mystic_armor", "Create Spell Tome:\nMystic Armor");
         add("ritual.spellbound.create_mystic_armor.description", "Creates a Mystic Armor spell tome");
         add("spellbound.ritual.materials", "Ritual Materials");
+    }
+
+    protected void divineActionContents() {
+        add("divine_action.healing_touch.heal_mob_to_full", "Heal any non-hostile mob to full.");
+        add("divine_action.healing_touch.apply_blessed_bandages", "Heal your wounds with Blessed Bandages.");
+        add("divine_action.healing_touch.purify_shrine", "Purify a shrine with a Divine Phial.");
+        add("divine_action.healing_touch.lore", "This is a bunch of lore for the first divine action. Watch me fill this translation with an absolute word soup you'd want to have at your next family Christmas dinner.\n\n The second divine action lore entry won't make any more sense than the first. And don't expect too much from the last one either, I'm just using all this text as a means of testing. Can you believe that? Testing? Me?\n\n Well, unfortunately, I'm running out of words to use for the last lore entry. So this is where I sign off o7.");
     }
 
     protected void skillDescriptions() {

@@ -28,18 +28,18 @@ public class GuideRitualRenderer implements IPageElementRenderer<Transfiguration
         graphics.drawString(Minecraft.getInstance().font,
                 Component.literal(String.valueOf(stack.getCount())),
                 leftPos + numberOffset,
-                topPos + 56,
+                topPos + 61,
                 0,
                 true);
 
         graphics.blit(CommonClass.customLocation("textures/gui/books/crafting_grids/small/basic.png"),
                 leftPos + numberOffset - 7,
-                topPos + 52,
+                topPos + 56,
                 0,
                 0,
                 17,
-                16,
                 17,
-                16);
+                17,
+                17);
     }
 }

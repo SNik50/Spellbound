@@ -855,6 +855,7 @@ public class PageBuilder {
         private float scale;
         private ElementPosition position;
         private ResourceLocation pageScrap;
+        private boolean disableBackground;
 
         private StaticItem() {
             this.ingredients = new ArrayList<>();
@@ -862,6 +863,7 @@ public class PageBuilder {
             this.scale = 1f;
             this.position = ElementPosition.getDefault();
             this.pageScrap = GuideBookManager.FIRST_PAGE;
+            this.disableBackground = false;
         }
 
         /**
@@ -936,12 +938,21 @@ public class PageBuilder {
             return this;
         }
 
+        /**
+         * Disables the crafting grid icon
+         * @return this
+         */
+        public StaticItem disableBackground() {
+            this.disableBackground = true;
+            return this;
+        }
+
         public GuideStaticItemElement build() {
             return new GuideStaticItemElement(
                     ingredients,
                     tile,
                     position,
-                    new StaticItemExtras(pageScrap, scale)
+                    new StaticItemExtras(pageScrap, scale, disableBackground)
             );
         }
     }
@@ -1000,6 +1011,14 @@ public class PageBuilder {
          */
         public static Text ofTranslatable(String translationKey) {
             return new Text(Component.translatable(translationKey));
+        }
+        /**
+         * Creates a new GuideText builder for a given translation key
+         * @param component The component to display
+         * @return new GuideText builder
+         */
+        public static Text of(Component component) {
+            return new Text(component);
         }
 
         /**
@@ -1149,6 +1168,63 @@ public class PageBuilder {
                     ),
                     position
             );
+        }
+    }
+
+    //Builder for GuideTooltipRenderer
+    public static class Tooltip {
+        private final List<Component> tooltips = new ArrayList<>();
+        private ElementPosition position;
+        private int width, height;
+
+        private Tooltip() {
+            this.position = ElementPosition.getDefault();
+        }
+
+        /**
+         * Creates a new builder for a TooltipRenderer element
+         * @return new RitualRenderer builder
+         */
+        public static Tooltip of() {
+            return new Tooltip();
+        }
+
+
+        /**
+         * Adds a component to the tooltip
+         * @param tooltip the item to display
+         * @return this
+         */
+        public Tooltip addTooltip(Component tooltip) {
+            this.tooltips.add(tooltip);
+            return this;
+        }
+
+        /**
+         * Sets the position the element appears on the page
+         * @param x the x offset from left of the book
+         * @param y the y offset from top of the book
+         * @return this
+         */
+        public Tooltip position(int x, int y) {
+            this.position = new ElementPosition(x, y);
+            return this;
+        }
+
+        /**
+         * Sets the position the element appears on the page
+         * @param width the width of the mouse hover area
+         * @param height the height of the mouse hover area
+         * @return this
+         */
+        public Tooltip dimensions(int width, int height) {
+            this.width = width;
+            this.height = height;
+            return this;
+        }
+
+        public GuideTooltipElement build() {
+            return new GuideTooltipElement(this.tooltips, this.position, this.width, this.height);
         }
     }
 
