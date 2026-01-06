@@ -156,10 +156,7 @@ public class ModLangProvider extends LanguageProvider {
                  "Uh oh seems like I have angered a few too many Magi. Im trying to throw together what ever I can hoping i can protect my self a little more consistantly.",
                 "Well i was trying to make myself absorb their mana and while that didn't completely work I have managed to reduce the impact of their spells.");
 
-        //Summon
-        add("guide.summons.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can increase my strength through numbers with the rites of summoning.");
-
-        //Divine
+        summonContents();
 
         //Deception
         add("guide.deception.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can utilize the shadows to my advantage with the art of deception.");
@@ -169,6 +166,26 @@ public class ModLangProvider extends LanguageProvider {
         add("guide." + path.name() + "." + spell.location().getPath() + ".description", description);
         add("guide." + path.name() + "." + spell.location().getPath() + ".lore", lore);
         add("guide." + path.name() + "." + spell.location().getPath() + ".boss_lore", bossLore);
+    }
+
+    protected void summonContents() {
+        add("guide.summons.cover_page", "This book shall document my discoveries throughout my adventures into the arcane and how I can increase my strength through numbers with the rites of summoning.");
+
+        add("guide.summon.dimensions", "Dimensions");
+        add("guide.summon.description1", "Summoning magic... dragging creatures from the darkest of realms and forcing them to fight on your behalf. Only the strong willed can use this power.");
+        add("guide.summon.description2", "To harness this source of magic a creature must first be battled to understand its power. But that requires first reaching into these twisted realms where they reside and hunting these powerful entities.");
+        add("guide.summon.dimensions1", "The most powerful creatures to exist, lord over their own realms. If I am able to find a way to access these dimensions then I can how to control these beasts and their powers.");
+        add("guide.summon.dimensions2", "I know I can't be the first one to try this I plan to search for any potential portals left by others.");
+
+        add("guide.summon.summoning_stone", "Summoning Stones");
+        add("guide.summon.summoning_portal", "Portal Construction");
+        add("guide.summon.summoning_stone1", "After speaking to a few Spell Brokers they have told me of these summoning stones that can be crafted to create a gateway.");
+        add("guide.summon.summoning_portal1", "Ah-ha! Mimicking an End portal seems to allow these stones to be activated with Magic Essence. Now I just need to find how to access a specific dimension.");
+
+        add("guide.summon.portal_activation", "Portal Activation");
+        add("guide.summon.portal_activation1", "After referencing end portals I have realised that these types of portals need a block to focus on to, to locate their destination.");
+        add("guide.summon.portal_activation2", "I believe that if I can create just a single summoning stone adjusted to a specific dimension I could open a gateway by placing it in the middle of my portal and activating it.");
+        add("guide.summon.valid_portals", "Well after multiple stages of trial and error I have found that these focused summoning stones must be very specific. When I am able to find a way to create a new focused stone I will be sure to note it down in this book, along with any information regarding the spells I can draw out from the dimension.");
     }
 
     protected void ritualContents() {

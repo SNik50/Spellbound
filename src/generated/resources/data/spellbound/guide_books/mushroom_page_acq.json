@@ -124,5 +124,5 @@
     }
   ],
   "id": "spellbound:the_necronomicon",
-  "insertAfter": "spellbound:summon_cover_page"
+  "insertAfter": "spellbound:summon_portal_activation"
 }

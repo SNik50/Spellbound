@@ -75,6 +75,9 @@ public interface SBGuidePages {
 
     //Summon Book
     ResourceKey<GuideBookPage> SUMMON_COVER_PAGE = key("summon_cover_page");
+    ResourceKey<GuideBookPage> SUMMON_DESCRIPTION = key("summon_description");
+    ResourceKey<GuideBookPage> SUMMON_PORTALS = key("summon_portals");
+    ResourceKey<GuideBookPage> SUMMON_PORTAL_ACTIVATION = key("summon_portal_activation");
     ResourceKey<GuideBookPage> MUSHROOM_ACQ = key("mushroom_page_acq");
 
     //Divine Book
@@ -95,13 +98,15 @@ public interface SBGuidePages {
     //Deception Book
     ResourceKey<GuideBookPage> DECEPTION_COVER_PAGE = key("deception_cover_page");
 
-    //Basic Bookmarks
+    //Basic Bookmarked pages
     ResourceKey<GuideBookPage> BASIC_COVER_PAGE = key("basic_cover_page");
     ResourceKey<GuideBookPage> BASIC_TRANSFIG_PAGE = key("basic_transfig_cover");
     ResourceKey<GuideBookPage> BASIC_SUMMON_PAGE = key("basic_summon_cover");
     ResourceKey<GuideBookPage> BASIC_DIVINE_PAGE = key("basic_divine_cover");
     ResourceKey<GuideBookPage> BASIC_DECEPTION_PAGE = key("basic_deception_cover");
     ResourceKey<GuideBookPage> BASIC_RUIN_PAGE = key("basic_ruin_cover");
+
+    //Basic
     ResourceKey<GuideBookPage> SPELLBOUND_DESCRIPTION = key("basic_cover_page"); //What is Spellbound & Paths
     ResourceKey<GuideBookPage> IMPORTANT_ITEMS = key("basic_cover_page"); //Arcanthus, Magic Essence, and Workbench
     ResourceKey<GuideBookPage> BOOK_RECIPES = key("basic_cover_page"); //Book Recipes
@@ -196,7 +201,6 @@ public interface SBGuidePages {
                         )
         );
         createSpellPage(context, SOLAR_RAY, RUIN_P3, RUIN_BOOK, SBSpells.SOLAR_RAY);
-        createSummonAcqPage(context, SUMMON_BOOK, MUSHROOM_ACQ, SUMMON_COVER_PAGE, SBEntities.GIANT_MUSHROOM.get(), SBSpells.WILD_MUSHROOM.get());
 
         //Transfiguration
         createCoverPage(context, TRANSFIG_BOOK, TRANSFIG_COVER_PAGE, SpellPath.TRANSFIGURATION);
@@ -209,6 +213,46 @@ public interface SBGuidePages {
 
         //Summon
         createCoverPage(context, SUMMON_BOOK, SUMMON_COVER_PAGE, SpellPath.SUMMONS);
+        createDescription(
+                context,
+                SUMMON_DESCRIPTION,
+                SUMMON_COVER_PAGE,
+                Book.SUMMONS,
+                translatable("spellbound.path.summon"),
+                translatable("guide.summon.dimensions"),
+                false,
+                new TextPosition(translatable("guide.summon.description1"), 35),
+                new TextPosition(translatable("guide.summon.description2"), 100),
+                new TextPosition(translatable("guide.summon.dimensions1"), PAGE_TWO_START_X, 35),
+                new TextPosition(translatable("guide.summon.dimensions2"), PAGE_TWO_START_X, 120)
+        );
+        createDescriptionAndRecipeAndImage(context,
+                SUMMON_PORTALS,
+                SUMMON_DESCRIPTION,
+                Book.SUMMONS,
+                translatable("guide.summon.summoning_stone"),
+                translatable("guide.summon.summoning_portal"),
+                false,
+                List.of(
+                        new RecipePosition(ResourceLocation.withDefaultNamespace("anvil"), PAGE_START_CENTER_X-40, 90)
+                ),
+                List.of(
+                        new ImageWithDimensions(loc("textures/gui/books/images/summoning_portal.png"), PAGE_TWO_START_X, 35,150, 80)
+                ),
+                new TextPosition(translatable("guide.summon.summoning_stone1"), 35),
+                new TextPosition(translatable("guide.summon.summoning_portal1"), PAGE_TWO_START_X, 120));
+        createDescription(context,
+                SUMMON_PORTAL_ACTIVATION,
+                SUMMON_PORTALS,
+                Book.SUMMONS,
+                translatable("guide.summon.portal_activation"),
+                translatable("guide.summon.portal_activation"),
+                false,
+                new TextPosition(translatable("guide.summon.portal_activation1"), 35),
+                new TextPosition(translatable("guide.summon.portal_activation2"), 110),
+                new TextPosition(translatable("guide.summon.valid_portals"), PAGE_TWO_START_X, 35)
+                );
+        createSummonAcqPage(context, SUMMON_BOOK, MUSHROOM_ACQ, SUMMON_PORTAL_ACTIVATION, SBEntities.GIANT_MUSHROOM.get(), SBSpells.WILD_MUSHROOM.get());
 
         //Divine
         createCoverPage(context, DIVINE_BOOK, DIVINE_COVER_PAGE, SpellPath.DIVINE);
@@ -360,6 +404,73 @@ public interface SBGuidePages {
                             .position(text.xPos, text.yPos)
                             .build()
             );
+        }
+
+        register(context, currentPage, builder);
+    }
+
+    private static void createDescriptionAndRecipeAndImage(
+            BootstrapContext<GuideBookPage> context,
+            ResourceKey<GuideBookPage> currentPage,
+            ResourceKey<GuideBookPage> prevPage,
+            Book book,
+            MutableComponent title,
+            @Nullable MutableComponent secondTitle,
+            boolean doubleTitle,
+            List<RecipePosition> recipes,
+            List<ImageWithDimensions> images,
+            TextPosition... texts
+    ) {
+        var builder = PageBuilder.forBook(book.getLocation()).setPreviousPage(prevPage).addElements(
+                PageBuilder.Text
+                        .of(title)
+                        .position(PAGE_START_CENTER_X, doubleTitle ? PAGE_START_DOUBLE_Y : PAGE_START_Y)
+                        .bold()
+                        .centered()
+                        .build(),
+                PageBuilder.SpellBorder
+                        .of(book.getPath())
+                        .setPosition(0, 0)
+                        .build()
+        );
+        if (secondTitle != null) {
+            builder.addElements(
+                    PageBuilder.Text
+                            .of(secondTitle)
+                            .position(PAGE_TWO_START_CENTER_X, doubleTitle ? PAGE_START_DOUBLE_Y : PAGE_START_Y)
+                            .bold()
+                            .centered()
+                            .build(),
+                    PageBuilder.SpellBorder
+                            .of(book.getPath())
+                            .setPosition(PAGE_TWO_START_X, 0)
+                            .build()
+            );
+        }
+        for (var text : texts) {
+            builder.addElements(
+                    PageBuilder.Text
+                            .of(text.text)
+                            .position(text.xPos, text.yPos)
+                            .maxLineLength(text.lineLength)
+                            .build()
+            );
+        }
+        for (var recipe : recipes) {
+            builder.addElements(PageBuilder.Recipe
+                    .of(recipe.recipe)
+                    .position(recipe.xPos, recipe.yPos)
+                    .gridName(book.getCraftingGrid()).build());
+        }
+        for (var image : images) {
+            var imageBuilder = PageBuilder.Image
+                    .of(image.texture)
+                    .position(image.xPos, image.yPos)
+                    .setDimensions(image.width, image.height);
+            if (!image.withCorners) {
+                imageBuilder.disableCorners();
+            }
+            builder.addElements(imageBuilder.build());
         }
 
         register(context, currentPage, builder);
@@ -832,6 +943,8 @@ public interface SBGuidePages {
         }
     }
 
+    record RecipePosition(ResourceLocation recipe, int xPos, int yPos) {}
+
     record ImageWithDimensions(ResourceLocation texture, int xPos, int yPos, int width, int height, boolean withCorners) {
 
         ImageWithDimensions(ResourceLocation texture, int xPos, int yPos, int width, int height) {
@@ -851,19 +964,21 @@ public interface SBGuidePages {
     }
 
     enum Book {
-        BASIC(BASIC_BOOK, null),
-        RUIN(RUIN_BOOK, SpellPath.RUIN),
-        TRANSFIG(TRANSFIG_BOOK, SpellPath.TRANSFIGURATION),
-        SUMMONS(SUMMON_BOOK, SpellPath.SUMMONS),
-        DIVINE(DIVINE_BOOK, SpellPath.DIVINE),
-        DECEPTION(DECEPTION_BOOK, SpellPath.DECEPTION);
+        BASIC(BASIC_BOOK, null, PageBuilder.Recipe.SpellboundGrids.BASIC),
+        RUIN(RUIN_BOOK, SpellPath.RUIN, PageBuilder.Recipe.SpellboundGrids.GRIMOIRE),
+        TRANSFIG(TRANSFIG_BOOK, SpellPath.TRANSFIGURATION, PageBuilder.Recipe.SpellboundGrids.ARCHITECT),
+        SUMMONS(SUMMON_BOOK, SpellPath.SUMMONS, PageBuilder.Recipe.SpellboundGrids.NECRONOMICON),
+        DIVINE(DIVINE_BOOK, SpellPath.DIVINE, PageBuilder.Recipe.SpellboundGrids.CODEX),
+        DECEPTION(DECEPTION_BOOK, SpellPath.DECEPTION, PageBuilder.Recipe.SpellboundGrids.SWINDLER);
 
         private final ResourceLocation bookLocation;
         private final SpellPath path;
+        private final PageBuilder.Recipe.SpellboundGrids craftingGrid;
 
-        Book(ResourceLocation bookLocation, @Nullable SpellPath path) {
+        Book(ResourceLocation bookLocation, @Nullable SpellPath path, PageBuilder.Recipe.SpellboundGrids craftingGrid) {
             this.bookLocation = bookLocation;
             this.path = path;
+            this.craftingGrid = craftingGrid;
         }
 
         public ResourceLocation getLocation() {
@@ -872,6 +987,10 @@ public interface SBGuidePages {
 
         public SpellPath getPath() {
             return this.path;
+        }
+
+        public PageBuilder.Recipe.SpellboundGrids getCraftingGrid() {
+            return craftingGrid;
         }
     }
 
