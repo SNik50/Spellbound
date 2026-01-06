@@ -15,6 +15,16 @@
       }
     },
     {
+      "type": "spellbound:image",
+      "height": 18,
+      "image": "spellbound:textures/gui/skills/healing_touch/healing_touch.png",
+      "position": {
+        "xOffset": 122,
+        "yOffset": 2
+      },
+      "width": 18
+    },
+    {
       "type": "spellbound:spell_border",
       "bottomText": {
         "extra": [
@@ -32,20 +42,24 @@
     },
     {
       "type": "spellbound:image",
-      "height": 74,
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 79,
       "image": "spellbound:textures/gui/books/images/spells/healing_touch.png",
       "position": {
-        "yOffset": 40
+        "xOffset": 3,
+        "yOffset": 30
       },
       "width": 140
     },
     {
       "type": "spellbound:text",
       "position": {
-        "yOffset": 125
+        "yOffset": 115
       },
       "translation": {
-        "translate": "guide.DIVINE.healing_touch.description"
+        "translate": "skill.description.spellbound.healing_touch"
       }
     },
     {
