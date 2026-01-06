@@ -150,7 +150,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
 
     @Override
     public int getCastTime(SpellContext context) {
-        return CRYSTAL_PREDICATE.test(context) ? 5 : super.getCastTime(context);
+        return context != null && CRYSTAL_PREDICATE.test(context) ? 5 : super.getCastTime(context);
     }
 
     private static void primeCrystal(SpellContext context, ShatteringCrystal crystal) {

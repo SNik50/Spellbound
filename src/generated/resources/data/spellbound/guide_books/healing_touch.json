@@ -15,16 +15,6 @@
       }
     },
     {
-      "type": "spellbound:image",
-      "height": 18,
-      "image": "spellbound:textures/gui/skills/healing_touch/healing_touch.png",
-      "position": {
-        "xOffset": 122,
-        "yOffset": 2
-      },
-      "width": 18
-    },
-    {
       "type": "spellbound:spell_border",
       "bottomText": {
         "extra": [

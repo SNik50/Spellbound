@@ -49,7 +49,11 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> RUIN_DESCRIPTION = key("ruin_description");
     ResourceKey<GuideBookPage> RUIN_SUB_PATHS = key("ruin_sub_paths");
     ResourceKey<GuideBookPage> RUIN_PORTALS = key("ruin_portals");
+    ResourceKey<GuideBookPage> STORM_STRIKE = key("storm_strike_page");
+    ResourceKey<GuideBookPage> ELECTRIC_CHARGE = key("electric_charge_page");
+    ResourceKey<GuideBookPage> SHATTERING_CRYSTAL = key("shattering_crystal_page");
     ResourceKey<GuideBookPage> SOLAR_RAY = key("solar_ray_page");
+    ResourceKey<GuideBookPage> STORM_RIFT = key("storm_rift_page");
 
     //Transfig Book
     ResourceKey<GuideBookPage> TRANSFIG_COVER_PAGE = key("transfig_cover_page");
@@ -92,16 +96,11 @@ public interface SBGuidePages {
     //Deception Book
     ResourceKey<GuideBookPage> DECEPTION_COVER_PAGE = key("deception_cover_page");
     ResourceKey<GuideBookPage> DECEPTION_DESCRIPTION = key("deception_description");
-
-    //Basic Bookmarked pages
-    ResourceKey<GuideBookPage> BASIC_COVER_PAGE = key("basic_cover_page");
-    ResourceKey<GuideBookPage> BASIC_TRANSFIG_PAGE = key("basic_transfig_cover");
-    ResourceKey<GuideBookPage> BASIC_SUMMON_PAGE = key("basic_summon_cover");
-    ResourceKey<GuideBookPage> BASIC_DIVINE_PAGE = key("basic_divine_cover");
-    ResourceKey<GuideBookPage> BASIC_DECEPTION_PAGE = key("basic_deception_cover");
-    ResourceKey<GuideBookPage> BASIC_RUIN_PAGE = key("basic_ruin_cover");
+    ResourceKey<GuideBookPage> SHADOWBOND = key("shadowbond_page");
+    ResourceKey<GuideBookPage> PURGE_MAGIC = key("purge_magic_page");
 
     //Basic
+    ResourceKey<GuideBookPage> BASIC_COVER_PAGE = key("basic_cover_page");
     ResourceKey<GuideBookPage> SPELLBOUND_DESCRIPTION = key("basic_cover_page"); //What is Spellbound & Paths
     ResourceKey<GuideBookPage> IMPORTANT_ITEMS = key("basic_cover_page"); //Arcanthus, Magic Essence, and Workbench
     ResourceKey<GuideBookPage> BOOK_RECIPES = key("basic_cover_page"); //Book Recipes
@@ -146,7 +145,6 @@ public interface SBGuidePages {
                                         .build()
                         )
         );
-        createBasicCoverPage(context, BASIC_BOOK, BASIC_RUIN_PAGE, BASIC_COVER_PAGE, SpellPath.RUIN);
 
         //Ruin
         createCoverPage(context, RUIN_BOOK, RUIN_COVER_PAGE, SpellPath.RUIN);
@@ -182,7 +180,11 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.ruin.portals2"), 110),
                 new TextEntry(translatable("guide.ruin.portals3"), PAGE_TWO_START_X, 35));
 
-        createSpellPage(context, SOLAR_RAY, RUIN_PORTALS, Book.RUIN, SBSpells.SOLAR_RAY);
+        createSpellPage(context, STORM_STRIKE, RUIN_PORTALS, Book.RUIN, SBSpells.STORMSTRIKE);
+        createSpellPage(context, ELECTRIC_CHARGE, STORM_STRIKE, Book.RUIN, SBSpells.ELECTRIC_CHARGE);
+        createSpellPage(context, SHATTERING_CRYSTAL, ELECTRIC_CHARGE, Book.RUIN, SBSpells.SHATTERING_CRYSTAL);
+        createSpellPage(context, SOLAR_RAY, SHATTERING_CRYSTAL, Book.RUIN, SBSpells.SOLAR_RAY);
+        createSpellPage(context, STORM_RIFT, SOLAR_RAY, Book.RUIN, SBSpells.STORM_RIFT);
 
         //Transfiguration
         createCoverPage(context, TRANSFIG_BOOK, TRANSFIG_COVER_PAGE, SpellPath.TRANSFIGURATION);
@@ -334,6 +336,8 @@ public interface SBGuidePages {
                 false,
                 new TextEntry(translatable("guide.deception.description1"), 35),
                 new TextEntry(translatable("guide.deception.description2"), 110));
+        createSpellPage(context, SHADOWBOND, DECEPTION_DESCRIPTION, Book.DECEPTION, SBSpells.SHADOWBOND);
+        createSpellPage(context, PURGE_MAGIC, SHADOWBOND, Book.DECEPTION, SBSpells.PURGE_MAGIC);
     }
 
     private static void createBasicCoverPage(
@@ -753,12 +757,6 @@ public interface SBGuidePages {
                                 .centered()
                                 .bold()
                                 .build(),
-                        PageBuilder.Image
-                                .of(spell.get().getRootSkill().getTexture())
-                                .setDimensions(18, 18)
-                                .position(PAGE_TWO_START_X - 50, 2)
-                                .disableCorners()
-                                .build(),
                         PageBuilder.SpellBorder
                                 .of(spellType)
                                 .build(),
@@ -770,7 +768,7 @@ public interface SBGuidePages {
                                 .build(),
                         PageBuilder.Text
                                 .of(spell.get().getRootSkill().getDescription())
-                                .position(0, 125)
+                                .position(0, 115)
                                 .build(),
 
                         PageBuilder.Text
@@ -881,12 +879,6 @@ public interface SBGuidePages {
                                         .position(PAGE_START_CENTER_X, PAGE_START_Y)
                                         .centered()
                                         .bold()
-                                        .build(),
-                                PageBuilder.Image
-                                        .of(spell.get().getRootSkill().getTexture())
-                                        .setDimensions(18, 18)
-                                        .position(PAGE_TWO_START_X - 50, 2)
-                                        .disableCorners()
                                         .build(),
                                 PageBuilder.SpellBorder
                                         .of(spellType)

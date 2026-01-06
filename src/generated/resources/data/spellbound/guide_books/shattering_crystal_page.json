@@ -11,24 +11,15 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.healing_blossom"
+        "translate": "spells.spellbound.shattering_crystal"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "bottomText": {
-        "extra": [
-          {
-            "color": "dark_green",
-            "text": "50"
-          }
-        ],
-        "translate": "divine_action.judgement_required"
-      },
-      "colour": -3510773,
+      "colour": -10678496,
       "mastery": "expert",
-      "path": "divine",
-      "pathTexture": "spellbound:textures/gui/paths/divine.png"
+      "path": "ruin",
+      "pathTexture": "spellbound:textures/gui/paths/ruin.png"
     },
     {
       "type": "spellbound:image",
@@ -36,7 +27,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/healing_blossom.png",
+      "image": "spellbound:textures/gui/books/images/spells/shattering_crystal.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -49,7 +40,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.healing_blossom"
+        "translate": "skill.description.spellbound.shattering_crystal"
       }
     },
     {
@@ -59,7 +50,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.DIVINE.healing_blossom.lore"
+        "translate": "guide.RUIN.shattering_crystal.lore"
       }
     },
     {
@@ -69,7 +60,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.DIVINE.healing_blossom.boss_lore"
+        "translate": "guide.RUIN.shattering_crystal.boss_lore"
       }
     },
     {
@@ -77,13 +68,13 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:healing_blossom",
+      "path": "spellbound:shattering_crystal",
       "position": {
         "xOffset": 172,
         "yOffset": 195
       }
     }
   ],
-  "id": "spellbound:sanctified_codex",
-  "insertAfter": "spellbound:healing_touch_actions"
+  "id": "spellbound:grimoire_of_annihilation",
+  "insertAfter": "spellbound:electric_charge_page"
 }

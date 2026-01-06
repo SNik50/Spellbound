@@ -15,27 +15,7 @@
       }
     },
     {
-      "type": "spellbound:image",
-      "height": 18,
-      "image": "spellbound:textures/gui/skills/solar_ray/solar_ray.png",
-      "position": {
-        "xOffset": 122,
-        "yOffset": 2
-      },
-      "width": 18
-    },
-    {
       "type": "spellbound:spell_border",
-      "bottomText": {
-        "color": "#7C0A02",
-        "extra": [
-          {
-            "color": "#D73502",
-            "text": "fire"
-          }
-        ],
-        "translate": "guide.ruin.spell_border.sub_path"
-      },
       "colour": -10678496,
       "mastery": "expert",
       "path": "ruin",
@@ -57,7 +37,7 @@
     {
       "type": "spellbound:text",
       "position": {
-        "yOffset": 125
+        "yOffset": 115
       },
       "translation": {
         "translate": "skill.description.spellbound.solar_ray"
@@ -96,5 +76,5 @@
     }
   ],
   "id": "spellbound:grimoire_of_annihilation",
-  "insertAfter": "spellbound:ruin_portals"
+  "insertAfter": "spellbound:shattering_crystal_page"
 }

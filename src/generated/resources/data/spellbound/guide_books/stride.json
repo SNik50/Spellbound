@@ -15,16 +15,6 @@
       }
     },
     {
-      "type": "spellbound:image",
-      "height": 18,
-      "image": "spellbound:textures/gui/skills/stride/stride.png",
-      "position": {
-        "xOffset": 122,
-        "yOffset": 2
-      },
-      "width": 18
-    },
-    {
       "type": "spellbound:spell_border",
       "colour": -14396391,
       "mastery": "novice",
@@ -47,7 +37,7 @@
     {
       "type": "spellbound:text",
       "position": {
-        "yOffset": 125
+        "yOffset": 115
       },
       "translation": {
         "translate": "skill.description.spellbound.stride"
