@@ -6,6 +6,7 @@ import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.world.item.SpellTomeItem;
 import com.ombremoon.spellbound.datagen.provider.guide_builders.PageBuilder;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -762,46 +763,53 @@ public interface SBGuidePages {
     ) {
         SpellType<?> spellType = spell.get();
         String translations = "guide." + spellType.getPath().name() + "." + spellType.location().getPath() + ".";
-        register(context,
-                currentPage,
-                PageBuilder
-                        .forBook(book.getLocation())
-                        .setPreviousPage(prevPage)
-                        .addElements(
-                                PageBuilder.Text
-                                        .ofTranslatable("spells.spellbound." + spellType.location().getPath())
-                                        .position(PAGE_START_CENTER_X, PAGE_START_Y)
-                                        .centered()
-                                        .bold()
-                                        .build(),
-                                PageBuilder.SpellBorder
-                                        .of(spellType)
-                                        .build(),
-                                PageBuilder.Image
-                                        .of(CommonClass.customLocation("textures/gui/books/images/spells/" + spellType.location().getPath() + ".png"))
-                                        .setDimensions(140, 74)
-                                        .position(3, 40)
-                                        .setCornerTexture(CommonClass.customLocation("textures/gui/books/image_borders/" + book.bookLocation.getPath() + ".png"))
-                                        .build(),
-                                PageBuilder.Text
-                                        .ofTranslatable(translations + "description")
-                                        .position(0, 125)
-                                        .build(),
 
-                                PageBuilder.Text
-                                        .ofTranslatable(translations + "lore")
-                                        .position(PAGE_TWO_START_X, 5)
-                                        .build(),
-                                PageBuilder.Text
-                                        .ofTranslatable(translations + "boss_lore")
-                                        .position(PAGE_TWO_START_X, 68)
-                                        .build(),
-                                PageBuilder.SpellInfo
-                                        .of(spellType)
-                                        .alwaysShow()
-                                        .position(PAGE_TWO_START_X, 195)
-                                        .build()
-                        ));
+        PageBuilder builder = PageBuilder
+                .forBook(book.getLocation())
+                .setPreviousPage(prevPage)
+                .addElements(
+                        PageBuilder.Text
+                                .ofTranslatable("spells.spellbound." + spellType.location().getPath())
+                                .position(PAGE_START_CENTER_X , PAGE_START_Y)
+                                .centered()
+                                .bold()
+                                .build(),
+                        PageBuilder.Image
+                                .of(spell.get().getRootSkill().getTexture())
+                                .setDimensions(18, 18)
+                                .position(PAGE_TWO_START_X - 50, 2)
+                                .disableCorners()
+                                .build(),
+                        PageBuilder.SpellBorder
+                                .of(spellType)
+                                .build(),
+                        PageBuilder.Image
+                                .of(CommonClass.customLocation("textures/gui/books/images/spells/" + spellType.location().getPath() + ".png"))
+                                .setDimensions(140, 79)
+                                .position(3, 30)
+                                .disableCorners()
+                                .build(),
+                        PageBuilder.Text
+                                .of(spell.get().getRootSkill().getDescription())
+                                .position(0, 125)
+                                .build(),
+
+                        PageBuilder.Text
+                                .ofTranslatable(translations + "lore")
+                                .position(PAGE_TWO_START_X, 5)
+                                .build(),
+                        PageBuilder.Text
+                                .ofTranslatable(translations + "boss_lore")
+                                .position(PAGE_TWO_START_X, 68)
+                                .build(),
+                        PageBuilder.SpellInfo
+                                .of(spellType)
+                                .alwaysShow()
+                                .position(PAGE_TWO_START_X, 195)
+                                .build()
+                );
+
+        register(context, currentPage, builder);
     }
 
     private static void createSummonAcqPage(BootstrapContext<GuideBookPage> context,
@@ -895,18 +903,25 @@ public interface SBGuidePages {
                                         .centered()
                                         .bold()
                                         .build(),
+                                PageBuilder.Image
+                                        .of(spell.get().getRootSkill().getTexture())
+                                        .setDimensions(18, 18)
+                                        .position(PAGE_TWO_START_X - 50, 2)
+                                        .disableCorners()
+                                        .build(),
                                 PageBuilder.SpellBorder
                                         .of(spellType)
                                         .setBottomText(translatable("divine_action.judgement_required").append(literal(Integer.toString(judgement)).withStyle(judgement >= 0 ? ChatFormatting.DARK_GREEN : ChatFormatting.DARK_RED)))
                                         .build(),
                                 PageBuilder.Image
                                         .of(CommonClass.customLocation("textures/gui/books/images/spells/" + spellType.location().getPath() + ".png"))
-                                        .setDimensions(140, 74)
-                                        .position(0, 40)
+                                        .setDimensions(140, 79)
+                                        .position(3, 30)
+                                        .disableCorners()
                                         .build(),
                                 PageBuilder.Text
-                                        .ofTranslatable(translations + "description")
-                                        .position(0, 125)
+                                        .of(spell.get().getRootSkill().getDescription())
+                                        .position(0, 115)
                                         .build(),
 
                                 PageBuilder.Text

@@ -15,6 +15,16 @@
       }
     },
     {
+      "type": "spellbound:image",
+      "height": 18,
+      "image": "spellbound:textures/gui/skills/wild_mushroom/wild_mushroom.png",
+      "position": {
+        "xOffset": 122,
+        "yOffset": 2
+      },
+      "width": 18
+    },
+    {
       "type": "spellbound:spell_border",
       "colour": -13490312,
       "mastery": "adept",
@@ -23,12 +33,14 @@
     },
     {
       "type": "spellbound:image",
-      "corner_texture": "spellbound:textures/gui/books/image_borders/the_necronomicon.png",
-      "height": 74,
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 79,
       "image": "spellbound:textures/gui/books/images/spells/wild_mushroom.png",
       "position": {
         "xOffset": 3,
-        "yOffset": 40
+        "yOffset": 30
       },
       "width": 140
     },
@@ -38,7 +50,7 @@
         "yOffset": 125
       },
       "translation": {
-        "translate": "guide.SUMMONS.wild_mushroom.description"
+        "translate": "skill.description.spellbound.wild_mushroom"
       }
     },
     {
