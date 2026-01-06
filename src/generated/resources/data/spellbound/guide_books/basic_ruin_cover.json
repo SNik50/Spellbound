@@ -6,7 +6,7 @@
         "enableCorners": false
       },
       "height": 150,
-      "image": "spellbound:textures/gui/paths/transfiguration.png",
+      "image": "spellbound:textures/gui/paths/ruin.png",
       "position": {
         "yOffset": 25
       },
@@ -14,9 +14,9 @@
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -14396391,
-      "path": "transfiguration",
-      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png",
+      "colour": -10678496,
+      "path": "ruin",
+      "pathTexture": "spellbound:textures/gui/paths/ruin.png",
       "position": {
         "xOffset": 172
       }
@@ -31,7 +31,7 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "item.spellbound.architects_lexicon"
+        "translate": "item.spellbound.studies_in_the_arcane"
       }
     },
     {
@@ -44,9 +44,10 @@
         "yOffset": 65
       },
       "translation": {
-        "translate": "guide.transfiguration.cover_page"
+        "translate": "guide.basic.ruin.cover_page"
       }
     }
   ],
-  "id": "spellbound:architects_lexicon"
+  "id": "spellbound:studies_in_the_arcane",
+  "insertAfter": "spellbound:basic_cover_page"
 }

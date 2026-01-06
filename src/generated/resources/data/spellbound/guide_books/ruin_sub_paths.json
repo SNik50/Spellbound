@@ -11,14 +11,14 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "guide.divine.judgement_cont"
+        "translate": "guide.ruin.subpaths_cnt"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -3510773,
-      "path": "divine",
-      "pathTexture": "spellbound:textures/gui/paths/divine.png"
+      "colour": -10678496,
+      "path": "ruin",
+      "pathTexture": "spellbound:textures/gui/paths/ruin.png"
     },
     {
       "type": "spellbound:text",
@@ -26,29 +26,29 @@
         "yOffset": 35
       },
       "translation": {
-        "translate": "guide.divine.judgement3"
+        "translate": "guide.ruin.fire"
       }
     },
     {
       "type": "spellbound:text",
       "position": {
-        "yOffset": 65
+        "yOffset": 100
       },
       "translation": {
-        "translate": "guide.divine.judgement4"
+        "translate": "guide.ruin.frost"
       }
     },
     {
       "type": "spellbound:text",
       "position": {
         "xOffset": 172,
-        "yOffset": 10
+        "yOffset": 35
       },
       "translation": {
-        "translate": "guide.divine.judgement5"
+        "translate": "guide.ruin.shock"
       }
     }
   ],
-  "id": "spellbound:sanctified_codex",
-  "insertAfter": "spellbound:divine_description"
+  "id": "spellbound:grimoire_of_annihilation",
+  "insertAfter": "spellbound:ruin_description"
 }

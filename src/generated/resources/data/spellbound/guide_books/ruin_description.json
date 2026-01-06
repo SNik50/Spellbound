@@ -11,14 +11,14 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spellbound.path.summons"
+        "translate": "spellbound.path.ruin"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -13490312,
-      "path": "summons",
-      "pathTexture": "spellbound:textures/gui/paths/summons.png"
+      "colour": -10678496,
+      "path": "ruin",
+      "pathTexture": "spellbound:textures/gui/paths/ruin.png"
     },
     {
       "type": "spellbound:text",
@@ -31,14 +31,14 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "guide.summon.dimensions"
+        "translate": "guide.ruin.subpaths"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -13490312,
-      "path": "summons",
-      "pathTexture": "spellbound:textures/gui/paths/summons.png",
+      "colour": -10678496,
+      "path": "ruin",
+      "pathTexture": "spellbound:textures/gui/paths/ruin.png",
       "position": {
         "xOffset": 172
       }
@@ -49,7 +49,7 @@
         "yOffset": 35
       },
       "translation": {
-        "translate": "guide.summon.description1"
+        "translate": "guide.ruin.description1"
       }
     },
     {
@@ -58,7 +58,7 @@
         "yOffset": 100
       },
       "translation": {
-        "translate": "guide.summon.description2"
+        "translate": "guide.ruin.description2"
       }
     },
     {
@@ -68,20 +68,20 @@
         "yOffset": 35
       },
       "translation": {
-        "translate": "guide.summon.dimensions1"
+        "translate": "guide.ruin.subpaths1"
       }
     },
     {
       "type": "spellbound:text",
       "position": {
         "xOffset": 172,
-        "yOffset": 120
+        "yOffset": 80
       },
       "translation": {
-        "translate": "guide.summon.dimensions2"
+        "translate": "guide.ruin.subpaths2"
       }
     }
   ],
-  "id": "spellbound:the_necronomicon",
-  "insertAfter": "spellbound:summon_cover_page"
+  "id": "spellbound:grimoire_of_annihilation",
+  "insertAfter": "spellbound:ruin_cover_page"
 }

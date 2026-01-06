@@ -66,6 +66,8 @@ public class GuideBookScreen extends Screen {
         int renderLeft = this.leftPos + PAGE_X_OFFSET;
         int renderTop = this.topPos + PAGE_Y_OFFSET;
         ElementRenderDispatcher.tick();
+        checkCornerHover(guiGraphics, mouseX, mouseY);
+
 
         for (IPageElement element : pages.get(currentPage).elements()) {
             ElementRenderDispatcher.renderElement(element, guiGraphics, renderLeft, renderTop, mouseX, mouseY, partialTick);
@@ -78,7 +80,7 @@ public class GuideBookScreen extends Screen {
             }
         }
 
-        checkCornerHover(guiGraphics, mouseX, mouseY);
+
     }
 
     public void checkCornerHover(GuiGraphics graphics, int mouseX, int mouseY) {
