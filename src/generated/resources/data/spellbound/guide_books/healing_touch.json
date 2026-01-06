@@ -16,6 +16,9 @@
     },
     {
       "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
       "height": 18,
       "image": "spellbound:textures/gui/skills/healing_touch/healing_touch.png",
       "position": {

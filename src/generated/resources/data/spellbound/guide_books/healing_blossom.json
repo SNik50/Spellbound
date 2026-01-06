@@ -16,6 +16,9 @@
     },
     {
       "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
       "height": 18,
       "image": "spellbound:textures/gui/skills/healing_blossom/healing_blossom.png",
       "position": {

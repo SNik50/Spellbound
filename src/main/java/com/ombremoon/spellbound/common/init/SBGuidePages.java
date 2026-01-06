@@ -6,7 +6,6 @@ import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
-import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.world.item.SpellTomeItem;
 import com.ombremoon.spellbound.datagen.provider.guide_builders.PageBuilder;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -21,7 +20,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -56,10 +54,10 @@ public interface SBGuidePages {
 
     //Transfig Book
     ResourceKey<GuideBookPage> TRANSFIG_COVER_PAGE = key("transfig_cover_page");
-    ResourceKey<GuideBookPage> TRANSFIG_DESCRIPTION = key("transfig_cover_page"); //Description & Rituals
-    ResourceKey<GuideBookPage> TRANSFIG_RITUALS = key("transfig_cover_page"); //Rituals & Layouts
-    ResourceKey<GuideBookPage> TRANSFIG_RITUAL_ITEMS_1 = key("transfig_cover_page"); //Display, Pedestal, Chalk, and Talismans
-    ResourceKey<GuideBookPage> TRANSFIG_RITUAL_ITEMS_2 = key("transfig_cover_page"); //Display, Pedestal, Chalk, and Talismans
+    ResourceKey<GuideBookPage> TRANSFIG_DESCRIPTION = key("transfig_description");
+    ResourceKey<GuideBookPage> TRANSFIG_RITUALS = key("transfig_rituals");
+    ResourceKey<GuideBookPage> TRANSFIG_RITUAL_ITEMS_1 = key("transfig_display_pedestal");
+    ResourceKey<GuideBookPage> TRANSFIG_RITUAL_ITEMS_2 = key("transfig_talisman_chalk");
 //    ResourceKey<GuideBookPage> TRANSFIG_ARMOR_STAFF = key("divine_description"); //Armor & Staff
 //    ResourceKey<GuideBookPage> FLUX_SHARD = key("flux_shard"); //Flux Shard
     ResourceKey<GuideBookPage> STRIDE = key("stride");
@@ -149,7 +147,6 @@ public interface SBGuidePages {
                                         .build()
                         )
         );
-        createBasicCoverPage(context, BASIC_BOOK, BASIC_RUIN_PAGE, BASIC_COVER_PAGE, SpellPath.RUIN);
 
         //Ruin
         createCoverPage(context, RUIN_BOOK, RUIN_COVER_PAGE, SpellPath.RUIN);
@@ -189,7 +186,7 @@ public interface SBGuidePages {
 
         //Transfiguration
         createCoverPage(context, TRANSFIG_BOOK, TRANSFIG_COVER_PAGE, SpellPath.TRANSFIGURATION);
-        createDescriptionAndItems(
+        createDescription(
                 context,
                 TRANSFIG_DESCRIPTION,
                 TRANSFIG_COVER_PAGE,
@@ -197,16 +194,42 @@ public interface SBGuidePages {
                 translatable("spellbound.path.transfiguration"),
                 translatable("guide.transfiguration.rituals"),
                 false,
-                List.of(
-                        new ItemEntry(Ingredient.of(blockToItem(SBBlocks.TRANSFIGURATION_PEDESTAL)), 147, 100),
-                        new ItemEntry(Ingredient.of(blockToItem(SBBlocks.TRANSFIGURATION_DISPLAY)), 251, 100)
-                ),
                 new TextEntry(translatable("guide.transfiguration.description1"), 35),
                 new TextEntry(translatable("guide.transfiguration.description2"), 100),
                 new TextEntry(translatable("guide.transfiguration.rituals1"), PAGE_TWO_START_X, 35),
-                new TextEntry(translatable("guide.transfiguration.rituals2"), PAGE_TWO_START_X, 80)
+                new TextEntry(translatable("guide.transfiguration.rituals2"), PAGE_TWO_START_X, 125)
         );
-        createSpellPage(context, STRIDE, TRANSFIG_COVER_PAGE, Book.TRANSFIG, SBSpells.STRIDE);
+        createDescriptionAndImages(
+                context,
+                TRANSFIG_RITUALS,
+                TRANSFIG_DESCRIPTION,
+                Book.TRANSFIG,
+                translatable("guide.transfiguration.rituals_cont"),
+                null,
+                false,
+                List.of(
+                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier1.png"), 9, 37, 70, 70, false),
+                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier2.png"), 60, 110, 70, 70, false),
+                        new ImageEntryWithDimensions(loc("textures/gui/books/images/ritual_tier3.png"), PAGE_TWO_START_X + 9, 9, 100, 100, false),
+                        new ImageEntryWithDimensions(loc("textures/gui/books/images/pedestal.png"), PAGE_TWO_START_X + 9, 111, 16, 16, false),
+                        new ImageEntryWithDimensions(loc("textures/gui/books/images/display.png"), PAGE_TWO_START_X + 9, 130, 16, 16, false),
+                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_1.png"), 95, 50, 16, 16, false),
+                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_5.png"), 124, 64, 16, 16, false),
+                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_17.png"), 103, 83, 16, 16, false),
+                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_4.png"), 15, 125, 16, 16, false), //8, 21 -- 14, 19
+                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_22.png"), 38, 139, 16, 16, false),
+                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_19.png"), 4, 148, 16, 16, false),
+                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_13.png"), 284, 25, 16, 16, false),
+                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_6.png"), 294, 52, 16, 16, false),
+                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_18.png"), 304, 75, 16, 16, false),
+                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_15.png"), 284, 75, 16, 16, false),
+                        new ImageEntryWithDimensions(loc("textures/block/rune/rune_26.png"), 304, 25, 16, 16, false)
+                ),
+                new TextEntry(translatable("guide.transfiguration.pedestal_legend"), PAGE_TWO_START_X + 31, 115),
+                new TextEntry(translatable("guide.transfiguration.display_legend"), PAGE_TWO_START_X + 31, 134),
+                new TextEntry(translatable("guide.transfiguration.rune_circuit"), PAGE_TWO_START_X, 150)
+        );
+        createSpellPage(context, STRIDE, TRANSFIG_RITUALS, Book.TRANSFIG, SBSpells.STRIDE);
         createRitualPage(context, STRIDE_RITUAL, STRIDE, SBRituals.CREATE_STRIDE, 5, 0, RitualTier.ONE);
         createSpellPage(context, SHADOW_GATE, STRIDE_RITUAL, Book.TRANSFIG, SBSpells.SHADOW_GATE);
         createRitualPage(context, SHADOW_GATE_RITUAL, SHADOW_GATE, SBRituals.CREATE_SHADOW_GATE, 10, 0, RitualTier.TWO);

@@ -1,0 +1,264 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.transfiguration.rituals_cont"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -14396391,
+      "path": "transfiguration",
+      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 203,
+        "yOffset": 115
+      },
+      "translation": {
+        "translate": "guide.transfiguration.pedestal_legend"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 203,
+        "yOffset": 134
+      },
+      "translation": {
+        "translate": "guide.transfiguration.display_legend"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 150
+      },
+      "translation": {
+        "translate": "guide.transfiguration.rune_circuit"
+      }
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 70,
+      "image": "spellbound:textures/gui/books/images/ritual_tier1.png",
+      "position": {
+        "xOffset": 9,
+        "yOffset": 37
+      },
+      "width": 70
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 70,
+      "image": "spellbound:textures/gui/books/images/ritual_tier2.png",
+      "position": {
+        "xOffset": 60,
+        "yOffset": 110
+      },
+      "width": 70
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 100,
+      "image": "spellbound:textures/gui/books/images/ritual_tier3.png",
+      "position": {
+        "xOffset": 181,
+        "yOffset": 9
+      },
+      "width": 100
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 16,
+      "image": "spellbound:textures/gui/books/images/pedestal.png",
+      "position": {
+        "xOffset": 181,
+        "yOffset": 111
+      },
+      "width": 16
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 16,
+      "image": "spellbound:textures/gui/books/images/display.png",
+      "position": {
+        "xOffset": 181,
+        "yOffset": 130
+      },
+      "width": 16
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 16,
+      "image": "spellbound:textures/block/rune/rune_1.png",
+      "position": {
+        "xOffset": 95,
+        "yOffset": 50
+      },
+      "width": 16
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 16,
+      "image": "spellbound:textures/block/rune/rune_5.png",
+      "position": {
+        "xOffset": 124,
+        "yOffset": 64
+      },
+      "width": 16
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 16,
+      "image": "spellbound:textures/block/rune/rune_17.png",
+      "position": {
+        "xOffset": 103,
+        "yOffset": 83
+      },
+      "width": 16
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 16,
+      "image": "spellbound:textures/block/rune/rune_4.png",
+      "position": {
+        "xOffset": 15,
+        "yOffset": 125
+      },
+      "width": 16
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 16,
+      "image": "spellbound:textures/block/rune/rune_22.png",
+      "position": {
+        "xOffset": 38,
+        "yOffset": 139
+      },
+      "width": 16
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 16,
+      "image": "spellbound:textures/block/rune/rune_19.png",
+      "position": {
+        "xOffset": 4,
+        "yOffset": 148
+      },
+      "width": 16
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 16,
+      "image": "spellbound:textures/block/rune/rune_13.png",
+      "position": {
+        "xOffset": 284,
+        "yOffset": 25
+      },
+      "width": 16
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 16,
+      "image": "spellbound:textures/block/rune/rune_6.png",
+      "position": {
+        "xOffset": 294,
+        "yOffset": 52
+      },
+      "width": 16
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 16,
+      "image": "spellbound:textures/block/rune/rune_18.png",
+      "position": {
+        "xOffset": 304,
+        "yOffset": 75
+      },
+      "width": 16
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 16,
+      "image": "spellbound:textures/block/rune/rune_15.png",
+      "position": {
+        "xOffset": 284,
+        "yOffset": 75
+      },
+      "width": 16
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 16,
+      "image": "spellbound:textures/block/rune/rune_26.png",
+      "position": {
+        "xOffset": 304,
+        "yOffset": 25
+      },
+      "width": 16
+    }
+  ],
+  "id": "spellbound:architects_lexicon",
+  "insertAfter": "spellbound:transfig_description"
+}

@@ -216,6 +216,13 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.transfiguration.quote", "Reality is not a rule. It is a suggestion");
         add("guide.transfiguration.description1", "Matter, equivalent exchange, logic—the Transfiguration Path requires great understanding of these concepts. It's more than magic—it's a science.");
         add("guide.transfiguration.description2", "To truly master this path is to reject the world as it appears. Stone can become water, iron can become gold, and a formidable enemy can become a harmless sheep. But to rewrite the laws of physics, you must understand them first.");
+        add("guide.transfiguration.rituals", "Alchemy Rituals");
+        add("guide.transfiguration.rituals1", "Alchemy, the foundation of everything I do. Whether I am extracting a new spell formula or manipulating my environment, the process is the same: arrange the geometry, balance the components, and force the transmutation.");
+        add("guide.transfiguration.rituals2", "The apparatus appears to consists of a central pedestal surrounded by display stands, with each tier increasing the displays and height needed.");
+        add("guide.transfiguration.rituals_cont", "Alchemy Rituals Cont.");
+        add("guide.transfiguration.pedestal_legend", "- Pedestal");
+        add("guide.transfiguration.display_legend", "- Display");
+        add("guide.transfiguration.rune_circuit", "If I connect the displays in a ring with these runic symbols I found, the structure as a circuit, with the items on displays defining the properties of the ritual.");
         add("ritual.spellbound.create_stride", "Create Spell Tome:\nStride");
         add("ritual.spellbound.create_stride.description", "Creates a Stride spell tome");
         add("ritual.spellbound.create_shadow_gate", "Create Spell Tome:\nShadow Gate");

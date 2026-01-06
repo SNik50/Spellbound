@@ -822,6 +822,7 @@ public class PageBuilder {
         private ResourceLocation pageScrap;
         private boolean enableCorners;
         private ResourceLocation cornerTexture;
+        int color;
 
         private Image(ResourceLocation image) {
             this.image = image;
