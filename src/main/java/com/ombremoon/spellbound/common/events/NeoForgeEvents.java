@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.common.events;
 import com.mojang.brigadier.CommandDispatcher;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
+import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
 import com.ombremoon.spellbound.common.world.commands.SpellboundCommand;
@@ -30,10 +31,14 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.SimpleExplosionDamageCalculator;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
@@ -51,6 +56,7 @@ import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.server.command.ConfigCommand;
 
 import java.util.List;
+import java.util.Optional;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
 public class NeoForgeEvents {
@@ -65,6 +71,45 @@ public class NeoForgeEvents {
         new SpellboundCommand(dispatcher, context);
 
         ConfigCommand.register(dispatcher);
+    }
+
+    @SubscribeEvent
+    public static void effectAdded(MobEffectEvent.Added event) {
+        MobEffectInstance effectInstance = event.getEffectInstance();
+        LivingEntity entity = event.getEntity();
+
+        if (effectInstance.is(SBEffects.COMBUST)) {
+            entity.level().explode(null,
+                    entity.level().damageSources().source(SBDamageTypes.RUIN_FIRE),
+                    new SimpleExplosionDamageCalculator(false, true, Optional.of(0f), Optional.empty()) {
+                        @Override
+                        public float getEntityDamageAmount(Explosion explosion, Entity entity) {
+                            return Math.min(super.getEntityDamageAmount(explosion, entity), 10);
+                        }
+                    },
+                    entity.getX(),
+                    entity.getY()+1,
+                    entity.getZ(),
+                    3,
+                    true,
+                    Level.ExplosionInteraction.MOB);
+        } else if (effectInstance.is(SBEffects.DISCHARGE)) {
+            SpellHandler spellHandler = SpellUtil.getSpellHandler(entity);
+            spellHandler.consumeMana((float) (spellHandler.getMana() * 0.2f));
+
+            LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(entity.level());
+            lightningBolt.setPos(entity.position());
+            entity.level().addFreshEntity(lightningBolt);
+
+            for (int i = 0; i < 3; i++) {
+                var bolt = EntityType.LIGHTNING_BOLT.create(entity.level());
+                bolt.setPos(
+                        entity.position().x + entity.getRandom().nextInt(-5, 5),
+                        entity.position().y,
+                        entity.position().z + entity.getRandom().nextInt(-5, 5));
+                entity.level().addFreshEntity(bolt);
+            }
+        }
     }
 
     @SubscribeEvent

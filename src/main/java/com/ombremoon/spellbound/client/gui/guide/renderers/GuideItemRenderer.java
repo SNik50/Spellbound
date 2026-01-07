@@ -5,6 +5,7 @@ import com.ombremoon.spellbound.client.gui.guide.elements.special.GuideGhostItem
 import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -14,10 +15,15 @@ public class GuideItemRenderer implements IPageElementRenderer<GuideItemElement>
 
     @Override
     public void render(GuideItemElement element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
+        ItemEntity entity = (ItemEntity) getData(element, "entity");
+        if (entity == null) {
+            entity = EntityType.ITEM.create(Minecraft.getInstance().level);
+            saveData(element, "entity", entity);
+        }
+
         GuideGhostItem ghostItem = new GuideGhostItem(buildIngredient(element.items()), 0, 0);
 
         ItemStack stack = ghostItem.getItem(tickCount);
-        ItemEntity entity = EntityType.ITEM.create(Minecraft.getInstance().level);
         entity.setItem(stack);
 
         entity.tickCount = tickCount;

@@ -63,7 +63,7 @@ public class GuideTextRenderer implements IPageElementRenderer<GuideTextElement>
     }
 
     @Override
-    public void handleClick(GuideTextElement element, Screen screen) {
+    public void handleClick(GuideTextElement element, Screen screen, double mouseX, double mouseY, int leftPos, int topPos) {
         if (element.extras().link().isBlank()) return;
         Minecraft minecraft = Minecraft.getInstance();
         String url = element.extras().link();

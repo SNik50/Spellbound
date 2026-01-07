@@ -11,7 +11,7 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "guide.ruin.portals"
+        "translate": "guide.ruin.build_up"
       }
     },
     {
@@ -31,7 +31,7 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "guide.ruin.keystones"
+        "translate": "guide.ruin.effects"
       }
     },
     {
@@ -49,16 +49,7 @@
         "yOffset": 35
       },
       "translation": {
-        "translate": "guide.ruin.portals1"
-      }
-    },
-    {
-      "type": "spellbound:text",
-      "position": {
-        "yOffset": 110
-      },
-      "translation": {
-        "translate": "guide.ruin.portals2"
+        "translate": "guide.ruin.build_up1"
       }
     },
     {
@@ -68,10 +59,30 @@
         "yOffset": 35
       },
       "translation": {
-        "translate": "guide.ruin.portals3"
+        "translate": "guide.ruin.fire_status"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 90
+      },
+      "translation": {
+        "translate": "guide.ruin.frost_status"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 135
+      },
+      "translation": {
+        "translate": "guide.ruin.shock_status"
       }
     }
   ],
   "id": "spellbound:grimoire_of_annihilation",
-  "insertAfter": "spellbound:ruin_build_up"
+  "insertAfter": "spellbound:ruin_sub_paths"
 }

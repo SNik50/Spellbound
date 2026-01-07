@@ -22,6 +22,29 @@
     },
     {
       "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 247,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.deception.acquisition"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -13357984,
+      "path": "deception",
+      "pathTexture": "spellbound:textures/gui/paths/deception.png",
+      "position": {
+        "xOffset": 172
+      }
+    },
+    {
+      "type": "spellbound:text",
       "position": {
         "yOffset": 35
       },
@@ -32,10 +55,30 @@
     {
       "type": "spellbound:text",
       "position": {
-        "yOffset": 110
+        "yOffset": 120
       },
       "translation": {
         "translate": "guide.deception.description2"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.deception.acquisition1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 90
+      },
+      "translation": {
+        "translate": "guide.deception.acquisition2"
       }
     }
   ],

@@ -17,15 +17,23 @@ public class GuideEntityRenderer implements IPageElementRenderer<GuideEntityElem
 
     @Override
     public void render(GuideEntityElement element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
-        Registry<EntityType<?>> registry = BuiltInRegistries.ENTITY_TYPE;
-        EntityType<?> entityType = registry.get(element.entityLoc().get(Mth.floor(tickCount / 30.0F) % element.entityLoc().size()));
+        Entity entity = (Entity) getData(element, "entity");
+        Integer selectedEntity = (Integer) getData(element, "entityIndex");
+        int entityIndex = Mth.floor(tickCount / 30.0F) % element.entityLoc().size();
 
-        if (entityType == null) {
-            LOGGER.warn("Entity could not be found {}", element.entityLoc());
-            return;
+        if (entity == null || selectedEntity == null || selectedEntity != entityIndex) {
+            Registry<EntityType<?>> registry = BuiltInRegistries.ENTITY_TYPE;
+            EntityType<?> entityType = registry.get(element.entityLoc().get(entityIndex));
+
+            if (entityType == null) {
+                LOGGER.warn("Entity could not be found {}", element.entityLoc());
+                return;
+            }
+
+            entity = entityType.create(Minecraft.getInstance().level);
+            saveData(element, "entity", entity);
+            saveData(element, "entityIndex", entityIndex);
         }
-
-        Entity entity = entityType.create(Minecraft.getInstance().level);
 
         RenderUtil.renderEntityInInventory(graphics,
                 leftPos + element.position().xOffset(),

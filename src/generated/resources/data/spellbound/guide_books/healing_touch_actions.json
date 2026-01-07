@@ -215,7 +215,7 @@
     {
       "type": "spellbound:text_list",
       "extras": {
-        "bulletPoint": "",
+        "bullet_point": "",
         "maxRows": 3,
         "rowGap": 55
       },
@@ -225,21 +225,24 @@
             "translate": "healing_touch.heal_mob_to_full.lore"
           },
           "extraOffset": 0,
-          "scrap": "spellbound:default"
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
         },
         {
           "component": {
             "translate": "healing_touch.use_blessed_bandages.lore"
           },
           "extraOffset": 0,
-          "scrap": "spellbound:use_blessed_bandages_lore"
+          "scrap": "spellbound:use_blessed_bandages_lore",
+          "target_page": "spellbound:default"
         },
         {
           "component": {
             "translate": "healing_touch.bless_shrine.lore"
           },
           "extraOffset": 10,
-          "scrap": "spellbound:bless_shrine"
+          "scrap": "spellbound:bless_shrine",
+          "target_page": "spellbound:default"
         }
       ],
       "position": {

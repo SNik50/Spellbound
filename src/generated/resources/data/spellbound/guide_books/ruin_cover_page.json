@@ -37,14 +37,14 @@
     {
       "type": "spellbound:text",
       "extras": {
-        "centered": true
+        "bold": true
       },
       "position": {
-        "xOffset": 247,
-        "yOffset": 65
+        "xOffset": 172,
+        "yOffset": 40
       },
       "translation": {
-        "translate": "guide.ruin.cover_page"
+        "translate": "guide.general.table_contents"
       }
     },
     {
@@ -55,10 +55,86 @@
       },
       "position": {
         "xOffset": 247,
-        "yOffset": 150
+        "yOffset": 160
       },
       "translation": {
         "translate": "guide.ruin.quote"
+      }
+    },
+    {
+      "type": "spellbound:text_list",
+      "extras": {
+        "rowGap": 10
+      },
+      "list": [
+        {
+          "component": {
+            "translate": "guide.ruin.contents.description"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:ruin_description"
+        },
+        {
+          "component": {
+            "translate": "guide.ruin.subpaths_cnt"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:ruin_sub_paths"
+        },
+        {
+          "component": {
+            "translate": "guide.ruin.build_up"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:ruin_build_up"
+        },
+        {
+          "component": {
+            "translate": "spells.spellbound.stormstrike"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:storm_strike_page"
+        },
+        {
+          "component": {
+            "translate": "spells.spellbound.electric_charge"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:electric_charge_page"
+        },
+        {
+          "component": {
+            "translate": "spells.spellbound.shattering_crystal"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:shattering_crystal_page"
+        },
+        {
+          "component": {
+            "translate": "spells.spellbound.solar_ray"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:solar_ray_page"
+        },
+        {
+          "component": {
+            "translate": "spells.spellbound.storm_rift"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:storm_rift_page"
+        }
+      ],
+      "position": {
+        "xOffset": 182,
+        "yOffset": 50
       }
     }
   ],

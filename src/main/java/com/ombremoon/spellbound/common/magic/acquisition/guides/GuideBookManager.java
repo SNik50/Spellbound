@@ -123,7 +123,7 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
         List<GuideBookPage> sortedBook = new ArrayList<>();
         while (!queue.isEmpty()) {
             ResourceLocation current = queue.poll();
-            PAGE_INDEX.put(current, pages.size());
+            PAGE_INDEX.put(current, sortedBook.size());
             sortedBook.add(pages.get(current));
 
             List<ResourceLocation> children = parentToChildren.get(current);

@@ -56,7 +56,7 @@
       "type": "spellbound:text",
       "position": {
         "xOffset": 172,
-        "yOffset": 125
+        "yOffset": 115
       },
       "translation": {
         "translate": "guide.summon.summoning_portal1"
@@ -74,13 +74,13 @@
     {
       "type": "spellbound:image",
       "corner_texture": "spellbound:textures/gui/books/image_borders/the_necronomicon.png",
-      "height": 80,
+      "height": 67,
       "image": "spellbound:textures/gui/books/images/summoning_portal.png",
       "position": {
         "xOffset": 172,
         "yOffset": 35
       },
-      "width": 150
+      "width": 145
     }
   ],
   "id": "spellbound:the_necronomicon",

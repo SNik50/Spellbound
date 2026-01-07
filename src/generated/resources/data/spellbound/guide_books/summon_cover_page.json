@@ -37,14 +37,14 @@
     {
       "type": "spellbound:text",
       "extras": {
-        "centered": true
+        "bold": true
       },
       "position": {
-        "xOffset": 247,
-        "yOffset": 65
+        "xOffset": 172,
+        "yOffset": 40
       },
       "translation": {
-        "translate": "guide.summons.cover_page"
+        "translate": "guide.general.table_contents"
       }
     },
     {
@@ -55,10 +55,54 @@
       },
       "position": {
         "xOffset": 247,
-        "yOffset": 150
+        "yOffset": 160
       },
       "translation": {
         "translate": "guide.summons.quote"
+      }
+    },
+    {
+      "type": "spellbound:text_list",
+      "extras": {
+        "rowGap": 10
+      },
+      "list": [
+        {
+          "component": {
+            "translate": "guide.summon.description"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:summon_description"
+        },
+        {
+          "component": {
+            "translate": "guide.summon.summoning_stone"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:summon_portals"
+        },
+        {
+          "component": {
+            "translate": "guide.summon.portal_activation"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:summon_portal_activation"
+        },
+        {
+          "component": {
+            "translate": "spells.spellbound.wild_mushroom"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:wild_mushroom"
+        }
+      ],
+      "position": {
+        "xOffset": 182,
+        "yOffset": 50
       }
     }
   ],

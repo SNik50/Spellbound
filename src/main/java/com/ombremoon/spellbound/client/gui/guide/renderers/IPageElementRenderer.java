@@ -39,11 +39,19 @@ public interface IPageElementRenderer<T extends IPageElement> extends Loggable {
      */
     void render(T element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount);
 
+    default Object getData(IPageElement element, String key) {
+        return ElementRenderDispatcher.getData(element, key);
+    }
+
+    default <V> void saveData(IPageElement element, String key, V data) {
+        ElementRenderDispatcher.putData(element, key, data);
+    }
+
     default boolean isVisible(ResourceLocation scrap) {
         return scrap.equals(CommonClass.customLocation("default")) || Minecraft.getInstance().player.isCreative() || SpellUtil.hasScrap(Minecraft.getInstance().player, scrap);
     }
 
-    default void handleClick(T element, Screen screen) {}
+    default void handleClick(T element, Screen screen, double mouseX, double mouseY, int leftPos, int topPos) {}
 
     default void handleHover(T element, GuiGraphics guiGraphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick) {}
 

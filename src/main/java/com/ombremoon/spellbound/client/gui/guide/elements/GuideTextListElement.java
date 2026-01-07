@@ -5,6 +5,8 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.client.gui.guide.elements.extras.ElementPosition;
 import com.ombremoon.spellbound.client.gui.guide.elements.extras.TextListExtras;
+import com.ombremoon.spellbound.client.gui.guide.elements.special.IClickable;
+import com.ombremoon.spellbound.client.gui.guide.elements.special.IInteractable;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -14,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-public record GuideTextListElement(List<ScrapComponent> list, TextListExtras extras, ElementPosition position) implements IPageElement {
+public record GuideTextListElement(List<ScrapComponent> list, TextListExtras extras, ElementPosition position) implements IPageElement, IClickable {
     public static final MapCodec<GuideTextListElement> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
             ScrapComponent.CODEC.listOf().fieldOf("list").forGetter(GuideTextListElement::list),
             TextListExtras.CODEC.optionalFieldOf("extras", TextListExtras.getDefault()).forGetter(GuideTextListElement::extras),
@@ -26,25 +28,30 @@ public record GuideTextListElement(List<ScrapComponent> list, TextListExtras ext
         return CODEC;
     }
 
-    public record ScrapComponent(Component component, ResourceLocation scrap, int extraOffset) {
+    public record ScrapComponent(Component component, ResourceLocation scrap, int extraOffset, ResourceLocation targetPage) {
         static final Codec<ScrapComponent> CODEC = RecordCodecBuilder.create(
                 instance -> instance.group(
                         ComponentSerialization.CODEC.fieldOf("component").forGetter(ScrapComponent::component),
                         ResourceLocation.CODEC.fieldOf("scrap").forGetter(ScrapComponent::scrap),
-                        Codec.INT.fieldOf("extraOffset").forGetter(ScrapComponent::extraOffset)
+                        Codec.INT.fieldOf("extraOffset").forGetter(ScrapComponent::extraOffset),
+                        ResourceLocation.CODEC.fieldOf("target_page").forGetter(ScrapComponent::targetPage)
                 ).apply(instance, ScrapComponent::new)
         );
 
         public ScrapComponent(Component component, int extraOffset) {
-            this(component, CommonClass.customLocation("default"), extraOffset);
+            this(component, CommonClass.customLocation("default"), extraOffset, CommonClass.customLocation("default"));
         }
 
         public ScrapComponent(Component component, ResourceLocation scrap) {
-            this(component, scrap, 0);
+            this(component, scrap, 0, CommonClass.customLocation("default"));
         }
 
         public ScrapComponent(Component component) {
-            this(component, CommonClass.customLocation("default"), 0);
+            this(component, CommonClass.customLocation("default"), 0, CommonClass.customLocation("default"));
+        }
+
+        public ScrapComponent(Component component, ResourceLocation scrap, ResourceLocation targetPage) {
+            this(component, CommonClass.customLocation("default"), 0, targetPage);
         }
     }
 }

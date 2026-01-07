@@ -37,14 +37,14 @@
     {
       "type": "spellbound:text",
       "extras": {
-        "centered": true
+        "bold": true
       },
       "position": {
-        "xOffset": 247,
-        "yOffset": 65
+        "xOffset": 172,
+        "yOffset": 40
       },
       "translation": {
-        "translate": "guide.transfiguration.cover_page"
+        "translate": "guide.general.table_contents"
       }
     },
     {
@@ -55,10 +55,78 @@
       },
       "position": {
         "xOffset": 247,
-        "yOffset": 150
+        "yOffset": 160
       },
       "translation": {
         "translate": "guide.transfiguration.quote"
+      }
+    },
+    {
+      "type": "spellbound:text_list",
+      "extras": {
+        "rowGap": 10
+      },
+      "list": [
+        {
+          "component": {
+            "translate": "guide.transfiguration.description"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:transfig_description"
+        },
+        {
+          "component": {
+            "translate": "guide.transfiguration.rituals_cont"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:transfig_rituals"
+        },
+        {
+          "component": {
+            "translate": "guide.transfiguration.blocks"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:transfig_display_pedestal"
+        },
+        {
+          "component": {
+            "translate": "guide.transfiguration.items"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:transfig_talisman_chalk"
+        },
+        {
+          "component": {
+            "translate": "spells.spellbound.stride"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:stride"
+        },
+        {
+          "component": {
+            "translate": "spells.spellbound.shadow_gate"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:shadow_gate_"
+        },
+        {
+          "component": {
+            "translate": "spells.spellbound.mystic_armor"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:mystic_armor"
+        }
+      ],
+      "position": {
+        "xOffset": 182,
+        "yOffset": 50
       }
     }
   ],

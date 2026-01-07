@@ -41,6 +41,14 @@ public class GuideBookScreen extends Screen {
         this.bookTexture = bookTexture;
     }
 
+    public void setPage(int pageNum) {
+        this.currentPage = pageNum;
+    }
+
+    public void setPage(ResourceLocation pageId) {
+        this.currentPage = GuideBookManager.getPageIndex(pageId);
+    }
+
     @Override
     public boolean isPauseScreen() {
         return false;
@@ -112,7 +120,7 @@ public class GuideBookScreen extends Screen {
             }
 
             this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            ElementRenderDispatcher.resetTickCount();
+            ElementRenderDispatcher.resetElements();
             return true;
         } else if (currentPage < lastPage && mouseX >= this.leftPos + 354 && mouseX <= this.leftPos + 370 && mouseY >= this.topPos + 230 && mouseY <= this.topPos + 243) {
             for (int i = currentPage+1; i <= lastPage; i++) {
@@ -123,13 +131,13 @@ public class GuideBookScreen extends Screen {
             }
 
             this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
-            ElementRenderDispatcher.resetTickCount();
+            ElementRenderDispatcher.resetElements();
             return true;
         }
 
         for (IPageElement element : this.pages.get(currentPage).elements()) {
             if (element instanceof IClickable && ElementRenderDispatcher.isHovering(element, (int) mouseX, (int) mouseY, this.leftPos + PAGE_X_OFFSET, this.topPos + PAGE_Y_OFFSET)) {
-                ElementRenderDispatcher.handleClick(element, this);
+                ElementRenderDispatcher.handleClick(element, this, mouseX, mouseY, this.leftPos + PAGE_X_OFFSET, this.topPos + PAGE_Y_OFFSET);
                 return true;
             }
         }

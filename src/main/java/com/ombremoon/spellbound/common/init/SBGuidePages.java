@@ -22,13 +22,17 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
+import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -53,7 +57,9 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> RUIN_COVER_PAGE = key("ruin_cover_page");
     ResourceKey<GuideBookPage> RUIN_DESCRIPTION = key("ruin_description");
     ResourceKey<GuideBookPage> RUIN_SUB_PATHS = key("ruin_sub_paths");
+    ResourceKey<GuideBookPage> RUIN_BUILD_UP = key("ruin_build_up");
     ResourceKey<GuideBookPage> RUIN_PORTALS = key("ruin_portals");
+    ResourceKey<GuideBookPage> RUIN_ARMOR_STAFF = key("ruin_armor_staff");
     ResourceKey<GuideBookPage> STORM_STRIKE = key("storm_strike_page");
     ResourceKey<GuideBookPage> ELECTRIC_CHARGE = key("electric_charge_page");
     ResourceKey<GuideBookPage> SHATTERING_CRYSTAL = key("shattering_crystal_page");
@@ -172,7 +178,17 @@ public interface SBGuidePages {
         );
 
         //Ruin
-        createCoverPage(context, RUIN_BOOK, RUIN_COVER_PAGE, SpellPath.RUIN);
+        createCoverPage(context, RUIN_BOOK, RUIN_COVER_PAGE, SpellPath.RUIN,
+                new ContentsEntry(translatable("guide.ruin.contents.description"), RUIN_DESCRIPTION),
+                new ContentsEntry(translatable("guide.ruin.subpaths_cnt"), RUIN_SUB_PATHS),
+                new ContentsEntry(translatable("guide.ruin.build_up"), RUIN_BUILD_UP),
+                new ContentsEntry(translatable("guide.ruin.portals"), RUIN_PORTALS),
+                new ContentsEntry(translatable("guide.ruin.armor"), RUIN_ARMOR_STAFF),
+                new ContentsEntry(spellName(SBSpells.STORMSTRIKE.get()), STORM_STRIKE),
+                new ContentsEntry(spellName(SBSpells.ELECTRIC_CHARGE.get()), ELECTRIC_CHARGE),
+                new ContentsEntry(spellName(SBSpells.SHATTERING_CRYSTAL.get()), SHATTERING_CRYSTAL),
+                new ContentsEntry(spellName(SBSpells.SOLAR_RAY.get()), SOLAR_RAY),
+                new ContentsEntry(spellName(SBSpells.STORM_RIFT.get()), STORM_RIFT));
         createDescription(context,
                 RUIN_DESCRIPTION,
                 RUIN_COVER_PAGE,
@@ -195,13 +211,44 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.ruin.frost"), 100),
                 new TextEntry(translatable("guide.ruin.shock"), PAGE_TWO_START_X, 35));
         createDescription(context,
-                RUIN_PORTALS,
+                RUIN_BUILD_UP,
                 RUIN_SUB_PATHS,
+                Book.RUIN,
+                translatable("guide.ruin.build_up"),
+                translatable("guide.ruin.effects"),
+                false,
+                new TextEntry(translatable("guide.ruin.build_up1"), 35),
+                new TextEntry(translatable("guide.ruin.fire_status"), PAGE_TWO_START_X, 35),
+                new TextEntry(translatable("guide.ruin.frost_status"), PAGE_TWO_START_X, 90),
+                new TextEntry(translatable("guide.ruin.shock_status"), PAGE_TWO_START_X, 135)
+                );
+        createDescription(context,
+                RUIN_PORTALS,
+                RUIN_BUILD_UP,
                 Book.RUIN,
                 translatable("guide.ruin.portals"),
                 translatable("guide.ruin.keystones"),
                 false,
                 new TextEntry(translatable("guide.ruin.portals1"), 35),
+                new TextEntry(translatable("guide.ruin.portals2"), 110),
+                new TextEntry(translatable("guide.ruin.portals3"), PAGE_TWO_START_X, 35));
+        createArmorDescription(context,
+                RUIN_ARMOR_STAFF,
+                RUIN_PORTALS,
+                Book.RUIN,
+                SpellPath.RUIN,
+                translatable("guide.ruin.drip"),
+                null,
+                false,
+                List.of(
+                        new EquipmentEntry(
+                                SBItems.STORMWEAVER_HELMET,
+                                SBItems.STORMWEAVER_CHESTPLATE,
+                                SBItems.STORMWEAVER_LEGGINGS,
+                                SBItems.STORMWEAVER_BOOTS,
+                                SBItems.SHOCK_STAFF,
+                                0, 35)
+                ),
                 new TextEntry(translatable("guide.ruin.portals2"), 110),
                 new TextEntry(translatable("guide.ruin.portals3"), PAGE_TWO_START_X, 35));
 
@@ -212,7 +259,14 @@ public interface SBGuidePages {
         createSpellPage(context, STORM_RIFT, SOLAR_RAY, Book.RUIN, SBSpells.STORM_RIFT);
 
         //Transfiguration
-        createCoverPage(context, TRANSFIG_BOOK, TRANSFIG_COVER_PAGE, SpellPath.TRANSFIGURATION);
+        createCoverPage(context, TRANSFIG_BOOK, TRANSFIG_COVER_PAGE, SpellPath.TRANSFIGURATION,
+                new ContentsEntry(translatable("guide.transfiguration.description"), TRANSFIG_DESCRIPTION),
+                new ContentsEntry(translatable("guide.transfiguration.rituals_cont"), TRANSFIG_RITUALS),
+                new ContentsEntry(translatable("guide.transfiguration.blocks"), TRANSFIG_RITUAL_ITEMS_1),
+                new ContentsEntry(translatable("guide.transfiguration.items"), TRANSFIG_RITUAL_ITEMS_2),
+                new ContentsEntry(spellName(SBSpells.STRIDE.get()), STRIDE),
+                new ContentsEntry(spellName(SBSpells.SHADOW_GATE.get()), SHADOW_GATE),
+                new ContentsEntry(spellName(SBSpells.MYSTIC_ARMOR.get()), MYSTIC_ARMOR));
         createDescription(
                 context,
                 TRANSFIG_DESCRIPTION,
@@ -302,7 +356,11 @@ public interface SBGuidePages {
         createRitualPage(context, MYSTIC_ARMOR_RITUAL, MYSTIC_ARMOR, SBRituals.CREATE_MYSTIC_ARMOR, 10, 0, RitualTier.TWO);
 
         //Summon
-        createCoverPage(context, SUMMON_BOOK, SUMMON_COVER_PAGE, SpellPath.SUMMONS);
+        createCoverPage(context, SUMMON_BOOK, SUMMON_COVER_PAGE, SpellPath.SUMMONS,
+                new ContentsEntry(translatable("guide.summon.description"), SUMMON_DESCRIPTION),
+                new ContentsEntry(translatable("guide.summon.summoning_stone"), SUMMON_PORTALS),
+                new ContentsEntry(translatable("guide.summon.portal_activation"), SUMMON_PORTAL_ACTIVATION),
+                new ContentsEntry(spellName(SBSpells.WILD_MUSHROOM.get()), WILD_MUSHROOM));
         createDescription(
                 context,
                 SUMMON_DESCRIPTION,
@@ -327,10 +385,10 @@ public interface SBGuidePages {
                         new RecipeEntry(defaultNameSpace("anvil"), PAGE_START_CENTER_X-40, 90)
                 ),
                 List.of(
-                        new ImageEntryWithDimensions(loc("textures/gui/books/images/summoning_portal.png"), PAGE_TWO_START_X, 35,150, 80)
+                        new ImageEntryWithDimensions(loc("textures/gui/books/images/summoning_portal.png"), PAGE_TWO_START_X, 35,145, 67)
                 ),
                 new TextEntry(translatable("guide.summon.summoning_stone1"), 35),
-                new TextEntry(translatable("guide.summon.summoning_portal1"), PAGE_TWO_START_X, 125)
+                new TextEntry(translatable("guide.summon.summoning_portal1"), PAGE_TWO_START_X, 115)
         );
         createDescription(context,
                 SUMMON_PORTAL_ACTIVATION,
@@ -348,7 +406,13 @@ public interface SBGuidePages {
         createSummonAcqPage(context, SUMMON_BOOK, MUSHROOM_ACQ, SUMMON_PORTAL_ACTIVATION, SBEntities.GIANT_MUSHROOM.get(), SBSpells.WILD_MUSHROOM.get());
 
         //Divine
-        createCoverPage(context, DIVINE_BOOK, DIVINE_COVER_PAGE, SpellPath.DIVINE);
+        createCoverPage(context, DIVINE_BOOK, DIVINE_COVER_PAGE, SpellPath.DIVINE,
+                new ContentsEntry(translatable("guide.divine.divine_judgement"), DIVINE_DESCRIPTION),
+                new ContentsEntry(translatable("guide.divine.judgement_cont"), DIVINE_JUDGEMENT),
+                new ContentsEntry(translatable("guide.divine.divine_temple"), DIVINE_TEMPLE_VALKYR),
+                new ContentsEntry(translatable("guide.divine.divine_shrine"), DIVINE_SHRINE),
+                new ContentsEntry(spellName(SBSpells.HEALING_TOUCH.get()), HEALING_TOUCH),
+                new ContentsEntry(spellName(SBSpells.HEALING_BLOSSOM.get()), HEALING_BLOSSOM));
         createDescription(
                 context,
                 DIVINE_DESCRIPTION,
@@ -432,97 +496,79 @@ public interface SBGuidePages {
         );
 
         //Deception
-        createCoverPage(context, DECEPTION_BOOK, DECEPTION_COVER_PAGE, SpellPath.DECEPTION);
+        createCoverPage(context, DECEPTION_BOOK, DECEPTION_COVER_PAGE, SpellPath.DECEPTION,
+                new ContentsEntry(translatable("spellbound.path.deception"), DECEPTION_DESCRIPTION),
+                new ContentsEntry(spellName(SBSpells.SHADOWBOND.get()), SHADOWBOND),
+                new ContentsEntry(spellName(SBSpells.PURGE_MAGIC.get()), PURGE_MAGIC));
         createDescription(context,
                 DECEPTION_DESCRIPTION,
                 DECEPTION_COVER_PAGE,
                 Book.DECEPTION,
                 translatable("spellbound.path.deception"),
-                null,
+                translatable("guide.deception.acquisition"),
                 false,
                 new TextEntry(translatable("guide.deception.description1"), 35),
-                new TextEntry(translatable("guide.deception.description2"), 110));
+                new TextEntry(translatable("guide.deception.description2"), 120),
+                new TextEntry(translatable("guide.deception.acquisition1"), PAGE_TWO_START_X, 35),
+                new TextEntry(translatable("guide.deception.acquisition2"), PAGE_TWO_START_X, 90));
         createSpellPage(context, SHADOWBOND, DECEPTION_DESCRIPTION, Book.DECEPTION, SBSpells.SHADOWBOND);
         createSpellPage(context, PURGE_MAGIC, SHADOWBOND, Book.DECEPTION, SBSpells.PURGE_MAGIC);
-    }
-
-    private static void createBasicCoverPage(
-            BootstrapContext<GuideBookPage> context,
-            ResourceLocation forBook,
-            ResourceKey<GuideBookPage> currentPage,
-            ResourceKey<GuideBookPage> prevPage,
-            SpellPath path
-    ) {
-        register(
-                context,
-                currentPage,
-                PageBuilder
-                        .forBook(forBook)
-                        .setPreviousPage(prevPage)
-                        .addElements(
-                                PageBuilder.Image
-                                        .of(loc("textures/gui/paths/" + path.getSerializedName() + ".png"))
-                                        .setDimensions(150, 150)
-                                        .position(0, 25)
-                                        .disableCorners()
-                                        .build(),
-                                PageBuilder.SpellBorder
-                                        .of(path)
-                                        .setPosition(PAGE_TWO_START_X, 0)
-                                        .build(),
-                                PageBuilder.Text
-                                        .ofTranslatable("item.spellbound." + forBook.getPath())
-                                        .position(PAGE_TWO_START_CENTER_X, PAGE_START_Y)
-                                        .centered()
-                                        .build(),
-                                PageBuilder.Text
-                                        .ofTranslatable("guide.basic." + path.getSerializedName() + ".cover_page")
-                                        .position(PAGE_TWO_START_CENTER_X, 65)
-                                        .centered()
-                                        .build()
-                        )
-        );
     }
 
     private static void createCoverPage(
             BootstrapContext<GuideBookPage> context,
             ResourceLocation forBook,
             ResourceKey<GuideBookPage> currentPage,
-            SpellPath path
+            SpellPath path,
+            ContentsEntry... contents
     ) {
+
+        var builder = PageBuilder
+                .forBook(forBook)
+                .addElements(
+                        PageBuilder.Image
+                                .of(loc("textures/gui/paths/" + path.getSerializedName() + ".png"))
+                                .setDimensions(150, 150)
+                                .position(0, 25)
+                                .disableCorners()
+                                .build(),
+                        PageBuilder.SpellBorder
+                                .of(path)
+                                .setPosition(PAGE_TWO_START_X, 0)
+                                .build(),
+                        PageBuilder.Text
+                                .ofTranslatable("item.spellbound." + forBook.getPath())
+                                .position(PAGE_TWO_START_CENTER_X, PAGE_START_Y)
+                                .centered()
+                                .build(),
+                        PageBuilder.Text
+                                .ofTranslatable("guide.general.table_contents")
+                                .position(PAGE_TWO_START_X, 40)
+                                .bold()
+                                .build(),
+                        PageBuilder.Text
+                                .ofTranslatable("guide." + path.getSerializedName() + ".quote")
+                                .position(PAGE_TWO_START_CENTER_X, 160)
+                                .centered()
+                                .italic()
+                                .build()
+                );
+
+        var list = PageBuilder.TextList
+                .of()
+                .position(PAGE_TWO_START_X+10, 50)
+                .rowGap(10);
+
+        for (ContentsEntry entry : contents) {
+            list.addEntry(entry.comp, CommonClass.customLocation("default"), entry.targetPage().location());
+        }
+
+        builder.addElements(list.build());
+
         register(
                 context,
                 currentPage,
-                PageBuilder
-                        .forBook(forBook)
-                        .addElements(
-                                PageBuilder.Image
-                                        .of(loc("textures/gui/paths/" + path.getSerializedName() + ".png"))
-                                        .setDimensions(150, 150)
-                                        .position(0, 25)
-                                        .disableCorners()
-                                        .build(),
-                                PageBuilder.SpellBorder
-                                        .of(path)
-                                        .setPosition(PAGE_TWO_START_X, 0)
-                                        .build(),
-                                PageBuilder.Text
-                                        .ofTranslatable("item.spellbound." + forBook.getPath())
-                                        .position(PAGE_TWO_START_CENTER_X, PAGE_START_Y)
-                                        .centered()
-                                        .build(),
-                                PageBuilder.Text
-                                        .ofTranslatable("guide." + path.getSerializedName() + ".cover_page")
-                                        .position(PAGE_TWO_START_CENTER_X, 65)
-                                        .centered()
-                                        .build(),
-                                PageBuilder.Text
-                                        .ofTranslatable("guide." + path.getSerializedName() + ".quote")
-                                        .position(PAGE_TWO_START_CENTER_X, 150)
-                                        .centered()
-                                        .italic()
-                                        .build()
-                        )
+                builder
         );
     }
 
@@ -582,6 +628,96 @@ public interface SBGuidePages {
                             .of(text.text)
                             .position(text.xPos, text.yPos)
                             .build()
+            );
+        }
+
+        register(context, currentPage, builder);
+    }
+
+    private static void createArmorDescription(
+            BootstrapContext<GuideBookPage> context,
+            ResourceKey<GuideBookPage> currentPage,
+            ResourceKey<GuideBookPage> prevPage,
+            Book book,
+            MutableComponent title,
+            @Nullable MutableComponent secondTitle,
+            boolean doubleTitle,
+            List<EquipmentEntry> equipment,
+            TextEntry... texts
+    ) {
+        createArmorDescription(context,
+                currentPage,
+                prevPage,
+                book,
+                book.getPath(),
+                title,
+                secondTitle,
+                doubleTitle,
+                equipment,
+                texts);
+    }
+
+    private static void createArmorDescription(
+            BootstrapContext<GuideBookPage> context,
+            ResourceKey<GuideBookPage> currentPage,
+            ResourceKey<GuideBookPage> prevPage,
+            Book book,
+            SpellPath path,
+            MutableComponent title,
+            @Nullable MutableComponent secondTitle,
+            boolean doubleTitle,
+            List<EquipmentEntry> equipment,
+            TextEntry... texts
+    ) {
+        var builder = PageBuilder.forBook(book.getLocation()).setPreviousPage(prevPage).addElements(
+                PageBuilder.Text
+                        .of(title)
+                        .position(PAGE_START_CENTER_X, doubleTitle ? PAGE_START_DOUBLE_Y : PAGE_START_Y)
+                        .bold()
+                        .centered()
+                        .build(),
+                PageBuilder.SpellBorder
+                        .of(path)
+                        .setPosition(0, 0)
+                        .build()
+        );
+        if (secondTitle != null) {
+            builder.addElements(
+                    PageBuilder.Text
+                            .of(secondTitle)
+                            .position(PAGE_TWO_START_CENTER_X, doubleTitle ? PAGE_START_DOUBLE_Y : PAGE_START_Y)
+                            .bold()
+                            .centered()
+                            .build(),
+                    PageBuilder.SpellBorder
+                            .of(path)
+                            .setPosition(PAGE_TWO_START_X, 0)
+                            .build()
+            );
+        }
+
+        for (var text : texts) {
+            builder.addElements(
+                    PageBuilder.Text
+                            .of(text.text)
+                            .position(text.xPos, text.yPos)
+                            .build()
+            );
+        }
+
+        for (var stand : equipment) {
+            builder.addElements(
+                    PageBuilder.EquipmentRenderer
+                            .of()
+                            .setHelmet(stand.helmet())
+                            .setChestplate(stand.chestplate())
+                            .setLeggings(stand.leggings())
+                            .setBoots(stand.boots())
+                            .setOffHand(stand.offHand())
+                            .setMainHand(stand.mainHand())
+                            .setPosition(stand.x(), stand.y())
+                            .build()
+
             );
         }
 
@@ -864,7 +1000,7 @@ public interface SBGuidePages {
                 .setPreviousPage(prevPage)
                 .addElements(
                         PageBuilder.Text
-                                .ofTranslatable("spells.spellbound." + spellType.location().getPath())
+                                .of(spellName(spellType))
                                 .position(PAGE_START_CENTER_X , PAGE_START_Y)
                                 .centered()
                                 .bold()
@@ -1225,6 +1361,10 @@ public interface SBGuidePages {
         return ResourceKey.create(Keys.GUIDE_BOOK, CommonClass.customLocation(name));
     }
 
+    private static MutableComponent spellName(SpellType<?> spell) {
+        return translatable("spells.spellbound." + spell.location().getPath());
+    }
+
     record ItemActionEntry(ResourceKey<DivineAction> action, ResourceLocation actionScrap, ResourceLocation loreScrap, int judgement, int cooldown, int loreOffset, Ingredient ingredient) implements ActionEntry {}
 
     record EntityActionEntry(ResourceKey<DivineAction> action, ResourceLocation actionScrap, ResourceLocation loreScrap, int judgement, int cooldown, int loreOffset, EntityEntry entity) implements ActionEntry {}
@@ -1278,6 +1418,33 @@ public interface SBGuidePages {
         }
     }
 
+    record EquipmentEntry(ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, ItemStack offHand, ItemStack mainHand, int x, int y) {
+
+        EquipmentEntry(ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, int x, int y) {
+            this(helmet, chestplate, leggings, boots, ItemStack.EMPTY, ItemStack.EMPTY, x, y);
+        }
+
+        EquipmentEntry(Supplier<Item> helmet, Supplier<Item> chestplate, Supplier<Item> leggings, Supplier<Item> boots, int x, int y) {
+            this(helmet.get().getDefaultInstance(),
+                    chestplate.get().getDefaultInstance(),
+                    leggings.get().getDefaultInstance(),
+                    boots.get().getDefaultInstance(),
+                    ItemStack.EMPTY,
+                    ItemStack.EMPTY,
+                    x, y);
+        }
+
+        EquipmentEntry(Supplier<Item> helmet, Supplier<Item> chestplate, Supplier<Item> leggings, Supplier<Item> boots, Supplier<Item> mainHand, int x, int y) {
+            this(helmet.get().getDefaultInstance(),
+                    chestplate.get().getDefaultInstance(),
+                    leggings.get().getDefaultInstance(),
+                    boots.get().getDefaultInstance(),
+                    ItemStack.EMPTY,
+                    mainHand.get().getDefaultInstance(),
+                    x, y);
+        }
+    }
+
     record TextEntry(Component text, int xPos, int yPos, int lineLength, ResourceLocation scrap) {
 
         TextEntry(Component text, int xPos, int yPos, int lineLength) {
@@ -1303,6 +1470,8 @@ public interface SBGuidePages {
             this(item, xPos, yPos, true);
         }
     }
+
+    record ContentsEntry(Component comp, ResourceKey<GuideBookPage> targetPage) {}
 
     enum Book {
         BASIC(BASIC_BOOK, null, PageBuilder.Recipe.SpellboundGrids.BASIC),

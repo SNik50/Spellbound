@@ -121,5 +121,6 @@ public class Spellbound {
         ElementRenderDispatcher.register(GuideTooltipElement.class, new GuideTooltipRenderer());
         ElementRenderDispatcher.register(GuideSpellBorderElement.class, new GuideSpellBorderRenderer());
         ElementRenderDispatcher.register(TransfigurationRitualElement.class, new GuideRitualRenderer());
+        ElementRenderDispatcher.register(GuideArmorElement.class, new GuideArmorRenderer());
     }
 }

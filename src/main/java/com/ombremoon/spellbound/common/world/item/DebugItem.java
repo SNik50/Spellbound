@@ -1,9 +1,7 @@
 package com.ombremoon.spellbound.common.world.item;
 
-import com.ombremoon.spellbound.common.init.SBData;
-import com.ombremoon.spellbound.common.init.SBPageScraps;
-import com.ombremoon.spellbound.common.init.SBRituals;
-import com.ombremoon.spellbound.common.init.SBSpells;
+import com.ombremoon.spellbound.common.init.*;
+import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.entity.projectile.MushroomProjectile;
@@ -37,8 +35,8 @@ public class DebugItem extends Item implements Loggable {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         var handler = SpellUtil.getSpellHandler(player);
         var skillHandler = SpellUtil.getSkills(player);
-//        duckDebug(level, player, usedHand, handler, skillHandler);
-        ombreDebug(level, player, usedHand, handler, skillHandler);
+        duckDebug(level, player, usedHand, handler, skillHandler);
+        //ombreDebug(level, player, usedHand, handler, skillHandler);
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide);
     }
 
@@ -63,11 +61,7 @@ public class DebugItem extends Item implements Loggable {
     }
 
     private void duckDebug(Level level, Player player, InteractionHand hand, SpellHandler spellHandler, SkillHolder skillHolder) {
-        for (ResourceLocation loc : player.getData(SBData.BOOK_SCRAPS)) {
-            Constants.LOG.debug(loc.toString());
-        }
-        if (player instanceof ServerPlayer serverPlayer) {
-            PayloadHandler.sendScrapToast(serverPlayer, SBPageScraps.UNLOCKED_SOLAR_RAY);
-        }
+        EffectManager manager = SpellUtil.getSpellEffects(player);
+        manager.incrementRuinEffects(SBDamageTypes.RUIN_FROST, 100);
     }
 }
