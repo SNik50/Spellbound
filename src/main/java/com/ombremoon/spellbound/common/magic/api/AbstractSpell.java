@@ -414,6 +414,9 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             if (this.shouldTickSpellEffect(this.context)) {
                 this.onSpellTick(this.context);
             }
+            if (!this.level.isClientSide && this.getCastType() == CastType.CHANNEL && !context.getSpellHandler().inCastMode()) {
+                this.endSpell();
+            }
             if (!this.level.isClientSide && this.getCastType() != CastType.CHANNEL && tickCount >= getDuration()) {
                 this.endSpell();
             }

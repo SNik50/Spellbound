@@ -100,15 +100,6 @@ public class NeoForgeEvents {
             LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(entity.level());
             lightningBolt.setPos(entity.position());
             entity.level().addFreshEntity(lightningBolt);
-
-            for (int i = 0; i < 3; i++) {
-                var bolt = EntityType.LIGHTNING_BOLT.create(entity.level());
-                bolt.setPos(
-                        entity.position().x + entity.getRandom().nextInt(-5, 5),
-                        entity.position().y,
-                        entity.position().z + entity.getRandom().nextInt(-5, 5));
-                entity.level().addFreshEntity(bolt);
-            }
         }
     }
 

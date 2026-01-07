@@ -246,7 +246,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.ruin.build_up1", "It seems that a single creatures body can only take so much of each element. When my targets body is unable to absorb more of the element their body seems to react in a different way depending on the element. Il keep experimenting and try to understand what exactly is happening");
         add("guide.ruin.fire_status", "§lFire§r\nFire energy explodes out the target dealing damage and setting fire in a radius around the target.");
         add("guide.ruin.frost_status", "§lFrost§r\nFreezes foe solid stopping them from being able to move freely temporarily.");
-        add("guide.ruin.shock_status", "§lShock§r\nTarget becomes a lightning rod calling down 4 bolts of lightning around the target, also draining 20% mana.");
+        add("guide.ruin.shock_status", "§lShock§r\nTarget becomes a lightning rod calling down 3 waves of lightning around the target, also draining 20% mana.");
 
         add("guide.ruin.portals", "Ruin Portals");
         add("guide.ruin.keystones", "Keystones");
