@@ -93,6 +93,22 @@
         },
         {
           "component": {
+            "translate": "guide.ruin.portals"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:ruin_portals"
+        },
+        {
+          "component": {
+            "translate": "guide.ruin.armor"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:ruin_armor_staff"
+        },
+        {
+          "component": {
             "translate": "spells.spellbound.stormstrike"
           },
           "extraOffset": 0,

@@ -10,6 +10,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
@@ -42,6 +44,7 @@ public class ModLangProvider extends LanguageProvider {
         SBBlocks.BLOCKS.getEntries().forEach(this::blockLang);
 //        EntityInit.ENTITIES.getEntries().forEach(this::entityLang);
         SBEffects.EFFECTS.getEntries().forEach(this::effectLang);
+        SBAttributes.ATTRIBUTES.getEntries().forEach(this::attributeLang);
 
         pathLang();
         manualEntries();
@@ -65,6 +68,10 @@ public class ModLangProvider extends LanguageProvider {
 
     protected void skillLang(DeferredHolder<Skill, ? extends Skill> entry) {
         add(entry.get().getNameId(), checkReplace(entry));
+    }
+
+    protected void attributeLang(DeferredHolder<Attribute,? extends Attribute> entry) {
+        add(entry.get().getDescriptionId(), checkReplace(entry));
     }
 
     protected void blockLang(DeferredHolder<Block, ? extends Block> entry) {
@@ -245,8 +252,8 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.ruin.effects", "Elemental Effects");
         add("guide.ruin.build_up1", "It seems that a single creatures body can only take so much of each element. When my targets body is unable to absorb more of the element their body seems to react in a different way depending on the element. Il keep experimenting and try to understand what exactly is happening");
         add("guide.ruin.fire_status", "§lFire§r\nFire energy explodes out the target dealing damage and setting fire in a radius around the target.");
-        add("guide.ruin.frost_status", "§lFrost§r\nFreezes foe solid stopping them from being able to move freely temporarily.");
-        add("guide.ruin.shock_status", "§lShock§r\nTarget becomes a lightning rod calling down 3 waves of lightning around the target, also draining 20% mana.");
+        add("guide.ruin.frost_status", "§lFrost§r\nFreezes foe solid stopping them from performing any actions temporarily.");
+        add("guide.ruin.shock_status", "§lShock§r\nTargets access to the arcane is blocked, silencing them temporarily. Additionally, drains 20% mana.");
 
         add("guide.ruin.portals", "Ruin Portals");
         add("guide.ruin.keystones", "Keystones");
@@ -356,12 +363,12 @@ public class ModLangProvider extends LanguageProvider {
         add("healing_blossom.purify_wither_rose.lore", "I can sense a sinister aura coming from this black flower. As a servant of the Divine, it is my duty to cleanse it!");
 
         addSpellContents(SpellPath.DIVINE, SBSpells.HEALING_TOUCH.get(),
-                "I have already established morally green actions will reward me so what if I channel my energy into healing a creature",
-                "It work's perfectly. Its like the very power that created life flowed through me restoring my target to its original state.");
+                "The power of the Divines is one in which harm to living creatures is seen as a sin. Does that mean I can use this power for the opposite?",
+                "It work's perfectly. After sustaining an attack, self inflicted or otherwise, I can channel the Divine energy to heal myself.");
 
         addSpellContents(SpellPath.DIVINE, SBSpells.HEALING_BLOSSOM.get(),
-                "The Divines didn't just make sentient creatures but also plants. I wonder if my borrowed power can be used for flora",
-                "I managed to grow this plant that by imbuing it with a fraction of my energy is able to emit a healing aura periodically/");
+                "The Divines didn't just make sentient creatures but also plants. I wonder if my borrowed power can be used for flora.",
+                "I managed to grow this plant that by imbuing it with a fraction of my energy is able to emit a healing aura periodically.");
     }
 
     protected void deceptionGuideContents() {

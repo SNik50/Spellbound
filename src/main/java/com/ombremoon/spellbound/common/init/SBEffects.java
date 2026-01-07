@@ -20,7 +20,7 @@ public class SBEffects {
     //Status
     public static final Holder<MobEffect> COMBUST = EFFECTS.register("combust", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
     public static final Holder<MobEffect> FROZEN = EFFECTS.register("frozen", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
-    public static final Holder<MobEffect> DISCHARGE = EFFECTS.register("discharge", () -> new DischargeEffect(MobEffectCategory.HARMFUL, 8889187));
+    public static final Holder<MobEffect> DISCHARGE = EFFECTS.register("discharge", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
     public static final Holder<MobEffect> DISEASE = EFFECTS.register("disease", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
 
     //Crowd Control

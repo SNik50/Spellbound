@@ -93,13 +93,6 @@ public class NeoForgeEvents {
                     3,
                     true,
                     Level.ExplosionInteraction.MOB);
-        } else if (effectInstance.is(SBEffects.DISCHARGE)) {
-            SpellHandler spellHandler = SpellUtil.getSpellHandler(entity);
-            spellHandler.consumeMana((float) (spellHandler.getMana() * 0.2f));
-
-            LightningBolt lightningBolt = EntityType.LIGHTNING_BOLT.create(entity.level());
-            lightningBolt.setPos(entity.position());
-            entity.level().addFreshEntity(lightningBolt);
         }
     }
 
