@@ -97,5 +97,5 @@
     }
   ],
   "id": "spellbound:studies_in_the_arcane",
-  "insertAfter": "spellbound:basic_cover_page"
+  "insertAfter": "spellbound:spellbound_contents"
 }

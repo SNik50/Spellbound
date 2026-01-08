@@ -60,6 +60,10 @@ public class RenderUtil {
         guiGraphics.drawString(font, text, x - font.width(text) / 2, y - font.lineHeight / 2, color);
     }
 
+    public static void drawCenteredString(GuiGraphics guiGraphics, Font font, Component text, int x, int y, int color) {
+        guiGraphics.drawString(font, text, x - font.width(text) / 2, y - font.lineHeight / 2, color, false);
+    }
+
     public static void drawCenteredString(GuiGraphics guiGraphics, Font font, FormattedCharSequence text, int x, int y, int color, boolean dropShadow) {
         guiGraphics.drawString(font, text, x - font.width(text) / 2, y, color, dropShadow);
     }

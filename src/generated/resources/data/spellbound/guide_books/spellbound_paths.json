@@ -50,16 +50,6 @@
       }
     },
     {
-      "type": "spellbound:text",
-      "position": {
-        "xOffset": 130,
-        "yOffset": 150
-      },
-      "translation": {
-        "translate": "guide.basic.summons_fix"
-      }
-    },
-    {
       "type": "spellbound:image",
       "extras": {
         "enableCorners": false

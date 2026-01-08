@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.init;
 
+import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.common.world.effect.*;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
@@ -7,6 +8,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.bus.api.IEventBus;
@@ -16,7 +18,6 @@ public class SBEffects {
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister
             .create(Registries.MOB_EFFECT, Constants.MOD_ID);
 
-    //TODO: Make status effects do stuff
     //Status
     public static final Holder<MobEffect> COMBUST = EFFECTS.register("combust", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
     public static final Holder<MobEffect> FROZEN = EFFECTS.register("frozen", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
@@ -30,6 +31,12 @@ public class SBEffects {
     public static final Holder<MobEffect> SILENCED = EFFECTS.register("silenced", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
     public static final Holder<MobEffect> FEAR = EFFECTS.register("fear", () -> new FearEffect(MobEffectCategory.HARMFUL, 8889187).addAttributeModifier(Attributes.ATTACK_DAMAGE, CommonClass.customLocation("fear_attack"), 0.75, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL).addAttributeModifier(Attributes.ARMOR, CommonClass.customLocation("fear_armor"), 0.75, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     public static final Holder<MobEffect> TAUNT = EFFECTS.register("taunt", () -> new TauntEffect(MobEffectCategory.HARMFUL, 8889187));
+
+    //Set Bonuses
+    public static final Holder<MobEffect> PYROMANCER = EFFECTS.register("pyromancer_set_bonus", () -> new SBEffect(MobEffectCategory.BENEFICIAL, 8889187).addSpellModifiers(SpellModifier.PYROMANCER_SET));
+    public static final Holder<MobEffect> STORMWEAVER = EFFECTS.register("stormweaver_set_bonus", () -> new SBEffect(MobEffectCategory.BENEFICIAL, 8889187).addSpellModifiers(SpellModifier.STORMWEAVER_SET));
+    public static final Holder<MobEffect> CRYOMANCER = EFFECTS.register("cryomancer_set_bonus", () -> new SBEffect(MobEffectCategory.BENEFICIAL, 8889187).addSpellModifiers(SpellModifier.CRYOMANCER_SET));
+    public static final Holder<MobEffect> TRANSFIG = EFFECTS.register("transfiguration_set_bonus", () -> new SBEffect(MobEffectCategory.BENEFICIAL, 8889187).addSpellModifiers(SpellModifier.TRANSFIG_SET));
 
     public static final Holder<MobEffect> AFTERGLOW = EFFECTS.register("afterglow", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
     public static final Holder<MobEffect> PERMAFROST = EFFECTS.register("permafrost", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
