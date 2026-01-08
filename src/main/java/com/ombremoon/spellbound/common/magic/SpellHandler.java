@@ -504,10 +504,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      */
     public boolean isStationary() {
         return this.stationaryTicks > 0
-                || this.caster.hasEffect(SBEffects.ROOTED)
-                || this.caster.hasEffect(SBEffects.STUNNED)
-                || this.caster.hasEffect(SBEffects.FROZEN)
-                || this.caster.hasEffect(SBEffects.SLEEP)
+                || EffectManager.isRooted(this.caster)
                 || this.caster.hasEffect(SBEffects.FEAR)
                 || this.caster.hasEffect(SBEffects.TAUNT);
     }

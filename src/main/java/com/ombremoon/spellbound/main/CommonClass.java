@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.main;
 
 import com.ombremoon.spellbound.common.init.*;
+import com.ombremoon.spellbound.common.world.item.MageArmorItem;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.loading.FMLLoader;
@@ -31,6 +32,8 @@ public class CommonClass {
         SBSpells.register(modEventBus);
         SBStats.register(modEventBus);
         SBTriggers.register(modEventBus);
+
+        MageArmorItem.armorAttributeInit();
 //        fixAttributes();
     }
 

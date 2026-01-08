@@ -122,6 +122,7 @@ public class SpellCastEvents {
         if (minecraft.getOverlay() != null) return false;
         if (minecraft.screen != null) return false;
         if (!minecraft.mouseHandler.isMouseGrabbed()) return false;
+        if (EffectManager.isSilenced(Minecraft.getInstance().player)) return false;
         return minecraft.isWindowActive();
     }
 

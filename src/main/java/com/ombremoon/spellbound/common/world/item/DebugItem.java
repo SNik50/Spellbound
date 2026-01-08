@@ -62,6 +62,6 @@ public class DebugItem extends Item implements Loggable {
 
     private void duckDebug(Level level, Player player, InteractionHand hand, SpellHandler spellHandler, SkillHolder skillHolder) {
         EffectManager manager = SpellUtil.getSpellEffects(player);
-        manager.incrementRuinEffects(SBDamageTypes.RUIN_FROST, 100);
+        manager.incrementRuinEffects(SBDamageTypes.RUIN_SHOCK, 100);
     }
 }

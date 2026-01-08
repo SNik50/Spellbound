@@ -51,7 +51,8 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
      * @return true if they are rooted (cant move), false otherwise
      */
     public static boolean isRooted(LivingEntity entity) {
-        return entity.hasEffect(SBEffects.ROOTED);
+        return entity.hasEffect(SBEffects.ROOTED)
+                || isStunned(entity);
     }
 
     /**
@@ -61,7 +62,8 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
      */
     public static boolean isSilenced(LivingEntity entity) {
         return entity.hasEffect(SBEffects.SILENCED)
-                || isStunned(entity);
+                || isStunned(entity)
+                || entity.hasEffect(SBEffects.DISCHARGE);
     }
 
     /**
@@ -70,7 +72,9 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
      * @return true if stunned, false otherwise
      */
     public static boolean isStunned(LivingEntity entity) {
-        return entity.hasEffect(SBEffects.STUNNED);
+        return entity.hasEffect(SBEffects.STUNNED)
+                || entity.hasEffect(SBEffects.FROZEN)
+                || entity.hasEffect(SBEffects.SLEEP);
     }
 
     public double getMagicResistance() {
@@ -176,7 +180,7 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         if (effect.getEffect() == null)
             return;
 
-        livingEntity.addEffect(new MobEffectInstance(effect.getEffect(), 60));
+        livingEntity.addEffect(new MobEffectInstance(effect.getEffect(), effect.getDuration()));
     }
 
     public Effect getEffectFromDamageType(ResourceKey<DamageType> damageType) {
@@ -216,20 +220,22 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
     }
 
     public enum Effect {
-        FIRE(SpellPath.FIRE, SBEffects.COMBUST, SBAttributes.FIRE_SPELL_RESIST, SBDamageTypes.RUIN_FIRE),
-        FROST(SpellPath.FROST, SBEffects.FROZEN, SBAttributes.FROST_SPELL_RESIST, SBDamageTypes.RUIN_FROST),
-        SHOCK(SpellPath.SHOCK, SBEffects.DISCHARGE, SBAttributes.SHOCK_SPELL_RESIST, SBDamageTypes.RUIN_SHOCK);
+        FIRE(SpellPath.FIRE, SBEffects.COMBUST, SBAttributes.FIRE_SPELL_RESIST, SBDamageTypes.RUIN_FIRE, 20),
+        FROST(SpellPath.FROST, SBEffects.FROZEN, SBAttributes.FROST_SPELL_RESIST, SBDamageTypes.RUIN_FROST, 60),
+        SHOCK(SpellPath.SHOCK, SBEffects.DISCHARGE, SBAttributes.SHOCK_SPELL_RESIST, SBDamageTypes.RUIN_SHOCK, 100);
 
         private final SpellPath path;
         private final Holder<MobEffect> mobEffect;
         private final Holder<Attribute> resistance;
         private final ResourceKey<DamageType> damageType;
+        private final int duration;
 
-        Effect(SpellPath path, Holder<MobEffect> mobEffect, Holder<Attribute> resistance, ResourceKey<DamageType> damageType) {
+        Effect(SpellPath path, Holder<MobEffect> mobEffect, Holder<Attribute> resistance, ResourceKey<DamageType> damageType, int duration) {
             this.path = path;
             this.mobEffect = mobEffect;
             this.resistance = resistance;
             this.damageType = damageType;
+            this.duration = duration;
         }
 
         public SpellPath getPath() {
@@ -242,6 +248,10 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
          */
         public Holder<MobEffect> getEffect() {
             return this.mobEffect;
+        }
+
+        public int getDuration() {
+            return this.duration;
         }
 
         /**
