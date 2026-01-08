@@ -141,10 +141,15 @@ public class ModLangProvider extends LanguageProvider {
     }
 
     private void basicContents() {
-        add("guide.basic.ruin.cover_page", "The Ruin Path focuses on destructive spells that can destroy both living creatures and the environment utilising different elemental powers.");
+        add("guide.basic.contents", "Book Contents");
+        add("guide.basic.contributors", "Contributors");
+        add("guide.basic.dev_team", "Dev Team");
+        add("guide.basic.past_contributors", "Former Contributors");
+        add("guide.basic.spell_research", "Spell Research");
+
         add("guide.basic.discord", "Discord");
         add("guide.basic.bugs", "Bug Reports");
-        add("guide.basic.blurb", "Welcome fellow Magi, to the world of Spellbound! I present to you the first in many books documenting the arcane. Let this book act as your guide, introducing you to the different paths of magics to take and plethora of mysteries to be discovered.");
+        add("guide.basic.blurb", "Welcome fellow Magi, to the world of Spellbound! I present to you the first in many books documenting the arcane. Let this book act as your guide, introducing you to the different paths of magic to follow, and the plethora of mysteries to be discovered.");
         add("guide.basic.spellbound", "What is Spellbound?");
         add("guide.basic.description1", "The magical world of Spellbound puts an emphasis on your choices to craft your experience, rather than relying on RNG.");
         add("guide.basic.description2", "Unlock powerful spells, each with their own set of unique upgrades. Fight dangerous foes in otherworldly dimensions. Explore the dark arts or become a peaceful saint. Choose your path.");

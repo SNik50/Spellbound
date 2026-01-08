@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.client.gui.guide.renderers;
 import com.ombremoon.spellbound.client.gui.GuideBookScreen;
 import com.ombremoon.spellbound.client.gui.guide.elements.GuideTextListElement;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -43,13 +44,25 @@ public class GuideTextListRenderer implements IPageElementRenderer<GuideTextList
                     && isHoveringItem(xPos, yPos, element, comp.copy().append(scrapComponent.component()), mouseX, mouseY))
                 style = style.applyFormat(ChatFormatting.UNDERLINE);
 
-            graphics.drawWordWrap(Minecraft.getInstance().font,
-                    comp.append(scrapComponent.component()).withStyle(style),
-                    xPos,
-                    yPos,
-                    element.extras().lineLength(),
-                    element.extras().textColour()
-            );
+            comp.append(scrapComponent.component()).withStyle(style);
+
+            if (element.extras().centered()) {
+                RenderUtil.drawCenteredString(
+                        graphics,
+                        Minecraft.getInstance().font,
+                        comp,
+                        xPos, yPos,
+                        0
+                );
+            } else {
+                graphics.drawWordWrap(Minecraft.getInstance().font,
+                        comp,
+                        xPos,
+                        yPos,
+                        element.extras().lineLength(),
+                        element.extras().textColour()
+                );
+            }
         }
     }
 

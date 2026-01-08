@@ -34,6 +34,9 @@ public class SBEffects {
 
     //Set Bonuses
     public static final Holder<MobEffect> PYROMANCER = EFFECTS.register("pyromancer_set_bonus", () -> new SBEffect(MobEffectCategory.BENEFICIAL, 8889187).addSpellModifiers(SpellModifier.PYROMANCER_SET));
+    public static final Holder<MobEffect> STORMWEAVER = EFFECTS.register("stormweaver_set_bonus", () -> new SBEffect(MobEffectCategory.BENEFICIAL, 8889187).addSpellModifiers(SpellModifier.STORMWEAVER_SET));
+    public static final Holder<MobEffect> CRYOMANCER = EFFECTS.register("cryomancer_set_bonus", () -> new SBEffect(MobEffectCategory.BENEFICIAL, 8889187).addSpellModifiers(SpellModifier.CRYOMANCER_SET));
+    public static final Holder<MobEffect> TRANSFIG = EFFECTS.register("transfiguration_set_bonus", () -> new SBEffect(MobEffectCategory.BENEFICIAL, 8889187).addSpellModifiers(SpellModifier.TRANSFIG_SET));
 
     public static final Holder<MobEffect> AFTERGLOW = EFFECTS.register("afterglow", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
     public static final Holder<MobEffect> PERMAFROST = EFFECTS.register("permafrost", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));

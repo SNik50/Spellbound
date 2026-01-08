@@ -110,6 +110,7 @@ public interface SBGuidePages {
 
     //Basic
     ResourceKey<GuideBookPage> SPELLBOUND_COVER_PAGE = key("basic_cover_page");
+    ResourceKey<GuideBookPage> SPELLBOUND_CONTENTS = key("spellbound_contents");
     ResourceKey<GuideBookPage> SPELLBOUND_DESCRIPTION = key("spellbound_description");
     ResourceKey<GuideBookPage> SPELL_PATHS = key("spellbound_paths");
     ResourceKey<GuideBookPage> GENERAL_ITEMS = key("general_items");
@@ -157,31 +158,40 @@ public interface SBGuidePages {
                                         .build(),
                                 PageBuilder.Text
                                         .ofTranslatable("guide.basic.discord")
-                                        .position(55, 100)
+                                        .position(PAGE_START_CENTER_X, 100)
                                         .setLink("https://discord.gg/hagCkhVwfb")
                                         .underline()
+                                        .centered()
                                         .build(),
                                 PageBuilder.Text
                                         .ofTranslatable("guide.basic.bugs")
-                                        .position(42, 115)
+                                        .position(PAGE_START_CENTER_X, 115)
                                         .setLink("https://github.com/MoonBase-Mods/Spellbound/issues")
-                                        .underline().build(),
+                                        .underline()
+                                        .centered()
+                                        .build(),
                                 PageBuilder.Text
                                         .ofTranslatable("item.spellbound.studies_in_the_arcane")
                                         .position(PAGE_TWO_START_CENTER_X, PAGE_START_Y)
+                                        .bold()
                                         .centered()
                                         .build(),
                                 PageBuilder.Text
                                         .ofTranslatable("guide.basic.blurb")
                                         .position(PAGE_TWO_START_CENTER_X, 65)
                                         .centered()
+                                        .build(),
+                                PageBuilder.SpellBorder
+                                        .of(Book.SPELLBOUND.path)
+                                        .setPosition(PAGE_TWO_START_X, 0)
                                         .build()
                         )
         );
+        buildBasicContents(context);
         createDescriptionAndImages(
                 context,
                 SPELLBOUND_DESCRIPTION,
-                SPELLBOUND_COVER_PAGE,
+                SPELLBOUND_CONTENTS,
                 Book.SPELLBOUND,
                 translatable("guide.basic.spellbound"),
                 translatable("guide.basic.spell_paths"),
@@ -707,7 +717,7 @@ public interface SBGuidePages {
         createSpellPage(context, PURGE_MAGIC, SHADOWBOND, Book.DECEPTION, SBSpells.PURGE_MAGIC);
     }
 
-    private static void createCoverPage(
+    private static void     createCoverPage(
             BootstrapContext<GuideBookPage> context,
             ResourceLocation forBook,
             ResourceKey<GuideBookPage> currentPage,
@@ -1064,6 +1074,90 @@ public interface SBGuidePages {
         }
 
         register(context, currentPage, builder);
+    }
+
+    private static void buildBasicContents(BootstrapContext<GuideBookPage> context) {
+        register(context,
+                SPELLBOUND_CONTENTS,
+                PageBuilder.forBook(Book.SPELLBOUND.getLocation())
+                        .setPreviousPage(SPELLBOUND_COVER_PAGE)
+                        .addElements(
+                                PageBuilder.SpellBorder
+                                        .of(Book.SPELLBOUND.path)
+                                        .build(),
+                                PageBuilder.Text
+                                        .of(translatable("guide.basic.contents"))
+                                        .position(PAGE_TWO_START_CENTER_X, PAGE_START_Y)
+                                        .centered()
+                                        .bold()
+                                        .build(),
+                                PageBuilder.Text
+                                        .ofTranslatable("guide.general.table_contents")
+                                        .position(PAGE_TWO_START_X, 40)
+                                        .bold()
+                                        .build(),
+                                PageBuilder.TextList
+                                        .of()
+                                        .position(PAGE_TWO_START_X+10, 50)
+                                        .rowGap(10)
+                                        .addEntry(translatable("guide.basic.spellbound"), SPELLBOUND_DESCRIPTION)
+                                        .addEntry(translatable("guide.basic.spell_paths"), SPELL_PATHS)
+                                        .addEntry(translatable("guide.basic.general_items"), GENERAL_ITEMS)
+                                        .addEntry(translatable("block.spellbound.magis_workbench"), WORKBENCH)
+                                        .addEntry(translatable("guide.basic.book_recipes"), BOOK_RECIPES)
+                                        .addEntry(translatable("guide.basic.book_recipes_cont"), BOOK_RECIPES_CONT)
+                                        .addEntry(translatable("guide.basic.spell_research"), SPELL_RESEARCH)
+                                        .addEntry(translatable("guide.basic.path_items"), PATH_ITEMS)
+                                        .addEntry(translatable("guide.basic.spells"), SPELLS)
+                                        .addEntry(translatable("guide.basic.skills"), SKILLS)
+                                        .build(),
+
+                                PageBuilder.SpellBorder
+                                        .of(Book.SPELLBOUND.path)
+                                        .setPosition(PAGE_TWO_START_X, 0)
+                                        .build(),
+                                PageBuilder.Text
+                                        .of(translatable("guide.basic.contributors"))
+                                        .position(PAGE_START_CENTER_X, PAGE_START_Y)
+                                        .centered()
+                                        .bold()
+                                        .build(),
+                                PageBuilder.Text
+                                        .ofTranslatable("guide.basic.dev_team")
+                                        .position(PAGE_START_CENTER_X, 40)
+                                        .centered()
+                                        .bold()
+                                        .build(),
+                                PageBuilder.TextList
+                                        .of()
+                                        .position(PAGE_START_CENTER_X, 55)
+                                        .rowGap(10)
+                                        .bulletPoint("")
+                                        .centered()
+                                        .addEntry(literal("Ombremoon"))
+                                        .addEntry(literal("DuckXYZ"))
+                                        .addEntry(literal("piedilerci"))
+                                        .addEntry(literal("SvenYorhavich"))
+                                        .addEntry(literal("PierceTH"))
+                                        .addEntry(literal("Nikdo53"))
+                                        .addEntry(literal("LanTao"))
+                                        .build(),
+                                PageBuilder.Text
+                                        .ofTranslatable("guide.basic.past_contributors")
+                                        .position(PAGE_START_CENTER_X, 130)
+                                        .centered()
+                                        .bold()
+                                        .build(),
+                                PageBuilder.TextList
+                                        .of()
+                                        .position(PAGE_START_CENTER_X, 145)
+                                        .bulletPoint("")
+                                        .rowGap(10)
+                                        .centered()
+                                        .addEntry(literal("BuMa"))
+                                        .addEntry(literal("MADZter"))
+                                        .build()
+                        ));
     }
 
     private static void createDescriptionAndImages(

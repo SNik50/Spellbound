@@ -16,11 +16,12 @@
     {
       "type": "spellbound:text",
       "extras": {
+        "centered": true,
         "link": "https://discord.gg/hagCkhVwfb",
         "underline": true
       },
       "position": {
-        "xOffset": 55,
+        "xOffset": 72,
         "yOffset": 100
       },
       "translation": {
@@ -30,11 +31,12 @@
     {
       "type": "spellbound:text",
       "extras": {
+        "centered": true,
         "link": "https://github.com/MoonBase-Mods/Spellbound/issues",
         "underline": true
       },
       "position": {
-        "xOffset": 42,
+        "xOffset": 72,
         "yOffset": 115
       },
       "translation": {
@@ -44,6 +46,7 @@
     {
       "type": "spellbound:text",
       "extras": {
+        "bold": true,
         "centered": true
       },
       "position": {
@@ -65,6 +68,14 @@
       },
       "translation": {
         "translate": "guide.basic.blurb"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -65281,
+      "pathTexture": "spellbound:textures/gui/books/images/spellbound_logo.png",
+      "position": {
+        "xOffset": 172
       }
     }
   ],

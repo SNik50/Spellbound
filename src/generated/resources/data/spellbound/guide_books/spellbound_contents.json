@@ -1,0 +1,262 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:spell_border",
+      "colour": -65281,
+      "pathTexture": "spellbound:textures/gui/books/images/spellbound_logo.png"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 247,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.basic.contents"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true
+      },
+      "position": {
+        "xOffset": 172,
+        "yOffset": 40
+      },
+      "translation": {
+        "translate": "guide.general.table_contents"
+      }
+    },
+    {
+      "type": "spellbound:text_list",
+      "extras": {
+        "rowGap": 10
+      },
+      "list": [
+        {
+          "component": {
+            "translate": "guide.basic.spellbound"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:spellbound_description"
+        },
+        {
+          "component": {
+            "translate": "guide.basic.spell_paths"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:spellbound_paths"
+        },
+        {
+          "component": {
+            "translate": "guide.basic.general_items"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:general_items"
+        },
+        {
+          "component": {
+            "translate": "block.spellbound.magis_workbench"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:magis_workbench"
+        },
+        {
+          "component": {
+            "translate": "guide.basic.book_recipes"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:book_recipes"
+        },
+        {
+          "component": {
+            "translate": "guide.basic.book_recipes_cont"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:book_recipes_cont"
+        },
+        {
+          "component": {
+            "translate": "guide.basic.spell_research"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:spell_research"
+        },
+        {
+          "component": {
+            "translate": "guide.basic.path_items"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:path_items"
+        },
+        {
+          "component": {
+            "translate": "guide.basic.spells"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:spells"
+        },
+        {
+          "component": {
+            "translate": "guide.basic.skills"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:skills"
+        }
+      ],
+      "position": {
+        "xOffset": 182,
+        "yOffset": 50
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -65281,
+      "pathTexture": "spellbound:textures/gui/books/images/spellbound_logo.png",
+      "position": {
+        "xOffset": 172
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.basic.contributors"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 40
+      },
+      "translation": {
+        "translate": "guide.basic.dev_team"
+      }
+    },
+    {
+      "type": "spellbound:text_list",
+      "extras": {
+        "bullet_point": "",
+        "centered": true,
+        "rowGap": 10
+      },
+      "list": [
+        {
+          "component": "Ombremoon",
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": "DuckXYZ",
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": "piedilerci",
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": "SvenYorhavich",
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": "PierceTH",
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": "Nikdo53",
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": "LanTao",
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        }
+      ],
+      "position": {
+        "xOffset": 72,
+        "yOffset": 55
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 130
+      },
+      "translation": {
+        "translate": "guide.basic.past_contributors"
+      }
+    },
+    {
+      "type": "spellbound:text_list",
+      "extras": {
+        "bullet_point": "",
+        "centered": true,
+        "rowGap": 10
+      },
+      "list": [
+        {
+          "component": "BuMa",
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        },
+        {
+          "component": "MADZter",
+          "extraOffset": 0,
+          "scrap": "spellbound:default",
+          "target_page": "spellbound:default"
+        }
+      ],
+      "position": {
+        "xOffset": 72,
+        "yOffset": 145
+      }
+    }
+  ],
+  "id": "spellbound:studies_in_the_arcane",
+  "insertAfter": "spellbound:basic_cover_page"
+}
