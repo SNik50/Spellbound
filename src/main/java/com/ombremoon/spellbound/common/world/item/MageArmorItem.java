@@ -3,10 +3,14 @@ package com.ombremoon.spellbound.common.world.item;
 import com.ombremoon.spellbound.client.renderer.types.MageArmorRenderer;
 import com.ombremoon.spellbound.common.init.SBArmorMaterials;
 import com.ombremoon.spellbound.common.init.SBAttributes;
+import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
@@ -16,6 +20,7 @@ import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
@@ -31,7 +36,9 @@ import java.util.function.Consumer;
 public class MageArmorItem extends ArmorItem implements GeoItem {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     protected ItemAttributeModifiers attributeModifiers;
+    private boolean hasSetBonus;
     private static final Map<EquipmentSlot, Double> SPELL_RESISTANCES = new HashMap<>();
+    private static final Map<Holder<ArmorMaterial>, Holder<MobEffect>> SET_BONUS = new HashMap<>();
 
     public static void armorAttributeInit() {
         SPELL_RESISTANCES.put(EquipmentSlot.HEAD, 2.0);
@@ -39,16 +46,22 @@ public class MageArmorItem extends ArmorItem implements GeoItem {
         SPELL_RESISTANCES.put(EquipmentSlot.LEGS, 2.0);
         SPELL_RESISTANCES.put(EquipmentSlot.FEET, 2.0);
         SPELL_RESISTANCES.put(EquipmentSlot.BODY, 2.0);
+
+        SET_BONUS.put(SBArmorMaterials.PYROMANCER, SBEffects.PYROMANCER);
+        SET_BONUS.put(SBArmorMaterials.STORMWEAVER, SBEffects.STORMWEAVER);
+        SET_BONUS.put(SBArmorMaterials.CRYOMANCER, SBEffects.CRYOMANCER);
+        SET_BONUS.put(SBArmorMaterials.TRANSFIGURER, SBEffects.TRANSFIG);
     }
 
     public MageArmorItem(Holder<ArmorMaterial> material, Type type, Properties properties) {
         super(material, type, properties);
         buildModifiers();
+        this.hasSetBonus = SET_BONUS.containsKey(material);
     }
 
     protected void buildModifiers() {
         ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
-        
+
         int i = ((ArmorMaterial)material.value()).getDefense(type);
         float f = ((ArmorMaterial)material.value()).toughness();
         EquipmentSlotGroup equipmentslotgroup = EquipmentSlotGroup.bySlot(type.getSlot());
@@ -89,6 +102,19 @@ public class MageArmorItem extends ArmorItem implements GeoItem {
         return modifier(SPELL_RESISTANCES.get(this.type.getSlot()));
     }
 
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
+
+        if (this.getEquipmentSlot() != EquipmentSlot.HEAD) return;
+        if (!hasSetBonus) return;
+        if (!(entity instanceof LivingEntity livingEntity)) return;
+        for (ItemStack armorItem : livingEntity.getArmorSlots()) {
+            if (!(armorItem.getItem() instanceof MageArmorItem mageArmor) || !mageArmor.getMaterial().is(this.getMaterial())) return;
+        }
+
+        livingEntity.addEffect(new MobEffectInstance(SET_BONUS.get(this.material), 2));
+    }
 
     @Override
     public void createGeoRenderer(Consumer<GeoRenderProvider> consumer) {

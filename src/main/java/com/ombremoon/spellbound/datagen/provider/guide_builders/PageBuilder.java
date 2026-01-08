@@ -1279,6 +1279,7 @@ public class PageBuilder {
         private boolean dropShadow;
         private int textColour;
         private boolean underlineClickable;
+        private boolean centered;
 
         private TextList() {
             this.entries = new ArrayList<>();
@@ -1292,6 +1293,7 @@ public class PageBuilder {
             this.dropShadow = false;
             this.textColour = 0;
             this.underlineClickable = true;
+            this.centered = false;
         }
 
         /**
@@ -1322,6 +1324,11 @@ public class PageBuilder {
             return this;
         }
 
+        public TextList addEntry(Component text, ResourceKey<GuideBookPage> bookmark) {
+            this.entries.add(new GuideTextListElement.ScrapComponent(text, CommonClass.customLocation("default"), bookmark.location()));
+            return this;
+        }
+
         public TextList addEntry(Component text, int extraOffset) {
             this.entries.add(new GuideTextListElement.ScrapComponent(text, extraOffset));
             return this;
@@ -1334,6 +1341,11 @@ public class PageBuilder {
 
         public TextList addEntry(Component text,ResourceLocation scrap, ResourceLocation targetPage) {
             this.entries.add(new GuideTextListElement.ScrapComponent(text, scrap, targetPage));
+            return this;
+        }
+
+        public TextList centered() {
+            this.centered = true;
             return this;
         }
 
@@ -1437,7 +1449,8 @@ public class PageBuilder {
                             dropShadow,
                             textColour,
                             bulletPoint,
-                            underlineClickable
+                            underlineClickable,
+                            centered
                     ), position
             );
         }

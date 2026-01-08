@@ -7,6 +7,7 @@ import com.ombremoon.spellbound.client.renderer.layer.GenericSpellLayer;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerModel;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerRenderer;
 import com.ombremoon.spellbound.client.particle.FXEmitter;
+import com.ombremoon.spellbound.common.world.effect.SBEffect;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.events.EventFactory;
 import com.ombremoon.spellbound.common.init.*;
@@ -864,6 +865,13 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         for (var modifier : skills.getModifiers()) {
             if (modifierType.equals(modifier.modifierType()) && modifier.spellPredicate().test(spellType()))
                 f *= modifier.modifier();
+        }
+        for (MobEffectInstance instance : livingEntity.getActiveEffects()) {
+            if (!(instance.getEffect().value() instanceof SBEffect sbEffect)) continue;
+            for (var modifier : sbEffect.getSpellModifiers()) {
+                if (modifierType.equals(modifier.modifierType()) && modifier.spellPredicate().test(spellType()))
+                    f *= modifier.modifier();
+            }
         }
         return f;
     }
