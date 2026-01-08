@@ -137,13 +137,13 @@
       "extras": {
         "enableCorners": false
       },
-      "height": 64,
+      "height": 48,
       "image": "minecraft:textures/block/sweet_berry_bush_stage3.png",
       "position": {
-        "xOffset": 112,
+        "xOffset": 97,
         "yOffset": 89
       },
-      "width": 64
+      "width": 48
     },
     {
       "type": "spellbound:text",

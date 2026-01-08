@@ -53,7 +53,7 @@ public class StormRiftSpell extends AnimatedSpell {
                     double range = SpellUtil.getCastRange(context.getCaster());
                     BlockPos blockPos = spell.getSpawnPos(range);
 
-                    if (activePortals > 1) {
+                    if (blockPos != null && activePortals > 1) {
                         PortalInfo info = spell.portalMap.get(spell.portalMap.getPreviousPortal());
                         double distance = info.position().distanceToSqr(blockPos.getCenter());
                         return distance <= 2500 && spell.hasValidSpawnPos();

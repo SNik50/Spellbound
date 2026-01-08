@@ -583,7 +583,7 @@ public interface SBGuidePages {
                 translatable("guide.summon.summoning_portal"),
                 false,
                 List.of(
-                        new RecipeEntry(defaultNameSpace("anvil"), PAGE_START_CENTER_X-40, 90)
+                        new RecipeEntry(defaultNameSpace("wild_mushroom"), PAGE_START_CENTER_X-40, 90)
                 ),
                 List.of(
                         new ImageEntryWithDimensions(loc("textures/gui/books/images/summoning_portal.png"), PAGE_TWO_START_X, 35,145, 67)
@@ -692,7 +692,7 @@ public interface SBGuidePages {
                 SBSpells.HEALING_BLOSSOM,
                 true,
                 new ItemActionEntry(SBDivineActions.DECORATE_SHRINE, SBPageScraps.DECORATE_SHRINE, SBPageScraps.DECORATE_SHRINE_LORE, 5, 24000, 0, Ingredient.of(ItemTags.FLOWERS)),
-                new ImageActionEntry(SBDivineActions.GROW_AMBROSIA_BUSH, SBPageScraps.GROW_AMBROSIA_BUSH, SBPageScraps.GROW_AMBROSIA_BUSH_LORE, 10, 12000, 15, new ImageEntryWithScale(defaultNameSpace("textures/block/sweet_berry_bush_stage3.png"))),
+                new ImageActionEntry(SBDivineActions.GROW_AMBROSIA_BUSH, SBPageScraps.GROW_AMBROSIA_BUSH, SBPageScraps.GROW_AMBROSIA_BUSH_LORE, 10, 12000, 15, new ImageEntryWithScale(defaultNameSpace("textures/block/sweet_berry_bush_stage3.png"), -15, 0)),
                 new ItemActionEntry(SBDivineActions.PURIFY_WITHER_ROSE, SBPageScraps.PURIFY_WITHER_ROSE, SBPageScraps.PURIFY_WITHER_ROSE_LORE, 15, 6000, 35, Ingredient.of(Items.WITHER_ROSE))
         );
 
@@ -716,7 +716,7 @@ public interface SBGuidePages {
         createSpellPage(context, PURGE_MAGIC, SHADOWBOND, Book.DECEPTION, SBSpells.PURGE_MAGIC);
     }
 
-    private static void     createCoverPage(
+    private static void createCoverPage(
             BootstrapContext<GuideBookPage> context,
             ResourceLocation forBook,
             ResourceKey<GuideBookPage> currentPage,
@@ -1611,8 +1611,8 @@ public interface SBGuidePages {
                 int scale = imageEntry.image.scale;
                 builder.addElements(
                         PageBuilder.Image.of(imageEntry.image.texture)
-                                .position(xRenderPos, yRenderPos)
-                                .setDimensions(64 * scale, 64 * scale)
+                                .position(xRenderPos + imageEntry.image.xPos, yRenderPos + imageEntry.image.yPos)
+                                .setDimensions(48 * scale, 48 * scale)
                                 .disableCorners()
                                 .build()
                 );

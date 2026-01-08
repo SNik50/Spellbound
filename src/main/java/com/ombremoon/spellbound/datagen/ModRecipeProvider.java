@@ -10,6 +10,7 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.common.Tags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -104,6 +105,12 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('B', Items.BOOK)
                 .define('*', Items.TRIPWIRE_HOOK)
                 .define('^', Items.INK_SAC)
+                .pattern("*B^")
+                .unlockedBy("has_book", has(Items.BOOK))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBBlocks.WILD_MUSHROOM.get())
+                .define('S', SBBlocks.SUMMON_STONE.get())
+                .define('#', Tags.Items.MUSHROOMS)
                 .pattern("*B^")
                 .unlockedBy("has_book", has(Items.BOOK))
                 .save(output);

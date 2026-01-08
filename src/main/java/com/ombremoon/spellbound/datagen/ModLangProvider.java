@@ -111,7 +111,7 @@ public class ModLangProvider extends LanguageProvider {
     }
 
     protected void guideContents() {
-        //Elements
+        add("guide.general.table_contents", "Table of Contents:");
         add("guide.element.spell_info", "Spell Info");
         add("guide.element.spell_info.spell_mastery", "Spell Mastery: %1$s");
         add("guide.element.spell_info.damage", "Damage: %1$s");
@@ -121,11 +121,6 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.element.spell_info.mana_per_tick", "Mana/Tick: %1$s");
         add("guide.element.spell_border.element", "Element: ");
         add("guide.element.spell_border.mastery", "Mastery: %1$s");
-
-        //Summon Acq
-        //Transfig
-        add("guide.basic.acquisition", "Spell Acquisition");
-        add("guide.general.table_contents", "Table of Content:");
 
         basicContents();
         ruinContents();
