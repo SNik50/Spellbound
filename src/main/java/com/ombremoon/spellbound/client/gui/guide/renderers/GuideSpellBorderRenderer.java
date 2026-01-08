@@ -16,7 +16,7 @@ import java.util.Optional;
 public class GuideSpellBorderRenderer implements IPageElementRenderer<GuideSpellBorderElement> {
     @Override
     public void render(GuideSpellBorderElement element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
-        SpellPath path = element.path();
+        Optional<SpellPath> path = element.path();
         Optional<SpellMastery> mastery = element.mastery();
         Font font = Minecraft.getInstance().font;
         topPos += 15;
@@ -67,18 +67,18 @@ public class GuideSpellBorderRenderer implements IPageElementRenderer<GuideSpell
 
         graphics.hLine(leftPos + element.position().xOffset() + 8, leftPos + element.position().xOffset() + 135, topPos+178, element.colour());
 
-        if (path.isSubPath()) {
+        if (path.isPresent() && path.get().isSubPath()) {
             String elementText = I18n.get("guide.element.spell_border.element");
 
-            int textStart = (153 - font.width(elementText + path.getSerializedName())) / 2;
+            int textStart = (153 - font.width(elementText + path.get().getSerializedName())) / 2;
             graphics.drawString(font,
                     elementText,
                     textStart + leftPos + element.position().xOffset(),
                     topPos + 182 + element.position().yOffset(), element.colour(), false);
             graphics.drawString(font,
-                    path.name(),
+                    path.get().name(),
                     textStart + font.width(elementText) + leftPos + element.position().xOffset(),
-                    topPos + 182 + element.position().yOffset(), path.getColor(), false);
+                    topPos + 182 + element.position().yOffset(), path.get().getColor(), false);
         }
     }
 }

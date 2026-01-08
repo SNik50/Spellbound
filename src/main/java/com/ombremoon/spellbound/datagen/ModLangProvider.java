@@ -136,10 +136,12 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.basic.ruin.cover_page", "The Ruin Path focuses on destructive spells that can destroy both living creatures and the environment utilising different elemental powers.");
         add("guide.basic.discord", "Discord");
         add("guide.basic.bugs", "Bug Reports");
-        add("guide.basic.blurb", "Welcome fellow Magi! I present to you the first in many books documenting my exploration into the arcane. This book will act as a guideline introducing you to the different paths of magic I have discovered and how they can be used.");
+        add("guide.basic.blurb", "Welcome fellow Magi, to the world of Spellbound! I present to you the first in many books documenting the arcane. Let this book act as your guide, introducing you to the different paths of magics to take and plethora of mysteries to be discovered.");
+        add("guide.basic.spellbound", "What is Spellbound?");
         add("guide.basic.description1", "The magical world of Spellbound puts an emphasis on your choices to craft your experience, rather than relying on RNG.");
         add("guide.basic.description2", "Unlock powerful spells, each with their own set of unique upgrades. Fight dangerous foes in otherworldly dimensions. Explore the dark arts or become a peaceful saint. Choose your path.");
-        add("guide.basic.spell_paths", "All spells are broken up into 5 spell paths: §2Transfiguration§r, §4Ruin§r, §1Summons§r, §eDivine§r, and §9Deception§r");
+        add("guide.basic.spell_paths", "Spell Paths");
+        add("guide.basic.spell_paths1", "All spells are broken up into 5 spell paths: §2Transfiguration§r, §4Ruin§r, §1Summons§r, §eDivine§r, and §9Deception§r");
         add("guide.basic.ruin", "Ruin is the path of elemental energy, destruction and chaos. Unlike other paths, the Ruin path can be broken down into addition sub-paths: §lFire§r, §lFrost§r, and §lShock§r. Each path has a unique effect that is applied to targets after taking enough damage.");
         add("guide.basic.transfiguration", "Transfiguration is the path of alchemy and change. Offering a variety of utility and protection, Transfiguration spells are essential in almost all Magi's arsenal. Magis following this path have the ability to perform spells on an even grander scale through rituals.");
         add("guide.basic.summons", "Summons is the path creation. As a Summoner, bring forth allies from beyond the grave or other dimension to fight in your stead by defeating them in combat. Befriend familiars to aid you in your journey as a Magi.");

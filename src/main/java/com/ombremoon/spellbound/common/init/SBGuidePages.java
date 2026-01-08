@@ -112,7 +112,7 @@ public interface SBGuidePages {
 
     //Basic
     ResourceKey<GuideBookPage> BASIC_COVER_PAGE = key("basic_cover_page");
-    ResourceKey<GuideBookPage> SPELLBOUND_DESCRIPTION = key("basic_cover_page"); //What is Spellbound & Paths
+    ResourceKey<GuideBookPage> SPELLBOUND_DESCRIPTION = key("spellbound_description"); //What is Spellbound & Paths
     ResourceKey<GuideBookPage> IMPORTANT_ITEMS = key("basic_cover_page"); //Arcanthus, Magic Essence
     ResourceKey<GuideBookPage> WORKBENCH = key("basic_cover_page"); //Workbench
     ResourceKey<GuideBookPage> BOOK_RECIPES = key("basic_cover_page"); //Book Recipes
@@ -168,13 +168,31 @@ public interface SBGuidePages {
                                         .underline().build(),
                                 PageBuilder.Text
                                         .ofTranslatable("item.spellbound.studies_in_the_arcane")
-                                        .position(PAGE_TWO_START_X, 20)
+                                        .position(PAGE_TWO_START_CENTER_X, PAGE_START_Y)
+                                        .centered()
                                         .build(),
                                 PageBuilder.Text
                                         .ofTranslatable("guide.basic.blurb")
-                                        .position(PAGE_TWO_START_X, 40)
+                                        .position(PAGE_TWO_START_CENTER_X, 65)
+                                        .centered()
                                         .build()
                         )
+        );
+        createDescriptionAndImages(
+                context,
+                SPELLBOUND_DESCRIPTION,
+                BASIC_COVER_PAGE,
+                Book.BASIC,
+                translatable("guide.basic.spellbound"),
+                translatable("guide.basic.spell_paths"),
+                false,
+                List.of(
+                        new ImageEntryWithDimensions(loc("textures/gui/paths/ruin.png"), PAGE_TWO_START_X, 60, 32, 32, false)
+                ),
+                new TextEntry(translatable("guide.basic.description1"), 35),
+                new TextEntry(translatable("guide.basic.description2"), 90),
+                new TextEntry(translatable("guide.basic.spell_paths1"), PAGE_TWO_START_X, 35),
+                new TextEntry(translatable("guide.basic.ruin"), PAGE_TWO_START_X + 16, 60)
         );
 
         //Ruin
@@ -1240,7 +1258,7 @@ public interface SBGuidePages {
                         .of(SpellPath.DIVINE)
                         .build()
         );
-        var loreList = PageBuilder.TextList.of().position(PAGE_TWO_START_X + 10, 5).maxRows(3).rowGap(55).bulletPoint("");
+        var loreList = PageBuilder.TextList.of().position(PAGE_TWO_START_X, 5).maxRows(3).rowGap(55).bulletPoint("");
         for (int i = 0; i < entries.length; i++) {
             ActionEntry entry = entries[i];
             String action = entry.action().location().getPath().replace("/", ".");

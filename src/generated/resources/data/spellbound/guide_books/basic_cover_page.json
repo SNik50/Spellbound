@@ -43,9 +43,12 @@
     },
     {
       "type": "spellbound:text",
+      "extras": {
+        "centered": true
+      },
       "position": {
-        "xOffset": 172,
-        "yOffset": 20
+        "xOffset": 247,
+        "yOffset": 8
       },
       "translation": {
         "translate": "item.spellbound.studies_in_the_arcane"
@@ -53,9 +56,12 @@
     },
     {
       "type": "spellbound:text",
+      "extras": {
+        "centered": true
+      },
       "position": {
-        "xOffset": 172,
-        "yOffset": 40
+        "xOffset": 247,
+        "yOffset": 65
       },
       "translation": {
         "translate": "guide.basic.blurb"

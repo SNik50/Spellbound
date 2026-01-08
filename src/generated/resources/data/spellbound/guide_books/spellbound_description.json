@@ -1,0 +1,98 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.basic.spellbound"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": 0,
+      "pathTexture": "spellbound:textures/gui/images/spellbound_logo.png"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 247,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.basic.spell_paths"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": 0,
+      "pathTexture": "spellbound:textures/gui/images/spellbound_logo.png",
+      "position": {
+        "xOffset": 172
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.basic.description1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 100
+      },
+      "translation": {
+        "translate": "guide.basic.description2"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.basic.spell_paths1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 188,
+        "yOffset": 60
+      },
+      "translation": {
+        "translate": "guide.basic.ruin"
+      }
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 32,
+      "image": "spellbound:textures/gui/paths/ruin.png",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 60
+      },
+      "width": 32
+    }
+  ],
+  "id": "spellbound:studies_in_the_arcane",
+  "insertAfter": "spellbound:basic_cover_page"
+}

@@ -696,7 +696,7 @@ public class PageBuilder {
 
     //Builder for SpellBorder
     public static class SpellBorder implements PageBuilderType {
-        private final SpellPath path;
+        private final Optional<SpellPath> path;
         private final Optional<SpellMastery> mastery;
         private int colour;
         private ElementPosition position;
@@ -708,19 +708,19 @@ public class PageBuilder {
             this(spellType.getPath(), spellType.getMastery());
         }
 
-        private SpellBorder(SpellPath path, @Nullable SpellMastery mastery) {
-            this.path = path;
+        private SpellBorder(@Nullable SpellPath path, @Nullable SpellMastery mastery) {
+            this.path = Optional.ofNullable(path);
             this.mastery = Optional.ofNullable(mastery);
             this.position = ElementPosition.getDefault();
-            this.pathTexture = CommonClass.customLocation("textures/gui/paths/" + path.name().toLowerCase() + ".png");
-            this.colour = switch (path) {
+            this.pathTexture = path != null ? CommonClass.customLocation("textures/gui/paths/" + path.name().toLowerCase() + ".png") : CommonClass.customLocation("textures/gui/images/spellbound_logo.png");
+            this.colour = path != null ? switch (path) {
                 case RUIN -> -10678496;
                 case TRANSFIGURATION -> -14396391;
                 case SUMMONS -> -13490312;
                 case DIVINE -> -3510773;
                 case DECEPTION -> -13357984;
                 default -> 0;
-            };
+            } : 0;
             this.topText = Optional.empty();
             this.bottomText = Optional.empty();
         }
