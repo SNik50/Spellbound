@@ -1,0 +1,168 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.basic.book_recipes"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -65281,
+      "pathTexture": "spellbound:textures/gui/books/images/spellbound_logo.png"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.basic.guide_books"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 5,
+        "yOffset": 95
+      },
+      "translation": {
+        "translate": "guide.basic.guide_books1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 5,
+        "yOffset": 105
+      },
+      "translation": {
+        "translate": "guide.basic.guide_books2"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 5,
+        "yOffset": 115
+      },
+      "translation": {
+        "translate": "guide.basic.guide_books3"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 5,
+        "yOffset": 125
+      },
+      "translation": {
+        "translate": "guide.basic.guide_books4"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 5,
+        "yOffset": 135
+      },
+      "translation": {
+        "translate": "guide.basic.guide_books5"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 5,
+        "yOffset": 155
+      },
+      "translation": {
+        "translate": "guide.basic.guide_books6"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 60
+      },
+      "position": {
+        "xOffset": 180,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "item.spellbound.grimoire_of_annihilation"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 60
+      },
+      "position": {
+        "xOffset": 262,
+        "yOffset": 105
+      },
+      "translation": {
+        "translate": "item.spellbound.architects_lexicon"
+      }
+    },
+    {
+      "type": "spellbound:recipe",
+      "position": {
+        "xOffset": 237,
+        "yOffset": 5
+      },
+      "recipe": "spellbound:grimoire_of_annihilation"
+    },
+    {
+      "type": "spellbound:recipe",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 105
+      },
+      "recipe": "spellbound:architects_lexicon"
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:grimoire_of_annihilation"
+        }
+      ],
+      "position": {
+        "xOffset": 152,
+        "yOffset": 5
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:architects_lexicon"
+        }
+      ],
+      "position": {
+        "xOffset": 239,
+        "yOffset": 105
+      }
+    }
+  ],
+  "id": "spellbound:studies_in_the_arcane",
+  "insertAfter": "spellbound:magis_workbench"
+}

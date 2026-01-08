@@ -11,7 +11,7 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "guide.basic.spellbound"
+        "translate": "guide.basic.skills"
       }
     },
     {
@@ -21,81 +21,71 @@
     },
     {
       "type": "spellbound:text",
-      "extras": {
-        "bold": true,
-        "centered": true
-      },
-      "position": {
-        "xOffset": 247,
-        "yOffset": 8
-      },
-      "translation": {
-        "translate": "guide.basic.spell_paths"
-      }
-    },
-    {
-      "type": "spellbound:spell_border",
-      "colour": -65281,
-      "pathTexture": "spellbound:textures/gui/books/images/spellbound_logo.png",
-      "position": {
-        "xOffset": 172
-      }
-    },
-    {
-      "type": "spellbound:text",
       "position": {
         "yOffset": 35
       },
       "translation": {
-        "translate": "guide.basic.description1"
+        "translate": "guide.basic.skills1"
       }
     },
     {
       "type": "spellbound:text",
       "position": {
-        "yOffset": 90
+        "yOffset": 89
       },
       "translation": {
-        "translate": "guide.basic.description2"
+        "translate": "guide.basic.skills2"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 157
+      },
+      "translation": {
+        "translate": "guide.basic.skills3"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172
+      },
+      "translation": {
+        "translate": "guide.basic.modifier_skills"
       }
     },
     {
       "type": "spellbound:text",
       "position": {
         "xOffset": 172,
-        "yOffset": 35
+        "yOffset": 49
       },
       "translation": {
-        "translate": "guide.basic.spell_paths1"
+        "translate": "guide.basic.conditional_skills"
       }
     },
     {
       "type": "spellbound:text",
-      "extras": {
-        "maxLineLength": 134
-      },
       "position": {
-        "xOffset": 188,
-        "yOffset": 90
+        "xOffset": 172,
+        "yOffset": 79
       },
       "translation": {
-        "translate": "guide.basic.ruin"
+        "translate": "guide.basic.choice_skills"
       }
     },
     {
       "type": "spellbound:image",
-      "extras": {
-        "enableCorners": false
-      },
-      "height": 32,
-      "image": "spellbound:textures/gui/paths/ruin.png",
+      "height": 75,
+      "image": "spellbound:textures/gui/books/images/choice_spell.png",
       "position": {
-        "xOffset": 158,
-        "yOffset": 110
+        "xOffset": 206,
+        "yOffset": 127
       },
-      "width": 32
+      "width": 75
     }
   ],
   "id": "spellbound:studies_in_the_arcane",
-  "insertAfter": "spellbound:basic_cover_page"
+  "insertAfter": "spellbound:spells"
 }

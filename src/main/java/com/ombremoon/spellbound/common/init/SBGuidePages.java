@@ -29,10 +29,8 @@ import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -46,7 +44,7 @@ public interface SBGuidePages {
     int PAGE_TWO_START_CENTER_X = 247;
 
     //Books
-    ResourceLocation BASIC_BOOK = loc("studies_in_the_arcane");
+    ResourceLocation SPELLBOUND_BOOK = loc("studies_in_the_arcane");
     ResourceLocation RUIN_BOOK = loc("grimoire_of_annihilation");
     ResourceLocation TRANSFIG_BOOK = loc("architects_lexicon");
     ResourceLocation SUMMON_BOOK = loc("the_necronomicon");
@@ -111,15 +109,17 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> PURGE_MAGIC = key("purge_magic_page");
 
     //Basic
-    ResourceKey<GuideBookPage> BASIC_COVER_PAGE = key("basic_cover_page");
-    ResourceKey<GuideBookPage> SPELLBOUND_DESCRIPTION = key("spellbound_description"); //What is Spellbound & Paths
-    ResourceKey<GuideBookPage> IMPORTANT_ITEMS = key("basic_cover_page"); //Arcanthus, Magic Essence
-    ResourceKey<GuideBookPage> WORKBENCH = key("basic_cover_page"); //Workbench
-    ResourceKey<GuideBookPage> BOOK_RECIPES = key("basic_cover_page"); //Book Recipes
-    ResourceKey<GuideBookPage> BROKER_SCRAPS = key("basic_cover_page"); //Spell Broker & Page Scraps
-    ResourceKey<GuideBookPage> MORE_ITEMS = key("basic_cover_page"); //Shards, Armors & Staves
-    ResourceKey<GuideBookPage> SPELLS = key("basic_cover_page"); //Spell Mastery, Tomes & Choices
-    ResourceKey<GuideBookPage> SKILLS = key("basic_cover_page"); //Skills
+    ResourceKey<GuideBookPage> SPELLBOUND_COVER_PAGE = key("basic_cover_page");
+    ResourceKey<GuideBookPage> SPELLBOUND_DESCRIPTION = key("spellbound_description");
+    ResourceKey<GuideBookPage> SPELL_PATHS = key("spellbound_paths");
+    ResourceKey<GuideBookPage> GENERAL_ITEMS = key("general_items");
+    ResourceKey<GuideBookPage> WORKBENCH = key("magis_workbench");
+    ResourceKey<GuideBookPage> BOOK_RECIPES = key("book_recipes");
+    ResourceKey<GuideBookPage> BOOK_RECIPES_CONT = key("book_recipes_cont");
+    ResourceKey<GuideBookPage> SPELL_RESEARCH = key("spell_research");
+    ResourceKey<GuideBookPage> PATH_ITEMS = key("path_items"); //Shards, Armors & Staves
+    ResourceKey<GuideBookPage> SPELLS = key("spells"); //Spell Mastery, Tomes & Choices
+    ResourceKey<GuideBookPage> SKILLS = key("skills"); //Skills
 
     static void bootstrap(BootstrapContext<GuideBookPage> context) {
         Ingredient talisman1 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(SBData.TALISMAN_RINGS.get(), 1).build(), SBItems.RITUAL_TALISMAN.get());
@@ -145,9 +145,9 @@ public interface SBGuidePages {
         //Basic
         register(
                 context,
-                BASIC_COVER_PAGE,
+                SPELLBOUND_COVER_PAGE,
                 PageBuilder
-                        .forBook(BASIC_BOOK)
+                        .forBook(SPELLBOUND_BOOK)
                         .addElements(
                                 PageBuilder.Image
                                         .of(loc("textures/gui/books/images/spellbound_logo.png"))
@@ -181,18 +181,192 @@ public interface SBGuidePages {
         createDescriptionAndImages(
                 context,
                 SPELLBOUND_DESCRIPTION,
-                BASIC_COVER_PAGE,
-                Book.BASIC,
+                SPELLBOUND_COVER_PAGE,
+                Book.SPELLBOUND,
                 translatable("guide.basic.spellbound"),
                 translatable("guide.basic.spell_paths"),
                 false,
                 List.of(
-                        new ImageEntryWithDimensions(loc("textures/gui/paths/ruin.png"), PAGE_TWO_START_X, 60, 32, 32, false)
+                        new ImageEntryWithDimensions(loc("textures/gui/paths/ruin.png"), PAGE_TWO_START_X - 14, 110, 32, 32, false)
                 ),
                 new TextEntry(translatable("guide.basic.description1"), 35),
                 new TextEntry(translatable("guide.basic.description2"), 90),
                 new TextEntry(translatable("guide.basic.spell_paths1"), PAGE_TWO_START_X, 35),
-                new TextEntry(translatable("guide.basic.ruin"), PAGE_TWO_START_X + 16, 60)
+                new TextEntry(translatable("guide.basic.ruin"), PAGE_TWO_START_X + 16, 90, 134)
+        );
+        createDescriptionAndImages(
+                context,
+                SPELL_PATHS,
+                SPELLBOUND_DESCRIPTION,
+                Book.SPELLBOUND,
+                null,
+                null,
+                false,
+                List.of(
+                        new ImageEntryWithDimensions(loc("textures/gui/paths/transfiguration.png"), -3, 27, 32, 32, false),
+                        new ImageEntryWithDimensions(loc("textures/gui/paths/summons.png"), 124, 135, 32, 32, false),
+                        new ImageEntryWithDimensions(loc("textures/gui/paths/divine.png"), PAGE_TWO_START_X + 121, 26, 32, 32, false),
+                        new ImageEntryWithDimensions(loc("textures/gui/paths/deception.png"), PAGE_TWO_START_X - 10, 130, 32, 32, false)
+                ),
+                new TextEntry(translatable("guide.basic.transfiguration"), 31, 0, 119),
+                new TextEntry(translatable("guide.basic.summons"), 0, 114, 130),
+                new TextEntry(translatable("guide.basic.divine"), PAGE_TWO_START_X, 0, 134),
+                new TextEntry(translatable("guide.basic.deception"), PAGE_TWO_START_X + 25, 97, 134),
+                new TextEntry(translatable("guide.basic.summons_fix"), 130, 150)
+        );
+        createDescriptionWithRecipeAndItem(
+                context,
+                GENERAL_ITEMS,
+                SPELL_PATHS,
+                Book.SPELLBOUND,
+                translatable("guide.basic.general_items"),
+                null,
+                false,
+                List.of(
+                        new RecipeEntry(loc("magic_essence"), PAGE_TWO_START_X + 16, 111)
+                ),
+                List.of(
+                        new ItemEntry(Ingredient.of(blockToItem(SBBlocks.ARCANTHUS)), 84, 27, false),
+                        new ItemEntry(Ingredient.of(SBItems.MANA_TEAR.get()), -39, 105, false),
+                        new ItemEntry(Ingredient.of(SBItems.MAGIC_ESSENCE.get()), 234, 95, false)
+                ),
+                new TextEntry(translatable("guide.basic.arcanthus"), 0, 30, 115),
+                new TextEntry(translatable("guide.basic.mana_tear"), 29, 120, 130),
+                new TextEntry(translatable("guide.basic.magic_essence"), PAGE_TWO_START_X, 35)
+        );
+        createDescriptionWithRecipeAndImage(
+                context,
+                WORKBENCH,
+                GENERAL_ITEMS,
+                Book.SPELLBOUND,
+                translatable("block.spellbound.magis_workbench"),
+                null,
+                false,
+                List.of(
+                        new RecipeEntry(loc("magis_workbench"), 65 , 100)
+                ),
+                List.of(
+                        new ImageEntryWithDimensions(loc("textures/gui/books/images/magis_workbench.png"), 1, 116, 64, 64, false),
+                        new ImageEntryWithDimensions(loc("textures/gui/books/images/workbench_screen.png"), PAGE_TWO_START_X, 5, 150, 83),
+                        new ImageEntryWithDimensions(loc("textures/gui/books/images/spell_select.png"), PAGE_TWO_START_X, 98, 150, 83)
+                ),
+                new TextEntry(translatable("guide.basic.workbench1"), 35)
+        );
+        createDescriptionWithRecipeAndItem(
+                context,
+                BOOK_RECIPES,
+                WORKBENCH,
+                Book.SPELLBOUND,
+                translatable("guide.basic.book_recipes"),
+                null,
+                false,
+                List.of(
+                        new RecipeEntry(RUIN_BOOK, PAGE_TWO_START_X + 65, 5),
+                        new RecipeEntry(TRANSFIG_BOOK, PAGE_TWO_START_X, 105)
+                ),
+                List.of(
+                        new ItemEntry(Ingredient.of(SBItems.RUIN_BOOK.get()), PAGE_TWO_START_X - 20, 5, false),
+                        new ItemEntry(Ingredient.of(SBItems.TRANSFIG_BOOK.get()), 239, 105, false)
+                ),
+                new TextEntry(translatable("guide.basic.guide_books"), 35),
+                new TextEntry(translatable("guide.basic.guide_books1"), 5, 95),
+                new TextEntry(translatable("guide.basic.guide_books2"), 5, 105),
+                new TextEntry(translatable("guide.basic.guide_books3"), 5, 115),
+                new TextEntry(translatable("guide.basic.guide_books4"), 5, 125),
+                new TextEntry(translatable("guide.basic.guide_books5"), 5, 135),
+                new TextEntry(translatable("guide.basic.guide_books6"), 5, 155),
+                new TextEntry(translatable("item.spellbound.grimoire_of_annihilation"), PAGE_TWO_START_X + 8, 8, 60),
+                new TextEntry(translatable("item.spellbound.architects_lexicon"), PAGE_TWO_START_X + 90, 105, 60)
+        );
+        createDescriptionWithRecipeAndItem(
+                context,
+                BOOK_RECIPES_CONT,
+                BOOK_RECIPES,
+                Book.SPELLBOUND,
+                null,
+                null,
+                false,
+                List.of(
+                        new RecipeEntry(SUMMON_BOOK, 5),
+                        new RecipeEntry(DIVINE_BOOK, 65, 105),
+                        new RecipeEntry(DECEPTION_BOOK, PAGE_TWO_START_X, 55)
+                ),
+                List.of(
+                        new ItemEntry(Ingredient.of(SBItems.SUMMON_BOOK.get()), 67, 5, false),
+                        new ItemEntry(Ingredient.of(SBItems.DIVINE_BOOK.get()), -20, 105, false),
+                        new ItemEntry(Ingredient.of(SBItems.DECEPTION_BOOK.get()), 239, 55, false)
+                ),
+                new TextEntry(translatable("item.spellbound.the_necronomicon"), 86, 8, 70),
+                new TextEntry(translatable("item.spellbound.sanctified_codex"), 8, 105, 60),
+                new TextEntry(translatable("item.spellbound.swindlers_guide"), PAGE_TWO_START_X + 90, 55, 60)
+        );
+        createDescriptionAndImages(
+                context,
+                SPELL_RESEARCH,
+                BOOK_RECIPES_CONT,
+                Book.SPELLBOUND,
+                translatable("entity.spellbound.spell_broker"),
+                translatable("guide.basic.page_scraps"),
+                true,
+                List.of(
+                        new ImageEntryWithDimensions(loc("textures/gui/books/images/spell_broker.png"), 75, 75, 75, 75)
+                ),
+                new TextEntry(translatable("guide.basic.spell_broker"), 35),
+                new TextEntry(translatable("guide.basic.spell_broker1"), 0, 85, 75),
+                new TextEntry(translatable("guide.basic.page_scraps1"), PAGE_TWO_START_X, 30),
+                new TextEntry(translatable("guide.basic.page_scraps2"), PAGE_TWO_START_X + 25, 90, 130),
+                new TextEntry(translatable("guide.basic.page_scraps3"), PAGE_TWO_START_X, 143, 130)
+        );
+        createDescriptionAndItems(
+                context,
+                PATH_ITEMS,
+                SPELL_RESEARCH,
+                Book.SPELLBOUND,
+                translatable("guide.basic.path_items"),
+                null,
+                false,
+                List.of(
+                        new ItemEntry(Ingredient.of(SBTags.Items.MAGIC_SHARD), - 25, 85, false),
+                        new ItemEntry(Ingredient.of(SBTags.Items.STAFF), PAGE_TWO_START_X - 28, 10, false),
+                        new ItemEntry(Ingredient.of(SBItems.TRANSFIGURER_HELMET.get(), SBItems.PYROMANCER_HELMET.get(), SBItems.STORMWEAVER_HELMET.get(), SBItems.CRYOMANCER_HELMET.get()), 239, 105, false)
+                ),
+                new TextEntry(translatable("guide.basic.path_items1"), 35),
+                new TextEntry(translatable("guide.basic.shards"), 55, 90, 100),
+                new TextEntry(translatable("guide.basic.staves"), PAGE_TWO_START_X + 55, 5, 90),
+                new TextEntry(translatable("guide.basic.armor"), PAGE_TWO_START_X, 115, 90)
+        );
+        createDescriptionAndImages(
+                context,
+                SPELLS,
+                PATH_ITEMS,
+                Book.SPELLBOUND,
+                translatable("guide.basic.spells"),
+                null,
+                false,
+                List.of(
+                        new ImageEntryWithDimensions(loc("textures/gui/books/images/spells.png"), PAGE_TWO_START_X + 4, 75, 125, 125)
+                ),
+                new TextEntry(translatable("guide.basic.spell_tomes"), 35),
+                new TextEntry(translatable("guide.basic.spell_mastery"), 120),
+                new TextEntry(translatable("guide.basic.choice_spells"), PAGE_TWO_START_X, PAGE_START_Y)
+        );
+        createDescriptionAndImages(
+                context,
+                SKILLS,
+                SPELLS,
+                Book.SPELLBOUND,
+                translatable("guide.basic.skills"),
+                null,
+                false,
+                List.of(
+                        new ImageEntryWithDimensions(loc("textures/gui/books/images/choice_spell.png"), PAGE_TWO_START_X + 34, 127, 75, 75)
+                ),
+                new TextEntry(translatable("guide.basic.skills1"), 35),
+                new TextEntry(translatable("guide.basic.skills2"), 89),
+                new TextEntry(translatable("guide.basic.skills3"), 157),
+                new TextEntry(translatable("guide.basic.modifier_skills"), PAGE_TWO_START_X, 0),
+                new TextEntry(translatable("guide.basic.conditional_skills"), PAGE_TWO_START_X, 49),
+                new TextEntry(translatable("guide.basic.choice_skills"), PAGE_TWO_START_X, 79)
         );
 
         //Ruin
@@ -814,25 +988,28 @@ public interface SBGuidePages {
             ResourceKey<GuideBookPage> currentPage,
             ResourceKey<GuideBookPage> prevPage,
             Book book,
-            MutableComponent title,
+            @Nullable MutableComponent title,
             @Nullable MutableComponent secondTitle,
             boolean doubleTitle,
             List<RecipeEntry> recipes,
             List<ItemEntry> items,
             TextEntry... texts
     ) {
-        var builder = PageBuilder.forBook(book.getLocation()).setPreviousPage(prevPage).addElements(
-                PageBuilder.Text
-                        .of(title)
-                        .position(PAGE_START_CENTER_X, doubleTitle ? PAGE_START_DOUBLE_Y : PAGE_START_Y)
-                        .bold()
-                        .centered()
-                        .build(),
-                PageBuilder.SpellBorder
-                        .of(book.getPath())
-                        .setPosition(0, 0)
-                        .build()
-        );
+        var builder = PageBuilder.forBook(book.getLocation()).setPreviousPage(prevPage);
+        if (title != null) {
+            builder.addElements(
+                    PageBuilder.Text
+                            .of(title)
+                            .position(PAGE_START_CENTER_X, doubleTitle ? PAGE_START_DOUBLE_Y : PAGE_START_Y)
+                            .bold()
+                            .centered()
+                            .build(),
+                    PageBuilder.SpellBorder
+                            .of(book.getPath())
+                            .setPosition(0, 0)
+                            .build()
+            );
+        }
         if (secondTitle != null) {
             builder.addElements(
                     PageBuilder.Text
@@ -872,8 +1049,18 @@ public interface SBGuidePages {
             if (!item.withBackground) {
                 itemBuilder.disableBackground();
             }
-
             builder.addElements(itemBuilder.build());
+
+            if (item.tooltip != null) {
+                builder.addElements(
+                        PageBuilder.Tooltip
+                                .of()
+                                .addTooltip(item.tooltip)
+                                .position(item.xPos, item.yPos)
+                                .dimensions(32, 32)
+                                .build()
+                );
+            }
         }
 
         register(context, currentPage, builder);
@@ -884,24 +1071,27 @@ public interface SBGuidePages {
             ResourceKey<GuideBookPage> currentPage,
             ResourceKey<GuideBookPage> prevPage,
             Book book,
-            MutableComponent title,
+            @Nullable MutableComponent title,
             @Nullable MutableComponent secondTitle,
             boolean doubleTitle,
             List<ImageEntryWithDimensions> images,
             TextEntry... texts
     ) {
-        var builder = PageBuilder.forBook(book.getLocation()).setPreviousPage(prevPage).addElements(
-                PageBuilder.Text
-                        .of(title)
-                        .position(PAGE_START_CENTER_X, doubleTitle ? PAGE_START_DOUBLE_Y : PAGE_START_Y)
-                        .bold()
-                        .centered()
-                        .build(),
-                PageBuilder.SpellBorder
-                        .of(book.getPath())
-                        .setPosition(0, 0)
-                        .build()
-        );
+        var builder = PageBuilder.forBook(book.getLocation()).setPreviousPage(prevPage);
+        if (title != null) {
+            builder.addElements(
+                    PageBuilder.Text
+                            .of(title)
+                            .position(PAGE_START_CENTER_X, doubleTitle ? PAGE_START_DOUBLE_Y : PAGE_START_Y)
+                            .bold()
+                            .centered()
+                            .build(),
+                    PageBuilder.SpellBorder
+                            .of(book.getPath())
+                            .setPosition(0, 0)
+                            .build()
+            );
+        }
         if (secondTitle != null) {
             builder.addElements(
                     PageBuilder.Text
@@ -1329,7 +1519,7 @@ public interface SBGuidePages {
                 builder.addElements(
                         PageBuilder.Image.of(imageEntry.image.texture)
                                 .position(xRenderPos, yRenderPos)
-                                .setDimensions(32 * scale, 32 * scale)
+                                .setDimensions(64 * scale, 64 * scale)
                                 .disableCorners()
                                 .build()
                 );
@@ -1427,7 +1617,12 @@ public interface SBGuidePages {
         }
     }
 
-    record RecipeEntry(ResourceLocation recipe, int xPos, int yPos) {}
+    record RecipeEntry(ResourceLocation recipe, int xPos, int yPos) {
+
+        RecipeEntry(ResourceLocation recipe, int yPos) {
+            this(recipe, 0, yPos);
+        }
+    }
 
     record ImageEntryWithDimensions(ResourceLocation texture, int xPos, int yPos, int width, int height, boolean withCorners) {
 
@@ -1463,10 +1658,14 @@ public interface SBGuidePages {
         }
     }
 
-    record TextEntry(Component text, int xPos, int yPos, int lineLength, ResourceLocation scrap) {
+    record TextEntry(Component text, int xPos, int yPos, int lineLength, boolean centered, ResourceLocation scrap) {
+
+        TextEntry(Component text, int xPos, int yPos, int lineLength, boolean centered) {
+            this(text, xPos, yPos, lineLength, centered, SBPageScraps.DEFAULT);
+        }
 
         TextEntry(Component text, int xPos, int yPos, int lineLength) {
-            this(text, xPos, yPos, lineLength, SBPageScraps.DEFAULT);
+            this(text, xPos, yPos, lineLength, false);
         }
 
         TextEntry(Component text, int xPos, int yPos) {
@@ -1478,10 +1677,14 @@ public interface SBGuidePages {
         }
     }
 
-    record ItemEntry(Ingredient item, int xPos, int yPos, boolean withBackground, ResourceLocation scrap) {
+    record ItemEntry(Ingredient item, int xPos, int yPos, boolean withBackground, MutableComponent tooltip, ResourceLocation scrap) {
+
+        ItemEntry(Ingredient item, int xPos, int yPos, boolean withBackground, MutableComponent tooltip) {
+            this(item, xPos, yPos, withBackground, tooltip, SBPageScraps.DEFAULT);
+        }
 
         ItemEntry(Ingredient item, int xPos, int yPos, boolean withBackground) {
-            this(item, xPos, yPos, withBackground, SBPageScraps.DEFAULT);
+            this(item, xPos, yPos, withBackground, null);
         }
 
         ItemEntry(Ingredient item, int xPos, int yPos) {
@@ -1492,7 +1695,7 @@ public interface SBGuidePages {
     record ContentsEntry(Component comp, ResourceKey<GuideBookPage> targetPage) {}
 
     enum Book {
-        BASIC(BASIC_BOOK, null, PageBuilder.Recipe.SpellboundGrids.BASIC),
+        SPELLBOUND(SPELLBOUND_BOOK, null, PageBuilder.Recipe.SpellboundGrids.BASIC),
         RUIN(RUIN_BOOK, SpellPath.RUIN, PageBuilder.Recipe.SpellboundGrids.GRIMOIRE),
         TRANSFIG(TRANSFIG_BOOK, SpellPath.TRANSFIGURATION, PageBuilder.Recipe.SpellboundGrids.ARCHITECT),
         SUMMONS(SUMMON_BOOK, SpellPath.SUMMONS, PageBuilder.Recipe.SpellboundGrids.NECRONOMICON),

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "*": {
+      "item": "minecraft:bone"
+    },
+    "B": {
+      "item": "minecraft:book"
+    },
+    "^": {
+      "item": "minecraft:rotten_flesh"
+    }
+  },
+  "pattern": [
+    "*B^"
+  ],
+  "result": {
+    "count": 1,
+    "id": "spellbound:the_necronomicon"
+  }
+}

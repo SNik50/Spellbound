@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "*": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "B": {
+      "item": "minecraft:book"
+    },
+    "^": {
+      "item": "minecraft:glass_bottle"
+    }
+  },
+  "pattern": [
+    "*B^"
+  ],
+  "result": {
+    "count": 1,
+    "id": "spellbound:architects_lexicon"
+  }
+}

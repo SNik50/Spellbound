@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_arcanthus": {
+      "conditions": {
+        "items": [
+          {
+            "items": "spellbound:arcanthus"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "spellbound:magic_essence"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_arcanthus"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "spellbound:magic_essence"
+    ]
+  }
+}

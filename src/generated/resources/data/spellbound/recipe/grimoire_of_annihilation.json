@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "minecraft:snowball"
+    },
+    "*": {
+      "item": "minecraft:coal"
+    },
+    "B": {
+      "item": "minecraft:book"
+    },
+    "^": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "pattern": [
+    " # ",
+    "*B^"
+  ],
+  "result": {
+    "count": 1,
+    "id": "spellbound:grimoire_of_annihilation"
+  }
+}

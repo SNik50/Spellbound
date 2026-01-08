@@ -1,0 +1,75 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "block.spellbound.magis_workbench"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -65281,
+      "pathTexture": "spellbound:textures/gui/books/images/spellbound_logo.png"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.basic.workbench1"
+      }
+    },
+    {
+      "type": "spellbound:recipe",
+      "position": {
+        "xOffset": 65,
+        "yOffset": 100
+      },
+      "recipe": "spellbound:magis_workbench"
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 64,
+      "image": "spellbound:textures/gui/books/images/magis_workbench.png",
+      "position": {
+        "xOffset": 1,
+        "yOffset": 116
+      },
+      "width": 64
+    },
+    {
+      "type": "spellbound:image",
+      "height": 83,
+      "image": "spellbound:textures/gui/books/images/workbench_screen.png",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 5
+      },
+      "width": 150
+    },
+    {
+      "type": "spellbound:image",
+      "height": 83,
+      "image": "spellbound:textures/gui/books/images/spell_select.png",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 98
+      },
+      "width": 150
+    }
+  ],
+  "id": "spellbound:studies_in_the_arcane",
+  "insertAfter": "spellbound:general_items"
+}

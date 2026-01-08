@@ -1,0 +1,132 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.basic.path_items"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -65281,
+      "pathTexture": "spellbound:textures/gui/books/images/spellbound_logo.png"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.basic.path_items1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100
+      },
+      "position": {
+        "xOffset": 55,
+        "yOffset": 90
+      },
+      "translation": {
+        "translate": "guide.basic.shards"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 90
+      },
+      "position": {
+        "xOffset": 227,
+        "yOffset": 5
+      },
+      "translation": {
+        "translate": "guide.basic.staves"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 90
+      },
+      "position": {
+        "xOffset": 172,
+        "yOffset": 115
+      },
+      "translation": {
+        "translate": "guide.basic.armor"
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "tag": "spellbound:magic_shard"
+        }
+      ],
+      "position": {
+        "xOffset": -25,
+        "yOffset": 85
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "tag": "spellbound:staff"
+        }
+      ],
+      "position": {
+        "xOffset": 144,
+        "yOffset": 10
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        [
+          {
+            "item": "spellbound:transfigurer_helmet"
+          },
+          {
+            "item": "spellbound:pyromancer_helmet"
+          },
+          {
+            "item": "spellbound:stormweaver_helmet"
+          },
+          {
+            "item": "spellbound:cryomancer_helmet"
+          }
+        ]
+      ],
+      "position": {
+        "xOffset": 239,
+        "yOffset": 105
+      }
+    }
+  ],
+  "id": "spellbound:studies_in_the_arcane",
+  "insertAfter": "spellbound:spell_research"
+}

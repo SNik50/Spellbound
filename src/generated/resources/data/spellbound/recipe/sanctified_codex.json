@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "*": {
+      "item": "minecraft:fermented_spider_eye"
+    },
+    "B": {
+      "item": "minecraft:book"
+    },
+    "^": {
+      "item": "minecraft:gold_nugget"
+    }
+  },
+  "pattern": [
+    "*B^"
+  ],
+  "result": {
+    "count": 1,
+    "id": "spellbound:sanctified_codex"
+  }
+}

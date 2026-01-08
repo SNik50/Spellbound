@@ -29,7 +29,7 @@ public class GuideSpellBorderRenderer implements IPageElementRenderer<GuideSpell
                 16, 16, 16, 16
         );
 
-        graphics.hLine(leftPos + element.position().xOffset() + 8, leftPos + element.position().xOffset() + 150, topPos + element.position().yOffset() + 8, element.colour());
+        graphics.hLine(leftPos + element.position().xOffset() + 10, leftPos + element.position().xOffset() + 150, topPos + element.position().yOffset() + 8, element.colour());
 
         topPos -= 5;
 
@@ -65,7 +65,7 @@ public class GuideSpellBorderRenderer implements IPageElementRenderer<GuideSpell
                 16, 16, 16, 16
         );
 
-        graphics.hLine(leftPos + element.position().xOffset() + 8, leftPos + element.position().xOffset() + 135, topPos+178, element.colour());
+        graphics.hLine(leftPos + element.position().xOffset() + 8, leftPos + element.position().xOffset() + 133, topPos+178, element.colour());
 
         if (path.isPresent() && path.get().isSubPath()) {
             String elementText = I18n.get("guide.element.spell_border.element");

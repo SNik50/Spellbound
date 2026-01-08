@@ -6,10 +6,7 @@ import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -24,6 +21,10 @@ public class ModRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput output) {
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, SBItems.MAGIC_ESSENCE.get(), 2)
+                .requires(SBBlocks.ARCANTHUS.get())
+                .unlockedBy("has_arcanthus", has(SBBlocks.ARCANTHUS.get()))
+                .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBItems.RITUAL_TALISMAN.get())
                 .define('G', Items.GOLD_INGOT)
                 .define('M', SBItems.MAGIC_ESSENCE.get())
@@ -45,8 +46,9 @@ public class ModRecipeProvider extends RecipeProvider {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBBlocks.TRANSFIGURATION_DISPLAY.get())
                 .define('S', ItemTags.STONE_BRICKS)
                 .define('C', Items.COPPER_INGOT)
+                .define('#', SBItems.MAGIC_ESSENCE.get())
                 .pattern(" S ")
-                .pattern("CSC")
+                .pattern("C#C")
                 .pattern("SSS")
                 .unlockedBy("has_copper", has(Items.COPPER_INGOT))
                 .save(output);
@@ -58,22 +60,52 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("  C")
                 .unlockedBy("has_magic_essence", has(SBItems.MAGIC_ESSENCE.get()))
                 .save(output);
-       /* ShapedRecipeBuilder.shaped(RecipeCategory.MISC, talisman)
-                .define('G', Items.GOLD_INGOT)
-                .define('M', SBItems.MAGIC_ESSENCE.get())
-                .pattern("GGG")
-                .pattern("MGM")
-                .pattern(" G ")
-                .unlockedBy("has_magic_essence", has(SBItems.MAGIC_ESSENCE.get()))
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBBlocks.MAGI_WORKBENCH.get())
+                .define('L', ItemTags.LOGS)
+                .define('W', Items.BLUE_WOOL)
+                .define('#', SBItems.MAGIC_ESSENCE.get())
+                .define('^', Items.BOOK)
+                .pattern("^#^")
+                .pattern("WWW")
+                .pattern("L L")
+                .unlockedBy("has_blue_wool", has(Items.BLUE_WOOL))
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, talisman)
-                .define('G', Items.GOLD_INGOT)
-                .define('D', Items.DIAMOND)
-                .define('M', SBItems.MAGIC_ESSENCE.get())
-                .pattern("GGG")
-                .pattern("MDM")
-                .pattern(" G ")
-                .unlockedBy("has_magic_essence", has(SBItems.MAGIC_ESSENCE.get()))
-                .save(output);*/
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBItems.RUIN_BOOK.get())
+                .define('B', Items.BOOK)
+                .define('*', Items.COAL)
+                .define('#', Items.SNOWBALL)
+                .define('^', Items.COPPER_INGOT)
+                .pattern(" # ")
+                .pattern("*B^")
+                .unlockedBy("has_book", has(Items.BOOK))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBItems.TRANSFIG_BOOK.get())
+                .define('B', Items.BOOK)
+                .define('*', Items.AMETHYST_SHARD)
+                .define('^', Items.GLASS_BOTTLE)
+                .pattern("*B^")
+                .unlockedBy("has_book", has(Items.BOOK))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBItems.SUMMON_BOOK.get())
+                .define('B', Items.BOOK)
+                .define('*', Items.BONE)
+                .define('^', Items.ROTTEN_FLESH)
+                .pattern("*B^")
+                .unlockedBy("has_book", has(Items.BOOK))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBItems.DIVINE_BOOK.get())
+                .define('B', Items.BOOK)
+                .define('*', Items.FERMENTED_SPIDER_EYE)
+                .define('^', Items.GOLD_NUGGET)
+                .pattern("*B^")
+                .unlockedBy("has_book", has(Items.BOOK))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBItems.DECEPTION_BOOK.get())
+                .define('B', Items.BOOK)
+                .define('*', Items.TRIPWIRE_HOOK)
+                .define('^', Items.INK_SAC)
+                .pattern("*B^")
+                .unlockedBy("has_book", has(Items.BOOK))
+                .save(output);
     }
 }

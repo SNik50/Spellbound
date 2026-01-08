@@ -1,0 +1,117 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 119
+      },
+      "position": {
+        "xOffset": 31
+      },
+      "translation": {
+        "translate": "guide.basic.transfiguration"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 130
+      },
+      "position": {
+        "yOffset": 114
+      },
+      "translation": {
+        "translate": "guide.basic.summons"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 134
+      },
+      "position": {
+        "xOffset": 172
+      },
+      "translation": {
+        "translate": "guide.basic.divine"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 134
+      },
+      "position": {
+        "xOffset": 197,
+        "yOffset": 97
+      },
+      "translation": {
+        "translate": "guide.basic.deception"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 130,
+        "yOffset": 150
+      },
+      "translation": {
+        "translate": "guide.basic.summons_fix"
+      }
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 32,
+      "image": "spellbound:textures/gui/paths/transfiguration.png",
+      "position": {
+        "xOffset": -3,
+        "yOffset": 27
+      },
+      "width": 32
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 32,
+      "image": "spellbound:textures/gui/paths/summons.png",
+      "position": {
+        "xOffset": 124,
+        "yOffset": 135
+      },
+      "width": 32
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 32,
+      "image": "spellbound:textures/gui/paths/divine.png",
+      "position": {
+        "xOffset": 293,
+        "yOffset": 26
+      },
+      "width": 32
+    },
+    {
+      "type": "spellbound:image",
+      "extras": {
+        "enableCorners": false
+      },
+      "height": 32,
+      "image": "spellbound:textures/gui/paths/deception.png",
+      "position": {
+        "xOffset": 162,
+        "yOffset": 130
+      },
+      "width": 32
+    }
+  ],
+  "id": "spellbound:studies_in_the_arcane",
+  "insertAfter": "spellbound:spellbound_description"
+}

@@ -1,0 +1,116 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.basic.general_items"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -65281,
+      "pathTexture": "spellbound:textures/gui/books/images/spellbound_logo.png"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 115
+      },
+      "position": {
+        "yOffset": 30
+      },
+      "translation": {
+        "translate": "guide.basic.arcanthus"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 130
+      },
+      "position": {
+        "xOffset": 29,
+        "yOffset": 120
+      },
+      "translation": {
+        "translate": "guide.basic.mana_tear"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.basic.magic_essence"
+      }
+    },
+    {
+      "type": "spellbound:recipe",
+      "position": {
+        "xOffset": 188,
+        "yOffset": 111
+      },
+      "recipe": "spellbound:magic_essence"
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:arcanthus"
+        }
+      ],
+      "position": {
+        "xOffset": 84,
+        "yOffset": 27
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:mana_tear"
+        }
+      ],
+      "position": {
+        "xOffset": -39,
+        "yOffset": 105
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:magic_essence"
+        }
+      ],
+      "position": {
+        "xOffset": 234,
+        "yOffset": 95
+      }
+    }
+  ],
+  "id": "spellbound:studies_in_the_arcane",
+  "insertAfter": "spellbound:spellbound_paths"
+}

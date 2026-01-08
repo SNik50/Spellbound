@@ -1,0 +1,116 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 70
+      },
+      "position": {
+        "xOffset": 86,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "item.spellbound.the_necronomicon"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 60
+      },
+      "position": {
+        "xOffset": 8,
+        "yOffset": 105
+      },
+      "translation": {
+        "translate": "item.spellbound.sanctified_codex"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 60
+      },
+      "position": {
+        "xOffset": 262,
+        "yOffset": 55
+      },
+      "translation": {
+        "translate": "item.spellbound.swindlers_guide"
+      }
+    },
+    {
+      "type": "spellbound:recipe",
+      "position": {
+        "yOffset": 5
+      },
+      "recipe": "spellbound:the_necronomicon"
+    },
+    {
+      "type": "spellbound:recipe",
+      "position": {
+        "xOffset": 65,
+        "yOffset": 105
+      },
+      "recipe": "spellbound:sanctified_codex"
+    },
+    {
+      "type": "spellbound:recipe",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 55
+      },
+      "recipe": "spellbound:swindlers_guide"
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:the_necronomicon"
+        }
+      ],
+      "position": {
+        "xOffset": 67,
+        "yOffset": 5
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:sanctified_codex"
+        }
+      ],
+      "position": {
+        "xOffset": -20,
+        "yOffset": 105
+      }
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "spellbound:swindlers_guide"
+        }
+      ],
+      "position": {
+        "xOffset": 239,
+        "yOffset": 55
+      }
+    }
+  ],
+  "id": "spellbound:studies_in_the_arcane",
+  "insertAfter": "spellbound:book_recipes"
+}

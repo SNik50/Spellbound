@@ -2,6 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
+    "#": {
+      "item": "spellbound:magic_essence"
+    },
     "C": {
       "item": "minecraft:copper_ingot"
     },
@@ -11,7 +14,7 @@
   },
   "pattern": [
     " S ",
-    "CSC",
+    "C#C",
     "SSS"
   ],
   "result": {

@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": {
+      "item": "spellbound:magic_essence"
+    },
+    "L": {
+      "tag": "minecraft:logs"
+    },
+    "W": {
+      "item": "minecraft:blue_wool"
+    },
+    "^": {
+      "item": "minecraft:book"
+    }
+  },
+  "pattern": [
+    "^#^",
+    "WWW",
+    "L L"
+  ],
+  "result": {
+    "count": 1,
+    "id": "spellbound:magis_workbench"
+  }
+}

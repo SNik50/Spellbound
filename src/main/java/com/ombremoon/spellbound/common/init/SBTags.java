@@ -38,6 +38,8 @@ public class SBTags {
 
     public static class Items {
         public static TagKey<Item> DIVINE_SHRINE = tag("divine_shrine");
+        public static TagKey<Item> STAFF = tag("staff");
+        public static TagKey<Item> MAGIC_SHARD = tag("magic_shard");
 
         private static TagKey<Item> tag(String name) {
             return TagKey.create(Registries.ITEM, CommonClass.customLocation(name));

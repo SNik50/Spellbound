@@ -712,15 +712,15 @@ public class PageBuilder {
             this.path = Optional.ofNullable(path);
             this.mastery = Optional.ofNullable(mastery);
             this.position = ElementPosition.getDefault();
-            this.pathTexture = path != null ? CommonClass.customLocation("textures/gui/paths/" + path.name().toLowerCase() + ".png") : CommonClass.customLocation("textures/gui/images/spellbound_logo.png");
+            this.pathTexture = path != null ? CommonClass.customLocation("textures/gui/paths/" + path.name().toLowerCase() + ".png") : CommonClass.customLocation("textures/gui/books/images/spellbound_logo.png");
             this.colour = path != null ? switch (path) {
                 case RUIN -> -10678496;
                 case TRANSFIGURATION -> -14396391;
                 case SUMMONS -> -13490312;
                 case DIVINE -> -3510773;
                 case DECEPTION -> -13357984;
-                default -> 0;
-            } : 0;
+                default -> 0xFFFF00FF;
+            } : 0xFFFF00FF;
             this.topText = Optional.empty();
             this.bottomText = Optional.empty();
         }

@@ -34,10 +34,10 @@ public class GuideRecipeRenderer implements IPageElementRenderer<GuideRecipeElem
         Recipe<?> recipe = recipeHolder.value();
         if (recipe.getType() != RecipeType.CRAFTING) return;
 
-        if (recipe instanceof ShapedRecipe shapedRecipe) {
+        if (recipe instanceof ShapedRecipe || recipe instanceof ShapelessRecipe) {
             List<GuideGhostItem> ghostRecipe = new ArrayList<>();
 
-            boolean largeGrid = shapedRecipe.getWidth() > 2 || shapedRecipe.getHeight() > 2;
+            boolean largeGrid = (recipe instanceof ShapedRecipe shapedRecipe && (shapedRecipe.getWidth() > 2 || shapedRecipe.getHeight()> 2)) || recipe instanceof ShapelessRecipe shapelessRecipe && shapelessRecipe.getIngredients().size() > 4;
             if (largeGrid) {
                 graphics.blit(
                         CommonClass.customLocation("textures/gui/books/crafting_grids/large/" + element.gridName() + ".png"),
@@ -51,7 +51,7 @@ public class GuideRecipeRenderer implements IPageElementRenderer<GuideRecipeElem
                         (int) (82 * element.scale()));
 
                 if (!isVisible(element.extras().scrap())) return;
-                for (int i = 1; i <= 9; i++) {
+                for (int i = 1; i <= recipe.getIngredients().size(); i++) {
                     int slotXOffset = (i-1)%3 * (int) ( 23 * element.scale());
                     int slotYOffset = 1;
                     if (i > 3) slotYOffset += (int) (23 * element.scale());
@@ -73,7 +73,7 @@ public class GuideRecipeRenderer implements IPageElementRenderer<GuideRecipeElem
                         (int) (58 * element.scale()));
 
                 if (!isVisible(element.extras().scrap())) return;
-                for (int i = 1; i <= 4; i++) {
+                for (int i = 1; i <= recipe.getIngredients().size(); i++) {
                     int slotXOffset = (i+1)%2 * ( (int) (23 * element.scale()));
                     int slotYOffset = i > 2 ? ( int)(23 * element.scale()) : 0;
 

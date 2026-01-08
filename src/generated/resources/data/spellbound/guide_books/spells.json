@@ -1,0 +1,63 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.basic.spells"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -65281,
+      "pathTexture": "spellbound:textures/gui/books/images/spellbound_logo.png"
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.basic.spell_tomes"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 120
+      },
+      "translation": {
+        "translate": "guide.basic.spell_mastery"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.basic.choice_spells"
+      }
+    },
+    {
+      "type": "spellbound:image",
+      "height": 125,
+      "image": "spellbound:textures/gui/books/images/spells.png",
+      "position": {
+        "xOffset": 176,
+        "yOffset": 75
+      },
+      "width": 125
+    }
+  ],
+  "id": "spellbound:studies_in_the_arcane",
+  "insertAfter": "spellbound:path_items"
+}

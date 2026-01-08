@@ -11,7 +11,6 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
@@ -29,7 +28,9 @@ public class ModLangProvider extends LanguageProvider {
     protected static final Map<String, String> REPLACE_LIST = ImmutableMap.of(
             "tnt", "TNT",
             "sus", "",
-            "magis", "Magi's"
+            "magis", "Magi's",
+            "architects", "Architect's",
+            "swindlers", "Swindler's"
     );
 
     public ModLangProvider(PackOutput gen) {
@@ -42,7 +43,7 @@ public class ModLangProvider extends LanguageProvider {
         SBSpells.SPELL_TYPES.getEntries().forEach(this::spellLang);
         SBSkills.SKILLS.getEntries().forEach(this::skillLang);
         SBBlocks.BLOCKS.getEntries().forEach(this::blockLang);
-//        EntityInit.ENTITIES.getEntries().forEach(this::entityLang);
+        SBEntities.ENTITIES.getEntries().forEach(this::entityLang);
         SBEffects.EFFECTS.getEntries().forEach(this::effectLang);
         SBAttributes.ATTRIBUTES.getEntries().forEach(this::attributeLang);
 
@@ -148,32 +149,38 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.basic.description1", "The magical world of Spellbound puts an emphasis on your choices to craft your experience, rather than relying on RNG.");
         add("guide.basic.description2", "Unlock powerful spells, each with their own set of unique upgrades. Fight dangerous foes in otherworldly dimensions. Explore the dark arts or become a peaceful saint. Choose your path.");
         add("guide.basic.spell_paths", "Spell Paths");
-        add("guide.basic.spell_paths1", "All spells are broken up into 5 spell paths: §2Transfiguration§r, §4Ruin§r, §1Summons§r, §eDivine§r, and §9Deception§r");
-        add("guide.basic.ruin", "Ruin is the path of elemental energy, destruction and chaos. Unlike other paths, the Ruin path can be broken down into addition sub-paths: §lFire§r, §lFrost§r, and §lShock§r. Each path has a unique effect that is applied to targets after taking enough damage.");
-        add("guide.basic.transfiguration", "Transfiguration is the path of alchemy and change. Offering a variety of utility and protection, Transfiguration spells are essential in almost all Magi's arsenal. Magis following this path have the ability to perform spells on an even grander scale through rituals.");
-        add("guide.basic.summons", "Summons is the path creation. As a Summoner, bring forth allies from beyond the grave or other dimension to fight in your stead by defeating them in combat. Befriend familiars to aid you in your journey as a Magi.");
+        add("guide.basic.spell_paths1", "All spells are broken up into 5 spell paths: §4Ruin§r, §2Transfiguration§r, §1Summons§r, §eDivine§r, and §9Deception§r");
+        add("guide.basic.spell_paths_cont", "Spell Paths Cont.");
+        add("guide.basic.ruin", "Ruin is the path of elemental energy, destruction and chaos. The Ruin path can be broken down into addition sub-paths: §lFire§r, §lFrost§r, and §lShock§r. Each path has a unique effect that is applied to targets after taking enough damage.");
+        add("guide.basic.transfiguration", "Transfiguration is the path of alchemy and change. Offering a variety of utility and protection, Transfiguration spells are essential in almost all Magi's arsenal. Learn how to perform spells on an even grander scale through rituals.");
+        add("guide.basic.summons", "Summons is the path creation. As a Summoner, bring forth allies from beyond the grave or other dimension to fight in your stead by defeating them in combat. Befriend familiars to aid you in your journey as a");
+        add("guide.basic.summons_fix", "Magi.");
         add("guide.basic.divine", "Divine is the path of light and darkness. Aid your allies and smite the undead, or curse your enemies and steal their life force, the Divine forces fuel your power. But beware, for every action taken, judgement will be passed.");
-        add("guide.basic.deception", "Deception is the path of illusions and trickery. Not all Magis are so brazen—masters of the art of Deception make their moves from the shadows, striking when you least expect. It is said that there is a place beyond mortal reach, housing secrets for those determined enough to uncover them.");
+        add("guide.basic.deception", "Deception is the path of illusions and trickery. Masters of the art of Deception make their moves from the shadows, striking when you least expect. It is said that there is a place beyond mortal reach, housing secrets for those determined enough to uncover them.");
+        add("guide.basic.general_items", "General Items");
         add("guide.basic.arcanthus", "A magical flower found in small patches in flower fields, Arcanthus is the easiest way for a Magi to introduce oneself to the world of magic. Can be crafted into magic essence.");
         add("guide.basic.magic_essence", "Magic Essence is the core of all magic items in this world, utilizing the magical properties of Arcanthus to enhance its host object.");
         add("guide.basic.mana_tear", "As you and your spells grow stronger, the mana needed to cast them is increased. Mana Tears can be used to permanently increase mana reserves.");
-        add("guide.basic.workbench", "A Magi's Workbench is a Magi's most important tool for spell growth.\n\nThis is where you can view, swap out, and upgrade your spells as you progress through the world.");
-        add("guide.workbench.path_tabs", "Path Tabs");
-        add("guide.workbench.spell_list", "Spell List");
-        add("guide.workbench.skills", "Skills");
-        add("guide.workbench.spell_name", "Spell Name");
-        add("guide.workbench.skill_points", "Skill Points");
-        add("guide.workbench.spell_level", "Spell Level");
-        add("guide.workbench.path_level", "Path Level");
-        add("guide.workbench.unlocked_spells", "Unlocked Spells");
-        add("guide.basic.spell_broker", "Located in a secluded tower in the forest and sometimes seen roaming the lands is a shady fellow, the Spell Broker. Carrying spells he can only have obtained through suspicious means, the Broker seeks to trade things of magical value.");
+        add("guide.basic.workbench1", "A Magi's Workbench is a Magi's most important tool for spell growth. This is where you can view, swap out, and upgrade your spells as you progress through the world.");
+        add("guide.basic.book_recipes", "Book Recipes");
+        add("guide.basic.book_recipes_cont", "Book Recipes Cont.");
+        add("guide.basic.guide_books", "Guide Books are essential for any Magi, new or old. Within them contains all information relevant to its corresponding path. Some content includes: ");
+        add("guide.basic.guide_books1", "▪ Path Overview");
+        add("guide.basic.guide_books2", "▪ Unique Path Mechanic");
+        add("guide.basic.guide_books3", "▪ Path Lore");
+        add("guide.basic.guide_books4", "▪ Path Specific Items");
+        add("guide.basic.guide_books5", "▪ Spell Info & Acquisition");
+        add("guide.basic.guide_books6", "Note: Not all content has been added yet");
+        add("guide.basic.spell_broker", "Located in a secluded tower in the forest and sometimes seen roaming the lands is a shady fellow, the Spell Broker.");
+        add("guide.basic.spell_broker1", "Carrying spells he could only have obtained through suspicious means, the Broker seeks to trade things of magical value.");
         add("guide.basic.page_scraps", "Magic Research &\nPage Scraps");
-        add("guide.basic.page_scraps_description1", "Path books hold key information about spell acquisition and path mechanics, but are encrypted in a magical language and need a cipher to read.");
-        add("guide.basic.page_scraps_description2", "Page scraps can be obtained around the world through various actions, deciphering certain entries in a book.");
-        add("guide.basic.page_scraps_description3", "Explore the lands, interact with mobs, and be on the look out for clues to unlock every book entry.");
+        add("guide.basic.page_scraps1", "Path books hold key information about spell acquisition and path mechanics, but are encrypted in a magical language and need a cipher to read.");
+        add("guide.basic.page_scraps2", "Page scraps can be obtained around the world through various actions, deciphering certain entries in a book.");
+        add("guide.basic.page_scraps3", "Explore the lands, interact with mobs, and be on the look out for clues to unlock every book entry.");
         add("guide.basic.path_items", "Path Items");
+        add("guide.basic.path_items1", "Every path has a set of specific items that will help Magi's on their path: §lShards§r, §lStaves§r, and §lArmor§r");
         add("guide.basic.shards", "Shards are special magic catalyst items that can be found underground, dropped from certain mobs, or earned from specific tasks.");
-        add("guide.basic.armor", "Enchanted regalia that buffs the potency of spells from the corresponding path.");
+        add("guide.basic.armor", "Enchanted regalia that buffs the certain spell stats from the corresponding path.");
         add("guide.basic.staves", "A Magi's Staff allows its user to better control the flow of magic, bestowing a special buff to spells of the corresponding path.");
         add("guide.basic.spells", "Spells");
         add("guide.basic.spell_tomes", "To learn a spell, you must first obtain its Spell Tome. Spell Tomes cannot be found in dungeons or as common mob loot, but are instead acquired through certain tasks corresponding to its path.");
@@ -183,9 +190,9 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.basic.skills1", "Skills are upgrades unique to each spell that adds additional functionality to it. All spells have a total of 10 skill upgrades.");
         add("guide.basic.skills2", "Skills are unlocked via Skill Points, which are earned every time you level up a spell. Spells can level up to a max level of 5, meaning only 5 of the 10 upgrades can be unlocked.");
         add("guide.basic.skills3", "There are 3 special types of skills: §lModifier§r, §lConditional§r, and §lChoice§r skills.");
-        add("guide.basic.modifier_skills", "Modifier skills give permanent buffs/debuffs to certain spell stats, such as duration, potency, or mana cost.");
-        add("guide.basic.conditional_skills", "Conditional skills require specific conditions to be met to either unlock or use.");
-        add("guide.basic.choice_skills", "Choice skills almost entirely change how a spell functions, giving Magi's the option to swap between different implementations of the same spell.");
+        add("guide.basic.modifier_skills", "▪ Modifier skills give permanent buffs/debuffs to certain spell stats, such as duration, potency, or mana cost.");
+        add("guide.basic.conditional_skills", "▪ Conditional skills require specific conditions to be met to either unlock or use.");
+        add("guide.basic.choice_skills", "▪ Choice skills almost entirely change how a spell functions, giving Magi's the option to swap between different implementations of the same spell.");
     }
 
     protected void transfigContents() {

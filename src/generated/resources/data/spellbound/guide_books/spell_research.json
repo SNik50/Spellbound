@@ -8,10 +8,10 @@
       },
       "position": {
         "xOffset": 72,
-        "yOffset": 8
+        "yOffset": 4
       },
       "translation": {
-        "translate": "guide.basic.spellbound"
+        "translate": "entity.spellbound.spell_broker"
       }
     },
     {
@@ -27,10 +27,10 @@
       },
       "position": {
         "xOffset": 247,
-        "yOffset": 8
+        "yOffset": 4
       },
       "translation": {
-        "translate": "guide.basic.spell_paths"
+        "translate": "guide.basic.page_scraps"
       }
     },
     {
@@ -47,55 +47,68 @@
         "yOffset": 35
       },
       "translation": {
-        "translate": "guide.basic.description1"
+        "translate": "guide.basic.spell_broker"
       }
     },
     {
       "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 75
+      },
       "position": {
-        "yOffset": 90
+        "yOffset": 85
       },
       "translation": {
-        "translate": "guide.basic.description2"
+        "translate": "guide.basic.spell_broker1"
       }
     },
     {
       "type": "spellbound:text",
       "position": {
         "xOffset": 172,
-        "yOffset": 35
+        "yOffset": 30
       },
       "translation": {
-        "translate": "guide.basic.spell_paths1"
+        "translate": "guide.basic.page_scraps1"
       }
     },
     {
       "type": "spellbound:text",
       "extras": {
-        "maxLineLength": 134
+        "maxLineLength": 130
       },
       "position": {
-        "xOffset": 188,
+        "xOffset": 197,
         "yOffset": 90
       },
       "translation": {
-        "translate": "guide.basic.ruin"
+        "translate": "guide.basic.page_scraps2"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 130
+      },
+      "position": {
+        "xOffset": 172,
+        "yOffset": 143
+      },
+      "translation": {
+        "translate": "guide.basic.page_scraps3"
       }
     },
     {
       "type": "spellbound:image",
-      "extras": {
-        "enableCorners": false
-      },
-      "height": 32,
-      "image": "spellbound:textures/gui/paths/ruin.png",
+      "height": 75,
+      "image": "spellbound:textures/gui/books/images/spell_broker.png",
       "position": {
-        "xOffset": 158,
-        "yOffset": 110
+        "xOffset": 75,
+        "yOffset": 75
       },
-      "width": 32
+      "width": 75
     }
   ],
   "id": "spellbound:studies_in_the_arcane",
-  "insertAfter": "spellbound:basic_cover_page"
+  "insertAfter": "spellbound:book_recipes_cont"
 }
