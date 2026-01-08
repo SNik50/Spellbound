@@ -48,7 +48,7 @@ public class MageArmorItem extends ArmorItem implements GeoItem {
 
     protected void buildModifiers() {
         ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
-        
+
         int i = ((ArmorMaterial)material.value()).getDefense(type);
         float f = ((ArmorMaterial)material.value()).toughness();
         EquipmentSlotGroup equipmentslotgroup = EquipmentSlotGroup.bySlot(type.getSlot());

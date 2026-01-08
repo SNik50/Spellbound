@@ -42,6 +42,7 @@ public record SpellModifier(ResourceLocation id, ModifierType modifierType, Pred
     public static final StreamCodec<ByteBuf, SpellModifier> STREAM_CODEC = ResourceLocation.STREAM_CODEC
             .map(SpellModifier::getTypeFromLocation, SpellModifier::id);
 
+    //Skill
     public static final SpellModifier FEAR = registerModifier("fear", ModifierType.POTENCY, spellType -> true, 0.75F);
     public static final SpellModifier UNWANTED_GUESTS = registerModifier("unwanted_guests", ModifierType.POTENCY, spellType -> true, 0.9F);
     public static final SpellModifier REPRISAL = registerModifier("reprisal", ModifierType.POTENCY, spellType -> spellType.getPath() == SpellPath.DIVINE, 1.5F);
@@ -57,6 +58,9 @@ public record SpellModifier(ResourceLocation id, ModifierType modifierType, Pred
 //    public static final SpellModifier GALE_FORCE = registerModifier("gale_force", ModifierType.DURATION, path -> path == SBSpells.CYCLONE.get(), 2F);
     public static final SpellModifier RESIDUAL_DISRUPTION = registerModifier("residual_disruption", ModifierType.CAST_CHANCE, spell -> true, 0.5F);
     public static final SpellModifier UNFOCUSED = registerModifier("unfocused", ModifierType.POTENCY, spell -> true, 0.8F);
+
+    //Set bonus
+    public static final SpellModifier PYROMANCER_SET = registerModifier("pyromancer_set_bonus", ModifierType.POTENCY, spellType -> spellType.getPath() == SpellPath.RUIN && spellType.getSubPath() == SpellPath.FIRE, 1.2F);
 
     private static SpellModifier registerModifier(String name, ModifierType type, Predicate<SpellType<?>> spellPredicate, float modifier) {
         SpellModifier spellModifier = new SpellModifier(CommonClass.customLocation(name), type, spellPredicate, modifier);
