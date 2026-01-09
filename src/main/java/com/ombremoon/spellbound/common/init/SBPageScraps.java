@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.init;
 
+import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.resources.ResourceLocation;
 
@@ -37,21 +38,5 @@ public class SBPageScraps {
         return TEXTURES.get(scrap);
     }
 
-    public enum SpellboundToasts {
-        DECEPTION("deception_scrap_toast"),
-        DIVINE("divine_scrap_toast"),
-        RUIN("ruin_scrap_toast"),
-        SUMMON("summon_scrap_toast"),
-        TRANSFIG("transfig_scrap_toast");
 
-        private final String textureName;
-
-        SpellboundToasts(String texture) {
-            this.textureName = texture;
-        }
-
-        public ResourceLocation getTexture() {
-            return CommonClass.customLocation("textures/gui/toasts/" + textureName + ".png");
-        }
-    }
 }

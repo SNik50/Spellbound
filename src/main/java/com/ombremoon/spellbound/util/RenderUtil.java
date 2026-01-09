@@ -3,10 +3,13 @@ package com.ombremoon.spellbound.util;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.ombremoon.spellbound.client.gui.BasicGuideScreen;
 import com.ombremoon.spellbound.client.gui.GuideBookScreen;
 import com.ombremoon.spellbound.client.gui.WorkbenchScreen;
-import com.ombremoon.spellbound.client.renderer.SBRenderTypes;
-import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.client.gui.toasts.PageScrapUnlockedToast;
+import com.ombremoon.spellbound.client.gui.toasts.LevelUpToast;
+import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
+import com.ombremoon.spellbound.common.magic.api.SpellType;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
@@ -15,8 +18,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -31,7 +32,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Quaternionf;
 
-import java.util.Optional;
+import javax.annotation.Nullable;
 
 public class RenderUtil {
 
@@ -80,6 +81,22 @@ public class RenderUtil {
 
     public static void openBook(ResourceLocation id, ResourceLocation bookTexture) {
         Minecraft.getInstance().setScreen(new GuideBookScreen(Component.translatable("screen.spellbound.guide_book"), id, bookTexture));
+    }
+
+    public static void sendScrapToast(ResourceLocation scrap){
+        Minecraft.getInstance()
+                .getToasts()
+                .addToast(new PageScrapUnlockedToast(scrap));
+    }
+
+    public static void sendLevelUpToast(int level, SpellboundToasts toast, @Nullable SpellType<?> spell) {
+        Minecraft.getInstance()
+                .getToasts()
+                .addToast(new LevelUpToast(level, toast, spell));
+    }
+
+    public static void openBasicBook() {
+        Minecraft.getInstance().setScreen(new BasicGuideScreen(Component.translatable("screen.spellbound.guide_book")));
     }
 
     public static void renderItem(GuiGraphics graphics, ItemStack stack, int x, int y, float scale) {

@@ -22,7 +22,7 @@ public class BasicGuideItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         if (level.isClientSide) {
-            Minecraft.getInstance().setScreen(new BasicGuideScreen(Component.translatable("screen.spellbound.guide_book")));
+            RenderUtil.openBasicBook();
         }
 
         return InteractionResultHolder.success(player.getItemInHand(usedHand));

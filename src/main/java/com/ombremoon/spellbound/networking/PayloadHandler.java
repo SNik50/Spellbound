@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.networking;
 
+import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockHolder;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -7,7 +8,6 @@ import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
-import com.ombremoon.spellbound.main.ConfigHandler;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.clientbound.*;
 import com.ombremoon.spellbound.networking.serverbound.*;
@@ -20,7 +20,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -33,12 +32,19 @@ import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.jetbrains.annotations.Nullable;
 
-import javax.print.attribute.SetOfIntegerSyntax;
 import java.util.List;
 import java.util.Set;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
 public class PayloadHandler {
+
+    public static void sendPathLevelUp(ServerPlayer player, int level, SpellboundToasts toast) {
+        PacketDistributor.sendToPlayer(player, new PathLevelUpToastPayload(level, toast.ordinal()));
+    }
+
+    public static void sendSpellLevelUp(ServerPlayer player, int level, SpellType<?> spellType) {
+        PacketDistributor.sendToPlayer(player, new SpellLevelUpToastPayload(level, spellType));
+    }
 
     public static void switchMode() {
         PacketDistributor.sendToServer(new SwitchModePayload());
@@ -333,6 +339,18 @@ public class PayloadHandler {
                 ScrapToastPayload.TYPE,
                 ScrapToastPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleScrapToasts
+        );
+
+        registrar.playToClient(
+                PathLevelUpToastPayload.TYPE,
+                PathLevelUpToastPayload.STREAM_CODEC,
+                ClientPayloadHandler::handlePathLevelUpToast
+        );
+
+        registrar.playToClient(
+                SpellLevelUpToastPayload.TYPE,
+                SpellLevelUpToastPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleSpellLevelUpToast
         );
     }
 }

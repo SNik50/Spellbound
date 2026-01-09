@@ -91,6 +91,8 @@ public class ModLangProvider extends LanguageProvider {
         skillDescriptions();
         guideContents();
 
+        add("spellbound.toast.spell_level_up", "%1 has reached level: %2");
+        add("spellbound.toast.path_level_up", "%1 path has reached level: %2");
         add("spellbound.toast.scrap_unlocked", "New book entry unlocked");
 
         add("chat.spelltome.awardxp", "Spell already known. +10 spells XP.");
@@ -225,7 +227,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.ruin.portals3", "While exploring I have found a few gateways, but they seem to all be locked. Unfortunately, the way to make keystones has been long forgotten. I'l have to buy my ruin spells from Spell Brokers for now.");
 
         add("guide.ruin.elemental_equipment", "Elemental Equipment");
-        add("guide.ruin.elemental_equipment1", "I have discovered Elementally attuned robes and staves throughout the world. I suppose elements can also be used for protection. As far as I can tell these staves act as a catalyst causing my foes to reach Elemental Overload faster while the robes grant a bonus to my potency when I wear the full set.");
+        add("guide.ruin.elemental_equipment1", "I have discovered Elementally attuned robes and staves throughout the world. As far as I can tell these staves act as a catalyst, for their respective element, causing those who I target to reach Elemental Overload faster while the robes grant a bonus to my potency when I wear the full set.");
         add("guide.ruin.stormweaver_robes", "Within a trial chamber I have found these robes belonging to a long forgotten Stormweaver. These robes resist Shock damage to a degree.");
         add("guide.ruin.pyromancer_robes", "Exploring the nether I spotted these robes hot to the touch. At this temp I imagine Fire spells wont get through very well.");
         add("guide.ruin.cryomancer_robes", "My collection is complete, I found Frost robes! They were spread between igloos and abandoned shipwrecks.");

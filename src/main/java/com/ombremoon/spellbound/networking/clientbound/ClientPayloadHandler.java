@@ -1,18 +1,17 @@
 package com.ombremoon.spellbound.networking.clientbound;
 
 import com.ombremoon.spellbound.client.AnimationHelper;
-import com.ombremoon.spellbound.client.KeyBinds;
-import com.ombremoon.spellbound.client.gui.toasts.PageScrapUnlockedToast;
-import com.ombremoon.spellbound.common.world.weather.HailstormData;
-import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
-import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
+import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
+import com.ombremoon.spellbound.common.world.weather.HailstormData;
+import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.serverbound.ChargeOrChannelPayload;
+import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -201,9 +200,19 @@ public class ClientPayloadHandler {
 
     public static void handleScrapToasts(ScrapToastPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
-            Minecraft.getInstance()
-                    .getToasts()
-                    .addToast(new PageScrapUnlockedToast(payload.scrap()));
+            RenderUtil.sendScrapToast(payload.scrap());
+        });
+    }
+
+    public static void handlePathLevelUpToast(PathLevelUpToastPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            RenderUtil.sendLevelUpToast(payload.level(), SpellboundToasts.values()[payload.toast()], null);
+        });
+    }
+
+    public static void handleSpellLevelUpToast(SpellLevelUpToastPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            RenderUtil.sendLevelUpToast(payload.level(), SpellboundToasts.values()[payload.spellType().getPath().getToastOrdinal()], payload.spellType());
         });
     }
 

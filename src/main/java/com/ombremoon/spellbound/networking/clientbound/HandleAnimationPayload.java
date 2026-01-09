@@ -5,6 +5,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 public record HandleAnimationPayload(String playerId, String animation, float castSpeed, boolean stopAnimation) implements CustomPacketPayload {
     public static final Type<HandleAnimationPayload> TYPE =
