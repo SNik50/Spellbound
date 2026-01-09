@@ -8,6 +8,7 @@ import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.advancements.critereon.CriterionValidator;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
@@ -20,7 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public record DivineAction(ActionRewards rewards, Map<String, ActionCriterion<?>> criteria, ActionRequirements requirements) {
+public record DivineAction(ActionRewards rewards, Map<String, ActionCriterion<?>> criteria, ActionRequirements requirements, int cooldown) {
     public static final ResourceKey<Registry<DivineAction>> REGISTRY = ResourceKey.createRegistryKey(CommonClass.customLocation("divine_action"));
     public static final Codec<Map<String, ActionCriterion<?>>> CRITERIA_CODEC = Codec.unboundedMap(Codec.STRING, ActionCriterion.CODEC)
             .validate(map -> map.isEmpty() ? DataResult.error(() -> "Divine action cannot be empty") : DataResult.success(map));
@@ -28,10 +29,11 @@ public record DivineAction(ActionRewards rewards, Map<String, ActionCriterion<?>
             instance -> instance.group(
                     ActionRewards.CODEC.optionalFieldOf("rewards", ActionRewards.EMPTY).forGetter(DivineAction::rewards),
                     CRITERIA_CODEC.fieldOf("criteria").forGetter(DivineAction::criteria),
-                    ActionRequirements.CODEC.optionalFieldOf("requirements").forGetter(action -> Optional.of(action.requirements()))
-            ).apply(instance, (actionRewards, criterionMap, actionRequirements) -> {
+                    ActionRequirements.CODEC.optionalFieldOf("requirements").forGetter(action -> Optional.of(action.requirements())),
+                    Codec.INT.optionalFieldOf("cooldown", 0).forGetter(DivineAction::cooldown)
+            ).apply(instance, (actionRewards, criterionMap, actionRequirements, cooldown) -> {
                 ActionRequirements requirements1 = actionRequirements.orElseGet(() -> ActionRequirements.allOf(criterionMap.keySet()));
-                return new DivineAction(actionRewards, criterionMap, requirements1);
+                return new DivineAction(actionRewards, criterionMap, requirements1, cooldown);
             })
     ).validate(DivineAction::validate);
     public static final StreamCodec<RegistryFriendlyByteBuf, DivineAction> STREAM_CODEC = StreamCodec.ofMember(DivineAction::write, DivineAction::read);
@@ -43,10 +45,11 @@ public record DivineAction(ActionRewards rewards, Map<String, ActionCriterion<?>
 
     private void write(RegistryFriendlyByteBuf buffer) {
         this.requirements.write(buffer);
+        buffer.writeVarInt(this.cooldown);
     }
 
     private static DivineAction read(RegistryFriendlyByteBuf buffer) {
-        return new DivineAction(ActionRewards.EMPTY, Map.of(), new ActionRequirements(buffer));
+        return new DivineAction(ActionRewards.EMPTY, Map.of(), new ActionRequirements(buffer), buffer.readVarInt());
     }
 
     public void validate(ProblemReporter reporter, HolderGetter.Provider lootData) {
@@ -61,6 +64,7 @@ public record DivineAction(ActionRewards rewards, Map<String, ActionCriterion<?>
         private final ImmutableMap.Builder<String, ActionCriterion<?>> criteria = ImmutableMap.builder();
         private Optional<ActionRequirements> requirements = Optional.empty();
         private ActionRequirements.Strategy requirementsStrategy = ActionRequirements.Strategy.AND;
+        private int cooldown;
 
         public static Builder divineAction() {
             return new Builder();
@@ -90,17 +94,22 @@ public record DivineAction(ActionRewards rewards, Map<String, ActionCriterion<?>
             return this;
         }
 
+        public Builder requirements(int cooldown) {
+            this.cooldown = cooldown;
+            return this;
+        }
+
         public DivineAction build() {
             Map<String, ActionCriterion<?>> map = this.criteria.buildOrThrow();
             ActionRequirements requirements = this.requirements.orElseGet(() -> this.requirementsStrategy.create(map.keySet()));
-            return new DivineAction(this.rewards, map, requirements);
+            return new DivineAction(this.rewards, map, requirements, this.cooldown);
         }
 
         public ActionHolder build(ResourceLocation id) {
             Map<String, ActionCriterion<?>> map = this.criteria.buildOrThrow();
             ActionRequirements requirements = this.requirements.orElseGet(() -> this.requirementsStrategy.create(map.keySet()));
             return new ActionHolder(
-                    id, new DivineAction(this.rewards, map, requirements)
+                    id, new DivineAction(this.rewards, map, requirements, this.cooldown)
             );
         }
 

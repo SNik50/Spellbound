@@ -94,7 +94,7 @@ public class PlayerDivineActions implements Loggable {
             if (!flag2 && progress.isDone()) {
                 action.value().rewards().grant(this.player);
                 if (!this.isPageScrap(action))
-                    this.recentActions.put(action, this.player.tickCount + 600);
+                    this.recentActions.put(action, this.player.tickCount + action.value().cooldown());
 
                 for (String s : progress.getCompletedCriteria()) {
                     this.revoke(action, s);

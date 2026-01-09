@@ -28,8 +28,6 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 //TODO: General - Discuss with Duck about bobHurt in GameRenderer
 //TODO: General - Discuss with Duck about Followers
 
-//Add judgement requirement for divine spell acquisition
-//Add recent action cooldown for divine spell acquisition
 //Change rituals to check one display per tick (startup time min depends on tier {tier 1  = min(4)})
 
 //Alpha Bugs to Fix

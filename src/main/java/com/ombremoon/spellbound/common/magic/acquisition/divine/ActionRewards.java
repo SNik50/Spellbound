@@ -30,17 +30,18 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
-public record ActionRewards(int experience, int judgement, List<ResourceLocation> spells, List<ResourceKey<LootTable>> loot, List<ResourceLocation> bookScraps) {
+public record ActionRewards(int experience, int judgementGranted, int judgementRequired, List<ResourceLocation> spells, List<ResourceKey<LootTable>> loot, List<ResourceLocation> bookScraps) {
     public static final Codec<ActionRewards> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     Codec.INT.optionalFieldOf("experience", Integer.valueOf(0)).forGetter(ActionRewards::experience),
-                    Codec.INT.optionalFieldOf("judgement", Integer.valueOf(0)).forGetter(ActionRewards::judgement),
+                    Codec.INT.optionalFieldOf("judgement_granted", Integer.valueOf(0)).forGetter(ActionRewards::judgementGranted),
+                    Codec.INT.optionalFieldOf("judgement_required", Integer.valueOf(0)).forGetter(ActionRewards::judgementRequired),
                     ResourceLocation.CODEC.listOf().optionalFieldOf("spells", java.util.List.of()).forGetter(ActionRewards::spells),
                     ResourceKey.codec(Registries.LOOT_TABLE).listOf().optionalFieldOf("loot", List.of()).forGetter(ActionRewards::loot),
                     ResourceLocation.CODEC.listOf().optionalFieldOf("book_scraps", List.of()).forGetter(ActionRewards::bookScraps)
             ).apply(instance, ActionRewards::new)
     );
-    public static final ActionRewards EMPTY = new ActionRewards(0, 0, List.of(), List.of(), List.of());
+    public static final ActionRewards EMPTY = new ActionRewards(0, 0, 600, List.of(), List.of(), List.of());
 
     public void grant(ServerPlayer player) {
         player.giveExperiencePoints(this.experience);
@@ -51,6 +52,7 @@ public record ActionRewards(int experience, int judgement, List<ResourceLocation
                 .create(LootContextParamSets.ADVANCEMENT_REWARD);
         boolean flag = false;
 
+        var effects = SpellUtil.getSpellEffects(player);
         Pair<BlockPos, BlockState> blockState = DivineShrineBlock.getNearestShrine(player);
         if (blockState != null) {
             for (var key : this.loot) {
@@ -60,13 +62,13 @@ public record ActionRewards(int experience, int judgement, List<ResourceLocation
                 }
             }
 
-            for (ResourceLocation location : this.spells) {
-                SpellType<?> spellType = SBSpells.REGISTRY.get(location);
-                if (spellType != null) {
-                    ItemStack itemStack = SpellTomeItem.createWithSpell(spellType);
-                    RitualHelper.createItem(player.level(), Vec3.atBottomCenterOf(blockState.getFirst().above()), itemStack);
-//                    if (this.addOrDropItem(player, itemStack))
-//                        flag = true;
+            if (effects.getJudgement() >= this.judgementRequired) {
+                for (ResourceLocation location : this.spells) {
+                    SpellType<?> spellType = SBSpells.REGISTRY.get(location);
+                    if (spellType != null) {
+                        ItemStack itemStack = SpellTomeItem.createWithSpell(spellType);
+                        RitualHelper.createItem(player.level(), Vec3.atBottomCenterOf(blockState.getFirst().above()), itemStack);
+                    }
                 }
             }
 
@@ -75,6 +77,7 @@ public record ActionRewards(int experience, int judgement, List<ResourceLocation
             }
         }
 
+        effects.giveJudgement(this.judgementGranted);
         for (ResourceLocation location : this.bookScraps) {
             SpellUtil.grantScrap(player, location);
         }
@@ -106,7 +109,8 @@ public record ActionRewards(int experience, int judgement, List<ResourceLocation
 
     public static class Builder {
         private int experience;
-        private int judgement;
+        private int judgementGranted;
+        private int judgementRequired;
         private final ImmutableList.Builder<ResourceLocation> spells = ImmutableList.builder();
         private final ImmutableList.Builder<ResourceKey<LootTable>> loot = ImmutableList.builder();
         private final ImmutableList.Builder<ResourceLocation> scraps = ImmutableList.builder();
@@ -126,12 +130,21 @@ public record ActionRewards(int experience, int judgement, List<ResourceLocation
             return this;
         }
 
-        public static Builder judgement(int experience) {
-            return new Builder().addExperience(experience);
+        public static Builder judgementGranted(int judgement) {
+            return new Builder().addJudgement(judgement);
         }
 
-        public Builder addJudgement(int experience) {
-            this.experience += experience;
+        public static Builder judgementRequired(int judgement) {
+            return new Builder().requireJudgement(judgement);
+        }
+
+        public Builder addJudgement(int judgement) {
+            this.judgementGranted += judgement;
+            return this;
+        }
+
+        public Builder requireJudgement(int judgement) {
+            this.judgementRequired += judgement;
             return this;
         }
 
@@ -163,7 +176,7 @@ public record ActionRewards(int experience, int judgement, List<ResourceLocation
         }
 
         public ActionRewards build() {
-            return new ActionRewards(this.experience, this.judgement, this.spells.build(), this.loot.build(), this.scraps.build());
+            return new ActionRewards(this.experience, this.judgementGranted, this.judgementRequired, this.spells.build(), this.loot.build(), this.scraps.build());
         }
     }
 }

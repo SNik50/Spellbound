@@ -15,6 +15,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,11 +34,12 @@ public class GuideSpellInfoRenderer implements IPageElementRenderer<GuideSpellIn
             return;
         }
 
+        Player player = Minecraft.getInstance().player;
         SpellInfoExtras extras = element.extras();
-        boolean shouldShow = extras.alwaysShow() || Minecraft.getInstance().player.isCreative() || SpellUtil.getSpellHandler(Minecraft.getInstance().player).getSpellList().contains(spellType);
+        boolean shouldShow = extras.alwaysShow() || player.isCreative() || SpellUtil.getSpellHandler(player).getSpellList().contains(spellType);
 
-        AbstractSpell spell = spellType.createSpellWithData(Minecraft.getInstance().player);
-        float baseDamage = spell.getBaseDamage();
+        AbstractSpell spell = spellType.createSpellWithData(player);
+        float baseDamage = spell.getModifiedDamage();
         int castTime = spell.getCastTime();
         int duration = spell.getDuration();
         float manaCost = spell.getManaCost();
@@ -94,7 +96,7 @@ public class GuideSpellInfoRenderer implements IPageElementRenderer<GuideSpellIn
     }
 
     private void drawString(String key, float value, int elementCount, int leftPos, int topPos, GuiGraphics graphics, GuideSpellInfoElement element) {
-        graphics.drawString(Minecraft.getInstance().font, Component.translatable("guide.element.spell_info." + key, value), leftPos + element.position().xOffset() + 4, topPos - 5 + element.position().yOffset() + (-elementCount * element.extras().lineGap()), element.extras().colour(), element.extras().dropShadow());
+        graphics.drawString(Minecraft.getInstance().font, Component.translatable("guide.element.spell_info." + key, String.format("%.1f", value)), leftPos + element.position().xOffset() + 4, topPos - 5 + element.position().yOffset() + (-elementCount * element.extras().lineGap()), element.extras().colour(), element.extras().dropShadow());
     }
 
 }

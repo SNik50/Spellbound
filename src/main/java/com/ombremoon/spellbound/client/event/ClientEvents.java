@@ -12,6 +12,7 @@ import com.ombremoon.spellbound.client.renderer.entity.LivingShadowRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.PlaceholderRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.SpellBrokerRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.projectile.MushroomProjectileRenderer;
+import com.ombremoon.spellbound.client.renderer.entity.projectile.StormstrikeBoltRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.spell.*;
 import com.ombremoon.spellbound.client.renderer.layer.FrozenLayer;
 import com.ombremoon.spellbound.client.renderer.layer.GenericSpellLayer;
@@ -86,7 +87,7 @@ public class ClientEvents {
             event.registerEntityRenderer(SBEntities.SHATTERING_CRYSTAL.get(), ShatteringCrystalRenderer::new);
             event.registerEntityRenderer(SBEntities.ICE_SHRAPNEL.get(), EmissiveSpellProjectileRenderer::new);
             event.registerEntityRenderer(SBEntities.ICE_MIST.get(), EmissiveOutlineSpellRenderer::new);
-            event.registerEntityRenderer(SBEntities.STORMSTRIKE_BOLT.get(), EmissiveSpellProjectileRenderer::new);
+            event.registerEntityRenderer(SBEntities.STORMSTRIKE_BOLT.get(), StormstrikeBoltRenderer::new);
             event.registerEntityRenderer(SBEntities.STORM_RIFT.get(), StormRiftRenderer::new);
             event.registerEntityRenderer(SBEntities.STORM_CLOUD.get(), StormCloudRenderer::new);
             event.registerEntityRenderer(SBEntities.STORM_BOLT.get(), StormBoltRenderer::new);
