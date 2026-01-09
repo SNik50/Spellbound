@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.world.effect;
 
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
+import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,6 +18,12 @@ public class SBEffect extends MobEffect {
     }
 
     public void onEffectRemoved(LivingEntity livingEntity, int amplifier) {
+    }
+
+    @Override
+    public int getBlendDurationTicks() {
+        Constants.LOG.info("{}", super.getBlendDurationTicks());
+        return super.getBlendDurationTicks();
     }
 
     @Override

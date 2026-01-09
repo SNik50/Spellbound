@@ -7,6 +7,7 @@ import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -30,6 +32,7 @@ import software.bernie.geckolib.renderer.GeoArmorRenderer;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -45,7 +48,6 @@ public class MageArmorItem extends ArmorItem implements GeoItem {
         SPELL_RESISTANCES.put(EquipmentSlot.CHEST, 2.0);
         SPELL_RESISTANCES.put(EquipmentSlot.LEGS, 2.0);
         SPELL_RESISTANCES.put(EquipmentSlot.FEET, 2.0);
-        SPELL_RESISTANCES.put(EquipmentSlot.BODY, 2.0);
 
         SET_BONUS.put(SBArmorMaterials.PYROMANCER, SBEffects.PYROMANCER);
         SET_BONUS.put(SBArmorMaterials.STORMWEAVER, SBEffects.STORMWEAVER);
@@ -62,29 +64,30 @@ public class MageArmorItem extends ArmorItem implements GeoItem {
     protected void buildModifiers() {
         ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
 
-        int i = ((ArmorMaterial)material.value()).getDefense(type);
-        float f = ((ArmorMaterial)material.value()).toughness();
+        int i = material.value().getDefense(type);
+        float f = material.value().toughness();
         EquipmentSlotGroup equipmentslotgroup = EquipmentSlotGroup.bySlot(type.getSlot());
         ResourceLocation resourcelocation = ResourceLocation.withDefaultNamespace("armor." + type.getName());
-        builder.add(Attributes.ARMOR, new AttributeModifier(resourcelocation, (double)i, AttributeModifier.Operation.ADD_VALUE), equipmentslotgroup);
-        builder.add(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(resourcelocation, (double)f, AttributeModifier.Operation.ADD_VALUE), equipmentslotgroup);
-        float f1 = ((ArmorMaterial)material.value()).knockbackResistance();
+        builder.add(Attributes.ARMOR, new AttributeModifier(resourcelocation, i, AttributeModifier.Operation.ADD_VALUE), equipmentslotgroup);
+        builder.add(Attributes.ARMOR_TOUGHNESS, new AttributeModifier(resourcelocation, f, AttributeModifier.Operation.ADD_VALUE), equipmentslotgroup);
+        float f1 = material.value().knockbackResistance();
         if (f1 > 0.0F) {
-            builder.add(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(resourcelocation, (double)f1, AttributeModifier.Operation.ADD_VALUE), equipmentslotgroup);
+            builder.add(Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(resourcelocation, f1, AttributeModifier.Operation.ADD_VALUE), equipmentslotgroup);
         }
 
-        if (this.material.is(SBArmorMaterials.CRYOMANCER)) builder.add(
-                SBAttributes.FROST_SPELL_RESIST, modifier(), EquipmentSlotGroup.bySlot(type.getSlot())
-        );
-        else if (this.material.is(SBArmorMaterials.PYROMANCER)) builder.add(
-                SBAttributes.FIRE_SPELL_RESIST, modifier(), EquipmentSlotGroup.bySlot(type.getSlot())
-        );
-        else if (this.material.is(SBArmorMaterials.STORMWEAVER)) builder.add(
-                SBAttributes.SHOCK_SPELL_RESIST, modifier(), EquipmentSlotGroup.bySlot(type.getSlot())
-        );
-        else if (this.material.is(SBArmorMaterials.TRANSFIGURER)) builder.add(
-                SBAttributes.CAST_RANGE, modifier(0.5), EquipmentSlotGroup.bySlot(type.getSlot())
-        );
+        if (this.material.is(SBArmorMaterials.CRYOMANCER)) {
+            builder.add(
+                    SBAttributes.FROST_SPELL_RESIST, modifier(), EquipmentSlotGroup.bySlot(type.getSlot())
+            );
+        } else if (this.material.is(SBArmorMaterials.PYROMANCER)) {
+            builder.add(
+                    SBAttributes.FIRE_SPELL_RESIST, modifier(), EquipmentSlotGroup.bySlot(type.getSlot())
+            );
+        } else if (this.material.is(SBArmorMaterials.STORMWEAVER)) {
+            builder.add(
+                    SBAttributes.SHOCK_SPELL_RESIST, modifier(), EquipmentSlotGroup.bySlot(type.getSlot())
+            );
+        }
 
         this.attributeModifiers = builder.build();
     }
@@ -113,7 +116,16 @@ public class MageArmorItem extends ArmorItem implements GeoItem {
             if (!(armorItem.getItem() instanceof MageArmorItem mageArmor) || !mageArmor.getMaterial().is(this.getMaterial())) return;
         }
 
-        livingEntity.addEffect(new MobEffectInstance(SET_BONUS.get(this.material), 2));
+        if (livingEntity.tickCount % 20 == 0)
+            livingEntity.addEffect(new MobEffectInstance(SET_BONUS.get(this.material), 200));
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        if (this.material.is(SBArmorMaterials.TRANSFIGURER)) {
+            tooltipComponents.add(Component.translatable("spellbound.transfiguration_armor.buff"));
+        }
     }
 
     @Override

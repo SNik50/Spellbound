@@ -33,25 +33,26 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 //Change rituals to check one display per tick (startup time min depends on tier {tier 1  = min(4)})
 
 //Alpha Bugs to Fix
-//Dimension system
 //Ritual Lag
-//Loot Tables
-//Shadow Gate Light Level
-//Stave effects
-//Transfig armor effect (undecided)
 //Stave/armor pages
 //Adjust build up amounts
 //Add mob effect icons for ruin
-//Make discharge decrease mana over time not instantly
-//Decrease hurt area for healing blossom
 
 //Catalysts
 //Ruin - Doubles Status Build Up
-//Transfig - Rituals have double outpu
+//Transfig - Increases Range
 //Summons - Have 1 extra summon
 //Light Divine - Gain Judgement From Casting
 //Dark Divine - Lost Judgement From Casting
 //Deception - More Potency/Reduced Mana Cost in Darkness
+
+//Armors
+//Ruin - Resistances
+//Transfig - Increases Duration
+//Summons - Tankier Summons
+//Light Divine - Resistance to Undead and Dark Magic
+//Dark Divine - Reduces Nearby Light Magic Efficacy
+//Deception - Grants Dodge Chance
 
 @Mod(Constants.MOD_ID)
 public class Spellbound {

@@ -21,6 +21,7 @@ import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataHolder;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.item.MageArmorItem;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.Loggable;
@@ -49,6 +50,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
@@ -110,8 +112,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     public boolean isInactive = false;
     public boolean init = false;
     public int castId = 0;
-    private int shiftId = 0;
-    private boolean idDirty;
 
     /**
      * <p>
@@ -183,7 +183,9 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @return The spells duration
      */
     public int getDuration() {
-        return (int) Math.floor(this.getDuration(this.context) * getModifier(ModifierType.DURATION));
+        float duration =this.getDuration(this.context) * getModifier(ModifierType.DURATION);
+        duration *= this.getTransfigurationArmorBuff(this.context);
+        return Mth.floor(duration);
     }
 
     protected int getDuration(SpellContext context) {
@@ -426,11 +428,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         if (!this.level.isClientSide) {
             if (this.spellData.isDirty() || this.tickCount % this.updateInterval == 0)
                 this.sendDirtySpellData();
-
-            if (this.idDirty) {
-                PayloadHandler.shiftSpell(this.caster, this.spellType, this.shiftId, this.castId);
-                this.idDirty = false;
-            }
         } else {
             this.handleFXRemoval();
         }
@@ -634,8 +631,11 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         if (flag && !ownerEntity.level().isClientSide) {
             targetEntity.setLastHurtByMob(attackEntity instanceof LivingEntity livingEntity ? livingEntity : ownerEntity);
             ownerEntity.setLastHurtMob(targetEntity);
-            this.incrementEffect(targetEntity, damageType, damageAfterResistance);
             this.awardXp(this.calculateHurtXP(damageAfterResistance));
+            if (this.hasRuinBuff(this.context))
+                damageAfterResistance *= 2.0F;
+
+            this.incrementEffect(targetEntity, damageType, damageAfterResistance);
         }
         return flag;
     }
@@ -761,6 +761,50 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     public boolean consumeMana(LivingEntity targetEntity, float amount) {
         return SpellUtil.getSpellHandler(targetEntity).consumeMana(amount);
+    }
+
+    protected boolean hasRuinBuff(SpellContext context) {
+        return this.hasFireStaffBuff(context) || this.hasFrostStaffBuff(context) || this.hasShockStaffBuff(context);
+    }
+
+    protected boolean hasFireStaffBuff(SpellContext context) {
+        ItemStack staff = context.getCatalyst(SBItems.FIRE_STAFF.get());
+        return this.getSubPath() == SpellPath.FIRE && !staff.isEmpty();
+    }
+
+    protected boolean hasFrostStaffBuff(SpellContext context) {
+        ItemStack staff = context.getCatalyst(SBItems.ICE_STAFF.get());
+        return this.getSubPath() == SpellPath.FROST && !staff.isEmpty();
+    }
+
+    protected boolean hasShockStaffBuff(SpellContext context) {
+        ItemStack staff = context.getCatalyst(SBItems.SHOCK_STAFF.get());
+        return this.getSubPath() == SpellPath.SHOCK && !staff.isEmpty();
+    }
+
+    protected boolean hasTransfigurationStaffBuff(SpellContext context) {
+        ItemStack staff = context.getCatalyst(SBItems.TRANSFIGURATION_STAFF.get());
+        return this.getPath() == SpellPath.TRANSFIGURATION && !staff.isEmpty();
+    }
+
+    protected boolean hasSummonStaffBuff(SpellContext context) {
+        ItemStack staff = context.getCatalyst(SBItems.SHOCK_STAFF.get());
+        return this.getPath() == SpellPath.SUMMONS && !staff.isEmpty();
+    }
+
+    protected float getTransfigurationArmorBuff(SpellContext context) {
+        float i = 1.0F;
+        if (this.getPath() != SpellPath.TRANSFIGURATION)
+            return i;
+
+        LivingEntity caster = context.getCaster();
+        for (ItemStack stack : caster.getArmorSlots()) {
+            if (stack.getItem() instanceof MageArmorItem item && item.getMaterial() == SBArmorMaterials.TRANSFIGURER) {
+                i += 0.125F;
+            }
+        }
+
+        return i;
     }
 
     /**
@@ -964,6 +1008,9 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @return the BlockPos of a valid spawn position, null if none found
      */
     protected BlockPos getSpawnPos(double range) {
+        if (this.hasTransfigurationStaffBuff(this.context))
+            range *= 1.5F;
+
         BlockHitResult hitResult = this.getTargetBlock(range);
         if (hitResult.getType() == HitResult.Type.MISS) return null;
         if (hitResult.getDirection() == Direction.DOWN) return null;
@@ -1275,7 +1322,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
             var handler = SpellUtil.getSpellHandler(caster);
             boolean incrementId = true;
-            boolean shiftSpells = false;
             CompoundTag nbt = new CompoundTag();
             if (this.isRecast) {
                 AbstractSpell prevSpell;
@@ -1307,18 +1353,21 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
             if (!SpellUtil.canCastSpell(caster, this) || !(this.castPredicate.test(this.context, this) && RandomUtil.percentChance(getCastChance()))) {
                 onCastReset(this.context);
-                CompoundTag initTag = this.initTag(this.isRecast, true, shiftSpells);
+                CompoundTag initTag = this.initTag(this.isRecast, true);
                 PayloadHandler.updateSpells(caster, this.spellType, this.castId, initTag, nbt);
                 return;
             }
 
             int spellCap = this.context.getSpellLevel() + 1;
-            if (this.castId > spellCap) {
-                this.shiftSpells(this.context.getActiveSpells() >= spellCap, false);
-                shiftSpells = true;
+            if (this.hasSummonStaffBuff(this.context))
+                spellCap++;
+
+            int spellsActive = this.context.getActiveSpells();
+            if (spellsActive >= spellCap) {
+                this.endFirstSpell();
             }
 
-            CompoundTag initTag = this.initTag(this.isRecast, false, shiftSpells);
+            CompoundTag initTag = this.initTag(this.isRecast, false);
             PayloadHandler.updateSpells(caster, this.spellType, this.castId, initTag, nbt);
             awardXp(this.manaCost * this.xpModifier);
             if (caster instanceof Player player) {
@@ -1342,7 +1391,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @param castId The specific numeric id for the path instance
      * @param forceReset Whether the path failed casting on the server
      */
-    public void clientCastSpell(LivingEntity caster, Level level, BlockPos blockPos, int castId, CompoundTag spellData, boolean isRecast, boolean forceReset, boolean shiftSpells) {
+    public void clientCastSpell(LivingEntity caster, Level level, BlockPos blockPos, int castId, CompoundTag spellData, boolean isRecast, boolean forceReset) {
         this.level = level;
         this.caster = caster;
         this.blockPos = blockPos;
@@ -1355,11 +1404,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             return;
         }
 
-        if (shiftSpells)
-            this.shiftSpells(false, true);
-
         this.castId = castId;
-
         this.loadData(spellData);
 
         this.context.getSpellHandler().setCurrentlyCastingSpell(null);
@@ -1408,33 +1453,16 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return spell;
     }
 
-    private void shiftSpells(boolean endFirstSpell, boolean isClient) {
+    private void endFirstSpell() {
         var handler = this.context.getSpellHandler();
-        if (!isClient && endFirstSpell) {
-            Optional<AbstractSpell> firstSpell = handler.getActiveSpells(spellType()).stream().min(Comparator.comparingInt(AbstractSpell::getId));
-            firstSpell.ifPresent(AbstractSpell::endSpell);
-        }
-
-        var list = handler.getActiveSpells(spellType()).stream()
-                .filter(spell -> !spell.isInactive)
-                .sorted(Comparator.comparingInt(AbstractSpell::getId))
-                .toList();
-
-        for (int i = 0; i < list.size(); i++) {
-            AbstractSpell spell = list.get(i);
-            spell.shiftId = spell.castId;
-            spell.castId = i + 1;
-            spell.idDirty = true;
-        }
-
-        this.castId = list.size() + 1;
+        Optional<AbstractSpell> firstSpell = handler.getActiveSpells(spellType()).stream().min(Comparator.comparingInt(AbstractSpell::getId));
+        firstSpell.ifPresent(AbstractSpell::endSpell);
     }
 
-    private CompoundTag initTag(boolean isRecast, boolean forceReset, boolean shiftSpells) {
+    protected CompoundTag initTag(boolean isRecast, boolean forceReset) {
         CompoundTag nbt = new CompoundTag();
         nbt.putBoolean("isRecast", isRecast);
         nbt.putBoolean("forceReset", forceReset);
-        nbt.putBoolean("shiftSpells", shiftSpells);
         return nbt;
     }
 

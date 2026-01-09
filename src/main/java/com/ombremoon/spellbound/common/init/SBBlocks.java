@@ -268,9 +268,10 @@ public class SBBlocks {
     public static DeferredBlock<Block> registerSludge(String name, boolean causeHarm) {
         return registerBlock(name, () -> new SludgeBlock(causeHarm, blockProperties()
                 .mapColor(MapColor.COLOR_BLACK)
+                .noLootTable()
                 .forceSolidOn()
                 .noCollission()
-                .strength(50.0F, 1200.0F)));
+                .strength(-1.0F, 3600000.0F)));
     }
 
     private static DeferredBlock<Block> registerSimpleBlock(String name) {

@@ -18,7 +18,8 @@ public class SpellContext {
     private final LivingEntity caster;
     private final Level level;
     private final BlockPos blockPos;
-    private final ItemStack itemStack;
+    private final ItemStack rightHandItem;
+    private final ItemStack leftHandItem;
     @Nullable
     private final Entity target;
     private final SpellHandler spellHandler;
@@ -34,15 +35,16 @@ public class SpellContext {
     }
 
     public SpellContext(SpellType<?> spellType, LivingEntity caster, Level level, BlockPos blockPos, Entity target, boolean isRecast) {
-        this(spellType, caster, level, blockPos, caster.getMainHandItem(), target, isRecast);
+        this(spellType, caster, level, blockPos, caster.getMainHandItem(), caster.getOffhandItem(), target, isRecast);
     }
 
-    protected SpellContext(SpellType<?> spellType, LivingEntity caster, Level level, BlockPos blockPos, ItemStack itemStack, Entity target, boolean isRecast) {
+    protected SpellContext(SpellType<?> spellType, LivingEntity caster, Level level, BlockPos blockPos, ItemStack rightHandItem, ItemStack leftHandItem, Entity target, boolean isRecast) {
         this.spellType = spellType;
         this.caster = caster;
         this.level = level;
         this.blockPos = blockPos;
-        this.itemStack = itemStack;
+        this.rightHandItem = rightHandItem;
+        this.leftHandItem = leftHandItem;
         this.target = target;
         this.spellHandler = SpellUtil.getSpellHandler(caster);
         this.skillHolder = SpellUtil.getSkills(caster);
@@ -77,8 +79,12 @@ public class SpellContext {
         return this.blockPos;
     }
 
-    public ItemStack getItemInHand() {
-        return this.itemStack;
+    public ItemStack getMainHandItem() {
+        return this.rightHandItem;
+    }
+
+    public ItemStack getOffHandItem() {
+        return this.leftHandItem;
     }
 
     public @Nullable Entity getTarget() {
@@ -102,7 +108,7 @@ public class SpellContext {
     }
 
     public ItemStack getCatalyst(Item catalyst) {
-        return this.getItemInHand().is(catalyst) ? this.getItemInHand() : this.caster.getOffhandItem();
+        return this.getMainHandItem().is(catalyst) ? this.getMainHandItem() : this.getOffHandItem().is(catalyst) ? this.getOffHandItem() : ItemStack.EMPTY;
     }
 
     public void useCatalyst(Item catalyst) {

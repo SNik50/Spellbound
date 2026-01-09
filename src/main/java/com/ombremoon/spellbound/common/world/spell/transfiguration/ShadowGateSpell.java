@@ -1,16 +1,15 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
-import com.ombremoon.spellbound.common.magic.SpellMastery;
-import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.common.world.entity.spell.ShadowGate;
 import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.api.*;
+import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
+import com.ombremoon.spellbound.common.magic.api.RadialSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.*;
+import com.ombremoon.spellbound.common.world.entity.spell.ShadowGate;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
-import com.ombremoon.spellbound.util.portal.PortalInfo;
 import com.ombremoon.spellbound.util.portal.PortalMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
@@ -43,16 +42,16 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                     if (blockPos == null) return false;
 
                     if (!context.getLevel().getBlockState(blockPos).isAir()) return false;
-                    if (activePortals > 1) {
+                    /*if (activePortals > 1) {
                         int portalRange = hasReach ? 10000 : 2500;
                         PortalInfo info = spell.portalMap.get(spell.portalMap.getPreviousPortal());
                         double distance = info.position().distanceToSqr(blockPos.getCenter());
                         if (distance > portalRange) return false;
-                    }
+                    }*/
 
                     if (context.hasSkill(SBSkills.DARKNESS_PREVAILS)) return true;
                     int i = context.getLevel().getRawBrightness(blockPos, 0) + context.getLevel().getBrightness(LightLayer.BLOCK, blockPos) - context.getLevel().getSkyDarken();
-                    return i <= 4;
+                    return i <= 9;
                 })
                 .summonCast()
                 .fullRecast()

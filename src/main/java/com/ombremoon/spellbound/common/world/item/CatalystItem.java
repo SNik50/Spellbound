@@ -1,9 +1,17 @@
 package com.ombremoon.spellbound.common.world.item;
 
 import com.ombremoon.spellbound.client.renderer.types.SBCatalystRenderer;
+import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.magic.SpellPath;
+import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;
@@ -14,6 +22,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.function.Consumer;
 
 public class CatalystItem extends Item implements GeoItem {
+    public static final ResourceLocation TRANSFIG_STAFF_CAST_RANGE_ID = CommonClass.customLocation("transfig_staff_cast_range");
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private final SpellPath path;
 
@@ -24,6 +33,25 @@ public class CatalystItem extends Item implements GeoItem {
 
     public SpellPath getPath() {
         return this.path;
+    }
+
+    public static ItemAttributeModifiers createTransfigurationAttributes() {
+        return ItemAttributeModifiers.builder()
+                .add(
+                        SBAttributes.CAST_RANGE,
+                        new AttributeModifier(
+                                TRANSFIG_STAFF_CAST_RANGE_ID, 1.5F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+                        ),
+                        EquipmentSlotGroup.MAINHAND
+                )
+                .add(
+                        SBAttributes.CAST_RANGE,
+                        new AttributeModifier(
+                                TRANSFIG_STAFF_CAST_RANGE_ID, 1.5F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+                        ),
+                        EquipmentSlotGroup.OFFHAND
+                )
+                .build();
     }
 
     @Override

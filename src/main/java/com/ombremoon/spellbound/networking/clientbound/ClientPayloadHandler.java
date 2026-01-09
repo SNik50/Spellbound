@@ -68,21 +68,8 @@ public class ClientPayloadHandler {
                 AbstractSpell spell = payload.spellType().createSpell();
                 if (spell != null) {
                     CompoundTag nbt = payload.initTag();
-                    spell.clientCastSpell(livingEntity, level, livingEntity.getOnPos(), payload.castId(), payload.spellData(), nbt.getBoolean("isRecast"), nbt.getBoolean("forceReset"), nbt.getBoolean("shiftSpells"));
+                    spell.clientCastSpell(livingEntity, level, livingEntity.getOnPos(), payload.castId(), payload.spellData(), nbt.getBoolean("isRecast"), nbt.getBoolean("forceReset"));
                 }
-            }
-        });
-    }
-
-    public static void handleClientShiftSpell(UpdateSpellIdPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            var level = context.player().level();
-            Entity entity = level.getEntity(payload.entityId());
-            if (entity instanceof LivingEntity livingEntity) {
-                var handler = SpellUtil.getSpellHandler(livingEntity);
-                AbstractSpell spell = handler.getSpell(payload.spellType(), payload.shiftId());
-                if (spell != null)
-                    spell.castId = payload.castId();
             }
         });
     }

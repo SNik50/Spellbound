@@ -74,7 +74,7 @@ public class SpellCastEvents {
             boolean isCastKeyPressed = KeyBinds.getSpellCastMapping().isDown();
             boolean castKeyJustPressed = isCastKeyPressed && !wasCastKeyPressed;
 
-            if (castKeyJustPressed) {
+            if (castKeyJustPressed && handler.castTick == 0) {
                 if (handler.isChargingOrChannelling()) {
                     handler.setChargingOrChannelling(false);
                     PayloadHandler.setChargeOrChannel(false);
@@ -106,6 +106,7 @@ public class SpellCastEvents {
         }
     }
 
+    //Remove target == null
     public static SpellContext createContext(Player player, SpellHandler handler, AbstractSpell spell) {
         SpellType<?> spellType = spell.spellType();
         boolean isRecast = handler.getActiveSpells(spellType).size() > 1;

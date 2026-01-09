@@ -15,8 +15,11 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.EnchantedCountIncreaseFunction;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.functions.SmeltItemFunction;
+import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
@@ -33,9 +36,39 @@ public class ModEntityLootTables extends EntityLootSubProvider {
 
     @Override
     public void generate() {
-        multiDropsWithChance(SBEntities.MINI_MUSHROOM.get(),
-                new LootEntry(SBBlocks.WILD_MUSHROOM.get().asItem(), ConstantValue.exactly(1), 0.25F),
-                new LootEntry(Items.BONE_MEAL, ConstantValue.exactly(1), 1.0F)
+        this.add(
+                SBEntities.MINI_MUSHROOM.get(),
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(Items.BONE_MEAL)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 3.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                        )
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(SBBlocks.WILD_MUSHROOM.get())
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(-1.0F, 1.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                                        .when(LootItemKilledByPlayerCondition.killedByPlayer())
+                        )
+        );
+        this.add(
+                SBEntities.SPELL_BROKER.get(),
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(LootItem.lootTableItem(SBItems.SPELL_TOME.get())
+                                                .apply(SetSpellFunction.setSpell(SBSpells.WILD_MUSHROOM)))
+                                        .when(LootItemRandomChanceCondition.randomChance(0.15F))
+                        )
         );
         multiDrops(SBEntities.SPELL_BROKER.get(), new LootEntry(SBItems.SPELL_TOME.get(), ConstantValue.exactly(1), 0.25F, SetSpellFunction.setSpell(SBSpells.WILD_MUSHROOM)));
     }

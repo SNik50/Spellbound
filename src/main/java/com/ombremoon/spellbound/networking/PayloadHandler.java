@@ -99,11 +99,6 @@ public class PayloadHandler {
     public static void updateSpells(LivingEntity entity, SpellType<?> spellType, int castId,CompoundTag initTag, @Nullable CompoundTag spellData) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new UpdateSpellsPayload(entity.getId(), spellType, castId, initTag, spellData));
     }
-
-    public static void shiftSpell(LivingEntity entity, SpellType<?> spellType, int shiftId, int castId) {
-        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new UpdateSpellIdPayload(entity.getId(), spellType, shiftId, castId));
-    }
-
     public static void setSpellTicks(LivingEntity entity, SpellType<?> spellType, int castId, int ticks) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new UpdateSpellTicksPayload(entity.getId(), spellType, castId, ticks));
     }
@@ -197,11 +192,6 @@ public class PayloadHandler {
                 UpdateSpellsPayload.TYPE,
                 UpdateSpellsPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleClientUpdateSpells
-        );
-        registrar.playToClient(
-                UpdateSpellIdPayload.TYPE,
-                UpdateSpellIdPayload.STREAM_CODEC,
-                ClientPayloadHandler::handleClientShiftSpell
         );
         registrar.playToClient(
                 UpdateSpellTicksPayload.TYPE,

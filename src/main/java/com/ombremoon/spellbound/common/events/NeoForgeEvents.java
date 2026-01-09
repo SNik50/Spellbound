@@ -74,29 +74,6 @@ public class NeoForgeEvents {
     }
 
     @SubscribeEvent
-    public static void effectAdded(MobEffectEvent.Added event) {
-        MobEffectInstance effectInstance = event.getEffectInstance();
-        LivingEntity entity = event.getEntity();
-
-        if (effectInstance.is(SBEffects.COMBUST)) {
-            entity.level().explode(null,
-                    entity.level().damageSources().source(SBDamageTypes.RUIN_FIRE),
-                    new SimpleExplosionDamageCalculator(false, true, Optional.of(0f), Optional.empty()) {
-                        @Override
-                        public float getEntityDamageAmount(Explosion explosion, Entity entity) {
-                            return Math.min(super.getEntityDamageAmount(explosion, entity), 10);
-                        }
-                    },
-                    entity.getX(),
-                    entity.getY()+1,
-                    entity.getZ(),
-                    3,
-                    true,
-                    Level.ExplosionInteraction.MOB);
-        }
-    }
-
-    @SubscribeEvent
     public static void registerSentinelBox(RegisterPlayerSentinelBoxEvent event) {
         event.addEntry(SolarRaySpell.SOLAR_RAY);
         event.addEntry(SolarRaySpell.SOLAR_RAY_EXTENDED);

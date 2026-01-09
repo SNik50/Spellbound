@@ -32,7 +32,7 @@ public class SBItems {
     public static final Supplier<Item> HOLY_SHARD = registerSimpleItem("holy_shard");
     public static final Supplier<Item> FOOL_SHARD = registerSimpleItem("fool_shard");
 
-    public static final Supplier<Item> TRANSFIGURATION_STAFF = registerCatalystItem("transfiguration_staff", SpellPath.TRANSFIGURATION);
+    public static final Supplier<Item> TRANSFIGURATION_STAFF = registerItem("transfiguration_staff", () -> new CatalystItem(SpellPath.TRANSFIGURATION, getItemProperties().stacksTo(1).attributes(CatalystItem.createTransfigurationAttributes())), true);
     public static final Supplier<Item> FIRE_STAFF = registerCatalystItem("fire_staff", SpellPath.FIRE);
     public static final Supplier<Item> ICE_STAFF = registerCatalystItem("ice_staff", SpellPath.FROST);
     public static final Supplier<Item> SHOCK_STAFF = registerCatalystItem("shock_staff", SpellPath.SHOCK);

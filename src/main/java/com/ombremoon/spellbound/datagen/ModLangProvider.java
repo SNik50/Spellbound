@@ -108,6 +108,7 @@ public class ModLangProvider extends LanguageProvider {
         add("command.spellbound.spelllearnt", "%1%s has been learnt.");
         
         add("itemGroup.spellbound", "Spellbound🪄");
+        add("spellbound.transfiguration_armor.buff", "+12.5% Transfiguration Spell Duration");
     }
 
     protected void guideContents() {
@@ -281,7 +282,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.ritual.materials", "Ritual Materials");
         addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.STRIDE.get(),
                 "I have been trying to gather ingredients for all of my alchemy rituals, but it's taking me too long to find everything. I need a faster way...",
-                "Well I solved my problem with Transfiguration. You won't believe it, but by mixing the right ingredients, I can supercharge my body. Allowing my legs to work even faster!");
+                "Well, I solved my problem with Transfiguration. You won't believe it, but by mixing the right ingredients, I can supercharge my body. Allowing my legs to work even faster!");
         addSpellContents(SpellPath.TRANSFIGURATION, SBSpells.SHADOW_GATE.get(),
                 "As my studies have advanced, I am finding myself needing to explore more biomes. I've found that teleportation could be quite useful.",
                 "I think I got it! After experimenting with ender pearls, I found I can use them to rip open gateways temporarily. I have created a spell to keep these open for longer.");
