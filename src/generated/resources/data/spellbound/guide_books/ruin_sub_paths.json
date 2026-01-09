@@ -32,7 +32,7 @@
     {
       "type": "spellbound:text",
       "position": {
-        "yOffset": 100
+        "yOffset": 112
       },
       "translation": {
         "translate": "guide.ruin.frost"

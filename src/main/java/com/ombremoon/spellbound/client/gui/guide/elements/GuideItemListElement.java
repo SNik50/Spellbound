@@ -34,7 +34,7 @@ public record GuideItemListElement(List<ItemListEntry> items, ItemListExtras ext
 
     public record ItemListEntry(List<ItemStack> items, NumberProvider count, ResourceLocation scrap) {
         public static final Codec<ItemListEntry> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-                ItemStack.CODEC.listOf().fieldOf("items").forGetter(ItemListEntry::items),
+                ItemStack.STRICT_CODEC.listOf().fieldOf("items").forGetter(ItemListEntry::items),
                 NumberProviders.CODEC.optionalFieldOf("count", ConstantValue.exactly(1)).forGetter(ItemListEntry::count),
                 ResourceLocation.CODEC.optionalFieldOf("scrap", GuideBookManager.FIRST_PAGE).forGetter(ItemListEntry::scrap)
         ).apply(inst, ItemListEntry::new));

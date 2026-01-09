@@ -8,6 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -33,7 +34,7 @@ public class GuideItemListRenderer implements IPageElementRenderer<GuideItemList
 
     @Override
     public void render(GuideItemListElement element, GuiGraphics graphics, int leftPos, int topPos, int mouseX, int mouseY, float partialTick, int tickCount) {
-        Registry<Item> itemRegistry = Minecraft.getInstance().level.registryAccess().registry(Registries.ITEM).get();
+        Registry<Item> itemRegistry = BuiltInRegistries.ITEM;
 
         for (int i = 0; i < element.items().size(); i++) {
             GuideItemListElement.ItemListEntry entry = element.items().get(i);

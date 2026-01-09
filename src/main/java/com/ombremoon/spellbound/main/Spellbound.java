@@ -37,7 +37,13 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 //Ritual Lag
 //Loot Tables
 //Shadow Gate Light Level
-//Minor Book Changes
+//Stave effects
+//Transfig armor effect (undecided)
+//Stave/armor pages
+//Adjust build up amounts
+//Add mob effect icons for ruin
+//Make discharge decrease mana over time not instantly
+//Decrease hurt area for healing blossom
 
 //Catalysts
 //Ruin - Doubles Status Build Up

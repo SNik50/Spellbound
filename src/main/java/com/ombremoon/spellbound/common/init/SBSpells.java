@@ -82,7 +82,7 @@ public class SBSpells {
     //Summons
 //    public static final Supplier<SpellType<SummonUndeadSpell>> SUMMON_UNDEAD = registerSpell("summon_undead", summonBuilder("summon_undead", SummonUndeadSpell::new)
 //            .skills(SBSkills.SUMMON_UNDEAD));
-    public static final Supplier<SpellType<WildMushroomSpell>> WILD_MUSHROOM = registerSpell("wild_mushroom", summonBuilder("wild_mushroom", SpellMastery.ADEPT, WildMushroomSpell::new, BossFights.WILD_MUSHROOM)
+    public static final Supplier<SpellType<WildMushroomSpell>> WILD_MUSHROOM = registerSpell("wild_mushroom", summonBuilder("wild_mushroom", SpellMastery.ADEPT, WildMushroomSpell::new)
             .skills(SBSkills.WILD_MUSHROOM, SBSkills.VILE_INFLUENCE, SBSkills.HASTENED_GROWTH, SBSkills.ENVENOM,
                     SBSkills.PARASITIC_FUNGUS, SBSkills.NATURES_DOMINANCE, SBSkills.POISON_ESSENCE,
                     SBSkills.LIVING_FUNGUS, SBSkills.PROLIFERATION, SBSkills.FUNGAL_HARVEST, SBSkills.SYNTHESIS));
@@ -131,8 +131,7 @@ public class SBSpells {
         return new SpellType.Builder<>(name, factory).setPath(SpellPath.TRANSFIGURATION).setMastery(mastery);
     }
 
-    private static <T extends AbstractSpell> SpellType.Builder<T> summonBuilder(String name, SpellMastery mastery, SpellType.SpellFactory<T> factory, BossFight.BossFightBuilder<?> bossFight) {
-        SBBlocks.registerSummonStone(name + "_stone", name, bossFight);
+    private static <T extends AbstractSpell> SpellType.Builder<T> summonBuilder(String name, SpellMastery mastery, SpellType.SpellFactory<T> factory) {
         return new SpellType.Builder<>(name, factory).setPath(SpellPath.SUMMONS).setMastery(mastery);
     }
 

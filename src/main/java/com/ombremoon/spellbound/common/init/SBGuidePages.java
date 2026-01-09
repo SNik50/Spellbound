@@ -202,7 +202,7 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.basic.description1"), 35),
                 new TextEntry(translatable("guide.basic.description2"), 90),
                 new TextEntry(translatable("guide.basic.spell_paths1"), PAGE_TWO_START_X, 35),
-                new TextEntry(translatable("guide.basic.ruin"), PAGE_TWO_START_X + 16, 90, 134)
+                new TextEntry(translatable("guide.basic.ruin"), PAGE_TWO_START_X + 16, 80, 134)
         );
         createDescriptionAndImages(
                 context,
@@ -409,7 +409,7 @@ public interface SBGuidePages {
                 translatable("guide.ruin.subpaths_cnt"),
                 null, false,
                 new TextEntry(translatable("guide.ruin.fire"), 35),
-                new TextEntry(translatable("guide.ruin.frost"), 100),
+                new TextEntry(translatable("guide.ruin.frost"), 112),
                 new TextEntry(translatable("guide.ruin.shock"), PAGE_TWO_START_X, 35));
         createDescription(context,
                 RUIN_BUILD_UP,
@@ -583,7 +583,7 @@ public interface SBGuidePages {
                 translatable("guide.summon.summoning_portal"),
                 false,
                 List.of(
-                        new RecipeEntry(defaultNameSpace("wild_mushroom"), PAGE_START_CENTER_X-40, 90)
+                        new RecipeEntry(loc("summon_stone"), PAGE_START_CENTER_X-40, 90)
                 ),
                 List.of(
                         new ImageEntryWithDimensions(loc("textures/gui/books/images/summoning_portal.png"), PAGE_TWO_START_X, 35,145, 67)
@@ -601,7 +601,7 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.summon.portal_activation1"), 35),
                 new TextEntry(translatable("guide.summon.portal_activation2"), 110),
                 new TextEntry(translatable("guide.summon.valid_portals"), PAGE_TWO_START_X, 35),
-                new TextEntry(translatable("guide.summon.valid_portals1"), PAGE_TWO_START_X, 110)
+                new TextEntry(translatable("guide.summon.valid_portals1"), PAGE_TWO_START_X, 90)
                 );
         createSpellPage(context, WILD_MUSHROOM, SUMMON_PORTAL_ACTIVATION, Book.SUMMONS, SBSpells.WILD_MUSHROOM);
         createSummonAcqPage(context, SUMMON_BOOK, MUSHROOM_ACQ, SUMMON_PORTAL_ACTIVATION, SBEntities.GIANT_MUSHROOM.get(), SBSpells.WILD_MUSHROOM.get());
@@ -1319,8 +1319,6 @@ public interface SBGuidePages {
                                 .of(spell.get().getRootSkill().getDescription())
                                 .position(0, 115)
                                 .build(),
-                        //Hi
-
                         PageBuilder.Text
                                 .ofTranslatable(translations + "lore")
                                 .position(PAGE_TWO_START_X, 5)
@@ -1366,9 +1364,8 @@ public interface SBGuidePages {
                                 PageBuilder.SpellBorder
                                         .of(SpellPath.SUMMONS)
                                         .build(),
-                                //TODO: Fix recipe
                                 PageBuilder.Recipe
-                                        .of(ResourceLocation.withDefaultNamespace("anvil"))
+                                        .of(loc(spell.location().getPath() + "_summon_stone"))
                                         .gridName(PageBuilder.Recipe.SpellboundGrids.NECRONOMICON)
                                         .position(PAGE_START_CENTER_X - 40, 65)
                                         .build(),

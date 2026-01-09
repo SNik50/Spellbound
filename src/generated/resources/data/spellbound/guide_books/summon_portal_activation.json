@@ -75,7 +75,7 @@
       "type": "spellbound:text",
       "position": {
         "xOffset": 172,
-        "yOffset": 110
+        "yOffset": 90
       },
       "translation": {
         "translate": "guide.summon.valid_portals1"

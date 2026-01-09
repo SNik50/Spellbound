@@ -39,7 +39,7 @@
         "xOffset": 32,
         "yOffset": 65
       },
-      "recipe": "minecraft:anvil"
+      "recipe": "spellbound:wild_mushroom_summon_stone"
     },
     {
       "type": "spellbound:text",

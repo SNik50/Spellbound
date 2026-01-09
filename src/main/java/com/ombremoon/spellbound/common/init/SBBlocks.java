@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFight;
+import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFights;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.world.block.*;
@@ -254,13 +255,14 @@ public class SBBlocks {
                         .sound(SoundType.MOSS_CARPET)
                         .pushReaction(PushReaction.DESTROY)
                         .randomTicks()));
+    public static final Supplier<Block> WILD_MUSHROOM_SUMMON_STONE = registerSummonStone("wild_mushroom", BossFights.WILD_MUSHROOM);
 
     private static Boolean always(BlockState state, BlockGetter blockGetter, BlockPos pos) {
         return true;
     }
 
-    public static void registerSummonStone(String name, String spell, @Nullable BossFight.BossFightBuilder<?> bossFight) {
-        registerBlock(name, () -> new SummonStoneBlock(CommonClass.customLocation(spell), bossFight, blockProperties()));
+    public static Supplier<Block> registerSummonStone(String name, @Nullable BossFight.BossFightBuilder<?> bossFight) {
+        return registerBlock(name + "_summon_stone", () -> new SummonStoneBlock(CommonClass.customLocation(name), bossFight, blockProperties()));
     }
 
     public static DeferredBlock<Block> registerSludge(String name, boolean causeHarm) {

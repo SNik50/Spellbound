@@ -10,6 +10,7 @@ import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 
 import java.util.concurrent.CompletableFuture;
@@ -108,11 +109,28 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("*B^")
                 .unlockedBy("has_book", has(Items.BOOK))
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBBlocks.WILD_MUSHROOM.get())
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBBlocks.WILD_MUSHROOM_SUMMON_STONE.get())
                 .define('S', SBBlocks.SUMMON_STONE.get())
                 .define('#', Tags.Items.MUSHROOMS)
-                .pattern("*B^")
-                .unlockedBy("has_book", has(Items.BOOK))
+                .pattern("SSS")
+                .pattern("S#S")
+                .pattern("SSS")
+                .unlockedBy("has_mushroom", has(Tags.Items.MUSHROOMS))
                 .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBBlocks.SUMMON_STONE.get())
+                .define('S', Blocks.STONE)
+                .define('#', SBItems.MAGIC_ESSENCE.get())
+                .define('^', Items.ENDER_PEARL)
+                .define('O', Blocks.OBSIDIAN)
+                .pattern("SOS")
+                .pattern("^#^")
+                .pattern("SOS")
+                .unlockedBy("has_mushroom", has(Tags.Items.MUSHROOMS))
+                .save(output);
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, SBBlocks.SUMMON_STONE.get())
+                .requires(SBBlocks.CRACKED_SUMMON_STONE.get())
+                .requires(SBItems.MAGIC_ESSENCE.get())
+                .unlockedBy("has_summon_stone", has(SBBlocks.SUMMON_STONE.get()))
+                .save(output, getConversionRecipeName(SBBlocks.SUMMON_STONE.get(), SBBlocks.CRACKED_SUMMON_STONE.get()));
     }
 }

@@ -342,7 +342,7 @@ public class PayloadHandler {
         registrar.playToClient(
                 ScrapToastPayload.TYPE,
                 ScrapToastPayload.STREAM_CODEC,
-                ScrapToastPayload::handle
+                ClientPayloadHandler::handleScrapToasts
         );
     }
 }

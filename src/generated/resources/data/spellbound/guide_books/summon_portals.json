@@ -69,7 +69,7 @@
         "xOffset": 32,
         "yOffset": 90
       },
-      "recipe": "minecraft:anvil"
+      "recipe": "spellbound:summon_stone"
     },
     {
       "type": "spellbound:image",
