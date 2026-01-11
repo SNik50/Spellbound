@@ -6,6 +6,7 @@ import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.entity.projectile.MushroomProjectile;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormRiftSpell;
+import com.ombremoon.spellbound.common.world.spell.transfiguration.StrideSpell;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.main.Keys;
 import com.ombremoon.spellbound.networking.PayloadHandler;
@@ -18,6 +19,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,6 +29,7 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DebugItem extends Item implements Loggable {
     public DebugItem(Properties properties) {
@@ -35,8 +40,8 @@ public class DebugItem extends Item implements Loggable {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         var handler = SpellUtil.getSpellHandler(player);
         var skillHandler = SpellUtil.getSkills(player);
-        duckDebug(level, player, usedHand, handler, skillHandler);
-        //ombreDebug(level, player, usedHand, handler, skillHandler);
+//        duckDebug(level, player, usedHand, handler, skillHandler);
+        ombreDebug(level, player, usedHand, handler, skillHandler);
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide);
     }
 
@@ -57,11 +62,15 @@ public class DebugItem extends Item implements Loggable {
     }
 
     private void ombreDebug(Level level, Player player, InteractionHand usedHand, SpellHandler spellHandler, SkillHolder skillHolder) {
-        log(level.registryAccess().registryOrThrow(Keys.RITUAL).get(SBRituals.CREATE_MYSTIC_ARMOR).definition());
+        List<ArmorStand> entities = level.getEntitiesOfClass(ArmorStand.class, player.getBoundingBox().inflate(0.5));
+        log(entities);
+        for (ArmorStand stand : entities) {
+            stand.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(SBItems.CREATIONIST_STAFF.get()));
+        }
     }
 
     private void duckDebug(Level level, Player player, InteractionHand hand, SpellHandler spellHandler, SkillHolder skillHolder) {
         if (level.isClientSide) return;
-        skillHolder.awardSpellXp(SBSpells.SHADOW_GATE.get(), 1000);
+        skillHolder.awardSpellXp(SBSpells.HEALING_BLOSSOM.get(), 1000);
     }
 }

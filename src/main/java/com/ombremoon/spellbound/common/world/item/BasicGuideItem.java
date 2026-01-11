@@ -25,7 +25,7 @@ public class BasicGuideItem extends Item {
             RenderUtil.openBasicBook();
         }
 
-        return InteractionResultHolder.success(player.getItemInHand(usedHand));
+        return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide);
 
     }
 }

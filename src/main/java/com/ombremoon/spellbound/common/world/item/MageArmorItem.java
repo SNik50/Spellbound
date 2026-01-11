@@ -110,7 +110,7 @@ public class MageArmorItem extends ArmorItem implements GeoItem {
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         super.inventoryTick(stack, level, entity, slotId, isSelected);
 
-        if (this.getEquipmentSlot() != EquipmentSlot.HEAD) return;
+//        if () return;
         if (!hasSetBonus) return;
         if (!(entity instanceof LivingEntity livingEntity)) return;
         for (ItemStack armorItem : livingEntity.getArmorSlots()) {
@@ -122,7 +122,7 @@ public class MageArmorItem extends ArmorItem implements GeoItem {
             }
         }
 
-        if (!livingEntity.hasEffect(SET_BONUS.get(this.material)))
+        if (this.getEquipmentSlot() == EquipmentSlot.HEAD && !livingEntity.hasEffect(SET_BONUS.get(this.material)))
             livingEntity.addEffect(new MobEffectInstance(SET_BONUS.get(this.material), -1, 0, true, false));
     }
 

@@ -6,7 +6,7 @@
         "enableCorners": false
       },
       "height": 150,
-      "image": "spellbound:textures/gui/paths/transfiguration.png",
+      "image": "spellbound:textures/gui/paths/ruin.png",
       "position": {
         "yOffset": 25
       },
@@ -14,9 +14,9 @@
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -14396391,
-      "path": "transfiguration",
-      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png",
+      "colour": -10678496,
+      "path": "ruin",
+      "pathTexture": "spellbound:textures/gui/paths/ruin.png",
       "position": {
         "xOffset": 172
       }
@@ -31,7 +31,7 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "item.spellbound.architects_lexicon"
+        "translate": "item.spellbound.grimoire_of_annihilation"
       }
     },
     {
@@ -58,7 +58,7 @@
         "yOffset": 160
       },
       "translation": {
-        "translate": "guide.transfiguration.quote"
+        "translate": "guide.ruin.quote"
       }
     },
     {
@@ -69,91 +69,83 @@
       "list": [
         {
           "component": {
-            "translate": "guide.transfiguration.description"
+            "translate": "guide.ruin.contents.description"
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:transfig_description"
+          "target_page": "spellbound:ruin_description"
         },
         {
           "component": {
-            "translate": "guide.transfiguration.rituals_cont"
+            "translate": "guide.ruin.subpaths_cnt"
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:transfig_rituals"
+          "target_page": "spellbound:ruin_sub_paths"
         },
         {
           "component": {
-            "translate": "guide.transfiguration.blocks"
+            "translate": "guide.ruin.build_up"
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:transfig_display_pedestal"
+          "target_page": "spellbound:ruin_build_up"
         },
         {
           "component": {
-            "translate": "guide.transfiguration.items"
+            "translate": "guide.ruin.portals"
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:transfig_talisman_chalk"
+          "target_page": "spellbound:ruin_portals"
         },
         {
           "component": {
-            "translate": "guide.transfiguration.equipment"
+            "translate": "guide.general.path_items"
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:transfig_armor_staff"
+          "target_page": "spellbound:ruin_armor_staff"
         },
         {
           "component": {
-            "translate": "guide.transfiguration.armor_recipe"
+            "translate": "spells.spellbound.stormstrike"
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:transfig_helmet_ritual"
+          "target_page": "spellbound:storm_strike_page"
         },
         {
           "component": {
-            "translate": "guide.transfiguration.staff_recipe"
+            "translate": "spells.spellbound.electric_charge"
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:transfig_staff_ritual"
+          "target_page": "spellbound:electric_charge_page"
         },
         {
           "component": {
-            "translate": "spells.spellbound.stride"
+            "translate": "spells.spellbound.shattering_crystal"
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:stride"
+          "target_page": "spellbound:shattering_crystal_page"
         },
         {
           "component": {
-            "translate": "spells.spellbound.shadow_gate"
+            "translate": "spells.spellbound.solar_ray"
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:shadow_gate_"
+          "target_page": "spellbound:solar_ray_page"
         },
         {
           "component": {
-            "translate": "spells.spellbound.mystic_armor"
+            "translate": "spells.spellbound.storm_rift"
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:mystic_armor"
-        },
-        {
-          "component": {
-            "translate": "guide.transfigurations.mana_tear"
-          },
-          "extraOffset": 0,
-          "scrap": "spellbound:default",
-          "target_page": "spellbound:mana_tear_ritual"
+          "target_page": "spellbound:storm_rift_page"
         }
       ],
       "position": {
@@ -162,5 +154,5 @@
       }
     }
   ],
-  "id": "spellbound:architects_lexicon"
+  "id": "spellbound:grimoire_of_annihilation"
 }

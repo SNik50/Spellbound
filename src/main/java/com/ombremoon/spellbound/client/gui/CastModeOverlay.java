@@ -34,6 +34,9 @@ public class CastModeOverlay implements LayeredDraw.Layer {
 
     @Override
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {
+        if (Minecraft.getInstance().options.hideGui)
+            return;
+
         Player player = Minecraft.getInstance().player;
         var handler = SpellUtil.getSpellHandler(player);
         if (handler.inCastMode())
@@ -43,14 +46,14 @@ public class CastModeOverlay implements LayeredDraw.Layer {
     }
 
     private void renderCastMode(GuiGraphics guiGraphics, Player player, SpellHandler caster) {
-        int x = guiGraphics.guiWidth() - 27;
-        int y = 30;
+        int x = guiGraphics.guiWidth() / 2 - 205;
+        int y = guiGraphics.guiHeight() - 57;
         guiGraphics.blit(MANA_BAR, guiGraphics.guiWidth() / 2 - 200, guiGraphics.guiHeight() - 20, 0, 0, 106, 16, 106, 28);
         guiGraphics.blit(MANA_BAR, guiGraphics.guiWidth() / 2 - 198, guiGraphics.guiHeight() - 15, 2, 18, RenderUtil.getScaledRender((int)Math.floor(caster.getMana()), (int)Math.floor(player.getAttributeValue(SBAttributes.MAX_MANA)), 103), 8, 106, 28);
         int mana = Mth.floor(caster.getMana());
         guiGraphics.drawString(Minecraft.getInstance().font,
                 mana + "/" + Mth.floor(caster.getMaxMana()),
-                40,
+                guiGraphics.guiWidth() / 2 - 174,
                 guiGraphics.guiHeight() - 40,
                 8889187 ,
                 false);
@@ -63,7 +66,7 @@ public class CastModeOverlay implements LayeredDraw.Layer {
         guiGraphics.blit(BACKGROUND, x - 1, y - 1, 0, 0, 26, 26, 26, 26);
         guiGraphics.drawString(Minecraft.getInstance().font,
                 spell.createSpell().getName(),
-                40, guiGraphics.guiHeight() - 60,
+                guiGraphics.guiWidth() / 2 - 173, guiGraphics.guiHeight() - 57,
                 8889187, false);
     }
 

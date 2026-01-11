@@ -31,7 +31,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.crafting.CompoundIngredient;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -338,7 +337,7 @@ public interface SBGuidePages {
                 PATH_ITEMS,
                 SPELL_RESEARCH,
                 Book.SPELLBOUND,
-                translatable("guide.basic.path_items"),
+                translatable("guide.general.path_items"),
                 null,
                 false,
                 List.of(
@@ -346,7 +345,7 @@ public interface SBGuidePages {
                         new ItemEntry(Ingredient.of(SBTags.Items.STAFF), PAGE_TWO_START_X - 28, 10, false),
                         new ItemEntry(Ingredient.of(SBItems.CREATIONIST_HELMET.get(), SBItems.PYROMANCER_HELMET.get(), SBItems.STORMWEAVER_HELMET.get(), SBItems.CRYOMANCER_HELMET.get()), 239, 105, false)
                 ),
-                new TextEntry(translatable("guide.basic.path_items1"), 35),
+                new TextEntry(translatable("guide.basic.path_items"), 35),
                 new TextEntry(translatable("guide.basic.shards"), 55, 90, 100),
                 new TextEntry(translatable("guide.basic.staves"), PAGE_TWO_START_X + 55, 5, 90),
                 new TextEntry(translatable("guide.basic.armor"), PAGE_TWO_START_X, 115, 90)
@@ -391,7 +390,7 @@ public interface SBGuidePages {
                 new ContentsEntry(translatable("guide.ruin.subpaths_cnt"), RUIN_SUB_PATHS),
                 new ContentsEntry(translatable("guide.ruin.build_up"), RUIN_BUILD_UP),
                 new ContentsEntry(translatable("guide.ruin.portals"), RUIN_PORTALS),
-                new ContentsEntry(translatable("guide.ruin.elemental_equipment"), RUIN_ARMOR_STAFF),
+                new ContentsEntry(translatable("guide.general.path_items"), RUIN_ARMOR_STAFF),
                 new ContentsEntry(spellName(SBSpells.STORMSTRIKE.get()), STORM_STRIKE),
                 new ContentsEntry(spellName(SBSpells.ELECTRIC_CHARGE.get()), ELECTRIC_CHARGE),
                 new ContentsEntry(spellName(SBSpells.SHATTERING_CRYSTAL.get()), SHATTERING_CRYSTAL),
@@ -444,7 +443,7 @@ public interface SBGuidePages {
                 RUIN_ARMOR_STAFF,
                 RUIN_PORTALS,
                 Book.RUIN,
-                translatable("guide.ruin.elemental_equipment"),
+                translatable("guide.general.path_items"),
                 null,
                 false,
                 List.of(
@@ -471,11 +470,11 @@ public interface SBGuidePages {
                                 -22.5f, 45f, 0f)
                 ),
                 List.of(
-                        new ItemEntry(Ingredient.of(SBItems.FIRE_STAFF.get()), -15, 140, false),
-                        new ItemEntry(Ingredient.of(SBItems.SHOCK_STAFF.get()), PAGE_START_CENTER_X - 20, 140, false),
-                        new ItemEntry(Ingredient.of(SBItems.ICE_STAFF.get()), PAGE_TWO_START_X - 62, 140, false)
+                        new ItemEntry(Ingredient.of(SBItems.FIRE_STAFF.get()), -32, 120, false),
+                        new ItemEntry(Ingredient.of(SBItems.SHOCK_STAFF.get()), PAGE_START_CENTER_X - 50, 120, false),
+                        new ItemEntry(Ingredient.of(SBItems.ICE_STAFF.get()), PAGE_TWO_START_X - 105, 120, false)
                 ),
-                new TextEntry(translatable("guide.ruin.elemental_equipment1"),35),
+                new TextEntry(translatable("guide.ruin.path_items"),35),
                 new TextEntry(translatable("guide.ruin.stormweaver_robes"), PAGE_TWO_START_X + 40, 0, 120),
                 new TextEntry(translatable("guide.ruin.pyromancer_robes"), PAGE_TWO_START_X-5, 80, 120),
                 new TextEntry(translatable("guide.ruin.cryomancer_robes"), PAGE_TWO_START_X + 40, 140, 120));
@@ -492,7 +491,7 @@ public interface SBGuidePages {
                 new ContentsEntry(translatable("guide.transfiguration.rituals_cont"), TRANSFIG_RITUALS),
                 new ContentsEntry(translatable("guide.transfiguration.blocks"), TRANSFIG_RITUAL_ITEMS_1),
                 new ContentsEntry(translatable("guide.transfiguration.items"), TRANSFIG_RITUAL_ITEMS_2),
-                new ContentsEntry(translatable("guide.transfiguration.equipment"), TRANSFIG_ARMOR_STAFF),
+                new ContentsEntry(translatable("guide.general.path_items"), TRANSFIG_ARMOR_STAFF),
                 new ContentsEntry(translatable("guide.transfiguration.armor_recipe"), TRANSFIG_HELM_RITUAL),
                 new ContentsEntry(translatable("guide.transfiguration.staff_recipe"), TRANSFIG_STAFF_RITUAL),
                 new ContentsEntry(spellName(SBSpells.STRIDE.get()), STRIDE),
@@ -584,7 +583,7 @@ public interface SBGuidePages {
                 TRANSFIG_ARMOR_STAFF,
                 TRANSFIG_RITUAL_ITEMS_2,
                 Book.TRANSFIG,
-                translatable("guide.transfiguration.equipment"),
+                translatable("guide.general.path_items"),
                 null,
                 false,
                 List.of(
@@ -597,7 +596,7 @@ public interface SBGuidePages {
                                 -22.5f, 45f, 0f)
                 ),
                 List.of(
-                        new ItemEntry(Ingredient.of(SBItems.CREATIONIST_STAFF.get()), PAGE_START_CENTER_X - 20, 120, false)
+                        new ItemEntry(Ingredient.of(SBItems.CREATIONIST_STAFF.get()), 22, 115, false)
                 ),
                 new TextEntry(translatable("guide.transfiguration.stave"), 35),
                 new TextEntry(translatable("guide.transfiguration.robes"), PAGE_TWO_START_X, 90));
@@ -972,6 +971,7 @@ public interface SBGuidePages {
             var staticItem = PageBuilder.StaticItem
                     .of()
                     .addItem(item.item())
+                    .scale(2)
                     .position(item.xPos(), item.yPos());
             if (!item.withBackground) staticItem.disableBackground();
             builder.addElements(staticItem.build());
@@ -1178,7 +1178,7 @@ public interface SBGuidePages {
                                         .addEntry(translatable("guide.basic.book_recipes"), BOOK_RECIPES)
                                         .addEntry(translatable("guide.basic.book_recipes_cont"), BOOK_RECIPES_CONT)
                                         .addEntry(translatable("guide.basic.spell_research"), SPELL_RESEARCH)
-                                        .addEntry(translatable("guide.basic.path_items"), PATH_ITEMS)
+                                        .addEntry(translatable("guide.general.path_items"), PATH_ITEMS)
                                         .addEntry(translatable("guide.basic.spells"), SPELLS)
                                         .addEntry(translatable("guide.basic.skills"), SKILLS)
                                         .build(),

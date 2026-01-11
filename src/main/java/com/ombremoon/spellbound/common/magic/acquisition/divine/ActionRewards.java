@@ -1,7 +1,6 @@
 package com.ombremoon.spellbound.common.magic.acquisition.divine;
 
 import com.google.common.collect.ImmutableList;
-import com.lowdragmc.lowdraglib2.test.TestJava;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

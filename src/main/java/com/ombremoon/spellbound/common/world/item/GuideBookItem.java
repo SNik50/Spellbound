@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.world.item;
 
 import com.ombremoon.spellbound.common.init.SBTriggers;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -27,6 +28,7 @@ public class GuideBookItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
+//        Constants.LOG.info("{}", this.bookId);
         if (this.bookId == null) return InteractionResultHolder.fail(player.getItemInHand(usedHand));
         if (GuideBookManager.getBook(this.bookId) == null) return InteractionResultHolder.fail(player.getItemInHand(usedHand));
 
@@ -34,7 +36,7 @@ public class GuideBookItem extends Item {
             RenderUtil.openBook(this.bookId, this.bookTexture);
         }
 
-        return InteractionResultHolder.success(player.getItemInHand(usedHand));
+        return InteractionResultHolder.sidedSuccess(player.getItemInHand(usedHand), level.isClientSide);
 
     }
 }

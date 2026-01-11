@@ -145,6 +145,7 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
      * @return The sorted pages of the given book id
      */
     public static List<GuideBookPage> getBook(ResourceLocation id) {
+        Constants.LOG.info("{}", BOOKS);
         return BOOKS.get(id);
     }
 
