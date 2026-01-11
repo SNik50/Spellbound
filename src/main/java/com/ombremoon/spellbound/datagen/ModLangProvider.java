@@ -91,8 +91,8 @@ public class ModLangProvider extends LanguageProvider {
         skillDescriptions();
         guideContents();
 
-        add("spellbound.toast.spell_level_up", "%1 has reached level: %2");
-        add("spellbound.toast.path_level_up", "%1 path has reached level: %2");
+        add("spellbound.toast.spell_level_up", "%s has reached Level %s");
+        add("spellbound.toast.path_level_up", "%s path has reached Level %s");
         add("spellbound.toast.scrap_unlocked", "New book entry unlocked");
 
         add("chat.spelltome.awardxp", "Spell already known. +10 spells XP.");
@@ -124,6 +124,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.element.spell_info.mana_per_tick", "Mana/Tick: %1$s");
         add("guide.element.spell_border.element", "Element: ");
         add("guide.element.spell_border.mastery", "Mastery: %1$s");
+        add("guide.general.path_items", "Path Items");
 
         basicContents();
         ruinContents();
@@ -179,8 +180,7 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.basic.page_scraps1", "Path books hold key information about spell acquisition and path mechanics, but are encrypted in a magical language and need a cipher to read.");
         add("guide.basic.page_scraps2", "Page scraps can be obtained around the world through various actions, deciphering certain entries in a book.");
         add("guide.basic.page_scraps3", "Explore the lands, interact with mobs, and be on the look out for clues to unlock every book entry.");
-        add("guide.basic.path_items", "Path Items");
-        add("guide.basic.path_items1", "Every path has a set of specific items that will help Magi's grow stronger: §lShards§r, §lStaves§r, and §lArmor§r");
+        add("guide.basic.path_items", "Every path has a set of specific items that will help Magi's grow stronger: §lShards§r, §lStaves§r, and §lArmor§r");
         add("guide.basic.shards", "Shards are special magic catalyst items that can be found underground, dropped from certain mobs, or earned from specific tasks.");
         add("guide.basic.armor", "Enchanted regalia that buffs certain spell stats from the corresponding path.");
         add("guide.basic.staves", "A Magi's Staff allows its user to better control the flow of magic, bestowing a special buff to spells of the corresponding path.");
@@ -226,11 +226,10 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.ruin.portals2", "I aim to find the gateways to these ancient beings' realms so I can find how they are twisting the elements and create new ways of expressing my own magic.");
         add("guide.ruin.portals3", "While exploring I have found a few gateways, but they seem to all be locked. Unfortunately, the way to make keystones has been long forgotten. I'l have to buy my ruin spells from Spell Brokers for now.");
 
-        add("guide.ruin.elemental_equipment", "Elemental Equipment");
-        add("guide.ruin.elemental_equipment1", "I have discovered Elementally attuned robes and staves throughout the world. As far as I can tell these staves act as a catalyst, for their respective element, causing those who I target to reach Elemental Overload faster while the robes grant a bonus to my potency when I wear the full set.");
-        add("guide.ruin.stormweaver_robes", "Within a trial chamber I have found these robes belonging to a long forgotten Stormweaver. These robes resist Shock damage to a degree.");
-        add("guide.ruin.pyromancer_robes", "Exploring the nether I spotted these robes hot to the touch. At this temp I imagine Fire spells wont get through very well.");
-        add("guide.ruin.cryomancer_robes", "My collection is complete, I found Frost robes! They were spread between igloos and abandoned shipwrecks.");
+        add("guide.ruin.path_items", "I have discovered elemental attuned robes and staves throughout the world. As far as I can tell, these staves act as a catalyst for their respective element, causing those who I target to reach Elemental Overload faster. The robes, on the other hand, seems to increase the potency of my spells when I wear the full set.");
+        add("guide.ruin.stormweaver_robes", "Within a trial chamber, I have found these robes belonging to a long forgotten Stormweaver. These robes resist Shock damage to a degree.");
+        add("guide.ruin.pyromancer_robes", "Exploring the nether, I spotted these robes hot to the touch. With this kind of heat, I imagine Fire spells won't get through very well.");
+        add("guide.ruin.cryomancer_robes", "Finally, some Frost robes to protect me from the cold! They were spread between igloos and abandoned shipwrecks.");
 
         addSpellContents(SpellPath.RUIN, SBSpells.SOLAR_RAY.get(),
                 "I have purchased this spell tome from a Spell Broker as I have been unable to decipher its origin but I believe its siphoning energy from the sun.",
@@ -286,9 +285,8 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.transfiguration.ritual_talisman", "I have everything in place to begin my experiment, but nothing is happening. Maybe I need a catalyst? I should be wary—if it isn't strong enough, it could be a waste.");
         add("spellbound.ritual.materials", "Ritual Materials");
 
-        add("guide.transfiguration.equipment", "Equipment Creation");
-        add("guide.transfiguration.stave", "I have heard of catalysts enhancing a paths power. I am determined to create one to boost my spells, allowing me to cast further away. To do this I am going to need to create a fresh ritual. If I'm successful I'l be sure to document it.");
-        add("guide.transfiguration.robes", "Continuing on with my experimentation of creating equipment I have succeeded in creating a set of robes that allows the energy from my spells to cling on to me longer causing the duration of my spells to increase.");
+        add("guide.transfiguration.stave", "In my studies, I've theorized a specialized catalyst that can be tuned to my Transfiguration spells. One that acts as a lens, extending the reach of my magic. To forge this, I must devise a new ritual. If my theories are correct, I'll document the results here.");
+        add("guide.transfiguration.robes", "Continuing on with my experimentation, I have succeeded in designing a set of robes. The fabric traps some of the residual magical energy lost from casting, increasing the duration of my Transfiguration spells while wearing them.");
 
         addTransfigSpellContents(SBSpells.STRIDE.get(),
                 "I have been trying to gather ingredients for all of my alchemy rituals, but it's taking me too long to find everything. I need a faster way...",

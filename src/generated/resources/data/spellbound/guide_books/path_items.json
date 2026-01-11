@@ -11,7 +11,7 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "guide.basic.path_items"
+        "translate": "guide.general.path_items"
       }
     },
     {
@@ -25,7 +25,7 @@
         "yOffset": 35
       },
       "translation": {
-        "translate": "guide.basic.path_items1"
+        "translate": "guide.basic.path_items"
       }
     },
     {

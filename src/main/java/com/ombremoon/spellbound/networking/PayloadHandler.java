@@ -105,6 +105,8 @@ public class PayloadHandler {
     public static void updateSpells(LivingEntity entity, SpellType<?> spellType, int castId,CompoundTag initTag, @Nullable CompoundTag spellData) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new UpdateSpellsPayload(entity.getId(), spellType, castId, initTag, spellData));
     }
+
+    //Does this need to go to everyone?
     public static void setSpellTicks(LivingEntity entity, SpellType<?> spellType, int castId, int ticks) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new UpdateSpellTicksPayload(entity.getId(), spellType, castId, ticks));
     }
@@ -121,6 +123,7 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayer((ServerPlayer) player, new ChargeOrChannelPayload(isChargingOrChanneling));
     }
 
+    //Does this need to go to everyone?
     public static void endSpell(LivingEntity entity, SpellType<?> spellType, int castId) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new EndSpellPayload(entity.getId(), spellType, castId));
     }

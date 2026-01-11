@@ -11,13 +11,17 @@
     "B": {
       "item": "minecraft:book"
     },
+    "M": {
+      "item": "spellbound:magic_essence"
+    },
     "^": {
       "item": "minecraft:copper_ingot"
     }
   },
   "pattern": [
     " # ",
-    "*B^"
+    "*B^",
+    " M "
   ],
   "result": {
     "count": 1,

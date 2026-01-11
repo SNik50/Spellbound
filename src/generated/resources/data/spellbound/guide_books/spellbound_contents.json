@@ -96,7 +96,7 @@
         },
         {
           "component": {
-            "translate": "guide.basic.path_items"
+            "translate": "guide.general.path_items"
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",

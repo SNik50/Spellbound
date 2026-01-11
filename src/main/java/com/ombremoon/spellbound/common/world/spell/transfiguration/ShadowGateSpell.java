@@ -116,8 +116,16 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                                     addCooldown(SBSkills.QUICK_RECHARGE, 200);
                                 }
 
-                                if (context.hasSkill(SBSkills.SHADOW_ESCAPE) && isCaster(entity) && caster.getHealth() < caster.getMaxHealth() * 0.5F && !caster.hasEffect(MobEffects.INVISIBILITY))
-                                    caster.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 100, 0, false, false, true));
+                                if (context.hasSkill(SBSkills.SHADOW_ESCAPE) && isCaster(entity) && caster.getHealth() < caster.getMaxHealth() * 0.5F && !caster.hasEffect(MobEffects.INVISIBILITY)) {
+                                    addSkillBuff(
+                                            caster,
+                                            SBSkills.SHADOW_ESCAPE,
+                                            BuffCategory.BENEFICIAL,
+                                            SkillBuff.MOB_EFFECT,
+                                            new MobEffectInstance(MobEffects.INVISIBILITY, 100, 0, false, false, true),
+                                            100
+                                    );
+                                }
 
                                 if (!isCaster(entity) && context.hasSkill(SBSkills.UNWANTED_GUESTS) && !entity.isAlliedTo(context.getCaster())) {
                                     addEventBuff(
@@ -147,8 +155,16 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                                     Vec3 lookVec = adjacentGate.getViewVector(1.0F);
                                     entity.setDeltaMovement(lookVec.x, 2, lookVec.z);
                                     entity.hurtMarked = true;
-                                    if (isCaster(entity))
-                                        entity.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 100));
+                                    if (isCaster(entity)) {
+                                        addSkillBuff(
+                                                caster,
+                                                SBSkills.GRAVITY_SHIFT,
+                                                BuffCategory.BENEFICIAL,
+                                                SkillBuff.MOB_EFFECT,
+                                                new MobEffectInstance(MobEffects.SLOW_FALLING, 100),
+                                                100
+                                        );
+                                    }
                                 }
                             }
                         }

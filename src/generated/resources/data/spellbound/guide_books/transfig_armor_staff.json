@@ -11,7 +11,7 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "guide.transfiguration.equipment"
+        "translate": "guide.general.path_items"
       }
     },
     {
@@ -42,7 +42,8 @@
     {
       "type": "spellbound:item",
       "extras": {
-        "disableBackground": true
+        "disableBackground": true,
+        "scale": 2.0
       },
       "item": [
         {
@@ -50,8 +51,8 @@
         }
       ],
       "position": {
-        "xOffset": 52,
-        "yOffset": 120
+        "xOffset": 22,
+        "yOffset": 115
       }
     },
     {

@@ -82,14 +82,18 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('*', Items.COAL)
                 .define('#', Items.SNOWBALL)
                 .define('^', Items.COPPER_INGOT)
+                .define('M', SBItems.MAGIC_ESSENCE.get())
                 .pattern(" # ")
                 .pattern("*B^")
+                .pattern(" M ")
                 .unlockedBy("has_book", has(Items.BOOK))
                 .save(output);
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBItems.TRANSFIG_BOOK.get())
                 .define('B', Items.BOOK)
                 .define('*', Items.AMETHYST_SHARD)
                 .define('^', Items.GLASS_BOTTLE)
+                .define('M', SBItems.MAGIC_ESSENCE.get())
+                .pattern(" M ")
                 .pattern("*B^")
                 .unlockedBy("has_book", has(Items.BOOK))
                 .save(output);
@@ -97,6 +101,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('B', Items.BOOK)
                 .define('*', Items.BONE)
                 .define('^', Items.ROTTEN_FLESH)
+                .define('M', SBItems.MAGIC_ESSENCE.get())
+                .pattern(" M ")
                 .pattern("*B^")
                 .unlockedBy("has_book", has(Items.BOOK))
                 .save(output);
@@ -104,6 +110,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('B', Items.BOOK)
                 .define('*', Items.FERMENTED_SPIDER_EYE)
                 .define('^', Items.GOLD_NUGGET)
+                .define('M', SBItems.MAGIC_ESSENCE.get())
+                .pattern(" M ")
                 .pattern("*B^")
                 .unlockedBy("has_book", has(Items.BOOK))
                 .save(output);
@@ -111,6 +119,8 @@ public class ModRecipeProvider extends RecipeProvider {
                 .define('B', Items.BOOK)
                 .define('*', Items.TRIPWIRE_HOOK)
                 .define('^', Items.INK_SAC)
+                .define('M', SBItems.MAGIC_ESSENCE.get())
+                .pattern(" M ")
                 .pattern("*B^")
                 .unlockedBy("has_book", has(Items.BOOK))
                 .save(output);

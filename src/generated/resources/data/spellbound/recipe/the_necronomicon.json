@@ -8,11 +8,15 @@
     "B": {
       "item": "minecraft:book"
     },
+    "M": {
+      "item": "spellbound:magic_essence"
+    },
     "^": {
       "item": "minecraft:rotten_flesh"
     }
   },
   "pattern": [
+    " M ",
     "*B^"
   ],
   "result": {

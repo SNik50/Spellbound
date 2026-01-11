@@ -121,7 +121,6 @@ public class ElectricChargeSpell extends AnimatedSpell {
 
     @Override
     protected void onSpellStop(SpellContext context) {
-        log(this.entityIds);
         if (context.hasSkill(SBSkills.AMPLIFY) && (context.isRecast() && context.getTarget() == null) || this.discharged) {
             boolean hasShard = context.hasCatalyst(SBItems.STORM_SHARD.get());
             for (Integer entityId : this.entityIds) {
@@ -162,7 +161,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
                         handler.awardMana(10 + (context.getSpellLevel() * 2));
 
                     if (context.hasSkill(SBSkills.UNLEASHED_STORM)) {
-                        this.spawnDischargeParticles(target);
+//                        this.spawnDischargeParticles(target);
                         for (Entity entity : entities) {
                             if (entity instanceof LivingEntity targetEntity) {
                                 if (!isCaster(targetEntity)
@@ -171,7 +170,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
                                         && context.hasSkillReady(SBSkills.PIEZOELECTRIC)
                                         && caster instanceof Player) {
                                     RitualHelper.createItem(level, targetEntity.position(), new ItemStack(SBItems.STORM_SHARD.get()));
-                                    this.addCooldown(SBSkills.PIEZOELECTRIC, 600);
+                                    this.addCooldown(SBSkills.PIEZOELECTRIC, 24000);
                                 }
                             }
                         }
@@ -179,7 +178,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
 
                     if (context.hasSkill(SBSkills.PIEZOELECTRIC) && caster instanceof Player) {
                         RitualHelper.createItem(level, target.position(), new ItemStack(SBItems.STORM_SHARD.get()));
-                        this.addCooldown(SBSkills.PIEZOELECTRIC, 600);
+                        this.addCooldown(SBSkills.PIEZOELECTRIC, 24000);
                     }
                 }
             }

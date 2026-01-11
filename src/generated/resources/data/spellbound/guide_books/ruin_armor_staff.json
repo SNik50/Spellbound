@@ -11,7 +11,7 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "guide.ruin.elemental_equipment"
+        "translate": "guide.general.path_items"
       }
     },
     {
@@ -26,7 +26,7 @@
         "yOffset": 35
       },
       "translation": {
-        "translate": "guide.ruin.elemental_equipment1"
+        "translate": "guide.ruin.path_items"
       }
     },
     {
@@ -70,7 +70,8 @@
     {
       "type": "spellbound:item",
       "extras": {
-        "disableBackground": true
+        "disableBackground": true,
+        "scale": 2.0
       },
       "item": [
         {
@@ -78,14 +79,15 @@
         }
       ],
       "position": {
-        "xOffset": -15,
-        "yOffset": 140
+        "xOffset": -32,
+        "yOffset": 120
       }
     },
     {
       "type": "spellbound:item",
       "extras": {
-        "disableBackground": true
+        "disableBackground": true,
+        "scale": 2.0
       },
       "item": [
         {
@@ -93,14 +95,15 @@
         }
       ],
       "position": {
-        "xOffset": 52,
-        "yOffset": 140
+        "xOffset": 22,
+        "yOffset": 120
       }
     },
     {
       "type": "spellbound:item",
       "extras": {
-        "disableBackground": true
+        "disableBackground": true,
+        "scale": 2.0
       },
       "item": [
         {
@@ -108,8 +111,8 @@
         }
       ],
       "position": {
-        "xOffset": 110,
-        "yOffset": 140
+        "xOffset": 67,
+        "yOffset": 120
       }
     },
     {

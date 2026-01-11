@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.client.gui.toasts;
 
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -8,7 +9,11 @@ import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class LevelUpToast implements Toast {
     public static final String SPELL_TRANS = "spellbound.toast.spell_level_up";
@@ -35,20 +40,17 @@ public class LevelUpToast implements Toast {
                 this.width(), this.height());
 
         String popupText = this.spell == null
-                ? I18n.get(PATH_TRANS, this.toast.getPath().name().toLowerCase(), level)
-                : I18n.get(SPELL_TRANS, this.spell.createSpell().getName(), level);
+                ? Component.translatable(PATH_TRANS, this.spell.getPath().getSerializedName(), Integer.toString(this.level)).getString()
+                :  Component.translatable(SPELL_TRANS, this.spell.createSpell().getName(), Integer.toString(this.level)).getString();
         int lettersRevealed = Math.clamp(timeVisible / 120, 0, popupText.length());
-        Component comp = Component.translatable(popupText.substring(0, lettersRevealed))
+        MutableComponent comp = Component.translatable(popupText.substring(0, lettersRevealed))
                 .append(Component.translatable(popupText.substring(lettersRevealed))
                         .withStyle(ChatFormatting.OBFUSCATED));
 
-        guiGraphics.drawString(toastComponent.getMinecraft().font,
-                comp,
-                (width()-font.width(comp))/2,
-                (height()-8)/2,
-                0,
-                false);
-
+        List<FormattedCharSequence> lines = font.split(comp, 154);
+        for (int i = 0; i < lines.size(); i++) {
+            RenderUtil.drawCenteredString(guiGraphics, font, lines.get(i), (width()-font.width(comp))/2 + 95, (height()-13)/2 + (i * font.lineHeight), 0, false);
+        }
         return timeVisible < 8000 ? Visibility.SHOW : Visibility.HIDE;
     }
 }

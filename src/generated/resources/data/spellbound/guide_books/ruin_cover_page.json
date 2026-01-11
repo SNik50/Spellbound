@@ -101,7 +101,7 @@
         },
         {
           "component": {
-            "translate": "guide.ruin.elemental_equipment"
+            "translate": "guide.general.path_items"
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",

@@ -250,7 +250,7 @@ public class ClientEvents {
             }
 
             if (stage == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
-                ExtendedBlockPreviewRenderer.renderMultiblockPreviews(event.getPartialTick(), minecraft, level, camera, poseStack);
+//                ExtendedBlockPreviewRenderer.renderMultiblockPreviews(event.getPartialTick(), minecraft, level, camera, poseStack);
             }
 
         }

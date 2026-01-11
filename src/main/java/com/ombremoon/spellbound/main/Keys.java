@@ -12,10 +12,10 @@ import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.biome.Biome;
 
 public class Keys {
-    public static final ResourceKey<Registry<TransfigurationRitual>> RITUAL = ResourceKey.createRegistryKey(ResourceLocation.withDefaultNamespace("transfiguration_ritual"));
-    public static final ResourceKey<Registry<DivineAction>> DIVINE_ACTION = ResourceKey.createRegistryKey(ResourceLocation.withDefaultNamespace("divine_action"));
-    public static final ResourceKey<Registry<Multiblock>> MULTIBLOCKS = ResourceKey.createRegistryKey(ResourceLocation.withDefaultNamespace("multiblocks"));
-    public static final ResourceKey<Registry<GuideBookPage>> GUIDE_BOOK = ResourceKey.createRegistryKey(ResourceLocation.withDefaultNamespace("guide_books"));
+    public static final ResourceKey<Registry<TransfigurationRitual>> RITUAL = ResourceKey.createRegistryKey(CommonClass.customLocation("transfiguration_ritual"));
+    public static final ResourceKey<Registry<DivineAction>> DIVINE_ACTION = ResourceKey.createRegistryKey(CommonClass.customLocation("divine_action"));
+    public static final ResourceKey<Registry<Multiblock>> MULTIBLOCKS = ResourceKey.createRegistryKey(CommonClass.customLocation("multiblocks"));
+    public static final ResourceKey<Registry<GuideBookPage>> GUIDE_BOOK = ResourceKey.createRegistryKey(CommonClass.customLocation("guide_books"));
 
     public static ResourceKey<Biome> EMPTY_BIOME = ResourceKey.create(Registries.BIOME, CommonClass.customLocation("empty"));
 

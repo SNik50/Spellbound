@@ -21,7 +21,6 @@ public interface SBRituals {
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_BOOTS = key("create_transfig_boots");
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_STAVE = key("create_transfig_stave");
     ResourceKey<TransfigurationRitual> CREATE_MANA_TEAR = key("create_mana_tear");
-    ResourceKey<TransfigurationRitual> TEST = key("test");
 
     static void bootstrap(BootstrapContext<TransfigurationRitual> context) {
         register(
@@ -104,7 +103,7 @@ public interface SBRituals {
         register(context,
                 CREATE_TRANSFIG_STAVE,
                 TransfigurationRitual.ritual(1)
-                        .requires(Ingredient.of(Items.STICK))
+                        .requires(Ingredient.of(Items.IRON_SWORD))
                         .requires(Ingredient.of(Items.FLOWERING_AZALEA_LEAVES))
                         .requires(Ingredient.of(Items.EMERALD))
                         .requires(Ingredient.of(SBItems.MAGIC_ESSENCE.get()))
