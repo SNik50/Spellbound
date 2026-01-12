@@ -6,6 +6,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.client.gui.guide.elements.extras.ElementPosition;
 import com.ombremoon.spellbound.client.gui.guide.elements.extras.GuideImageExtras;
 import com.ombremoon.spellbound.main.CommonClass;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,4 +25,5 @@ public record GuideImageElement(ResourceLocation loc, int width, int height, Ele
     public @NotNull MapCodec<? extends IPageElement> codec() {
         return CODEC;
     }
+
 }

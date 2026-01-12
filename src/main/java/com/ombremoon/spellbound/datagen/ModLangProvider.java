@@ -142,7 +142,7 @@ public class ModLangProvider extends LanguageProvider {
     private void basicContents() {
         add("guide.basic.contents", "Book Contents");
         add("guide.basic.contributors", "Contributors");
-        add("guide.basic.dev_team", "Dev Team");
+        add("guide.basic.dev_team", "Development Team");
         add("guide.basic.past_contributors", "Former Contributors");
         add("guide.basic.spell_research", "Spell Research");
 

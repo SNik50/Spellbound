@@ -53,7 +53,7 @@ public class MageArmorItem extends ArmorItem implements GeoItem {
         SET_BONUS.put(SBArmorMaterials.PYROMANCER, SBEffects.PYROMANCER);
         SET_BONUS.put(SBArmorMaterials.STORMWEAVER, SBEffects.STORMWEAVER);
         SET_BONUS.put(SBArmorMaterials.CRYOMANCER, SBEffects.CRYOMANCER);
-        SET_BONUS.put(SBArmorMaterials.CREATIONIST, SBEffects.TRANSFIG);
+        SET_BONUS.put(SBArmorMaterials.CREATIONIST, SBEffects.CREATIONIST);
     }
 
     public MageArmorItem(Holder<ArmorMaterial> material, Type type, Properties properties) {
@@ -123,7 +123,7 @@ public class MageArmorItem extends ArmorItem implements GeoItem {
         }
 
         if (this.getEquipmentSlot() == EquipmentSlot.HEAD && !livingEntity.hasEffect(SET_BONUS.get(this.material)))
-            livingEntity.addEffect(new MobEffectInstance(SET_BONUS.get(this.material), -1));
+            livingEntity.addEffect(new MobEffectInstance(SET_BONUS.get(this.material), -1, 0, true, false));
     }
 
     @Override

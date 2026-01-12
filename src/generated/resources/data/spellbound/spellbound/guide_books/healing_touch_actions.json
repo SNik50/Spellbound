@@ -200,11 +200,7 @@
       },
       "item": [
         {
-          "type": "neoforge:components",
-          "components": {
-            "spellbound:talisman_rings": 2
-          },
-          "items": "spellbound:ritual_talisman"
+          "item": "spellbound:ritual_talisman"
         }
       ],
       "position": {

@@ -4,6 +4,9 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.client.gui.guide.elements.extras.ElementPosition;
 import com.ombremoon.spellbound.client.gui.guide.elements.extras.ItemRendererExtras;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,4 +23,5 @@ public record GuideItemElement(List<Ingredient> items, ElementPosition position,
     public @NotNull MapCodec<? extends IPageElement> codec() {
         return CODEC;
     }
+
 }

@@ -18,12 +18,12 @@ public class GuideEquipmentRenderer implements IPageElementRenderer<GuideEquipme
         if (stand == null) {
             stand = EntityType.ARMOR_STAND.create(Minecraft.getInstance().level);
 
-            stand.setItemSlot(EquipmentSlot.HEAD, element.helmet());
-            stand.setItemSlot(EquipmentSlot.CHEST, element.chestplate());
-            stand.setItemSlot(EquipmentSlot.LEGS, element.leggings());
-            stand.setItemSlot(EquipmentSlot.FEET, element.boots());
-            stand.setItemSlot(EquipmentSlot.OFFHAND, element.offHand());
-            stand.setItemSlot(EquipmentSlot.MAINHAND, element.mainHand());
+            if (element.helmet().isPresent()) stand.setItemSlot(EquipmentSlot.HEAD, element.helmet().get());
+            if (element.chestplate().isPresent()) stand.setItemSlot(EquipmentSlot.CHEST, element.chestplate().get());
+            if (element.leggings().isPresent()) stand.setItemSlot(EquipmentSlot.LEGS, element.leggings().get());
+            if (element.boots().isPresent()) stand.setItemSlot(EquipmentSlot.FEET, element.boots().get());
+            if (element.offHand().isPresent()) stand.setItemSlot(EquipmentSlot.OFFHAND, element.offHand().get());
+            if (element.mainHand().isPresent()) stand.setItemSlot(EquipmentSlot.MAINHAND, element.mainHand().get());
 
             EquipmentExtras extras = element.extras();
             stand.setHeadPose(extras.headRot().asVanilla());

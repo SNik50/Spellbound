@@ -34,6 +34,7 @@ import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public interface SBGuidePages {
@@ -573,8 +574,8 @@ public interface SBGuidePages {
                         new RecipeEntry(loc("ritual_talisman"), PAGE_TWO_START_X + 65, 35)
                 ),
                 List.of(
-                        new ItemEntry(CompoundIngredient.of(chalk1, chalk2, chalk3, chalk4, chalk5, chalk6, chalk7, chalk8, chalk9, chalk10, chalk11, chalk12, chalk13, chalk14, chalk15, chalk16), 67, 100, false),
-                        new ItemEntry(CompoundIngredient.of(talisman1, talisman2, talisman3), PAGE_TWO_START_X - 20, 35, false)
+                        new ItemEntry(Ingredient.of(SBItems.CHALK.get()), 67, 100, false),
+                        new ItemEntry(Ingredient.of(SBItems.RITUAL_TALISMAN.get()), PAGE_TWO_START_X - 20, 35, false)
                 ),
                 new TextEntry(translatable("guide.transfiguration.chalk"), 0, 35),
                 new TextEntry(translatable("guide.transfiguration.ritual_talisman"), PAGE_TWO_START_X, 125)
@@ -739,7 +740,7 @@ public interface SBGuidePages {
                 false,
                 new ItemActionEntry(SBDivineActions.HEAL_MOB_TO_FULL, null, null, 5, 24000, 0, Ingredient.of(Items.SHEEP_SPAWN_EGG)),
                 new ItemActionEntry(SBDivineActions.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES_LORE, 5, 24000, 0, Ingredient.of(Items.GOLDEN_APPLE)),
-                new ItemActionEntry(SBDivineActions.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE_LORE, 5, 24000, 10, talisman2)
+                new ItemActionEntry(SBDivineActions.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE_LORE, 5, 24000, 10, Ingredient.of(SBItems.RITUAL_TALISMAN.get()))
         );
         createDivineSpellPage(context, HEALING_BLOSSOM, HEALING_TOUCH_ACTIONS, DIVINE_BOOK, SBSpells.HEALING_BLOSSOM, 50);
         createDivineActionPage(
@@ -1793,41 +1794,28 @@ public interface SBGuidePages {
         }
     }
 
-    record EquipmentEntry(ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, ItemStack offHand, ItemStack mainHand, int x, int y, float xRot, float yRot, float zRot) {
-
-        EquipmentEntry(ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, int x, int y) {
-            this(helmet, chestplate, leggings, boots, ItemStack.EMPTY, ItemStack.EMPTY, x, y, 0f, 0f, 0f);
-        }
+    record EquipmentEntry(Optional<ItemStack> helmet, Optional<ItemStack> chestplate, Optional<ItemStack> leggings, Optional<ItemStack> boots, Optional<ItemStack> offHand, Optional<ItemStack> mainHand, int x, int y, float xRot, float yRot, float zRot) {
 
         EquipmentEntry(Supplier<Item> helmet, Supplier<Item> chestplate, Supplier<Item> leggings, Supplier<Item> boots, int x, int y) {
-            this(helmet.get().getDefaultInstance(),
-                    chestplate.get().getDefaultInstance(),
-                    leggings.get().getDefaultInstance(),
-                    boots.get().getDefaultInstance(),
-                    ItemStack.EMPTY,
-                    ItemStack.EMPTY,
+            this(Optional.of(helmet.get().getDefaultInstance()),
+                    Optional.of(chestplate.get().getDefaultInstance()),
+                    Optional.of(leggings.get().getDefaultInstance()),
+                    Optional.of(boots.get().getDefaultInstance()),
+                    Optional.empty(),
+                    Optional.empty(),
                     x, y, 0f, 0f, 0f);
         }
 
         EquipmentEntry(Supplier<Item> helmet, Supplier<Item> chestplate, Supplier<Item> leggings, Supplier<Item> boots, int x, int y, float xRot, float yRot, float zRot) {
-            this(helmet.get().getDefaultInstance(),
-                    chestplate.get().getDefaultInstance(),
-                    leggings.get().getDefaultInstance(),
-                    boots.get().getDefaultInstance(),
-                    ItemStack.EMPTY,
-                    ItemStack.EMPTY,
+            this(Optional.of(helmet.get().getDefaultInstance()),
+                    Optional.of(chestplate.get().getDefaultInstance()),
+                    Optional.of(leggings.get().getDefaultInstance()),
+                    Optional.of(boots.get().getDefaultInstance()),
+                    Optional.empty(),
+                    Optional.empty(),
                     x, y, xRot, yRot, zRot);
         }
 
-        EquipmentEntry(Supplier<Item> helmet, Supplier<Item> chestplate, Supplier<Item> leggings, Supplier<Item> boots, Supplier<Item> mainHand, int x, int y) {
-            this(helmet.get().getDefaultInstance(),
-                    chestplate.get().getDefaultInstance(),
-                    leggings.get().getDefaultInstance(),
-                    boots.get().getDefaultInstance(),
-                    ItemStack.EMPTY,
-                    mainHand.get().getDefaultInstance(),
-                    x, y, 0f, 0f, 0f);
-        }
     }
 
     record TextEntry(Component text, int xPos, int yPos, int lineLength, boolean centered, ResourceLocation scrap) {

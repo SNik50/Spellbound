@@ -3,7 +3,10 @@ package com.ombremoon.spellbound.client.gui.guide.elements.extras;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.main.CommonClass;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.feature.AbstractHugeMushroomFeature;
 
 public record ItemListExtras(ResourceLocation pageScrap, int maxRows, int rowGap, int columnGap, int countGap, boolean dropShadow, int textColour, boolean centered) implements IElementExtra {
     public static final Codec<ItemListExtras> CODEC = RecordCodecBuilder.create(inst -> inst.group(

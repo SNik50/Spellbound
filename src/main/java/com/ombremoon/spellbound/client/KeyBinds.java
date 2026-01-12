@@ -18,7 +18,7 @@ public class KeyBinds {
     public static final KeyMapping SELECT_SPELL_BINDING = new KeyMapping(KEY_SELECT_SPELL, KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_Z, KEY_CATEGORY_SPELLBOUND);
     public static final KeyMapping CYCLE_SPELL_BINDING = new KeyMapping(KEY_CYCLE_SPELL, KeyConflictContext.IN_GAME,
-            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_TAB, KEY_CATEGORY_SPELLBOUND);
+            InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, KEY_CATEGORY_SPELLBOUND);
 
     public static KeyMapping getSpellCastMapping() {
         Minecraft minecraft = Minecraft.getInstance();

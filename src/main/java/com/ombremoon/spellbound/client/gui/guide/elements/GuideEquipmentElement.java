@@ -4,17 +4,21 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.client.gui.guide.elements.extras.ElementPosition;
 import com.ombremoon.spellbound.client.gui.guide.elements.extras.EquipmentExtras;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public record GuideEquipmentElement(ItemStack helmet, ItemStack chestplate, ItemStack leggings, ItemStack boots, ItemStack offHand, ItemStack mainHand, ElementPosition position, EquipmentExtras extras) implements IPageElement {
+import java.util.Optional;
+
+public record GuideEquipmentElement(Optional<ItemStack> helmet, Optional<ItemStack> chestplate, Optional<ItemStack> leggings, Optional<ItemStack> boots, Optional<ItemStack> offHand, Optional<ItemStack> mainHand, ElementPosition position, EquipmentExtras extras) implements IPageElement {
     public static final MapCodec<GuideEquipmentElement> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            ItemStack.OPTIONAL_CODEC.optionalFieldOf("helmet", ItemStack.EMPTY).forGetter(GuideEquipmentElement::helmet),
-            ItemStack.OPTIONAL_CODEC.optionalFieldOf("chestplate", ItemStack.EMPTY).forGetter(GuideEquipmentElement::chestplate),
-            ItemStack.OPTIONAL_CODEC.optionalFieldOf("leggings", ItemStack.EMPTY).forGetter(GuideEquipmentElement::leggings),
-            ItemStack.OPTIONAL_CODEC.optionalFieldOf("boots", ItemStack.EMPTY).forGetter(GuideEquipmentElement::boots),
-            ItemStack.OPTIONAL_CODEC.optionalFieldOf("off_hand", ItemStack.EMPTY).forGetter(GuideEquipmentElement::offHand),
-            ItemStack.OPTIONAL_CODEC.optionalFieldOf("main_hand", ItemStack.EMPTY).forGetter(GuideEquipmentElement::mainHand),
+            ItemStack.STRICT_CODEC.optionalFieldOf("helmet").forGetter(GuideEquipmentElement::helmet),
+            ItemStack.STRICT_CODEC.optionalFieldOf("chestplate").forGetter(GuideEquipmentElement::chestplate),
+            ItemStack.STRICT_CODEC.optionalFieldOf("leggings").forGetter(GuideEquipmentElement::leggings),
+            ItemStack.STRICT_CODEC.optionalFieldOf("boots").forGetter(GuideEquipmentElement::boots),
+            ItemStack.STRICT_CODEC.optionalFieldOf("off_hand").forGetter(GuideEquipmentElement::offHand),
+            ItemStack.STRICT_CODEC.optionalFieldOf("main_hand").forGetter(GuideEquipmentElement::mainHand),
             ElementPosition.CODEC.optionalFieldOf("position", ElementPosition.getDefault()).forGetter(GuideEquipmentElement::position),
             EquipmentExtras.CODEC.optionalFieldOf("extras", EquipmentExtras.getDefault()).forGetter(GuideEquipmentElement::extras)
     ).apply(inst, GuideEquipmentElement::new));

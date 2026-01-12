@@ -2,8 +2,10 @@ package com.ombremoon.spellbound.networking.clientbound;
 
 import com.ombremoon.spellbound.client.AnimationHelper;
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
+import com.ombremoon.spellbound.client.renderer.ArenaDebugRenderer;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
 import com.ombremoon.spellbound.common.world.weather.HailstormData;
@@ -19,6 +21,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.Set;
@@ -233,6 +236,26 @@ public class ClientPayloadHandler {
                 final Set<ResourceKey<Level>> dimensionList = localPlayer.connection.levels();
                 Consumer<ResourceKey<Level>> keyConsumer = payload.add() ? dimensionList::add : dimensionList::remove;
                 payload.keys().forEach(keyConsumer);
+            }
+        });
+    }
+
+    public static void handGuideBooks(SendGuideBooksPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            GuideBookManager.registerGuideBooks(payload.pages(), payload.pageIndex());
+        });
+    }
+
+    public static void handleArenaDebug(ArenaDebugPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            ArenaDebugRenderer.setEnabled(payload.enabled());
+            if (payload.enabled()) {
+                AABB bounds = new AABB(payload.minX(), payload.minY(), payload.minZ(), payload.maxX(), payload.maxY(), payload.maxZ());
+                ArenaDebugRenderer.setArenaBounds(bounds);
+                ArenaDebugRenderer.setSpawnPos(payload.spawnPos());
+                ArenaDebugRenderer.setOriginPos(payload.originPos());
+            } else {
+                ArenaDebugRenderer.clear();
             }
         });
     }

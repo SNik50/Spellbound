@@ -7,6 +7,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.JsonOps;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.networking.clientbound.SendGuideBooksPayload;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -34,6 +35,15 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
         this.registries = registries;
     }
 
+    public static void registerGuideBooks(Map<ResourceLocation, List<GuideBookPage>> books, Map<ResourceLocation, Integer> indexxing) {
+        BOOKS = books;
+        PAGE_INDEX = indexxing;
+    }
+
+    public static SendGuideBooksPayload getClientboundPayload() {
+        return new SendGuideBooksPayload(BOOKS, PAGE_INDEX);
+    }
+
     public static int getPageIndex(ResourceLocation page) {
         return PAGE_INDEX.get(page);
     }
@@ -43,7 +53,7 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
     protected Map<ResourceLocation, JsonElement> prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
         Map<ResourceLocation, JsonElement> map = new HashMap();
 
-        scanDirectory(resourceManager, "guide_books", GSON, map);
+        scanDirectory(resourceManager, "spellbound/guide_books", GSON, map);
         scanDirectory(resourceManager, "standard", map);
         scanDirectory(resourceManager, "ruin", map);
         scanDirectory(resourceManager, "divine", map);
@@ -62,7 +72,7 @@ public class GuideBookManager extends SimpleJsonResourceReloadListener {
      * @param map The map containing all pages scanned so far
      */
     private void scanDirectory(ResourceManager manager, String name, Map<ResourceLocation, JsonElement> map) {
-        scanDirectory(manager, "guide_books/" + name, GSON, map);
+        scanDirectory(manager, "spellbound/guide_books/" + name, GSON, map);
     }
 
     /**

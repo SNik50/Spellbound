@@ -1,8 +1,12 @@
 package com.ombremoon.spellbound.client.gui.guide.elements.extras;
 
+import com.lowdragmc.lowdraglib2.test.TestJava;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.main.CommonClass;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 
 public record EntityRendererExtras(ResourceLocation pageScrap, boolean followMouse, float scale, float xRot, float yRot, float zRot, boolean animated) implements IElementExtra {

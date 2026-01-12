@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.datagen.provider.guide_builders;
 
+import com.lowdragmc.lowdraglib2.math.Range;
 import com.ombremoon.spellbound.client.gui.guide.elements.*;
 import com.ombremoon.spellbound.client.gui.guide.elements.extras.*;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -346,7 +347,7 @@ public class PageBuilder {
          */
         public ItemList addEntry(ItemStack ingredient, int count) {
             this.entries.add(new GuideItemListElement.ItemListEntry(
-                    List.of(ingredient), ConstantValue.exactly(count), GuideBookManager.FIRST_PAGE));
+                    List.of(ingredient), Range.of(count, count), GuideBookManager.FIRST_PAGE));
             return this;
         }
 
@@ -358,7 +359,7 @@ public class PageBuilder {
          */
         public ItemList addEntry(List<ItemStack> ingredient, int count) {
             this.entries.add(new GuideItemListElement.ItemListEntry(
-                    ingredient, ConstantValue.exactly(count), GuideBookManager.FIRST_PAGE));
+                    ingredient, Range.of(count, count), GuideBookManager.FIRST_PAGE));
             return this;
         }
 
@@ -371,7 +372,7 @@ public class PageBuilder {
          */
         public ItemList addEntry(ItemStack ingredient, int minCount, int maxCount) {
             this.entries.add(new GuideItemListElement.ItemListEntry(
-                    List.of(ingredient), UniformGenerator.between(minCount, maxCount), GuideBookManager.FIRST_PAGE));
+                    List.of(ingredient), Range.of(minCount, maxCount), GuideBookManager.FIRST_PAGE));
             return this;
         }
 
@@ -384,7 +385,7 @@ public class PageBuilder {
          */
         public ItemList addEntry(List<ItemStack> ingredient, int minCount, int maxCount) {
             this.entries.add(new GuideItemListElement.ItemListEntry(
-                    ingredient, UniformGenerator.between(minCount, maxCount), GuideBookManager.FIRST_PAGE));
+                    ingredient, Range.of(minCount, maxCount), GuideBookManager.FIRST_PAGE));
             return this;
         }
 
@@ -1564,12 +1565,12 @@ public class PageBuilder {
     }
 
     public static class EquipmentRenderer implements PageBuilderType {
-        private ItemStack helmet;
-        private ItemStack chestplate;
-        private ItemStack leggings;
-        private ItemStack boots;
-        private ItemStack offHand;
-        private ItemStack mainHand;
+        private Optional<ItemStack> helmet;
+        private Optional<ItemStack> chestplate;
+        private Optional<ItemStack> leggings;
+        private Optional<ItemStack> boots;
+        private Optional<ItemStack> offHand;
+        private Optional<ItemStack> mainHand;
         private ElementPosition position;
         EquipmentExtras.Rotation standRot;
         EquipmentExtras.Rotation headRot;
@@ -1581,12 +1582,12 @@ public class PageBuilder {
         float scale;
 
         private EquipmentRenderer() {
-            this.helmet = ItemStack.EMPTY;
-            this.chestplate = ItemStack.EMPTY;
-            this.leggings = ItemStack.EMPTY;
-            this.boots = ItemStack.EMPTY;
-            this.offHand = ItemStack.EMPTY;
-            this.mainHand = ItemStack.EMPTY;
+            this.helmet = Optional.empty();
+            this.chestplate = Optional.empty();
+            this.leggings = Optional.empty();
+            this.boots = Optional.empty();
+            this.offHand = Optional.empty();
+            this.mainHand = Optional.empty();
             this.position = ElementPosition.getDefault();
             this.standRot = EquipmentExtras.Rotation.defaultBodyRot();
             this.headRot = EquipmentExtras.Rotation.defaultHeadRot();
@@ -1642,32 +1643,32 @@ public class PageBuilder {
             return this;
         }
 
-        public EquipmentRenderer setHelmet(ItemStack helmet) {
+        public EquipmentRenderer setHelmet(Optional<ItemStack> helmet) {
             this.helmet = helmet;
             return this;
         }
 
-        public EquipmentRenderer setChestplate(ItemStack chestplate) {
+        public EquipmentRenderer setChestplate(Optional<ItemStack> chestplate) {
             this.chestplate = chestplate;
             return this;
         }
 
-        public EquipmentRenderer setLeggings(ItemStack leggings) {
+        public EquipmentRenderer setLeggings(Optional<ItemStack> leggings) {
             this.leggings = leggings;
             return this;
         }
 
-        public EquipmentRenderer setBoots(ItemStack boots) {
+        public EquipmentRenderer setBoots(Optional<ItemStack> boots) {
             this.boots = boots;
             return this;
         }
 
-        public EquipmentRenderer setOffHand(ItemStack offHand) {
+        public EquipmentRenderer setOffHand(Optional<ItemStack> offHand) {
             this.offHand = offHand;
             return this;
         }
 
-        public EquipmentRenderer setMainHand(ItemStack mainHand) {
+        public EquipmentRenderer setMainHand(Optional<ItemStack> mainHand) {
             this.mainHand = mainHand;
             return this;
         }

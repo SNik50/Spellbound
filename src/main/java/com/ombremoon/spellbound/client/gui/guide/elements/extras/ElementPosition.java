@@ -2,6 +2,8 @@ package com.ombremoon.spellbound.client.gui.guide.elements.extras;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 
 public record ElementPosition(int xOffset, int yOffset) {
     public static final Codec<ElementPosition> CODEC = RecordCodecBuilder.create(inst -> inst.group(
