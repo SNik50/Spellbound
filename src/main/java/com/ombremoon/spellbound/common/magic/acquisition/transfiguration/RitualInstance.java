@@ -44,7 +44,7 @@ public final class RitualInstance {
             multiblock.clearMultiblock(player, level, pattern);
         }
 
-        if (this.startTicks < ritual.definition().startupTime()) {
+        if (this.startTicks < /*ritual.definition().startupTime()*/100) {
             this.startTicks++;
         } else {
             this.ticks++;

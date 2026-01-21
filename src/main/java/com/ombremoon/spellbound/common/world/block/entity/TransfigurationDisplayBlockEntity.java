@@ -91,7 +91,7 @@ public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblock
 
     private static void tickItems(TransfigurationDisplayBlockEntity display) {
         display.spiralTick++;
-        if (display.spiralTick >= display.getRitual().definition().startupTime()) {
+        if (display.spiralTick >= /*display.getRitual().definition().startupTime()*/100) {
             resetDisplay(display);
         }
     }
@@ -122,7 +122,7 @@ public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblock
     }
 
     public Vec3 spiralOffset(float partialTicks, double turns) {
-        double raw = ((level.getGameTime() - spiralStartTick) + partialTicks) / this.getRitual().definition().startupTime();
+        double raw = ((level.getGameTime() - spiralStartTick) + partialTicks) / /*this.getRitual().definition().startupTime()*/100;
         double p = Mth.clamp(raw, 0.0, 1.0);
         double ease = 1.0 - Math.pow(1.0 - p, 3.0);
 

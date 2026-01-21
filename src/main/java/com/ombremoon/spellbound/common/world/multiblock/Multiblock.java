@@ -67,6 +67,8 @@ public abstract class Multiblock implements Loggable {
 
     }
 
+    protected void initializePart(MultiblockPart part, Level level, MultiblockPattern pattern) {}
+
     public Block getBlock(MultiblockIndex index) {
         BuildingBlock block = this.indices.get(index);
         return block != null ? block.getBlocks()[0] : null;
@@ -324,8 +326,9 @@ public abstract class Multiblock implements Loggable {
             this.forEachBlock(level, (blockState, index) -> {
                 BlockPos blockPos = getIndexPos(index);
                 BlockEntity blockEntity = level.getBlockEntity(blockPos);
-                if (blockEntity instanceof MultiblockPart part) {
+                if (blockEntity instanceof MultiblockPart part && part.shouldAssign()) {
                     part.assign(multiblock, index, facing);
+                    this.multiblock.initializePart(part, level, this);
                     level.sendBlockUpdated(blockPos, blockState, blockState, 3);
                 }
             });

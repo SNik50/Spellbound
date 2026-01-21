@@ -4,10 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.world.block.entity.TransfigurationDisplayBlockEntity;
-import com.ombremoon.spellbound.common.world.multiblock.BuildingBlock;
-import com.ombremoon.spellbound.common.world.multiblock.MultiblockIndex;
-import com.ombremoon.spellbound.common.world.multiblock.MultiblockOutput;
-import com.ombremoon.spellbound.common.world.multiblock.MultiblockSerializer;
+import com.ombremoon.spellbound.common.world.multiblock.*;
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBMultiblockSerializers;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
@@ -33,8 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-
-//TODO: FIX MULTI CLICK RITUAL
 
 public class TransfigurationMultiblock extends StandardMultiblock {
     public static final List<Block> EXCLUDED_BLOCKS = List.of(
@@ -71,24 +66,27 @@ public class TransfigurationMultiblock extends StandardMultiblock {
     }
 
     @Override
+    protected void initializePart(MultiblockPart part, Level level, MultiblockPattern pattern) {BlockPos pedestal = this.getPedestalPosition(pattern);
+//        List<TransfigurationDisplayBlockEntity> displays = this.createDisplayList(level, pattern);
+//        List<ItemStack> items = createItemList(displays);
+//        Optional<TransfigurationRitual> optional = RitualHelper.getRitualFor(level, this, items);
+        if (/*optional.isPresent() && */part instanceof TransfigurationDisplayBlockEntity display && !display.active) {
+//            TransfigurationRitual ritual = optional.get();
+//            display.setRitual(ritual);
+            display.setCenter(pedestal);
+            display.active = true;
+        }
+    }
+
+    @Override
     public void onActivate(Player player, Level level, MultiblockPattern pattern) {
         BlockPos pedestal = this.getPedestalPosition(pattern);
         List<TransfigurationDisplayBlockEntity> displays = this.createDisplayList(level, pattern);
         List<ItemStack> items = createItemList(displays);
         Optional<TransfigurationRitual> optional = RitualHelper.getRitualFor(level, this, items);
-        if (optional.isPresent()) {
+        if (optional.isPresent() && !level.isClientSide) {
             TransfigurationRitual ritual = optional.get();
-            displays.forEach(display -> {
-                if (!display.active) {
-                    display.setRitual(ritual);
-                    display.setCenter(pedestal);
-                    display.active = true;
-                    level.sendBlockUpdated(display.getBlockPos(), display.getBlockState(), display.getBlockState(), 3);
-                }
-            });
-
-            if (!level.isClientSide)
-                RitualSavedData.addRitual(level, new RitualInstance(Holder.direct(ritual), player.getUUID(), pedestal, pattern));
+            RitualSavedData.addRitual(level, new RitualInstance(Holder.direct(ritual), player.getUUID(), pedestal, pattern));
         } else {
             clearMultiblock(player, level, pattern);
         }

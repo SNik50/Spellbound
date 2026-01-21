@@ -15,4 +15,9 @@ public class RuneBlockEntity extends TransfigurationMultiblockPart {
     public RuneBlockEntity(BlockPos pos, BlockState blockState) {
         super(SBBlockEntities.RUNE.get(), pos, blockState);
     }
+
+    @Override
+    public boolean shouldAssign() {
+        return false;
+    }
 }
