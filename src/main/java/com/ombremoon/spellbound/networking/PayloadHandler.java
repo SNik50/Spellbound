@@ -106,7 +106,7 @@ public class PayloadHandler {
         PacketDistributor.sendToServer(new PlayerMovementPayload(PlayerMovementPayload.Movement.ROTATE, 0, 0, yRot));
     }
 
-    public static void handleAnimation(Player player, String animation, float animationSpeed, boolean stopAnimation) {
+    public static void handleAnimation(Player player, ResourceLocation animation, float animationSpeed, boolean stopAnimation) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new HandleAnimationPayload(player.getUUID().toString(), animation, animationSpeed, stopAnimation));
     }
 

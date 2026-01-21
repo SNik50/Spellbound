@@ -11,6 +11,7 @@ import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
@@ -53,7 +54,7 @@ public class SpellCastEvents {
 
     public static void chargeOrChannelSpell(EntityTickEvent.Post event) {
         Entity entity = event.getEntity();
-        if (!(entity instanceof Player player)) return;
+        if (!(entity instanceof AbstractClientPlayer player)) return;
 
         AnimationHelper.tick(player);
         var handler = SpellUtil.getSpellHandler(player);

@@ -200,9 +200,11 @@ public class NeoForgeEvents {
         if (!level.isClientSide) {
             ServerLevel serverLevel = (ServerLevel) level;
             RitualSavedData ritualData = RitualSavedData.get(serverLevel);
-            ritualData.ACTIVE_RITUALS.removeIf(ritualInstance -> !ritualInstance.isActive());
-            ritualData.ACTIVE_RITUALS.forEach(instance -> instance.tick(serverLevel));
-            ritualData.setDirty();
+            if (!ritualData.ACTIVE_RITUALS.isEmpty()) {
+                ritualData.ACTIVE_RITUALS.removeIf(ritualInstance -> !ritualInstance.isActive());
+                ritualData.ACTIVE_RITUALS.forEach(instance -> instance.tick(serverLevel));
+                ritualData.setDirty();
+            }
 
             if (ArenaSavedData.isArena(serverLevel)) {
                 ArenaSavedData arenaData = ArenaSavedData.get(serverLevel);

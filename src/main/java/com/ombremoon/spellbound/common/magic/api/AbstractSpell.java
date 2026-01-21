@@ -318,16 +318,16 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Returns the spells pathTexture of the spells.
-     * @return The spells pathTexture
+     * Returns the spells path of the spells.
+     * @return The spells path
      */
     public SpellPath getPath() {
         return this.spellType().getPath();
     }
 
     /**
-     * Returns the sub pathTexture of the spells if present.
-     * @return The spells sub pathTexture
+     * Returns the sub path of the spells if present.
+     * @return The spells sub path
      */
     public SpellPath getSubPath() {
         if (this.spellType.getPath() != SpellPath.RUIN || this.spellType.getPath().isSubPath())
@@ -653,7 +653,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Hurts the target entity. The damage type is determined by the sub-pathTexture of the path.
+     * Hurts the target entity. The damage type is determined by the sub-path of the path.
      * @param targetEntity The hurt entity
      * @param hurtAmount The amount of damage the entity takes
      * @return Whether the entity takes damage or not
@@ -675,7 +675,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Hurts the target entity by the pre-defined base damage of the path. The damage type is determined by the sub-pathTexture of the path.
+     * Hurts the target entity by the pre-defined base damage of the path. The damage type is determined by the sub-path of the path.
      * @param targetEntity The hurt entity
      * @return Whether the entity takes damage or not
      */
@@ -688,7 +688,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Calculates damage based on path level, pathTexture level, potency, and judgement (if Divine)
+     * Calculates damage based on path level, path level, potency, and judgement (if Divine)
      * @param ownerEntity The damage causing entity
      * @param amount The damage amount
      * @return The damage taking all modifiers into account
@@ -708,7 +708,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Calculates the final damage dealt after taking path level, pathTexture level, potency, and magic resistance into account
+     * Calculates the final damage dealt after taking path level, path level, potency, and magic resistance into account
      * @param ownerEntity The damage causing entity
      * @param targetEntity The hurt entity
      * @param damageAmount The damage amount
@@ -1135,18 +1135,26 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     /**
      * Plays an animation for the player. This is called server-side for all players to see the animation
      * @param player The player performing the animation
-     * @param animationName The animation pathTexture location
+     * @param animationName The animation path location
      */
-    protected void playAnimation(Player player, String animationName) {
+    protected void playAnimation(Player player, ResourceLocation animationName) {
         if (!player.level().isClientSide) {
             var handler = SpellUtil.getSpellHandler(player);
             handler.playAnimation(player, animationName, SpellUtil.getCastSpeed(player));
         }
     }
 
-    protected void stopAnimation(Player player, String animationName) {
+    protected void playAnimation(Player player, String animationName) {
+        this.playAnimation(player, CommonClass.customLocation(animationName));
+    }
+
+    protected void stopAnimation(Player player, ResourceLocation animationName) {
         if (!player.level().isClientSide)
             PayloadHandler.handleAnimation(player, animationName, 0.0F, true);
+    }
+
+    protected void stopAnimation(Player player, String animationName) {
+        this.stopAnimation(player, CommonClass.customLocation(animationName));
     }
 
     protected void playMovementAnimation(Player player, String animationName, @Nullable String fallbackAnimation) {

@@ -541,13 +541,13 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.VILE_INFLUENCE, "Increases the spore radius.");
         addSkillTooltip(SBSkills.HASTENED_GROWTH, "Decreases the explosion interval by 1 second.");
         addSkillTooltip(SBSkills.ENVENOM, "Spores now poison targets for 4 seconds.");
-        addSkillTooltip(SBSkills.PARASITIC_FUNGUS, "Spores deal extra damage, scaling with the caster's current mana, to poisoned or diseased enemies.");
+        addSkillTooltip(SBSkills.PARASITIC_FUNGUS, "Enemies hit by a mushroom explosion are taunted for 3 seconds.");
         addSkillTooltip(SBSkills.NATURES_DOMINANCE, "Each active mushroom increases the spell's damage by 10%.");
         addSkillTooltip(SBSkills.FUNGAL_HARVEST, "When 3 mushrooms are active, gain increased mana regeneration.");
         addSkillTooltip(SBSkills.POISON_ESSENCE, "If a target dies to a mushroom, the spell deals 25% more damage for 10 seconds.");
         addSkillTooltip(SBSkills.SYNTHESIS, "If a target dies to a mushroom, the casting cost of the spell is decreased by 100% for 5 seconds.");
-        addSkillTooltip(SBSkills.LIVING_FUNGUS, "When the spell ends, restores 7 - 15 mana back to the caster.");
-        addSkillTooltip(SBSkills.PROLIFERATION, "Getting hit by the same mushroom twice petrifies the target for 4 seconds.");
+        addSkillTooltip(SBSkills.LIVING_FUNGUS, "Recast on a mushroom to spawn a Mini Mushroom minion for 5 minutes.");
+        addSkillTooltip(SBSkills.PROLIFERATION, "Mini Mushroom minions can be bonemealed to spawn a Giant Mushroom.");
 
         addSkillTooltip(SBSkills.SUMMON_CAT_SPIRIT, "Summons a totem spirit for 60 seconds. It changes between warrior form (fighting stance) and cat form (healing stance).");
         addSkillTooltip(SBSkills.CATS_AGILITY, "In cat form, the spirit gains increased movement speed.");
@@ -593,8 +593,8 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.SNARE, "After the swap, the target is rooted.");
         addSkillTooltip(SBSkills.DISORIENTED, "After the swap, the target gets dizzy and deals 20% less damage for 5 seconds.");
         addSkillTooltip(SBSkills.OBSERVANT, "The target is outlined to the caster while invisible.");
-        addSkillTooltip(SBSkills.REVERSAL, "After the swap, the caster can recast with a fool's shard within 5 seconds to swap back with the target.");
-        addSkillTooltip(SBSkills.LIVING_SHADOW, "After the swap, the caster remains invisible for another 5 seconds and leaves behind a decoy for 10 seconds.");
+        addSkillTooltip(SBSkills.REVERSAL, "After the swap, the caster can recast within 5 seconds to swap back with the target.");
+        addSkillTooltip(SBSkills.LIVING_SHADOW, "After the swap, the caster remains invisible for another 5 seconds and leaves behind a decoy for up to 10 seconds.");
         addSkillTooltip(SBSkills.SHADOW_CHAIN, "The spell can now affect an additional target. Swapping order is in the order of targets affected.");
 
         addSkillTooltip(SBSkills.PURGE_MAGIC, "Stops all of the targets active spells.");
@@ -606,7 +606,7 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.RESIDUAL_DISRUPTION, "Targets hit with Purge Magic have a 50% chance to fail spells cast within the next 5 seconds.");
         addSkillTooltip(SBSkills.UNFOCUSED, "Reduces the target's spell power by 10% for 20 seconds.");
         addSkillTooltip(SBSkills.MAGIC_POISONING, "Mana is reduced by 20 points for each active spell purged.");
-        addSkillTooltip(SBSkills.NULLIFICATION, "Removes a random enchantment from the target's armor or weapon.");
+        addSkillTooltip(SBSkills.NULLIFICATION, "Removes a random enchantment from the target's equipment");
         addSkillTooltip(SBSkills.EXPUNGE, "Cast with a fool's shard to remove a spell from the target's knowledge. Can only be used once a day.");
 
         addSkillTooltip(SBSkills.SHATTERING_CRYSTAL, "Creates a crystal of Ice. Cast again to detonate it, dealing damage to nearby enemies.");

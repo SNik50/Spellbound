@@ -1,20 +1,22 @@
 package com.ombremoon.spellbound.main;
 
-import com.ombremoon.spellbound.client.gui.guide.*;
-import com.ombremoon.spellbound.client.gui.guide.elements.TransfigurationRitualElement;
+import com.ombremoon.spellbound.client.gui.guide.GuideTooltipRenderer;
+import com.ombremoon.spellbound.client.gui.guide.elements.*;
 import com.ombremoon.spellbound.client.gui.guide.renderers.*;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
-import com.ombremoon.spellbound.client.gui.guide.elements.*;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.DivineAction;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
-import dev.kosmx.playerAnim.api.layered.IAnimation;
-import dev.kosmx.playerAnim.api.layered.ModifierLayer;
-import dev.kosmx.playerAnim.minecraftApi.PlayerAnimationFactory;
-import net.minecraft.client.player.AbstractClientPlayer;
+import com.zigythebird.playeranim.animation.PlayerAnimResources;
+import com.zigythebird.playeranim.animation.PlayerAnimationController;
+import com.zigythebird.playeranim.animation.PlayerRawAnimationBuilder;
+import com.zigythebird.playeranim.api.PlayerAnimationFactory;
+import com.zigythebird.playeranimcore.animation.Animation;
+import com.zigythebird.playeranimcore.animation.RawAnimation;
+import com.zigythebird.playeranimcore.enums.PlayState;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
@@ -29,11 +31,12 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 // bobHurt stuff?
 
 //Change rituals to check one display per tick (startup time min depends on tier {tier 1  = min(4)})
+//Add favorites button to spell select screen
 
 //Catalysts
 //Ruin - Doubles Status Build Up
 //Transfig - Increases Range
-//Summons - Have 1 extra summon
+//Summons - Have 1 extra summon/Summons killed by the staff fill a dormant Soul Shard
 //Light Divine - Gain Judgement From Casting
 //Dark Divine - Lost Judgement From Casting
 //Deception - More Potency/Reduced Mana Cost in Darkness
@@ -45,6 +48,14 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 //Light Divine - Resistance to Undead and Dark Magic
 //Dark Divine - Reduces Nearby Light Magic Efficacy
 //Deception - Grants Dodge Chance
+
+//Functional Blocks
+//Resonance Pillar - Upgrade and swap familiars
+//Chroma Table - Customization options
+// - Respec and skill point transfer
+
+//Items
+//Shard Pouch - Carry a bunch of shards
 
 @Mod(Constants.MOD_ID)
 public class Spellbound {
@@ -71,7 +82,13 @@ public class Spellbound {
     private void clientSetup(final FMLClientSetupEvent event) {
         registerElementRenderers();
 
-        PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(CommonClass.customLocation("animation"), 42, Spellbound::registerPlayerAnimation);
+        event.enqueueWork(() -> {
+            PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
+                    CommonClass.customLocation("spell_cast"),
+                    1000,
+                    player -> new PlayerAnimationController(player, (controller, state, setter) -> PlayState.STOP)
+            );
+        });
 
         for (SpellPath spellPath : SpellPath.values()) {
             if (!spellPath.isSubPath()) {
@@ -97,10 +114,6 @@ public class Spellbound {
 
             return 0.0F;
         });
-    }
-
-    private static IAnimation registerPlayerAnimation(AbstractClientPlayer player) {
-        return new ModifierLayer<>();
     }
 
     private void registerRegistry(NewRegistryEvent event) {

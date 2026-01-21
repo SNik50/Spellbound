@@ -14,6 +14,7 @@ import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.serverbound.ChargeOrChannelPayload;
 import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -33,11 +34,11 @@ public class ClientPayloadHandler {
     public static void handleAnimation(HandleAnimationPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             Player player = context.player().level().getPlayerByUUID(UUID.fromString(payload.playerId()));
-            if (player != null) {
+            if (player instanceof AbstractClientPlayer clientPlayer) {
                 if (payload.stopAnimation()) {
-                    AnimationHelper.stopAnimation(player, payload.animation());
+                    AnimationHelper.stopAnimation(clientPlayer, payload.animation());
                 } else {
-                    AnimationHelper.playAnimation(player, payload.animation(), payload.castSpeed());
+                    AnimationHelper.playAnimation(clientPlayer, payload.animation(), payload.castSpeed());
                 }
             }
         });

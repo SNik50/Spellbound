@@ -84,7 +84,7 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
     public void tick() {
         super.tick();
         if (!this.level().isClientSide) {
-            if (this.getOwner() == null || !this.hasOwner() || this.isEnding() && this.tickCount >= this.getEndTick() || this.isSpellCast() && this.requiresSpellToPersist() && (this.spell == null || this.spell.isInactive))
+            if (this.getOwner() == null || !this.hasOwner() || this.isEnding() && this.tickCount >= this.getEndTick() || this.isSpellCast() && this.requiresSpellToPersist() && !this.isEnding() && (this.spell == null || this.spell.isInactive))
                 discard();
 
             if (this.spell != null)
