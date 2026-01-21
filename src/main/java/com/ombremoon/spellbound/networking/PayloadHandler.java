@@ -47,11 +47,11 @@ public class PayloadHandler {
     }
 
     public static void sendPathLevelUp(ServerPlayer player, int level, SpellboundToasts toast) {
-        PacketDistributor.sendToPlayer(player, new PathLevelUpToastPayload(level, toast.ordinal()));
+        PacketDistributor.sendToPlayer(player, new PathLevelUpToastPayload(level, toast));
     }
 
-    public static void sendSpellLevelUp(ServerPlayer player, int level, SpellType<?> spellType) {
-        PacketDistributor.sendToPlayer(player, new SpellLevelUpToastPayload(level, spellType));
+    public static void sendSpellLevelUp(ServerPlayer player, int level, SpellboundToasts toast, SpellType<?> spellType) {
+        PacketDistributor.sendToPlayer(player, new SpellLevelUpToastPayload(level, toast, spellType));
     }
 
     public static void switchMode() {

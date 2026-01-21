@@ -210,13 +210,13 @@ public class ClientPayloadHandler {
 
     public static void handlePathLevelUpToast(PathLevelUpToastPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
-            RenderUtil.sendLevelUpToast(payload.level(), SpellboundToasts.values()[payload.toast()], null);
+            RenderUtil.sendLevelUpToast(payload.level(), payload.toast(), null, payload.toast().getPath());
         });
     }
 
     public static void handleSpellLevelUpToast(SpellLevelUpToastPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
-            RenderUtil.sendLevelUpToast(payload.level(), SpellboundToasts.values()[payload.spellType().getPath().getToastOrdinal()], payload.spellType());
+            RenderUtil.sendLevelUpToast(payload.level(), payload.toast(), payload.spellType(), null);
         });
     }
 

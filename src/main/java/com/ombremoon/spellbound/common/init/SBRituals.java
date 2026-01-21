@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.init;
 
+import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.effects.CreateItem;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.effects.CreateSpellTome;
@@ -26,7 +27,7 @@ public interface SBRituals {
         register(
                 context,
                 CREATE_STRIDE,
-                TransfigurationRitual.ritual(1)
+                TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
                         .requires(Ingredient.of(Items.LEATHER_BOOTS))
                         .requires(Ingredient.of(Items.SUGAR))
                         .requires(Ingredient.of(Items.FEATHER))
@@ -37,7 +38,7 @@ public interface SBRituals {
         register(
                 context,
                 CREATE_SHADOW_GATE,
-                TransfigurationRitual.ritual(2, 200, 1)
+                TransfigurationRitual.ritual(2, 10, SpellMastery.NOVICE)
                         .requires(Ingredient.of(Items.IRON_DOOR), 2)
                         .requires(Ingredient.of(Items.ENDER_PEARL), 2)
                         .requires(Ingredient.of(Items.FEATHER), 2)
@@ -50,7 +51,7 @@ public interface SBRituals {
         register(
                 context,
                 CREATE_MYSTIC_ARMOR,
-                TransfigurationRitual.ritual(2, 200, 1)
+                TransfigurationRitual.ritual(2, 10, SpellMastery.NOVICE)
                         .requires(Ingredient.of(Items.DIAMOND_CHESTPLATE))
                         .requires(Ingredient.of(Items.CACTUS))
                         .requires(Ingredient.of(Items.OBSIDIAN), 2)
@@ -63,14 +64,14 @@ public interface SBRituals {
 
         register(context,
                 CREATE_MANA_TEAR,
-                TransfigurationRitual.ritual(1)
+                TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
                         .requires(Ingredient.of(Items.DIAMOND))
                         .requires(Ingredient.of(SBItems.MAGIC_ESSENCE.get()), 3)
                         .withEffect(new CreateItem(SBItems.MANA_TEAR.get())));
 
         register(context,
                 CREATE_TRANSFIG_HELM,
-                TransfigurationRitual.ritual(1)
+                TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
                         .requires(Ingredient.of(Items.LEATHER_HELMET))
                         .requires(Ingredient.of(Items.FLOWERING_AZALEA_LEAVES))
                         .requires(Ingredient.of(Items.EMERALD))
@@ -78,7 +79,7 @@ public interface SBRituals {
                         .withEffect(new CreateItem(SBItems.CREATIONIST_HELMET.get())));
         register(context,
                 CREATE_TRANSFIG_CHEST,
-                TransfigurationRitual.ritual(1)
+                TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
                         .requires(Ingredient.of(Items.LEATHER_CHESTPLATE))
                         .requires(Ingredient.of(Items.FLOWERING_AZALEA_LEAVES))
                         .requires(Ingredient.of(Items.EMERALD))
@@ -86,7 +87,7 @@ public interface SBRituals {
                         .withEffect(new CreateItem(SBItems.CREATIONIST_CHESTPLATE.get())));
         register(context,
                 CREATE_TRANSFIG_LEGS,
-                TransfigurationRitual.ritual(1)
+                TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
                         .requires(Ingredient.of(Items.LEATHER_LEGGINGS))
                         .requires(Ingredient.of(Items.FLOWERING_AZALEA_LEAVES))
                         .requires(Ingredient.of(Items.EMERALD))
@@ -94,7 +95,7 @@ public interface SBRituals {
                         .withEffect(new CreateItem(SBItems.CREATIONIST_LEGGINGS.get())));
         register(context,
                 CREATE_TRANSFIG_BOOTS,
-                TransfigurationRitual.ritual(1)
+                TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
                         .requires(Ingredient.of(Items.LEATHER_BOOTS))
                         .requires(Ingredient.of(Items.FLOWERING_AZALEA_LEAVES))
                         .requires(Ingredient.of(Items.EMERALD))
@@ -102,7 +103,7 @@ public interface SBRituals {
                         .withEffect(new CreateItem(SBItems.CREATIONIST_BOOTS.get())));
         register(context,
                 CREATE_TRANSFIG_STAVE,
-                TransfigurationRitual.ritual(1)
+                TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
                         .requires(Ingredient.of(Items.IRON_SWORD))
                         .requires(Ingredient.of(Items.FLOWERING_AZALEA_LEAVES))
                         .requires(Ingredient.of(Items.EMERALD))

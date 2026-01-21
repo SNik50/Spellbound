@@ -1,7 +1,8 @@
 {
   "definition": {
     "duration": 1,
-    "startupTime": 100,
+    "mastery_requirement": "novice",
+    "path_xp": 10,
     "tier": 1
   },
   "effects": [

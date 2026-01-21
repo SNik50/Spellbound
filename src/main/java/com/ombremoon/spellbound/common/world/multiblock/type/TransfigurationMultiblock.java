@@ -3,7 +3,6 @@ package com.ombremoon.spellbound.common.world.multiblock.type;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.ombremoon.spellbound.common.init.SBRituals;
 import com.ombremoon.spellbound.common.world.block.entity.TransfigurationDisplayBlockEntity;
 import com.ombremoon.spellbound.common.world.multiblock.*;
 import com.ombremoon.spellbound.common.init.SBBlocks;
@@ -66,12 +65,10 @@ public class TransfigurationMultiblock extends StandardMultiblock {
     }
 
     @Override
-    protected void initializePart(MultiblockPart part, Level level, MultiblockPattern pattern) {BlockPos pedestal = this.getPedestalPosition(pattern);
-//        List<ItemStack> items = this.createItemList(level, pattern);
-//        Optional<TransfigurationRitual> optional = RitualHelper.getRitualFor(level, this, items);
-        if (/*optional.isPresent() &&*/ part instanceof TransfigurationDisplayBlockEntity display && !display.active) {
-//            TransfigurationRitual ritual = optional.get();
-            display.setRitual(level.registryAccess().holderOrThrow(SBRituals.CREATE_SHADOW_GATE).value());
+    protected void initializePart(MultiblockPart part, Level level, MultiblockPattern pattern) {
+        BlockPos pedestal = this.getPedestalPosition(pattern);
+        if (part instanceof TransfigurationDisplayBlockEntity display && !display.active) {
+            display.setStartupTime(5 * this.rings * 20);
             display.setCenter(pedestal);
             display.active = true;
         }
@@ -171,39 +168,51 @@ public class TransfigurationMultiblock extends StandardMultiblock {
                 this.rings = 2;
                 this.index(5, 0, 5);
             } else if (rings == 3) {
-                this.pattern("  ^^^  ",
-                             " $   $ ",
-                             "^     ^",
-                             "^  #  ^",
-                             "^     ^",
-                             " $   $ ",
-                             "  ^^^  ");
-                this.pattern("   ^^^^^   ",
-                             "  $     $  ",
-                             " $       $ ",
-                             "^         ^",
-                             "^         ^",
-                             "^    #    ^",
-                             "^         ^",
-                             "^         ^",
-                             " $       $ ",
-                             "  $     $  ",
-                             "   ^^^^^   ");
-                this.pattern("    ^^^^^^^    ",
-                             "   $       $   ",
-                             "  $         $  ",
-                             " $           $ ",
+                this.pattern("***************",
+                             "***************",
+                             "***************",
+                             "***************",
+                             "******^^^******",
+                             "*****$   $*****",
+                             "****^     ^****",
+                             "****^  #  ^****",
+                             "****^     ^****",
+                             "*****$   $*****",
+                             "******^^^******",
+                             "***************",
+                             "***************",
+                             "***************",
+                             "***************");
+                this.pattern("***************",
+                             "***************",
+                             "*****^^^^^*****",
+                             "****$     $****",
+                             "***$       $***",
+                             "**^         ^**",
+                             "**^         ^**",
+                             "**^         ^**",
+                             "**^         ^**",
+                             "**^         ^**",
+                             "***$       $***",
+                             "****$     $****",
+                             "*****^^^^^*****",
+                             "***************",
+                             "***************");
+                this.pattern("****^^^^^^^****",
+                             "***$       $***",
+                             "**$         $**",
+                             "*$           $*",
                              "^             ^",
                              "^             ^",
                              "^             ^",
-                             "^      #      ^",
                              "^             ^",
                              "^             ^",
                              "^             ^",
-                             " $           $ ",
-                             "  $         $  ",
-                             "   $       $   ",
-                             "    ^^^^^^^    ");
+                             "^             ^",
+                             "*$           $*",
+                             "**$         $**",
+                             "***$       $***",
+                             "****^^^^^^^****");
                 this.rings = 3;
                 this.index(7, 0, 7);
             } else {

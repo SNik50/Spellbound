@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.main.Keys;
@@ -52,15 +53,15 @@ public class TransfigurationRitual {
     private final NonNullList<Value> elementMaterials;
     private final NonNullList<Ingredient> materials = NonNullList.create();
     private final List<RitualEffect> effects;
-    final Map<Ingredient, Integer> ingredients = new Object2IntOpenHashMap<>();
+    private final int startupTime;
 
     TransfigurationRitual(RitualDefinition definition, NonNullList<Value> elementMaterials, List<RitualEffect> effects) {
         this.definition = definition;
         this.elementMaterials = elementMaterials;
         this.effects = effects;
+        this.startupTime = 5 * definition.tier * 20;
 
         this.materials.addAll(this.convertValueToIngredient(elementMaterials));
-        elementMaterials.forEach(value -> ingredients.put(value.ingredient, value.count));
     }
 
     public boolean matches(TransfigurationMultiblock input, List<ItemStack> items) {
@@ -116,16 +117,16 @@ public class TransfigurationRitual {
         return this.effects;
     }
 
-    public static Builder ritual(int tier, int startupTime, int duration) {
-        return new Builder(new RitualDefinition(tier, startupTime, duration));
+    public int getStartupTime() {
+        return this.startupTime;
     }
 
-    public static Builder ritual(int tier, int duration) {
-        return ritual(tier, 100, duration);
+    public static Builder ritual(int tier, int duration, int pathXP, SpellMastery mastery) {
+        return new Builder(new RitualDefinition(tier, duration, pathXP, mastery));
     }
 
-    public static Builder ritual(int tier) {
-        return ritual(tier, DEFAULT_RITUAL_DURATION);
+    public static Builder ritual(int tier, int pathXP, SpellMastery mastery) {
+        return ritual(tier, DEFAULT_RITUAL_DURATION, pathXP, mastery);
     }
 
     public static class Builder {
@@ -156,12 +157,13 @@ public class TransfigurationRitual {
         }
     }
 
-    public record RitualDefinition(int tier, int startupTime, int duration) {
+    public record RitualDefinition(int tier, int duration, int pathXP, SpellMastery mastery) {
         public static final MapCodec<RitualDefinition> CODEC = RecordCodecBuilder.mapCodec(
                 p_344890_ -> p_344890_.group(
                                 ExtraCodecs.intRange(1, 3).fieldOf("tier").forGetter(RitualDefinition::tier),
-                                ExtraCodecs.NON_NEGATIVE_INT.fieldOf("startupTime").forGetter(RitualDefinition::startupTime),
-                                ExtraCodecs.NON_NEGATIVE_INT.fieldOf("duration").forGetter(RitualDefinition::duration)
+                                ExtraCodecs.NON_NEGATIVE_INT.fieldOf("duration").forGetter(RitualDefinition::duration),
+                                ExtraCodecs.NON_NEGATIVE_INT.fieldOf("path_xp").forGetter(RitualDefinition::pathXP),
+                                SpellMastery.CODEC.fieldOf("mastery_requirement").forGetter(RitualDefinition::mastery)
                         )
                         .apply(p_344890_, RitualDefinition::new)
         );

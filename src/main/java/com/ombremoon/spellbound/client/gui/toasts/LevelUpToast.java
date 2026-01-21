@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.client.gui.toasts;
 
+import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.ChatFormatting;
@@ -21,11 +22,13 @@ public class LevelUpToast implements Toast {
     private int level;
     private SpellboundToasts toast;
     private SpellType<?> spell;
+    private SpellPath path;
 
-    public LevelUpToast(int level, SpellboundToasts toast, @Nullable SpellType<?> spell) {
+    public LevelUpToast(int level, SpellboundToasts toast, @Nullable SpellType<?> spell, @Nullable SpellPath path) {
         this.level = level;
         this.toast = toast;
         this.spell = spell;
+        this.path = path;
     }
 
     @Override
@@ -40,7 +43,7 @@ public class LevelUpToast implements Toast {
                 this.width(), this.height());
 
         String popupText = this.spell == null
-                ? Component.translatable(PATH_TRANS, this.spell.getPath().getSerializedName(), Integer.toString(this.level)).getString()
+                ? Component.translatable(PATH_TRANS, this.path.getSerializedName(), Integer.toString(this.level)).getString()
                 :  Component.translatable(SPELL_TRANS, this.spell.createSpell().getName(), Integer.toString(this.level)).getString();
         int lettersRevealed = Math.clamp(timeVisible / 120, 0, popupText.length());
         MutableComponent comp = Component.translatable(popupText.substring(0, lettersRevealed))
