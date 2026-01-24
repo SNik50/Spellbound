@@ -60,9 +60,9 @@ public record SpellModifier(ResourceLocation id, ModifierType modifierType, Pred
     public static final SpellModifier UNFOCUSED = registerModifier("unfocused", ModifierType.POTENCY, spell -> true, 0.8F);
 
     //Set bonus
-    public static final SpellModifier PYROMANCER_SET = registerModifier("pyromancer_set_bonus", ModifierType.POTENCY, spellType -> spellType.getPath() == SpellPath.RUIN && spellType.getSubPath() == SpellPath.FIRE, 1.2F);
-    public static final SpellModifier STORMWEAVER_SET = registerModifier("stormweaver_set_bonus", ModifierType.POTENCY, spellType -> spellType.getPath() == SpellPath.RUIN && spellType.getSubPath() == SpellPath.SHOCK, 1.2F);
-    public static final SpellModifier CRYOMANCER_SET = registerModifier("cryomancer_set_bonus", ModifierType.POTENCY, spellType -> spellType.getPath() == SpellPath.RUIN && spellType.getSubPath() == SpellPath.FROST, 1.2F);
+    public static final SpellModifier PYROMANCER_SET = registerModifier("pyromancer_set_bonus", ModifierType.POTENCY, spellType -> spellType.getIdentifiablePath() == SpellPath.FIRE, 1.2F);
+    public static final SpellModifier STORMWEAVER_SET = registerModifier("stormweaver_set_bonus", ModifierType.POTENCY, spellType -> spellType.getIdentifiablePath() == SpellPath.SHOCK, 1.2F);
+    public static final SpellModifier CRYOMANCER_SET = registerModifier("cryomancer_set_bonus", ModifierType.POTENCY, spellType -> spellType.getIdentifiablePath() == SpellPath.FROST, 1.2F);
     public static final SpellModifier TRANSFIG_SET = registerModifier("transfig_set_bonus", ModifierType.POTENCY, spellType -> spellType.getPath() == SpellPath.TRANSFIGURATION, 1.2F);
 
     private static SpellModifier registerModifier(String name, ModifierType type, Predicate<SpellType<?>> spellPredicate, float modifier) {

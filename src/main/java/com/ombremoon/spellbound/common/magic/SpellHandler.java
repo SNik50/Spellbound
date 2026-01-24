@@ -25,6 +25,7 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -502,9 +503,9 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     /**
      * Plays an animation for the player. This is called server-side for all players to see the animation
      * @param player The player performing the animation
-     * @param animationName The animation pathTexture location
+     * @param animationName The animation path location
      */
-    public void playAnimation(Player player, String animationName, float animationSpeed) {
+    public void playAnimation(Player player, ResourceLocation animationName, float animationSpeed) {
         if (!player.level().isClientSide)
             PayloadHandler.handleAnimation(player, animationName, animationSpeed, false);
     }

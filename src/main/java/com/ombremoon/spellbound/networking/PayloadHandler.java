@@ -47,11 +47,11 @@ public class PayloadHandler {
     }
 
     public static void sendPathLevelUp(ServerPlayer player, int level, SpellboundToasts toast) {
-        PacketDistributor.sendToPlayer(player, new PathLevelUpToastPayload(level, toast.ordinal()));
+        PacketDistributor.sendToPlayer(player, new PathLevelUpToastPayload(level, toast));
     }
 
-    public static void sendSpellLevelUp(ServerPlayer player, int level, SpellType<?> spellType) {
-        PacketDistributor.sendToPlayer(player, new SpellLevelUpToastPayload(level, spellType));
+    public static void sendSpellLevelUp(ServerPlayer player, int level, SpellboundToasts toast, SpellType<?> spellType) {
+        PacketDistributor.sendToPlayer(player, new SpellLevelUpToastPayload(level, toast, spellType));
     }
 
     public static void switchMode() {
@@ -106,7 +106,7 @@ public class PayloadHandler {
         PacketDistributor.sendToServer(new PlayerMovementPayload(PlayerMovementPayload.Movement.ROTATE, 0, 0, yRot));
     }
 
-    public static void handleAnimation(Player player, String animation, float animationSpeed, boolean stopAnimation) {
+    public static void handleAnimation(Player player, ResourceLocation animation, float animationSpeed, boolean stopAnimation) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new HandleAnimationPayload(player.getUUID().toString(), animation, animationSpeed, stopAnimation));
     }
 

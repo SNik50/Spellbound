@@ -4,10 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.world.block.entity.TransfigurationDisplayBlockEntity;
-import com.ombremoon.spellbound.common.world.multiblock.BuildingBlock;
-import com.ombremoon.spellbound.common.world.multiblock.MultiblockIndex;
-import com.ombremoon.spellbound.common.world.multiblock.MultiblockOutput;
-import com.ombremoon.spellbound.common.world.multiblock.MultiblockSerializer;
+import com.ombremoon.spellbound.common.world.multiblock.*;
 import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBMultiblockSerializers;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
@@ -31,10 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-
-//TODO: FIX MULTI CLICK RITUAL
 
 public class TransfigurationMultiblock extends StandardMultiblock {
     public static final List<Block> EXCLUDED_BLOCKS = List.of(
@@ -71,62 +65,40 @@ public class TransfigurationMultiblock extends StandardMultiblock {
     }
 
     @Override
+    protected void initializePart(MultiblockPart part, Level level, MultiblockPattern pattern) {
+        BlockPos pedestal = this.getPedestalPosition(pattern);
+        if (part instanceof TransfigurationDisplayBlockEntity display && !display.active) {
+            display.setStartupTime(5 * this.rings * 20);
+            display.setCenter(pedestal);
+            display.active = true;
+        }
+    }
+
+    @Override
     public void onActivate(Player player, Level level, MultiblockPattern pattern) {
         BlockPos pedestal = this.getPedestalPosition(pattern);
-        List<TransfigurationDisplayBlockEntity> displays = this.createDisplayList(level, pattern);
-        List<ItemStack> items = createItemList(displays);
-        Optional<TransfigurationRitual> optional = RitualHelper.getRitualFor(level, this, items);
-        if (optional.isPresent()) {
+        List<ItemStack> items = this.createItemList(level, pattern);
+        Optional<TransfigurationRitual> optional = RitualHelper.getRitualFor(this, items, this.rings);
+        if (optional.isPresent() && !level.isClientSide) {
             TransfigurationRitual ritual = optional.get();
-            displays.forEach(display -> {
-                if (!display.active) {
-                    display.setRitual(ritual);
-                    display.setCenter(pedestal);
-                    display.active = true;
-                    level.sendBlockUpdated(display.getBlockPos(), display.getBlockState(), display.getBlockState(), 3);
-                }
-            });
-
-            if (!level.isClientSide)
-                RitualSavedData.addRitual(level, new RitualInstance(Holder.direct(ritual), player.getUUID(), pedestal, pattern));
+            RitualSavedData.addRitual(level, new RitualInstance(Holder.direct(ritual), player.getUUID(), pedestal, pattern));
         } else {
             clearMultiblock(player, level, pattern);
         }
     }
 
-    private List<TransfigurationDisplayBlockEntity> createDisplayList(Level level, MultiblockPattern pattern) {
-        List<TransfigurationDisplayBlockEntity> displays = new ArrayList<>();
+    private List<ItemStack> createItemList(Level level, MultiblockPattern pattern) {
+        List<ItemStack> ritualItems = new ArrayList<>();
         BlockPos origin = pattern.frontBottomLeft();
         for (MultiblockIndex index : this.displayPositions) {
             BlockPos blockPos = index.toPos(pattern.facing(), origin);
             BlockEntity entity = level.getBlockEntity(blockPos);
             if (entity instanceof TransfigurationDisplayBlockEntity display) {
-                displays.add(display);
+                ritualItems.add(display.currentItem);
             }
         }
 
-        return displays;
-    }
-
-    private List<ItemStack> createItemList(List<TransfigurationDisplayBlockEntity> displays) {
-        List<ItemStack> items = new ArrayList<>();
-        for (var display : displays) {
-            boolean found = false;
-            if (display.currentItem == null)
-                continue;
-
-            for (ItemStack item : items) {
-                if (item.getItem() == display.currentItem.getItem()) {
-                    item.grow(1);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                items.add(display.currentItem.copy());
-            }
-        }
-        return items;
+        return ritualItems;
     }
 
     @Override
@@ -196,39 +168,51 @@ public class TransfigurationMultiblock extends StandardMultiblock {
                 this.rings = 2;
                 this.index(5, 0, 5);
             } else if (rings == 3) {
-                this.pattern("  ^^^  ",
-                             " $   $ ",
-                             "^     ^",
-                             "^  #  ^",
-                             "^     ^",
-                             " $   $ ",
-                             "  ^^^  ");
-                this.pattern("   ^^^^^   ",
-                             "  $     $  ",
-                             " $       $ ",
-                             "^         ^",
-                             "^         ^",
-                             "^    #    ^",
-                             "^         ^",
-                             "^         ^",
-                             " $       $ ",
-                             "  $     $  ",
-                             "   ^^^^^   ");
-                this.pattern("    ^^^^^^^    ",
-                             "   $       $   ",
-                             "  $         $  ",
-                             " $           $ ",
+                this.pattern("***************",
+                             "***************",
+                             "***************",
+                             "***************",
+                             "******^^^******",
+                             "*****$   $*****",
+                             "****^     ^****",
+                             "****^  #  ^****",
+                             "****^     ^****",
+                             "*****$   $*****",
+                             "******^^^******",
+                             "***************",
+                             "***************",
+                             "***************",
+                             "***************");
+                this.pattern("***************",
+                             "***************",
+                             "*****^^^^^*****",
+                             "****$     $****",
+                             "***$       $***",
+                             "**^         ^**",
+                             "**^         ^**",
+                             "**^         ^**",
+                             "**^         ^**",
+                             "**^         ^**",
+                             "***$       $***",
+                             "****$     $****",
+                             "*****^^^^^*****",
+                             "***************",
+                             "***************");
+                this.pattern("****^^^^^^^****",
+                             "***$       $***",
+                             "**$         $**",
+                             "*$           $*",
                              "^             ^",
                              "^             ^",
                              "^             ^",
-                             "^      #      ^",
                              "^             ^",
                              "^             ^",
                              "^             ^",
-                             " $           $ ",
-                             "  $         $  ",
-                             "   $       $   ",
-                             "    ^^^^^^^    ");
+                             "^             ^",
+                             "*$           $*",
+                             "**$         $**",
+                             "***$       $***",
+                             "****^^^^^^^****");
                 this.rings = 3;
                 this.index(7, 0, 7);
             } else {

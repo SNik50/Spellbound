@@ -100,6 +100,11 @@ public class ModLangProvider extends LanguageProvider {
         add("chat.spelltome.spellunlocked", "Spell unlocked: ");
         add("tooltip.spellbound.holdshift", "Hold shift for more information.");
 
+        add("spellbound.sb_generic", "Magic Damage");
+        add("spellbound.ruin_fire", "Fire Damage");
+        add("spellbound.ruin_frost", "Frost Damage");
+        add("spellbound.ruin_shock", "Shock Damage");
+
         add("spellbound.path.level", "Lvl");
 
         add("command.spellbound.spellunknown", "You don't know the spells %1$s.");
@@ -427,7 +432,7 @@ public class ModLangProvider extends LanguageProvider {
 
         addSpellContents(SpellPath.DECEPTION, SBSpells.SHADOWBOND.get(),
                 "Someone has requested my help turning them invisible so they can sneak into a jungle temple's vault. If only I could reverse our roles...",
-                "Well that has done the trick! As soon as they passed the traps, I swapped places with them. Lets just hope they don't track me down.");
+                "Well that has done the trick! As soon as they passed the traps, I swapped places with them. Let's just hope they don't track me down.");
 
 
         addSpellContents(SpellPath.DECEPTION, SBSpells.PURGE_MAGIC.get(),
@@ -436,6 +441,17 @@ public class ModLangProvider extends LanguageProvider {
     }
 
     protected void skillDescriptions() {
+        add("spellbound.skill_tooltip.more_details", "Press §fShift§r for Details");
+        add("spellbound.skill_tooltip.details", "When Unlocked:");
+        add("spellbound.skill_tooltip.target_debuffs", "Target Buffs");
+        add("spellbound.skill_tooltip.ally_buffs", "Ally Buffs");
+        add("spellbound.skill_tooltip.damage", "%s %s");
+        add("spellbound.skill_tooltip.duration", "Duration: %s");
+        add("spellbound.skill_tooltip.modify_duration", "%s%s%% Fire Resist on Target");
+        add("spellbound.skill_tooltip.fire_resist", "%s%s%% Fire Resist on Target");
+        add("spellbound.skill_tooltip.ice_resist", "%s%s%% Ice Resist on Target");
+        add("spellbound.skill_tooltip.shock_resist", "%s%s%% Shock Resist on Target");
+
         addSkillTooltip(SBSkills.SOLAR_RAY, "Fire a thin beam of light that deals 5 fire damage per second.");
         addSkillTooltip(SBSkills.SUNSHINE, "Doubles the range of Solar Ray.");
         addSkillTooltip(SBSkills.HEALING_LIGHT, "Allies hit by the ray are healed for 2 health per second.");
@@ -453,9 +469,9 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.EXPLOSIVE_BARRAGE, "Each lava bomb explodes on impact.");
         addSkillTooltip(SBSkills.LAVA_FLOW, "Lava bombs turn into lava pools on impact.");
 
-        addSkillTooltip(SBSkills.STORMSTRIKE, "Send out a bolt of lightning that charges a target, dealing 2 shock damage per second for 3 seconds.");
+        addSkillTooltip(SBSkills.STORMSTRIKE, "Send out a bolt of lightning that charges a target");
         addSkillTooltip(SBSkills.STATIC_SHOCK, "Hitting a block now creates a small explosion that applies Stormstrike to anyone it hits.");
-        addSkillTooltip(SBSkills.ELECTRIFY, "Decrease the target's shock resistance by 30%.");
+        addSkillTooltip(SBSkills.ELECTRIFY, "Decreases the target's shock resistance.");
         addSkillTooltip(SBSkills.SHOCK_FACTOR, "Deals extra damage equal to 1% of your current mana each damage tick.");
         addSkillTooltip(SBSkills.PURGE, "Deals extra damage to summoned targets, equal to 10% of the caster's current mana.");
         addSkillTooltip(SBSkills.REFRACTION, "When the target takes damage from your shock-based Ruin spells while affected with Stormstrike, restores 15 mana back to the caster.");
@@ -541,13 +557,13 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.VILE_INFLUENCE, "Increases the spore radius.");
         addSkillTooltip(SBSkills.HASTENED_GROWTH, "Decreases the explosion interval by 1 second.");
         addSkillTooltip(SBSkills.ENVENOM, "Spores now poison targets for 4 seconds.");
-        addSkillTooltip(SBSkills.PARASITIC_FUNGUS, "Spores deal extra damage, scaling with the caster's current mana, to poisoned or diseased enemies.");
+        addSkillTooltip(SBSkills.PARASITIC_FUNGUS, "Enemies hit by a mushroom explosion are taunted for 3 seconds.");
         addSkillTooltip(SBSkills.NATURES_DOMINANCE, "Each active mushroom increases the spell's damage by 10%.");
         addSkillTooltip(SBSkills.FUNGAL_HARVEST, "When 3 mushrooms are active, gain increased mana regeneration.");
         addSkillTooltip(SBSkills.POISON_ESSENCE, "If a target dies to a mushroom, the spell deals 25% more damage for 10 seconds.");
         addSkillTooltip(SBSkills.SYNTHESIS, "If a target dies to a mushroom, the casting cost of the spell is decreased by 100% for 5 seconds.");
-        addSkillTooltip(SBSkills.LIVING_FUNGUS, "When the spell ends, restores 7 - 15 mana back to the caster.");
-        addSkillTooltip(SBSkills.PROLIFERATION, "Getting hit by the same mushroom twice petrifies the target for 4 seconds.");
+        addSkillTooltip(SBSkills.LIVING_FUNGUS, "Recast on a mushroom to spawn a Mini Mushroom minion for 5 minutes.");
+        addSkillTooltip(SBSkills.PROLIFERATION, "Mini Mushroom minions can be bonemealed to spawn a Giant Mushroom.");
 
         addSkillTooltip(SBSkills.SUMMON_CAT_SPIRIT, "Summons a totem spirit for 60 seconds. It changes between warrior form (fighting stance) and cat form (healing stance).");
         addSkillTooltip(SBSkills.CATS_AGILITY, "In cat form, the spirit gains increased movement speed.");
@@ -593,8 +609,8 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.SNARE, "After the swap, the target is rooted.");
         addSkillTooltip(SBSkills.DISORIENTED, "After the swap, the target gets dizzy and deals 20% less damage for 5 seconds.");
         addSkillTooltip(SBSkills.OBSERVANT, "The target is outlined to the caster while invisible.");
-        addSkillTooltip(SBSkills.REVERSAL, "After the swap, the caster can recast with a fool's shard within 5 seconds to swap back with the target.");
-        addSkillTooltip(SBSkills.LIVING_SHADOW, "After the swap, the caster remains invisible for another 5 seconds and leaves behind a decoy for 10 seconds.");
+        addSkillTooltip(SBSkills.REVERSAL, "After the swap, the caster can recast within 5 seconds to swap back with the target.");
+        addSkillTooltip(SBSkills.LIVING_SHADOW, "After the swap, the caster remains invisible for another 5 seconds and leaves behind a decoy for up to 10 seconds.");
         addSkillTooltip(SBSkills.SHADOW_CHAIN, "The spell can now affect an additional target. Swapping order is in the order of targets affected.");
 
         addSkillTooltip(SBSkills.PURGE_MAGIC, "Stops all of the targets active spells.");
@@ -606,12 +622,12 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.RESIDUAL_DISRUPTION, "Targets hit with Purge Magic have a 50% chance to fail spells cast within the next 5 seconds.");
         addSkillTooltip(SBSkills.UNFOCUSED, "Reduces the target's spell power by 10% for 20 seconds.");
         addSkillTooltip(SBSkills.MAGIC_POISONING, "Mana is reduced by 20 points for each active spell purged.");
-        addSkillTooltip(SBSkills.NULLIFICATION, "Removes a random enchantment from the target's armor or weapon.");
+        addSkillTooltip(SBSkills.NULLIFICATION, "Removes a random enchantment from the target's equipment");
         addSkillTooltip(SBSkills.EXPUNGE, "Cast with a fool's shard to remove a spell from the target's knowledge. Can only be used once a day.");
 
         addSkillTooltip(SBSkills.SHATTERING_CRYSTAL, "Creates a crystal of Ice. Cast again to detonate it, dealing damage to nearby enemies.");
         addSkillTooltip(SBSkills.FRIGID_BLAST, "Enemies hit by the blast are slower by 50% for 5 seconds.");
-        addSkillTooltip(SBSkills.ICE_SHARD, "Recast on a crystal: destroy it to make it drop a frozen shard. 30 sec. cooldown.");
+        addSkillTooltip(SBSkills.ICE_SHARD, "Recast on a crystal: destroy it to make it drop a frozen shard. 1 day cooldown.");
         addSkillTooltip(SBSkills.CHILL, "Crystal passively emits a freezing aura, dealing frost damage every second.");
         addSkillTooltip(SBSkills.FROZEN_SHRAPNEL, "The crystal now sends out ice shards that deal extra frost damage.");
         addSkillTooltip(SBSkills.HYPOTHERMIA, "Enemies hit by the explosion have their frost resistance reduced by 10% for 10 seconds.");

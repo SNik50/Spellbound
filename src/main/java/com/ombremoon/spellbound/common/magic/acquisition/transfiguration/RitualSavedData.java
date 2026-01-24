@@ -48,8 +48,6 @@ public class RitualSavedData extends SavedData {
         }
 
         tag.put("Transfiguration Rituals", ritualList);
-
-        LOGGER.info("Successfully saved rituals");
         return tag;
     }
 
@@ -66,7 +64,6 @@ public class RitualSavedData extends SavedData {
                 LOGGER.error("Invalid ritual found");
             }
         }
-        LOGGER.info("Rituals loaded successfully");
         return data;
     }
 }

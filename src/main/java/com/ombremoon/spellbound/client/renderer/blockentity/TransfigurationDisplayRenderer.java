@@ -46,7 +46,7 @@ public class TransfigurationDisplayRenderer implements BlockEntityRenderer<Trans
                 poseStack.translate(vec3.x, vec3.y, vec3.z);
             }
 
-            this.itemRenderer.renderStatic(itemstack, ItemDisplayContext.GROUND, 15728880, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, blockEntity.getLevel(), 0);
+            this.itemRenderer.renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, blockEntity.getLevel(), 0);
         }
 
         poseStack.popPose();

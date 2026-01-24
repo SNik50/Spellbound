@@ -14,6 +14,7 @@ import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.serverbound.ChargeOrChannelPayload;
 import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
@@ -33,11 +34,11 @@ public class ClientPayloadHandler {
     public static void handleAnimation(HandleAnimationPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             Player player = context.player().level().getPlayerByUUID(UUID.fromString(payload.playerId()));
-            if (player != null) {
+            if (player instanceof AbstractClientPlayer clientPlayer) {
                 if (payload.stopAnimation()) {
-                    AnimationHelper.stopAnimation(player, payload.animation());
+                    AnimationHelper.stopAnimation(clientPlayer, payload.animation());
                 } else {
-                    AnimationHelper.playAnimation(player, payload.animation(), payload.castSpeed());
+                    AnimationHelper.playAnimation(clientPlayer, payload.animation(), payload.castSpeed());
                 }
             }
         });
@@ -209,13 +210,13 @@ public class ClientPayloadHandler {
 
     public static void handlePathLevelUpToast(PathLevelUpToastPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
-            RenderUtil.sendLevelUpToast(payload.level(), SpellboundToasts.values()[payload.toast()], null);
+            RenderUtil.sendLevelUpToast(payload.level(), payload.toast(), null, payload.toast().getPath());
         });
     }
 
     public static void handleSpellLevelUpToast(SpellLevelUpToastPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
-            RenderUtil.sendLevelUpToast(payload.level(), SpellboundToasts.values()[payload.spellType().getPath().getToastOrdinal()], payload.spellType());
+            RenderUtil.sendLevelUpToast(payload.level(), payload.toast(), payload.spellType(), null);
         });
     }
 

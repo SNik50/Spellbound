@@ -76,28 +76,12 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
     }
 
     public void awardSpellXp(SpellType<?> spellType, float xp) {
-        SpellPath path = spellType.getPath();
+        SpellPath path = spellType.getIdentifiablePath();
         int spellLevel = this.getSpellLevel(spellType);
-        int pathLevel = this.getPathLevel(path);
         this.spellXp.put(spellType, Math.min(getSpellXp(spellType) + xp, getXPGoal(MAX_SPELL_LEVEL)));
 
-        SpellPath subPath = spellType.getSubPath();
-        if (subPath != null) {
-            this.pathXp.put(path, pathLevel + (xp * 0.3F));
-            this.pathXp.put(subPath, getPathXp(subPath) + (xp * 0.2F));
-        } else {
-            this.pathXp.put(path, pathLevel + (xp * 0.5F));
-        }
-        int newPathLevel = getPathLevel(path);
-        if (newPathLevel > pathLevel && newPathLevel > 0) {
-            NeoForge.EVENT_BUS.post(new PathLevelUpEvent(this.caster, path, newPathLevel));
-            float f = newPathLevel > 10 ? 1.0F : (float)newPathLevel / 10.0F;
-            caster.level().playSound(null, caster.getX(), caster.getY(), caster.getZ(), SoundEvents.PLAYER_LEVELUP, caster.getSoundSource(), f * 0.75F, 1.0F);
-
-            if (this.caster instanceof ServerPlayer serverPlayer) {
-                PayloadHandler.sendPathLevelUp(serverPlayer, newPathLevel, SpellboundToasts.values()[path.getToastOrdinal()]);
-            }
-        }
+        float pathXP = xp * 0.5F;
+        this.awardPathXP(path, pathXP, false);
 
         int newSpellLevel = this.getSpellLevel(spellType);
         if (newSpellLevel > spellLevel && newSpellLevel > 0) {
@@ -107,10 +91,39 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
             caster.level().playSound(null, caster.getX(), caster.getY(), caster.getZ(), SoundEvents.PLAYER_LEVELUP, caster.getSoundSource(), f * 0.75F, 1.0F);
 
             if (this.caster instanceof ServerPlayer serverPlayer) {
-                PayloadHandler.sendSpellLevelUp(serverPlayer, newSpellLevel, spellType);
+                PayloadHandler.sendSpellLevelUp(serverPlayer, newSpellLevel, SpellboundToasts.values()[path.getToastOrdinal()], spellType);
             }
         }
         sync();
+    }
+
+    public void awardPathXP(SpellPath path, float xp) {
+        this.awardPathXP(path, xp, true);
+    }
+
+    public void awardPathXP(SpellPath path, float xp, boolean sync) {
+        int pathLevel = this.getPathLevel(path);
+        float pathXP = this.getPathXp(path);
+        if (path.isSubPath()) {
+            this.pathXp.put(SpellPath.RUIN, this.getPathXp(SpellPath.RUIN) + xp);
+            this.pathXp.put(path, getPathXp(path) + xp);
+        } else {
+            this.pathXp.put(path, pathXP + xp);
+        }
+
+        int newPathLevel = getPathLevel(path);
+        if (!path.isSubPath() && newPathLevel > pathLevel && newPathLevel > 0) {
+            NeoForge.EVENT_BUS.post(new PathLevelUpEvent(this.caster, path, newPathLevel));
+            float f = newPathLevel > 10 ? 1.0F : (float) newPathLevel / 10.0F;
+            caster.level().playSound(null, caster.getX(), caster.getY(), caster.getZ(), SoundEvents.PLAYER_LEVELUP, caster.getSoundSource(), f * 0.75F, 1.0F);
+
+            if (this.caster instanceof ServerPlayer serverPlayer) {
+                PayloadHandler.sendPathLevelUp(serverPlayer, newPathLevel, SpellboundToasts.values()[path.getToastOrdinal()]);
+            }
+        }
+
+        if (sync)
+            this.sync();
     }
 
     public int getSkillPoints(SpellType<?> spellType) {
