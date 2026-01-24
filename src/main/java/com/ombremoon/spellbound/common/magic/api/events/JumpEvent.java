@@ -1,4 +1,4 @@
-package com.ombremoon.spellbound.common.magic.api.buff.events;
+package com.ombremoon.spellbound.common.magic.api.events;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.event.entity.living.LivingEvent;

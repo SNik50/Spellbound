@@ -16,7 +16,7 @@ import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.buff.*;
-import com.ombremoon.spellbound.common.magic.api.buff.events.SpellEvent;
+import com.ombremoon.spellbound.common.magic.api.events.SpellEvent;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataHolder;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
@@ -115,7 +115,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     /**
      * <p>
-     * Creates a static instance of a spells builder.
+     * Creates a static instance of a spell builder.
      * </p>
      * See:
      * <ul>
@@ -763,6 +763,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return SpellUtil.getSpellHandler(targetEntity).consumeMana(amount);
     }
 
+    protected boolean isBuffable(SpellContext context) {
+        return true;
+    }
+
     protected boolean hasRuinBuff(SpellContext context) {
         return this.hasFireStaffBuff(context) || this.hasFrostStaffBuff(context) || this.hasShockStaffBuff(context);
     }
@@ -789,7 +793,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     protected boolean hasSummonStaffBuff(SpellContext context) {
         ItemStack staff = context.getCatalyst(SBItems.SHOCK_STAFF.get());
-        return this.getPath() == SpellPath.SUMMONS && !staff.isEmpty();
+        return this.isBuffable(context) && this.getPath() == SpellPath.SUMMONS && !staff.isEmpty();
     }
 
     protected float getTransfigurationArmorBuff(SpellContext context) {
@@ -1359,7 +1363,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             }
 
             int spellCap = this.context.getSpellLevel() + 1;
-            if (this.hasSummonStaffBuff(this.context))
+            if (!this.fullRecast && this.hasSummonStaffBuff(this.context))
                 spellCap++;
 
             int spellsActive = this.context.getActiveSpells();

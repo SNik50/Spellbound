@@ -195,6 +195,18 @@ public class SBSkills {
     public static final Holder<Skill> OVERGROWTH = registerSkill("overgrowth", 0, 200, preReqs(TRANQUILITY_OF_WATER, CLEANSING_TOUCH));
     public static final Holder<Skill> OAK_BLESSING = registerSkill("oak_blessing", 50, 200, preReqs(TRANQUILITY_OF_WATER, CLEANSING_TOUCH));
 
+    public static final Holder<Skill> BLESSING = registerSkill("blessing");
+    public static final Holder<Skill> FORTIFIED_HEARTS = registerSkill("fortified_hearts", 0, 50, preReqs(BLESSING));
+    public static final Holder<Skill> ARCANE_RESTORATION = registerSkill("arcane_restoration", 0, 100, preReqs(BLESSING));
+    public static final Holder<Skill> SATIATING_BLESSING = registerSkill("satiating_blessing", 0, 150, preReqs(BLESSING));
+    public static final Holder<Skill> AIR_BUBBLE = registerSkill("air_bubble", 0, 200, preReqs(BLESSING));
+    public static final Holder<Skill> PURIFYING_WARD = registerSkill("purifying_ward", 0, 250, preReqs(BLESSING));
+    public static final Holder<Skill> EXTENDED_GRACE = registerSkill("extended_grace", 0, 300, preReqs(BLESSING));
+    public static final Holder<Skill> SHARED_BOON = registerSkill("shared_boon", 0, 350, preReqs(BLESSING));
+    public static final Holder<Skill> OVERFLOWING_AID = registerSkill("overflowing_aid", 0, 400, preReqs(BLESSING));
+    public static final Holder<Skill> CONSECRATED_PRESENCE = registerSkill("consecrated_presence", 0, 450, preReqs(BLESSING));
+    public static final Holder<Skill> UPLIFTING_CHORUS = registerSkill("uplifting_chorus", 0, 500, preReqs(BLESSING));
+
     //Healing Blossom
     public static final Holder<Skill> HEALING_BLOSSOM = registerSkill("healing_blossom");
     public static final Holder<Skill> THORNY_VINES = registerSkill("thorny_vines", -75, 50, preReqs(HEALING_BLOSSOM));

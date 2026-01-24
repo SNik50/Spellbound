@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.common.init;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.world.spell.deception.PurgeMagicSpell;
 import com.ombremoon.spellbound.common.world.spell.deception.ShadowbondSpell;
+import com.ombremoon.spellbound.common.world.spell.divine.BlessingSpell;
 import com.ombremoon.spellbound.common.world.spell.divine.HealingBlossomSpell;
 import com.ombremoon.spellbound.common.world.spell.divine.HealingTouchSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
@@ -96,6 +97,10 @@ public class SBSpells {
             .skills(SBSkills.HEALING_TOUCH, SBSkills.DIVINE_BALANCE, SBSkills.HEALING_STREAM, SBSkills.ACCELERATED_GROWTH,
                     SBSkills.TRANQUILITY_OF_WATER, SBSkills.NATURES_TOUCH, SBSkills.CLEANSING_TOUCH,
                     SBSkills.OVERGROWTH, SBSkills.BLASPHEMY, SBSkills.CONVALESCENCE, SBSkills.OAK_BLESSING));
+    public static final Supplier<SpellType<BlessingSpell>> BLESSING = registerSpell("blessing", divineBuilder("blessing", SpellMastery.NOVICE, BlessingSpell::new)
+            .skills(SBSkills.BLESSING, SBSkills.FORTIFIED_HEARTS, SBSkills.ARCANE_RESTORATION, SBSkills.SATIATING_BLESSING,
+                    SBSkills.AIR_BUBBLE, SBSkills.PURIFYING_WARD, SBSkills.EXTENDED_GRACE, SBSkills.SHARED_BOON,
+                    SBSkills.OVERFLOWING_AID, SBSkills.CONSECRATED_PRESENCE, SBSkills.UPLIFTING_CHORUS));
     public static final Supplier<SpellType<HealingBlossomSpell>> HEALING_BLOSSOM = registerSpell("healing_blossom", divineBuilder("healing_blossom", SpellMastery.EXPERT, HealingBlossomSpell::new)
             .skills(SBSkills.HEALING_BLOSSOM, SBSkills.THORNY_VINES, SBSkills.BLOOM, SBSkills.ETERNAL_SPRING,
                     SBSkills.FLOWER_FIELD, SBSkills.FLOURISHING_GROWTH, SBSkills.HEALING_WINDS, SBSkills.BURST_OF_LIFE,

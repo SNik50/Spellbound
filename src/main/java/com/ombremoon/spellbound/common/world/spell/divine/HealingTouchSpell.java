@@ -9,7 +9,7 @@ import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
-import com.ombremoon.spellbound.common.magic.api.buff.events.DamageEvent;
+import com.ombremoon.spellbound.common.magic.api.events.DamageEvent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
