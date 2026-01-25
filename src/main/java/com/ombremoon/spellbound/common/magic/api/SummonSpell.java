@@ -2,9 +2,8 @@ package com.ombremoon.spellbound.common.magic.api;
 
 import com.ombremoon.spellbound.common.world.entity.SmartSpellEntity;
 import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
-import com.ombremoon.spellbound.common.magic.api.buff.events.ChangeTargetEvent;
+import com.ombremoon.spellbound.common.magic.api.events.ChangeTargetEvent;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
@@ -38,7 +37,7 @@ public abstract class SummonSpell extends AnimatedSpell {
         super(spellType, builder);
     }
 
-    /**
+   /**
      * Attaches event listeners to hande summon targeting
      * @param context the context of the spells
      */
@@ -145,13 +144,8 @@ public abstract class SummonSpell extends AnimatedSpell {
             return this;
         }
 
-        public Builder<T> castAnimation(Function<SpellContext, String> castAnimationName) {
+        public Builder<T> castAnimation(Function<SpellContext, SpellAnimation> castAnimationName) {
             this.castAnimation = castAnimationName;
-            return this;
-        }
-
-        public Builder<T> failAnimation(Function<SpellContext, String> failAnimationName) {
-            this.failAnimation = failAnimationName;
             return this;
         }
 

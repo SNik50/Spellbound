@@ -1,8 +1,5 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.ice;
 
-import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
-import com.ombremoon.spellbound.common.world.entity.spell.IceShrapnel;
-import com.ombremoon.spellbound.common.world.entity.spell.ShatteringCrystal;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
@@ -12,6 +9,9 @@ import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
+import com.ombremoon.spellbound.common.world.entity.spell.IceShrapnel;
+import com.ombremoon.spellbound.common.world.entity.spell.ShatteringCrystal;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.resources.ResourceLocation;
@@ -40,11 +40,12 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                 .duration(400)
                 .manaCost(20)
                 .baseDamage(5)
-                .castAnimation(context -> context.quickOrSimpleCast(CRYSTAL_PREDICATE.test(context)))
+                .castAnimation(context -> {
+                    return context.quickOrSimpleCast(CRYSTAL_PREDICATE.test(context));
+                })
                 .castCondition((context, shatteringCrystalSpell) -> {
-                    var skills = context.getSkills();
                     if (context.getTarget() instanceof ShatteringCrystal crystal && context.getCaster() == crystal.getOwner()) {
-                        if (skills.hasSkill(SBSkills.GLACIAL_IMPACT) && context.hasCatalyst(SBItems.FROZEN_SHARD.get()) && !crystal.marked) {
+                        if (context.hasSkill(SBSkills.GLACIAL_IMPACT) && context.hasCatalyst(SBItems.FROZEN_SHARD.get()) && !crystal.marked) {
                             crystal.marked = true;
                             context.useCatalyst(SBItems.FROZEN_SHARD.get());
                         } else {
@@ -87,23 +88,22 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
         super.onSpellTick(context);
         Level level = context.getLevel();
         LivingEntity caster = context.getCaster();
-        var skills = context.getSkills();
         if (!level.isClientSide) {
             ShatteringCrystal crystal = this.getCrystal(context);
             if (!this.isSpawning()) {
-                if (crystal != null && (skills.hasSkill(SBSkills.THIN_ICE) || skills.hasSkill(SBSkills.CHILL))) {
+                if (crystal != null && (context.hasSkill(SBSkills.THIN_ICE) || context.hasSkill(SBSkills.CHILL))) {
                     List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, crystal.getBoundingBox().inflate(4))
                             .stream()
                             .filter(livingEntity -> !this.isCaster(livingEntity) || SpellUtil.IS_ALLIED.test(caster, livingEntity))
                             .toList();
 
-                    if (skills.hasSkill(SBSkills.CHILL) && this.tickCount % 20 == 0) {
+                    if (context.hasSkill(SBSkills.CHILL) && this.tickCount % 20 == 0) {
                         for (LivingEntity entity : entities) {
                             this.hurt(crystal, entity, this.getBaseDamage() / 2);
                         }
                     }
 
-                    if (skills.hasSkill(SBSkills.THIN_ICE) && !entities.isEmpty())
+                    if (context.hasSkill(SBSkills.THIN_ICE) && !entities.isEmpty())
                         primeCrystal(context, crystal);
                 }
 
@@ -159,9 +159,8 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
     }
 
     private static void primeCrystal(SpellContext context, ShatteringCrystal crystal) {
-        var skills = context.getSkills();
         ShatteringCrystalSpell spell = crystal.getSpell();
-        int count = skills.hasSkill(SBSkills.CRYSTAL_ECHO) ? 2 : 1;
+        int count = context.hasSkill(SBSkills.CRYSTAL_ECHO) ? 2 : 1;
         if (spell != null && !spell.isSpawning() && spell.primeCount < count && !spell.primed) {
             spell.primed = true;
             spell.primeTick = 50;
@@ -176,20 +175,19 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
 
     private void explodeCrystal(SpellContext context) {
         Level level = context.getLevel();
-        var skills = context.getSkills();
         ShatteringCrystal crystal = this.getCrystal(context);
         if (crystal != null) {
             List<Entity> entities = level.getEntities(crystal, crystal.getBoundingBox().inflate(4));
-            boolean flag = skills.hasSkill(SBSkills.CRYSTAL_ECHO) && !crystal.marked;
+            boolean flag = context.hasSkill(SBSkills.CRYSTAL_ECHO) && !crystal.marked;
             int count = flag ? 2 : 1;
             for (Entity entity : entities) {
-                if (skills.hasSkill(SBSkills.CHAOTIC_SHATTER) && entity instanceof ShatteringCrystal crystal1 && context.getCaster() == crystal1.getOwner()) {
+                if (context.hasSkill(SBSkills.CHAOTIC_SHATTER) && entity instanceof ShatteringCrystal crystal1 && context.getCaster() == crystal1.getOwner()) {
                     ShatteringCrystalSpell spell = crystal1.getSpell();
                     if (spell != null && spell.primeCount < count) {
                         primeCrystal(context, crystal1);
                     }
                 } else if (entity instanceof LivingEntity livingEntity && !this.isCaster(livingEntity) && this.hurt(crystal, livingEntity)) {
-                    if (skills.hasSkill(SBSkills.FRIGID_BLAST))
+                    if (context.hasSkill(SBSkills.FRIGID_BLAST))
                         this.addSkillBuff(
                                 livingEntity,
                                 SBSkills.FRIGID_BLAST,
@@ -199,7 +197,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                                 100
                         );
 
-                    if (skills.hasSkill(SBSkills.HYPOTHERMIA))
+                    if (context.hasSkill(SBSkills.HYPOTHERMIA))
                         this.addSkillBuff(
                                 livingEntity,
                                 SBSkills.HYPOTHERMIA,
@@ -228,7 +226,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                 }
             }
 
-            if (skills.hasSkill(SBSkills.FROZEN_SHRAPNEL)) {
+            if (context.hasSkill(SBSkills.FROZEN_SHRAPNEL)) {
                 int shards = RandomUtil.randomNumberBetween(6, 12);
                 for (int i = 0; i < shards; i++) {
                     this.shootProjectile(
@@ -254,11 +252,11 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                 }
             }
 
-            if (skills.hasSkill(SBSkills.LINGERING_FROST) && this.primeCount == count) {
+            if (context.hasSkill(SBSkills.LINGERING_FROST) && this.primeCount == count) {
                 this.summonEntity(context, SBEntities.ICE_MIST.get(), crystal.position());
             }
 
-            if (skills.hasSkillReady(SBSkills.ICE_SHARD)) {
+            if (context.hasSkillReady(SBSkills.ICE_SHARD)) {
                 RitualHelper.createItem(level, crystal.position(), new ItemStack(SBItems.FROZEN_SHARD.get()));
                 this.addCooldown(SBSkills.ICE_SHARD, 24000);
             }

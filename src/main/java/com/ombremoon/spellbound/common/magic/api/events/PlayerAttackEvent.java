@@ -1,4 +1,4 @@
-package com.ombremoon.spellbound.common.magic.api.buff.events;
+package com.ombremoon.spellbound.common.magic.api.events;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;

@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.spell.deception;
 
+import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -328,11 +329,12 @@ public class ShadowbondSpell extends AnimatedSpell {
 
     @Override
     public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
-        compoundTag.putInt("FirstTargetId", this.firstTarget);
-        compoundTag.putInt("SecondTargetId", this.secondTarget);
-        compoundTag.putIntArray("TargetList", this.targetList);
-        compoundTag.putBoolean("CanReverse", this.canReverse);
-        return compoundTag;
+        CompoundTag nbt = super.saveData(compoundTag);
+        nbt.putInt("FirstTargetId", this.firstTarget);
+        nbt.putInt("SecondTargetId", this.secondTarget);
+        nbt.putIntArray("TargetList", this.targetList);
+        nbt.putBoolean("CanReverse", this.canReverse);
+        return nbt;
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.ombremoon.spellbound.common.magic.api.buff;
 
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
-import com.ombremoon.spellbound.common.magic.api.buff.events.*;
+import com.ombremoon.spellbound.common.magic.api.events.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
