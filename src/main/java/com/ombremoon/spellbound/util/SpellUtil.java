@@ -77,11 +77,12 @@ public class SpellUtil {
     }
 
     public static boolean canCastSpell(LivingEntity livingEntity, AbstractSpell spell) {
+        var handler = getSpellHandler(livingEntity);
+        if (!handler.inCastMode()) return false;
         if (livingEntity instanceof Player player && player.getAbilities().instabuild) return true;
         if (EffectManager.isSilenced(livingEntity)) return false;
 
-        var handler = getSpellHandler(livingEntity);
-        return handler.inCastMode() && handler.consumeMana(spell.getManaCost(livingEntity), false);
+        return handler.consumeMana(spell.getManaCost(livingEntity), false);
     }
 
     public static <T extends SpellType<?>> void cycle(SpellHandler handler, T activeSpell) {
@@ -126,6 +127,10 @@ public class SpellUtil {
 
     public static float getCastSpeed(LivingEntity caster) {
         return caster.getAttribute(SBAttributes.CAST_SPEED) != null ? (float) caster.getAttributeValue(SBAttributes.CAST_SPEED) : 1.0F;
+    }
+
+    public static boolean isSpellActive(SpellType<?> spellType, LivingEntity caster) {
+        return !SpellUtil.getSpellHandler(caster).getActiveSpells(spellType).isEmpty();
     }
 
     /**

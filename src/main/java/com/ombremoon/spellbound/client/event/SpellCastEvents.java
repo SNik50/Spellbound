@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.client.event;
 
 import com.ombremoon.spellbound.client.AnimationHelper;
 import com.ombremoon.spellbound.client.KeyBinds;
+import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
@@ -60,17 +61,19 @@ public class SpellCastEvents {
         var handler = SpellUtil.getSpellHandler(player);
         var skills = SpellUtil.getSkills(player);
 
-        if (!isAbleToSpellCast()) return;
-        if (!handler.inCastMode()) return;
-
         var spellType = handler.getSelectedSpell();
         if (spellType == null) return;
 
         AbstractSpell spell = handler.getCurrentlyCastSpell();
         if (spell != null) {
             if (handler.castTick > 0 && !SpellUtil.canCastSpell(player, spell)) {
-                SpellContext spellContext = createContext(player, spell);
-                spell.resetCast(handler, spellContext);
+                spell.resetCast(handler, spell.getCastContext());
+                return;
+            }
+
+            if (!isAbleToSpellCast() || !handler.inCastMode()) {
+                spell.resetCast(handler, spell.getCastContext());
+                return;
             }
 
             boolean isCastKeyPressed = KeyBinds.getSpellCastMapping().isDown();
@@ -118,6 +121,7 @@ public class SpellCastEvents {
 
             wasCastKeyPressed = isCastKeyPressed;
         } else {
+            handler.setCurrentlyCastingSpell(null);
             spell = spellType.createSpellWithData(player);
             handler.setCurrentlyCastingSpell(spell);
             createContext(player, spell);
@@ -134,7 +138,7 @@ public class SpellCastEvents {
     }
 
     private static boolean canChargeSpell(SkillHolder skills, AbstractSpell spell) {
-        return spell instanceof ChargeableSpell chargeable && chargeable.canCharge((skill, choice) -> skills.hasSkill(skill) && (choice == null || skills.getChoice(spell.spellType()) == choice));
+        return spell instanceof ChargeableSpell chargeable && chargeable.canCharge((skill, choice) -> skills.hasSkill(skill) && (choice == null || skills.getChoice(spell.spellType()) == choice.value()));
     }
 
     private static void startCasting(Player player, SpellHandler handler, AbstractSpell spell) {

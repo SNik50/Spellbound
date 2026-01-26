@@ -17,13 +17,10 @@ import com.ombremoon.spellbound.common.world.spell.transfiguration.MysticArmorSp
 import com.ombremoon.spellbound.common.world.spell.transfiguration.ShadowGateSpell;
 import com.ombremoon.spellbound.common.world.spell.transfiguration.StrideSpell;
 import com.ombremoon.spellbound.common.magic.SpellPath;
-import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFight;
-import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFights;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.IEventBus;
@@ -39,7 +36,7 @@ public class SBSpells {
 
     //Ruin
     public static final Supplier<SpellType<FlameJetSpell>> FLAME_JET = registerSpell("flame_jet", fireRuinBuilder("flame_jet", SpellMastery.NOVICE, FlameJetSpell::new)
-            .skills(SBSkills.FLAME_JET, SBSkills.JET_ENGINE, SBSkills.FLAME_GEYSER, SBSkills.TWIN_JETS,
+            .skills(SBSkills.FLAME_JET, SBSkills.JET_ENGINE, SBSkills.FLAME_GEYSER, SBSkills.FLAME_INFERNO,
                     SBSkills.IGNITION_BURST, SBSkills.TURBO_CHARGE, SBSkills.EXPULSION_BLAST,
                     SBSkills.TURBULENCE_STREAM, SBSkills.JET_STABILIZATION, SBSkills.AFTERSHOCK_COMPRESSION, SBSkills.IRON_MAN));
     public static final Supplier<SpellType<SolarRaySpell>> SOLAR_RAY = registerSpell("solar_ray", fireRuinBuilder("solar_ray", SpellMastery.EXPERT, SolarRaySpell::new)

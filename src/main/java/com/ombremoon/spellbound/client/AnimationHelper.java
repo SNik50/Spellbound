@@ -1,10 +1,8 @@
 package com.ombremoon.spellbound.client;
 
-import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
-import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import com.zigythebird.playeranim.animation.PlayerAnimationController;
@@ -16,43 +14,44 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
 
 public class AnimationHelper {
+    public static final ResourceLocation SPELL_CAST_ANIMATION = CommonClass.customLocation("spell_cast");
+    public static final ResourceLocation MOVEMENT_ANIMATION = CommonClass.customLocation("movement");
 
-    public static void playAnimation(AbstractClientPlayer player, ResourceLocation animationName, float animationSpeed) {
-        PlayerAnimationController controller = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, CommonClass.customLocation("spell_cast"));
+    public static void playAnimation(AbstractClientPlayer player, SpellAnimation animation, float animationSpeed) {
+        PlayerAnimationController controller = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, animation.type().getAnimationLayer());
         if (controller != null) {
             controller.addModifier(new SpeedModifier(animationSpeed), 0);
-            controller.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(2, EasingType.EASE_IN_OUT_SINE), animationName, !controller.isPlayingTriggeredAnimation());
+            controller.replaceAnimationWithFade(AbstractFadeModifier.standardFadeIn(2, EasingType.EASE_IN_OUT_SINE), animation.animation(), !controller.isPlayingTriggeredAnimation());
         }
     }
 
-    public static void stopAnimation(AbstractClientPlayer player, ResourceLocation animationName) {
-        PlayerAnimationController controller = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, CommonClass.customLocation("spell_cast"));
+    public static void stopAnimation(AbstractClientPlayer player, SpellAnimation animation) {
+        PlayerAnimationController controller = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, animation.type().getAnimationLayer());
         if (controller == null)
             return;
 
-        if (controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animation().getNameOrId().equals(animationName.getPath())) {
+        if (isAnimationPlaying(controller, animation)) {
             controller.stopTriggeredAnimation();
         }
     }
 
     public static void tick(AbstractClientPlayer player) {
-        PlayerAnimationController controller = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, CommonClass.customLocation("spell_cast"));
-        if (controller != null) {
-            if (!controller.isActive() && controller.getModifierCount() > 0) {
-                controller.removeAllModifiers();
-            } else if (controller.isActive()) {
+        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, SPELL_CAST_ANIMATION);
+        if (spellController != null) {
+            if (!spellController.isActive() && spellController.getModifierCount() > 0) {
+                spellController.removeAllModifiers();
+            } else if (spellController.isActive()) {
                 player.setYBodyRot(player.getYHeadRot());
                 PayloadHandler.updateRotation(player.yBodyRot);
                 var handler = SpellUtil.getSpellHandler(player);
-                AbstractSpell spell = handler.getCurrentlyCastSpell();
-
-                if (spell instanceof AnimatedSpell animated) {
-                    SpellContext context = spell.getCastContext();
-                    SpellAnimation animation = animated.getCastAnimation(context);
-                    if (animation.type().isStationary() && animated.isStationaryCast(context))
-                        handler.setStationaryTicks(1);
-                }
+                SpellAnimation animation = handler.getAnimationForLayer(SPELL_CAST_ANIMATION);
+                if (animation != null && isAnimationPlaying(spellController, animation) && animation.stationary())
+                    handler.setStationaryTicks(1);
             }
         }
+    }
+
+    private static boolean isAnimationPlaying(PlayerAnimationController controller, SpellAnimation animation) {
+        return controller != null && controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animation().getNameOrId().equals(animation.animation().getPath());
     }
 }

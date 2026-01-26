@@ -139,8 +139,6 @@ public class SolarRaySpell extends ChanneledSpell {
                 solarRay.setPos(caster.position());
             });
         }
-
-//        context.getSpellHandler().setStationaryTicks(this.getCastTime() + 1);
     }
 
     @Override
@@ -149,8 +147,6 @@ public class SolarRaySpell extends ChanneledSpell {
         SolarRay solarRay = getSolarRay(context);
         if (solarRay != null)
             solarRay.setEndTick(9);
-
-//        context.getSpellHandler().setStationaryTicks(0);
     }
 
     @Override
@@ -192,19 +188,17 @@ public class SolarRaySpell extends ChanneledSpell {
     protected void onSpellTick(SpellContext context) {
         super.onSpellTick(context);
         LivingEntity caster = context.getCaster();
-        var handler = context.getSpellHandler();
         if (context.hasSkill(SBSkills.OVERHEAT) && this.tickCount == 100)
             ((ISentinel)caster).triggerSentinelBox(OVERHEAT);
 
         boolean overPower = context.hasSkill(SBSkills.OVERPOWER);
-//        if (!overPower)
-//            handler.setStationaryTicks(1);
-
         if (caster instanceof Player player) {
-            if (!context.getLevel().isClientSide && overPower) {
-                playMovementAnimation(player, "solar_walk", "solar_ray_channel");
-            } else {
-//                shakeScreen(player, 10, 5);
+            if (overPower) {
+                playMovementAnimation(player, CommonClass.customLocation("solar_walk"), new SpellAnimation(CommonClass.customLocation("solar_ray_channel"), SpellAnimation.Type.CHANNEL, false));
+            }
+
+            if (context.getLevel().isClientSide) {
+                shakeScreen(player, 10, 5);
             }
         }
     }
@@ -223,11 +217,6 @@ public class SolarRaySpell extends ChanneledSpell {
         SolarRay solarRay = getSolarRay(context);
         if (solarRay != null)
             solarRay.setEndTick(9);
-    }
-
-    @Override
-    public boolean isStationaryCast(SpellContext context) {
-        return this.isCasting() || this.tickCount > 1 && !context.hasSkill(SBSkills.OVERPOWER);
     }
 
     private void setSolarRay(int solarRay) {

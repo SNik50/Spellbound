@@ -1,20 +1,18 @@
 package com.ombremoon.spellbound.common.magic.api;
 
 import com.ombremoon.spellbound.common.events.EventFactory;
-import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.SpellMastery;
-import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -37,10 +35,9 @@ public abstract class AnimatedSpell extends AbstractSpell {
     @Override
     public void onCastStart(SpellContext context) {
         super.onCastStart(context);
-        Level level = context.getLevel();
         LivingEntity caster = context.getCaster();
-        String animation = this.castAnimation.apply(context).animation();
-        if (!level.isClientSide && !animation.isEmpty() && caster instanceof Player player) {
+        SpellAnimation animation = this.castAnimation.apply(context);
+        if (animation != null && caster instanceof Player player) {
             this.playAnimation(player, animation);
         }
     }
@@ -48,54 +45,36 @@ public abstract class AnimatedSpell extends AbstractSpell {
     /**
      * Plays an animation for the player. This is called server-side for all players to see the animation
      * @param player The player performing the animation
-     * @param animationName The animation path location
+     * @param animation The animation information
      */
-    protected void playAnimation(Player player, ResourceLocation animationName) {
-        if (!player.level().isClientSide) {
-            var handler = SpellUtil.getSpellHandler(player);
-            handler.playAnimation(player, animationName, SpellUtil.getCastSpeed(player));
-        }
+    protected void playAnimation(Player player, SpellAnimation animation) {
+        var handler = SpellUtil.getSpellHandler(player);
+        handler.playAnimation(player, animation, SpellUtil.getCastSpeed(player));
     }
 
-    protected void playAnimation(Player player, String animationName) {
-        this.playAnimation(player, CommonClass.customLocation(animationName));
+    protected void stopAnimation(Player player, SpellAnimation animation) {
+        var handler = SpellUtil.getSpellHandler(player);
+        handler.stopAnimation(player, animation);
     }
 
-    protected void stopAnimation(Player player, ResourceLocation animationName) {
-        if (!player.level().isClientSide)
-            PayloadHandler.handleAnimation(player, animationName, 0.0F, true);
-    }
-
-    protected void stopAnimation(Player player, String animationName) {
-        this.stopAnimation(player, CommonClass.customLocation(animationName));
-    }
-
-    protected void playMovementAnimation(Player player, String animationName, @Nullable String fallbackAnimation) {
-        var caster = SpellUtil.getSpellHandler(player);
-        if (caster.isMoving() && !caster.movementDirty) {
-            caster.movementDirty = true;
-            playAnimation(player, animationName);
-        } else if (!caster.isMoving() && caster.movementDirty) {
-            caster.movementDirty = false;
+    protected void playMovementAnimation(Player player, ResourceLocation movementAnimation, @Nullable SpellAnimation fallbackAnimation) {
+        var handler = SpellUtil.getSpellHandler(player);
+        SpellAnimation animation = new SpellAnimation(movementAnimation, SpellAnimation.Type.CAST, false);
+        if (handler.isMoving() && !handler.movementDirty) {
+            handler.movementDirty = true;
+            playAnimation(player, animation);
+        } else if (!handler.isMoving() && handler.movementDirty) {
+            handler.movementDirty = false;
             if (fallbackAnimation != null) {
                 playAnimation(player, fallbackAnimation);
             } else {
-                stopAnimation(player, animationName);
+                stopAnimation(player, animation);
             }
         }
     }
 
-    @Override
-    public boolean isStationaryCast(SpellContext context) {
-        return this.castAnimation.apply(context).stationary();
-    }
-
-    public SpellAnimation getCastAnimation(SpellContext context) {
-        return this.castAnimation.apply(context);
-    }
-
     public static class Builder<T extends AnimatedSpell> extends AbstractSpell.Builder<T> {
-        protected Function<SpellContext, SpellAnimation> castAnimation = context -> new SpellAnimation("simple_cast", SpellAnimation.Type.CAST, true);
+        protected Function<SpellContext, SpellAnimation> castAnimation = context -> new SpellAnimation(CommonClass.customLocation("simple_cast"), SpellAnimation.Type.CAST, true);
 
         public Builder<T> manaCost(int manaCost) {
             this.manaCost = manaCost;

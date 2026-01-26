@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.events;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
+import com.ombremoon.sentinellib.api.box.SentinelBox;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
 import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
@@ -9,6 +10,7 @@ import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
 import com.ombremoon.spellbound.common.world.commands.SpellboundCommand;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
+import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
 import com.ombremoon.spellbound.common.world.effect.SBEffect;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
@@ -78,6 +80,7 @@ public class NeoForgeEvents {
         event.addEntry(SolarRaySpell.SOLAR_BURST_FRONT);
         event.addEntry(SolarRaySpell.SOLAR_BURST_END);
         event.addEntry(SolarRaySpell.SOLAR_BURST_END_EXTENDED);
+        FlameJetSpell.registerBoxes(event);
     }
 
     @SubscribeEvent

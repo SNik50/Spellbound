@@ -39,16 +39,13 @@ public abstract class ChanneledSpell extends AnimatedSpell {
 
     @Override
     protected void onSpellStart(SpellContext context) {
-        Level level = context.getLevel();
         LivingEntity caster = context.getCaster();
         var handler = SpellUtil.getSpellHandler(caster);
         handler.setChargingOrChannelling(true);
 
-        if (!level.isClientSide) {
-            SpellAnimation animation = this.channelAnimation.apply(context);
-            if (animation != null && !animation.animation().isEmpty() && context.getCaster() instanceof Player player)
-                playAnimation(player, animation.animation());
-        }
+        SpellAnimation animation = this.channelAnimation.apply(context);
+        if (animation != null && context.getCaster() instanceof Player player)
+            playAnimation(player, animation);
     }
 
     @Override
@@ -68,15 +65,15 @@ public abstract class ChanneledSpell extends AnimatedSpell {
         LivingEntity caster = context.getCaster();
         var handler = SpellUtil.getSpellHandler(caster);
         handler.setChargingOrChannelling(false);
-        if (!caster.level().isClientSide) {
-            if (context.getCaster() instanceof Player player) {
-                if (this.channelStopAnimation != null && !this.channelStopAnimation.animation().isEmpty()) {
-                    playAnimation(player, this.channelStopAnimation.animation());
-                } else {
-                    stopAnimation(player, this.channelAnimation.apply(context).animation());
-                }
+        if (context.getCaster() instanceof Player player) {
+            if (this.channelStopAnimation != null) {
+                playAnimation(player, this.channelStopAnimation);
+            } else {
+                stopAnimation(player, this.channelAnimation.apply(context));
             }
-        } else {
+        }
+
+        if (caster.level().isClientSide) {
             KeyBinds.getSpellCastMapping().setDown(false);
         }
     }

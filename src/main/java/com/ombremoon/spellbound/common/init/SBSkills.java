@@ -24,17 +24,17 @@ public class SBSkills {
     public static final DeferredRegister<Skill> SKILLS = DeferredRegister.create(REGISTRY, Constants.MOD_ID);
 
     //Flame Jet
-    public static final Holder<Skill> FLAME_JET = registerSkill("flame_jet");
-    public static final Holder<Skill> JET_ENGINE = registerSkill("jet_engine", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> FLAME_GEYSER = registerSkill("flame_geyser", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> TWIN_JETS = registerSkill("twin_jets", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> IGNITION_BURST = registerSkill("ignition_burst", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> TURBO_CHARGE = registerSkill("turbo_charge", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> EXPULSION_BLAST = registerSkill("expulsion_blast", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> TURBULENCE_STREAM = registerSkill("turbulence_stream", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> JET_STABILIZATION = registerSkill("jet_stabilization", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> AFTERSHOCK_COMPRESSION = registerSkill("aftershock_compression", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> IRON_MAN = registerSkill("iron_man", 0, 0, preReqs(FLAME_JET));
+    public static final Holder<Skill> FLAME_JET = registerRadialSkill("flame_jet");
+    public static final Holder<Skill> FLAME_GEYSER = registerRadialSkill("flame_geyser", -75, 50, preReqs(FLAME_JET));
+    public static final Holder<Skill> EXPULSION_BLAST = registerSkill("expulsion_blast", 0, 50, preReqs(FLAME_JET));
+    public static final Holder<Skill> JET_ENGINE = registerSkill("jet_engine", -50, 100, preReqs(EXPULSION_BLAST));
+    public static final Holder<Skill> FLAME_INFERNO = registerRadialSkill("flame_inferno", 0, 100, preReqs(EXPULSION_BLAST));
+    public static final Holder<Skill> IGNITION_BURST = registerSkill("ignition_burst", 50, 100, preReqs(EXPULSION_BLAST));
+    public static final Holder<Skill> TURBO_CHARGE = registerRadialSkill("turbo_charge", 100, 100, preReqs(EXPULSION_BLAST));
+    public static final Holder<Skill> JET_STABILIZATION = registerSkill("jet_stabilization", 0, 150, preReqs(JET_ENGINE, FLAME_INFERNO, IGNITION_BURST));
+    public static final Holder<Skill> TURBULENCE_STREAM = registerSkill("turbulence_stream", -50, 200, preReqs(JET_STABILIZATION));
+    public static final Holder<Skill> AFTERSHOCK_COMPRESSION = registerSkill("aftershock_compression", 50, 200, preReqs(JET_STABILIZATION));
+    public static final Holder<Skill> IRON_MAN = registerRadialSkill("iron_man", 0, 250, preReqs(TURBULENCE_STREAM, AFTERSHOCK_COMPRESSION));
 
     //Solar Ray
     public static final Holder<Skill> SOLAR_RAY = registerSkill("solar_ray");

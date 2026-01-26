@@ -73,6 +73,7 @@ import software.bernie.geckolib.constant.dataticket.DataTicket;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -92,6 +93,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     protected static final float MANA_COST_MODIFIER = 0.15F;
     protected static final float HURT_XP_MODIFIER = 0.01F;
     protected static final float HEAL_MODIFIER = 0.25F;
+    protected static final AtomicInteger SPELL_COUNTER = new AtomicInteger();
     private final Map<Skill, List<Component>> skillTooltips = new HashMap<>();
     private final Map<Skill, DataComponentType<?>> tooltipComponents = new HashMap<>();
     private final SpellType<?> spellType;
@@ -160,7 +162,6 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.defineSpellData(dataBuilder);
         this.spellData = dataBuilder.build();
         this.registerSkillTooltips();
-
     }
 
     /**
@@ -559,12 +560,9 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     public void resetCast(SpellHandler handler, SpellContext context) {
         handler.castTick = 0;
+        handler.setChargingOrChannelling(false);
         PayloadHandler.castReset(this.spellType(), this.isRecast);
         this.onCastReset(context);
-    }
-
-    public boolean isStationaryCast(SpellContext castContext) {
-        return true;
     }
 
     /**
@@ -1221,6 +1219,11 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return this.level.clip(setupRayTraceContext(this.caster, range, ClipContext.Fluid.NONE));
     }
 
+    public Vec3 getTargetPosition(double range) {
+        BlockHitResult hitResult = this.getTargetBlock(range);
+        return hitResult.getType() != HitResult.Type.MISS ? hitResult.getLocation() : null;
+    }
+
     protected @Nullable Entity getTargetEntity() {
         return getTargetEntity(SpellUtil.getCastRange(this.caster));
     }
@@ -1376,14 +1379,14 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
                     prevSpell = this.getPreviouslyCastSpell();
                 }
 
-                if (prevSpell != null) {
+                if (prevSpell != null && prevSpell.isSpellType(this)) {
                     if (this.fullRecast) {
                         if (!prevSpell.skipEndOnRecast(prevSpell.context) && !prevSpell.equals(this))
                             prevSpell.endSpell();
 
-                        this.castId = 1;
+//                        this.castId = 1;
                     } else {
-                        this.castId = prevSpell.castId + 1;
+//                        this.castId = prevSpell.castId + 1;
                     }
 
                     incrementId = false;
@@ -1392,8 +1395,9 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
                 }
             }
 
-            if (incrementId)
-                this.castId++;
+//            if (incrementId)
+//                this.castId++;
+            this.castId = SPELL_COUNTER.incrementAndGet();
 
             if (!SpellUtil.canCastSpell(caster, this) || !(this.castPredicate.test(this.context, this) && RandomUtil.percentChance(getCastChance()))) {
                 onCastReset(this.context);
@@ -1419,6 +1423,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             }
 
             handler.setCurrentlyCastingSpell(null);
+            handler.previouslyCastSpell = this;
+            handler.lastCastTick = level.getGameTime();
             activateSpell();
             EventFactory.onSpellCast(caster, this, this.context);
 
@@ -1451,7 +1457,9 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.castId = castId;
         this.loadData(spellData);
 
-        this.context.getSpellHandler().setCurrentlyCastingSpell(null);
+        var handler = this.context.getSpellHandler();
+        handler.previouslyCastSpell = this;
+        handler.setCurrentlyCastingSpell(null);
         activateSpell();
         EventFactory.onSpellCast(caster, this, this.context);
 

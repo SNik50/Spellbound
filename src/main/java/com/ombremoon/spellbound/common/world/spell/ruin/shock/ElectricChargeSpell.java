@@ -82,18 +82,22 @@ public class ElectricChargeSpell extends AnimatedSpell {
     protected void onSpellRecast(SpellContext context) {
         super.onSpellRecast(context);
         Level level = context.getLevel();
+        var handler = context.getSpellHandler();
         boolean hasShard = context.hasCatalyst(SBItems.STORM_SHARD.get());
-        if (context.hasSkill(SBSkills.AMPLIFY)) {
-            return;
-        }
-
-        if (context.getTarget() == null || this.discharged) {
-            for (Integer entityId : this.entityIds) {
-                Entity entity = level.getEntity(entityId);
-                if (entity instanceof LivingEntity livingEntity)
-                    discharge(context, livingEntity, hasShard);
+        if (!level.isClientSide) {
+            if (context.hasSkill(SBSkills.AMPLIFY)) {
+                handler.setChargingOrChannelling(true);
+                return;
             }
-            endSpell();
+
+            if (context.getTarget() == null || this.discharged) {
+                for (Integer entityId : this.entityIds) {
+                    Entity entity = level.getEntity(entityId);
+                    if (entity instanceof LivingEntity livingEntity)
+                        discharge(context, livingEntity, hasShard);
+                }
+                endSpell();
+            }
         }
     }
 
@@ -166,7 +170,6 @@ public class ElectricChargeSpell extends AnimatedSpell {
                         handler.awardMana(10 + (context.getSpellLevel() * 2));
 
                     if (context.hasSkill(SBSkills.UNLEASHED_STORM)) {
-//                        this.spawnDischargeParticles(target);
                         for (Entity entity : entities) {
                             if (entity instanceof LivingEntity targetEntity) {
                                 if (!isCaster(targetEntity)

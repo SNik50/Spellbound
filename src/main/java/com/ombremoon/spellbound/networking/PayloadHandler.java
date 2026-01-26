@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.networking;
 
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
+import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockHolder;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -106,7 +107,7 @@ public class PayloadHandler {
         PacketDistributor.sendToServer(new PlayerMovementPayload(PlayerMovementPayload.Movement.ROTATE, 0, 0, yRot));
     }
 
-    public static void handleAnimation(Player player, ResourceLocation animation, float animationSpeed, boolean stopAnimation) {
+    public static void handleAnimation(Player player, SpellAnimation animation, float animationSpeed, boolean stopAnimation) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new HandleAnimationPayload(player.getUUID().toString(), animation, animationSpeed, stopAnimation));
     }
 
