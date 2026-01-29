@@ -1,7 +1,7 @@
 package com.ombremoon.spellbound.client.gui;
 
 import com.ombremoon.spellbound.common.init.SBData;
-import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import net.minecraft.ChatFormatting;
@@ -118,6 +118,15 @@ public abstract class SkillTooltip<T> {
         }
     };
 
+    public static SkillTooltip<Integer> PROC_DURATION = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Integer arg, Supplier<DataComponentType<Unit>> component) {
+            return (context, tooltipAdder, tooltipFlag) -> {
+                tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.proc_duration", formatDuration(arg)).withStyle(color(arg))));
+            };
+        }
+    };
+
     public static SkillTooltip<Integer> CHARGE_DURATION = new SkillTooltip<>() {
         @Override
         public SkillTooltipProvider tooltip(Integer arg, Supplier<DataComponentType<Unit>> component) {
@@ -190,6 +199,25 @@ public abstract class SkillTooltip<T> {
         }
     };
 
+    public static SkillTooltip<Float> KNOCKBACK_PER_CHARGE = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return (context, tooltipAdder, tooltipFlag) -> {
+                tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.knockback_per_charge", sign(arg)).withStyle(color(arg))));
+            };
+        }
+    };
+
+    public static SkillTooltip<Float> ALLY_RANGE = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return (context, tooltipAdder, tooltipFlag) -> {
+                tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.ally_range", sign(arg)).withStyle(color(arg))));
+            };
+        }
+    };
+
+
     public static SkillTooltip<Float> TARGET_FIRE_RESIST = new SkillTooltip<>() {
         @Override
         public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
@@ -217,11 +245,29 @@ public abstract class SkillTooltip<T> {
         }
     };
 
+    public static SkillTooltip<Float> KNOCKBACK = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return (context, tooltipAdder, tooltipFlag) -> {
+                tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.knockback", sign(arg)).withStyle(color(arg))));
+            };
+        }
+    };
+
     public static SkillTooltip<Float> EXPLOSION_RADIUS = new SkillTooltip<>() {
         @Override
         public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
             return (context, tooltipAdder, tooltipFlag) -> {
                 tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.explosion_radius", sign(arg)).withStyle(color(arg))));
+            };
+        }
+    };
+
+    public static SkillTooltip<ModifierData> ATTRIBUTE = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(ModifierData arg, Supplier<DataComponentType<Unit>> component) {
+            return (context, tooltipAdder, tooltipFlag) -> {
+                tooltipAdder.accept(CommonComponents.space().append(arg.attribute().value().toComponent(arg.attributeModifier(), tooltipFlag)).withStyle(color((float) arg.attributeModifier().amount())));
             };
         }
     };
@@ -235,15 +281,34 @@ public abstract class SkillTooltip<T> {
         }
     };
 
-    public static SkillTooltip<ChoiceTooltip> CHOICE = new SkillTooltip<>() {
+    public static SkillTooltip<Unit> CHOICE = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Unit arg, Supplier<DataComponentType<Unit>> component) {
+            return (context, tooltipAdder, tooltipFlag) -> {
+                tooltipAdder.accept(CommonComponents.NEW_LINE);
+                tooltipAdder.accept(Component.translatable("spellbound.skill_tooltip.choice").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+            };
+        }
+    };
+
+    public static SkillTooltip<ChoiceTooltip> CHOICE_CONDITION = new SkillTooltip<>() {
         @Override
         public SkillTooltipProvider tooltip(ChoiceTooltip arg, Supplier<DataComponentType<Unit>> component) {
             return (context, tooltipAdder, tooltipFlag) -> {
                 Skill skill = arg.skill.value();
                 int color = skill.getSpell().getIdentifiablePath().getColor();
                 tooltipAdder.accept(CommonComponents.NEW_LINE);
-                tooltipAdder.accept(Component.translatable("spellbound.skill_tooltip.choice").withStyle(ChatFormatting.GRAY).append(skill.getName().append(":").withColor(color).withStyle(ChatFormatting.ITALIC)));
+                tooltipAdder.accept(Component.translatable("spellbound.skill_tooltip.choice_condition").withStyle(ChatFormatting.GRAY).append(skill.getName().append(":").withColor(color).withStyle(ChatFormatting.ITALIC)));
                 arg.tooltip.addToTooltip(Item.TooltipContext.EMPTY, tooltipAdder, TooltipFlag.NORMAL);
+            };
+        }
+    };
+
+    public static SkillTooltip<Float> WATER_SLOWDOWN = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Float arg, Supplier<DataComponentType<Unit>> component) {
+            return (context, tooltipAdder, tooltipFlag) -> {
+                tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.dolphins_fin", sign(arg)).withStyle(invertedColor(arg))));
             };
         }
     };

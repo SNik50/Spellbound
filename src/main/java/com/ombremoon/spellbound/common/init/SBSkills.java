@@ -141,16 +141,16 @@ public class SBSkills {
     public static final Holder<Skill> MARATHON = registerSkill("marathon", 0, 250, preReqs(MOMENTUM, STAMPEDE));
 
     public static final Holder<Skill> DOLPHINS_FIN = registerRadialSkill("dolphins_fin");
-    public static final Holder<Skill> MERMAIDS_TAIL = registerSkill("mermaids_tail", 0, 0, preReqs(DOLPHINS_FIN));
-    public static final Holder<Skill> AQUATIC_DASH = registerRadialSkill("aquatic_dash", 0, 0, preReqs(DOLPHINS_FIN));
-    public static final Holder<Skill> SHARK_ATTACK = registerSkill("shark_attack", 0, 0, preReqs(DOLPHINS_FIN));
-    public static final Holder<Skill> ECHOLOCATION = registerRadialSkill("echolocation", 0, 0, preReqs(DOLPHINS_FIN));
-    public static final Holder<Skill> POD_LEADER = registerSkill("pod_leader", 0, 0, preReqs(DOLPHINS_FIN));
-    public static final Holder<Skill> SLIPSTREAM = registerSkill("slipstream", 0, 0, preReqs(DOLPHINS_FIN));
-    public static final Holder<Skill> SONAR_BLAST = registerRadialSkill("sonar_blast", 0, 0, preReqs(DOLPHINS_FIN));
-    public static final Holder<Skill> KELP_VEIL = registerSkill("kelp_veil", 0, 0, preReqs(DOLPHINS_FIN));
-    public static final Holder<Skill> HAMMERHEAD = registerSkill("hammerhead", 0, 0, preReqs(DOLPHINS_FIN));
-    public static final Holder<Skill> OCEAN_DWELLER = registerSkill("ocean_dweller", 0, 0, preReqs(DOLPHINS_FIN));
+    public static final Holder<Skill> MERMAIDS_TAIL = registerSkill("mermaids_tail", 0, 50, preReqs(DOLPHINS_FIN));
+    public static final Holder<Skill> POD_LEADER = registerSkill("pod_leader", -75, 50, preReqs(DOLPHINS_FIN));
+    public static final Holder<Skill> SLIPSTREAM = registerSkill("slipstream", 0, 100, preReqs(MERMAIDS_TAIL));
+    public static final Holder<Skill> ECHOLOCATION = registerRadialSkill("echolocation", 50, 100, preReqs(MERMAIDS_TAIL));
+    public static final Holder<Skill> SONAR_BLAST = registerRadialSkill("sonar_blast", -50, 100, preReqs(MERMAIDS_TAIL));
+    public static final Holder<Skill> AQUATIC_DASH = registerRadialSkill("aquatic_dash", 0, 150, preReqs(SLIPSTREAM, ECHOLOCATION, SONAR_BLAST));
+    public static final Holder<Skill> SHARK_ATTACK = registerSkill("shark_attack", 0, 200, preReqs(AQUATIC_DASH));
+    public static final Holder<Skill> HAMMERHEAD = registerSkill("hammerhead", -50, 200, preReqs(AQUATIC_DASH));
+    public static final Holder<Skill> KELP_VEIL = registerSkill("kelp_veil", 50, 200, preReqs(AQUATIC_DASH));
+    public static final Holder<Skill> OCEAN_DWELLER = registerSkill("ocean_dweller", 0, 250, preReqs(SHARK_ATTACK, HAMMERHEAD, KELP_VEIL));
 
     //Shadow Gate
     public static final Holder<Skill> SHADOW_GATE = registerRadialSkill("shadow_gate");

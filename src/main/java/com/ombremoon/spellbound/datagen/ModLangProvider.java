@@ -31,6 +31,7 @@ public class ModLangProvider extends LanguageProvider {
             "magis", "Magi's",
             "architects", "Architect's",
             "swindlers", "Swindler's",
+            "dolphins", "Dolphin's",
             "mermaids", "Mermaids's"
     );
 
@@ -455,6 +456,7 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.cooldown", "%s Cooldown");
         add("spellbound.skill_tooltip.effect_duration", "%s Effect Duration");
         add("spellbound.skill_tooltip.proc_chance", "%s%% Proc Chance");
+        add("spellbound.skill_tooltip.proc_duration", "%s Proc Duration");
         add("spellbound.skill_tooltip.charge_duration", "%s Charge Duration");
         add("spellbound.skill_tooltip.max_charges", "%s Charges");
         add("spellbound.skill_tooltip.modify_damage", "%s%% %s");
@@ -463,12 +465,17 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.damage_per_charge", "%s%% %s per Charge");
         add("spellbound.skill_tooltip.range_per_charge", "%s%% Range per Charge");
         add("spellbound.skill_tooltip.radius_per_charge", "%s%% Radius per Charge");
+        add("spellbound.skill_tooltip.knockback_per_charge", "%s%% Knockback per Charge");
+        add("spellbound.skill_tooltip.ally_range", "%s Ally Buff Range");
         add("spellbound.skill_tooltip.target_fire_resist", "%s%% Fire Resist on Target");
         add("spellbound.skill_tooltip.target_ice_resist", "%s%% Ice Resist on Target");
         add("spellbound.skill_tooltip.target_shock_resist", "%s%% Shock Resist on Target");
+        add("spellbound.skill_tooltip.knockback", "%s Knockback Strength");
         add("spellbound.skill_tooltip.explosion_radius", "%s Explosion Radius");
         add("spellbound.skill_tooltip.potency_scaling", "Scales with Potency");
-        add("spellbound.skill_tooltip.choice", "If ");
+        add("spellbound.skill_tooltip.choice", "Choice Upgrade");
+        add("spellbound.skill_tooltip.choice_condition", "If ");
+        add("spellbound.skill_tooltip.dolphins_fin", "%s%% Water Slowdown");
 
         addSkillTooltip(SBSkills.FLAME_JET, "Releases a short, concentrated burst of fire in front of the caster.");
         addSkillTooltip(SBSkills.JET_ENGINE, "Propels the caster in the direction they are facing, dealing Fire damage to enemies behind.");
@@ -558,6 +565,18 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.MOMENTUM, "For each second travelled, your attack speed is increased by 4%, up to a max of 20%, for 5 seconds.");
         addSkillTooltip(SBSkills.STAMPEDE, "You can charge through enemies, knocking them back and dealing 3 damage.");
         addSkillTooltip(SBSkills.MARATHON, "Food consumption is halted.");
+
+        addSkillTooltip(SBSkills.DOLPHINS_FIN, "Increases the caster's swim speed and water movement efficiency. Also reduces the caster's water speed reduction.");
+        addSkillTooltip(SBSkills.MERMAIDS_TAIL, "Increases the swim speed and water speed reduction bonuses.");
+        addSkillTooltip(SBSkills.AQUATIC_DASH, "Recast to perform an instant dash forward through the water.");
+        addSkillTooltip(SBSkills.SHARK_ATTACK, "Passing through an enemy with Aquatic Dash deals minor damage and knockback.");
+        addSkillTooltip(SBSkills.ECHOLOCATION, "Recast to emit a sonar ping, highlighting all entities in the water within range.");
+        addSkillTooltip(SBSkills.POD_LEADER, "Nearby allies gain the swim speed benefits.");
+        addSkillTooltip(SBSkills.SLIPSTREAM, "Continuously swimming increases the swim speed bonus and grants immunity to Mining Fatigue.");
+        addSkillTooltip(SBSkills.SONAR_BLAST, "Recast to emit a conical wave of force in the direction the caster is facing.");
+        addSkillTooltip(SBSkills.KELP_VEIL, "Remaining motionless underwater grants the caster invisibility until the next movement or action.");
+        addSkillTooltip(SBSkills.HAMMERHEAD, "Underwater mining speed reduction is negated.");
+        addSkillTooltip(SBSkills.OCEAN_DWELLER, "Gain the ability to breathe underwater.");
 
         addSkillTooltip(SBSkills.SHADOW_GATE, "Deploy 2 shadow portals (must be in a low light level), allowing passage in both directions with 50 blocks.");
         addSkillTooltip(SBSkills.REACH, "Double the range of the portals");

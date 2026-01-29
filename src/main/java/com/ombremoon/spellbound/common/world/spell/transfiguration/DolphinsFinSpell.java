@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
+import com.ombremoon.spellbound.client.gui.SkillTooltip;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.init.SBSkills;
@@ -12,6 +13,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
+import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -47,15 +49,14 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
     private static final ResourceLocation ECHOLOCATION = CommonClass.customLocation("echo_location");
     private static final ResourceLocation OCEAN_DWELLER = CommonClass.customLocation("ocean_dwell");
     private static final ResourceLocation KELP_VEIL = CommonClass.customLocation("kelp_veil");
+    private static final ResourceLocation KELP_VEIL_ATTACK = CommonClass.customLocation("kelp_veil_attack");
+    private static final ResourceLocation KELP_VEIL_SPELL_CAST = CommonClass.customLocation("kelp_veil_spell_cast");
     private static final ResourceLocation POD_LEADER = CommonClass.customLocation("pod_leader");
-    private final List<Integer> glowingEntities = new ObjectArrayList<>();
     private boolean usedDash = false;
-    private boolean usedEchoLocation = false;
     private int prevDuration;
     private int dashTicks = 0;
     private int slipStreamTicks = 0;
     private int kelpVeilTicks = 0;
-    private int echoLocationTicks = 0;
 
     public static Builder<DolphinsFinSpell> createDolphinsFinBuilder() {
         return createSimpleSpellBuilder(DolphinsFinSpell.class)
@@ -70,7 +71,53 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
 
     @Override
     public void registerSkillTooltips() {
-
+        this.addSkillDetails(SBSkills.DOLPHINS_FIN,
+                SkillTooltip.ATTRIBUTE.tooltip(
+                        new ModifierData(NeoForgeMod.SWIM_SPEED, new AttributeModifier(DOLPHINS_FIN_SWIM, 0.5F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                ),
+                SkillTooltip.ATTRIBUTE.tooltip(
+                        new ModifierData(Attributes.WATER_MOVEMENT_EFFICIENCY, new AttributeModifier(DOLPHINS_FIN_MOVEMENT, 0.5F, AttributeModifier.Operation.ADD_VALUE))
+                ),
+                SkillTooltip.WATER_SLOWDOWN.tooltip(-90F)
+        );
+        this.addSkillDetails(SBSkills.MERMAIDS_TAIL,
+                SkillTooltip.ATTRIBUTE.tooltip(
+                        new ModifierData(NeoForgeMod.SWIM_SPEED, new AttributeModifier(DOLPHINS_FIN_SWIM, 0.75F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                ),
+                SkillTooltip.WATER_SLOWDOWN.tooltip(-96F)
+        );
+        this.addSkillDetails(SBSkills.SHARK_ATTACK,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, 2.0F)),
+                SkillTooltip.KNOCKBACK.tooltip(1F)
+        );
+        this.addSkillDetails(SBSkills.ECHOLOCATION,
+                SkillTooltip.RADIUS.tooltip(25F),
+                SkillTooltip.POTENCY_SCALING.tooltip(),
+                SkillTooltip.CHOICE.tooltip()
+        );
+        this.addSkillDetails(SBSkills.POD_LEADER, SkillTooltip.ALLY_RANGE.tooltip(5.0F));
+        this.addSkillDetails(SBSkills.SLIPSTREAM,
+                SkillTooltip.ATTRIBUTE.tooltip(
+                        new ModifierData(NeoForgeMod.SWIM_SPEED, new AttributeModifier(POD_LEADER, 0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
+                ),
+                SkillTooltip.PROC_DURATION.tooltip(60),
+                SkillTooltip.EFFECT_DURATION.tooltip(200)
+        );
+        this.addSkillDetails(SBSkills.SONAR_BLAST,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, 2.0F)
+                ),
+                SkillTooltip.KNOCKBACK.tooltip(2.5F),
+                SkillTooltip.CHOICE.tooltip()
+        );
+        this.addSkillDetails(SBSkills.KELP_VEIL,
+                SkillTooltip.PROC_DURATION.tooltip(40),
+                SkillTooltip.EFFECT_DURATION.tooltip(60)
+        );
+        this.addSkillDetails(SBSkills.HAMMERHEAD,
+                SkillTooltip.ATTRIBUTE.tooltip(
+                        new ModifierData(Attributes.SUBMERGED_MINING_SPEED, new AttributeModifier(HAMMERHEAD, 0.8F, AttributeModifier.Operation.ADD_VALUE))
+                )
+        );
     }
 
     @Override
@@ -134,15 +181,10 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
                 caster.hurtMarked = true;
                 this.usedDash = true;
                 this.setRemainingTicks(this.getDuration() - this.prevDuration);
-
-                if (context.hasSkillBuff(SBSkills.KELP_VEIL)) {
-                    this.removeSkillBuff(caster, SBSkills.KELP_VEIL);
-                    this.kelpVeilTicks = 0;
-                }
             }
 
             if (context.isChoice(SBSkills.ECHOLOCATION)) {
-                var list = level.getEntitiesOfClass(LivingEntity.class, caster.getBoundingBox().inflate(25));
+                var list = level.getEntitiesOfClass(LivingEntity.class, this.getInflatedBB(caster, potency(25)));
                 for (LivingEntity entity : list) {
                     if (!isCaster(entity)) {
                         this.addSkillBuff(
@@ -181,13 +223,14 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
         }
 
         caster.playSound(SoundEvents.WARDEN_SONIC_BOOM, 3.0F, 1.0F);
-        this.usedEchoLocation = true;
         if (this.hurt(target, 2.0F)) {
             double d1 = 0.5 * (1.0 - target.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE));
             double d0 = 2.5 * (1.0 - target.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE));
             target.push(vec32.x() * d0, vec32.y() * d1, vec32.z() * d0);
         }
     }
+
+    //TEST NEW KELP VEIL
 
     @Override
     protected void onSpellTick(SpellContext context) {
@@ -200,10 +243,10 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
                 if (this.usedDash) {
                     this.dashTicks++;
                     if (context.isChoice(SBSkills.AQUATIC_DASH) && context.hasSkill(SBSkills.SHARK_ATTACK) && this.dashTicks < 20) {
-                        var entities = level.getEntitiesOfClass(LivingEntity.class, caster.getBoundingBox().inflate(0.5));
+                        var entities = level.getEntitiesOfClass(LivingEntity.class, this.getInflatedBB(caster, 0.5F));
                         for (LivingEntity entity : entities) {
                             if (!this.isCaster(entity) && this.hurt(entity, 2.0F)) {
-                                entity.knockback(1d, entity.getX() - caster.getX(), entity.getZ() - caster.getZ());
+                                entity.knockback(1F, entity.getX() - caster.getX(), entity.getZ() - caster.getZ());
                             }
                         }
                     } else {
@@ -245,7 +288,7 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
                 }
 
                 if (context.hasSkill(SBSkills.POD_LEADER)) {
-                    var list = level.getEntitiesOfClass(LivingEntity.class, caster.getBoundingBox().inflate(5));
+                    var list = level.getEntitiesOfClass(LivingEntity.class, this.getInflatedBB(caster, 5));
                     for (LivingEntity entity : list) {
                         if (!isCaster(entity) && SpellUtil.IS_ALLIED.test(caster, entity) && !SpellUtil.hasSkillBuff(entity, SBSkills.POD_LEADER)) {
                             this.addSkillBuff(
@@ -273,6 +316,30 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
                                     BuffCategory.BENEFICIAL,
                                     SkillBuff.MOB_EFFECT,
                                     new MobEffectInstance(SBEffects.MAGI_INVISIBILITY, duration, 0, false, false),
+                                    duration
+                            );
+                            this.addEventBuff(
+                                    caster,
+                                    SBSkills.KELP_VEIL,
+                                    BuffCategory.BENEFICIAL,
+                                    SpellEventListener.Events.ATTACK,
+                                    KELP_VEIL_ATTACK,
+                                    playerAttackEvent -> {
+                                        this.removeSkillBuff(caster, SBSkills.KELP_VEIL);
+                                        this.kelpVeilTicks = 0;
+                                    },
+                                    duration
+                            );
+                            this.addEventBuff(
+                                    caster,
+                                    SBSkills.KELP_VEIL,
+                                    BuffCategory.BENEFICIAL,
+                                    SpellEventListener.Events.CAST_SPELL,
+                                    KELP_VEIL_SPELL_CAST,
+                                    castSpellEvent -> {
+                                        this.removeSkillBuff(caster, SBSkills.KELP_VEIL);
+                                        this.kelpVeilTicks = 0;
+                                    },
                                     duration
                             );
                         }

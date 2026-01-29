@@ -133,6 +133,7 @@ public class SpellEventListener {
     }
 
     public static class Events<T extends SpellEvent> implements IEvent<T> {
+        public static Events<CastSpellEvent> CAST_SPELL = new Events<>(false);
         public static Events<JumpEvent> JUMP = new Events<>(false);
         public static Events<PlayerAttackEvent> ATTACK = new Events<>(false);
         public static Events<DamageEvent.Post> POST_DAMAGE = new Events<>(false);

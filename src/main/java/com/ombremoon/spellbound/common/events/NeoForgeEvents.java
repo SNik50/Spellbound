@@ -5,6 +5,7 @@ import com.mojang.logging.LogUtils;
 import com.ombremoon.sentinellib.api.box.SentinelBox;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
+import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
 import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
@@ -325,6 +326,13 @@ public class NeoForgeEvents {
 
         if (event.getSource().getEntity() instanceof LivingEntity sourceEntity)
             SpellUtil.getSpellHandler(sourceEntity).getListener().fireEvent(SpellEventListener.Events.ENTITY_KILL, new DeathEvent(sourceEntity, event));
+    }
+
+    @SubscribeEvent
+    public static void onLivingCastSpell(SpellCastEvent event) {
+        if (event.getEntity().level().isClientSide) return;
+
+        SpellUtil.getSpellHandler(event.getEntity()).getListener().fireEvent(SpellEventListener.Events.CAST_SPELL, new CastSpellEvent(event.getEntity(), event));
     }
 
     @SubscribeEvent

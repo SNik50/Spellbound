@@ -128,14 +128,24 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
     @Override
     public void registerSkillTooltips() {
         this.addSkillDetails(SBSkills.FLAME_JET, SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage())));
-        this.addSkillDetails(SBSkills.FLAME_GEYSER, SkillTooltip.RANGE.tooltip(0.5F));
+        this.addSkillDetails(SBSkills.EXPULSION_BLAST,
+                SkillTooltip.KNOCKBACK.tooltip(1F),
+                SkillTooltip.KNOCKBACK_PER_CHARGE.tooltip(25F)
+        );
+        this.addSkillDetails(SBSkills.JET_ENGINE, SkillTooltip.CHOICE.tooltip());
+        this.addSkillDetails(SBSkills.FLAME_GEYSER,
+                SkillTooltip.RANGE.tooltip(0.5F),
+                SkillTooltip.CHOICE.tooltip()
+        );
         this.addSkillDetails(SBSkills.FLAME_INFERNO,
                 SkillTooltip.MODIFY_DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, -50F)),
-                SkillTooltip.RADIUS.tooltip(1F)
+                SkillTooltip.RADIUS.tooltip(1F),
+                SkillTooltip.CHOICE.tooltip()
         );
         this.addSkillDetails(SBSkills.TURBO_CHARGE,
                 SkillTooltip.CHARGE_DURATION.tooltip(60),
-                SkillTooltip.MAX_CHARGES.tooltip(3)
+                SkillTooltip.MAX_CHARGES.tooltip(3),
+                SkillTooltip.CHOICE.tooltip()
         );
         this.addSkillDetails(SBSkills.IGNITION_BURST,
                 SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.FIRE, this.getModifiedDamage())),
@@ -146,7 +156,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 SkillTooltip.RANGE_PER_CHARGE.tooltip(0.25F),
                 SkillTooltip.MAX_CHARGES.tooltip(3),
                 SkillTooltip.COOLDOWN.tooltip(40),
-                SkillTooltip.CHOICE.tooltip(
+                SkillTooltip.CHOICE_CONDITION.tooltip(
                         new SkillTooltip.ChoiceTooltip(SBSkills.FLAME_INFERNO, SkillTooltip.RADIUS_PER_CHARGE.tooltip(25F))
                 )
         );
@@ -157,7 +167,8 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
         );
         this.addSkillDetails(SBSkills.IRON_MAN,
                 SkillTooltip.MANA_TICK_COST.tooltip(-5),
-                SkillTooltip.DURATION.tooltip(100)
+                SkillTooltip.DURATION.tooltip(100),
+                SkillTooltip.CHOICE.tooltip()
         );
     }
 

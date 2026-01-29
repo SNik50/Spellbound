@@ -1301,6 +1301,13 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return new ClipContext(fromPos, toPos, ClipContext.Block.OUTLINE, fluidContext, livingEntity);
     }
 
+    protected AABB getInflatedBB(Entity entity, double range) {
+        if (this.hasTransfigurationStaffBuff(this.context))
+            range *= 1.5F;
+
+        return entity.getBoundingBox().inflate(range);
+    }
+
     protected void createSurroundingParticles(Entity entity, ParticleOptions particle, double scale) {
         double d0 = entity.getRandom().nextGaussian() * 0.02;
         double d1 = entity.getRandom().nextGaussian() * 0.02;
