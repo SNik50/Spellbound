@@ -108,9 +108,10 @@ public class SBData {
     public static final Supplier<DataComponentType<Boolean>> BOSS_PICKUP = COMPONENT_TYPES.registerComponentType("boss_pickup",
             builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 
+    //Spell Components
+    public static final Supplier<DataComponentType<Unit>> POD_LEADER = COMPONENT_TYPES.registerComponentType("pod_leader", builder -> builder.persistent(Unit.CODEC));
+
     public static final Supplier<DataComponentType<Unit>> DETAILS = COMPONENT_TYPES.registerComponentType("details", builder -> builder.persistent(Unit.CODEC));
-    public static final Supplier<DataComponentType<Unit>> TARGET_DEBUFFS = COMPONENT_TYPES.registerComponentType("target_debuffs", builder -> builder.persistent(Unit.CODEC));
-    public static final Supplier<DataComponentType<Unit>> ALLY_BUFFS = COMPONENT_TYPES.registerComponentType("ally_buffs", builder -> builder.persistent(Unit.CODEC));
 
     public static void register(IEventBus modEventBus) {
         SBData.ATTACHMENT_TYPES.register(modEventBus);

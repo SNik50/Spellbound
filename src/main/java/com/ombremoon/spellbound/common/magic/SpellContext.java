@@ -144,6 +144,10 @@ public class SpellContext {
         return this.skillHolder.getChoice(this.spellType).equals(skill.value());
     }
 
+    public boolean hasSkillBuff(Holder<Skill> skill) {
+        return this.spellHandler.hasSkillBuff(skill.value());
+    }
+
     public SpellAnimation quickOrSimpleCast(boolean isInstant) {
         String animation = isInstant ? "instant_cast" : "simple_cast";
         return new SpellAnimation(animation, SpellAnimation.Type.CAST, true);

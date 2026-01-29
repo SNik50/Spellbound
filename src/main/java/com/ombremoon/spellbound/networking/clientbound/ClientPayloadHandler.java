@@ -186,9 +186,9 @@ public class ClientPayloadHandler {
             Entity entity = level.getEntity(payload.entityId());
             if (entity instanceof LivingEntity livingEntity) {
                 if (payload.remove()) {
-                    handler.addGlowEffect(livingEntity);
-                } else {
                     handler.removeGlowEffect(livingEntity);
+                } else {
+                    handler.addGlowEffect(livingEntity);
                 }
             }
         });

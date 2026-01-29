@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.world.spell.ruin.shock;
 
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
@@ -22,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
+import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
@@ -59,12 +61,14 @@ public class StormRiftSpell extends AnimatedSpell {
 
                     return spell.hasValidSpawnPos();
                 })
-                .fullRecast()
+                .fullRecast(false)
                 .skipEndOnRecast();
     }
 
     private static final ResourceLocation MAGNETIC_FIELD = CommonClass.customLocation("magnetic_field");
-    private static final ResourceLocation MOTION_SICKNESS = CommonClass.customLocation("motion_sickness");
+    private static final ResourceLocation MOTION_SICKNESS_ATTACK = CommonClass.customLocation("motion_sickness_attack");
+    private static final ResourceLocation MOTION_SICKNESS_MOVEMENT = CommonClass.customLocation("motion_sickness_movement");
+    private static final ResourceLocation MOTION_SICKNESS_BLOCK = CommonClass.customLocation("motion_sickness_block");
     private final PortalMap<StormRift> portalMap = new PortalMap<>();
     private final IntOpenHashSet thrownEntities = new IntOpenHashSet();
     private IntOpenHashSet stormClouds = new IntOpenHashSet();
@@ -160,25 +164,28 @@ public class StormRiftSpell extends AnimatedSpell {
                                     this.addSkillBuff(
                                             livingEntity,
                                             SBSkills.MOTION_SICKNESS,
+                                            MOTION_SICKNESS_MOVEMENT,
                                             BuffCategory.HARMFUL,
                                             SkillBuff.ATTRIBUTE_MODIFIER,
-                                            new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOTION_SICKNESS, -0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                                            new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(MOTION_SICKNESS_MOVEMENT, -0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                                             200
                                     );
                                     this.addSkillBuff(
                                             livingEntity,
                                             SBSkills.MOTION_SICKNESS,
+                                            MOTION_SICKNESS_ATTACK,
                                             BuffCategory.HARMFUL,
                                             SkillBuff.ATTRIBUTE_MODIFIER,
-                                            new ModifierData(Attributes.ATTACK_SPEED, new AttributeModifier(MOTION_SICKNESS, -0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                                            new ModifierData(Attributes.ATTACK_SPEED, new AttributeModifier(MOTION_SICKNESS_ATTACK, -0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                                             200
                                     );
                                     this.addSkillBuff(
                                             livingEntity,
                                             SBSkills.MOTION_SICKNESS,
+                                            MOTION_SICKNESS_BLOCK,
                                             BuffCategory.HARMFUL,
                                             SkillBuff.ATTRIBUTE_MODIFIER,
-                                            new ModifierData(Attributes.BLOCK_BREAK_SPEED, new AttributeModifier(MOTION_SICKNESS, -0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                                            new ModifierData(Attributes.BLOCK_BREAK_SPEED, new AttributeModifier(MOTION_SICKNESS_BLOCK, -0.4, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                                             200
                                     );
                                 }
@@ -319,6 +326,7 @@ public class StormRiftSpell extends AnimatedSpell {
                             this.addSkillBuff(
                                     livingEntity,
                                     SBSkills.MAGNETIC_FIELD,
+                                    MAGNETIC_FIELD,
                                     BuffCategory.HARMFUL,
                                     SkillBuff.ATTRIBUTE_MODIFIER,
                                     new ModifierData(Attributes.ARMOR, new AttributeModifier(MAGNETIC_FIELD, 0.75F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
@@ -355,7 +363,7 @@ public class StormRiftSpell extends AnimatedSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 

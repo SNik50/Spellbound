@@ -2,20 +2,22 @@ package com.ombremoon.spellbound.common.events;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.logging.LogUtils;
+import com.ombremoon.sentinellib.api.box.SentinelBox;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
+import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
 import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
 import com.ombremoon.spellbound.common.world.commands.SpellboundCommand;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
+import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
 import com.ombremoon.spellbound.common.world.effect.SBEffect;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.common.world.weather.HailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
-import com.ombremoon.spellbound.common.events.custom.MobEffectEvent;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
@@ -32,7 +34,9 @@ import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -78,6 +82,7 @@ public class NeoForgeEvents {
         event.addEntry(SolarRaySpell.SOLAR_BURST_FRONT);
         event.addEntry(SolarRaySpell.SOLAR_BURST_END);
         event.addEntry(SolarRaySpell.SOLAR_BURST_END_EXTENDED);
+        FlameJetSpell.registerBoxes(event);
     }
 
     @SubscribeEvent
@@ -170,8 +175,15 @@ public class NeoForgeEvents {
                     SpellCastEvents.chargeOrChannelSpell(event);
             }
 
-            if (handler.isStationary() && entity instanceof Mob mob)
-                mob.getNavigation().stop();
+            if (entity instanceof Mob mob) {
+                if (handler.isStationary()) {
+                    mob.getNavigation().stop();
+                }
+
+                if (mob.getTarget() != null && mob.getTarget().hasEffect(SBEffects.MAGI_INVISIBILITY)) {
+                    mob.setTarget(null);
+                }
+            }
         }
     }
 
@@ -179,6 +191,19 @@ public class NeoForgeEvents {
     public static void onEffectRemoved(MobEffectEvent.Remove event) {
         LivingEntity livingEntity = event.getEntity();
         if (event.getEffect().value() instanceof SBEffect effect && event.getEffectInstance() != null)
+            effect.onEffectRemoved(livingEntity, event.getEffectInstance().getAmplifier());
+
+        if (event.getEffectInstance() instanceof SBEffectInstance effectInstance && effectInstance.willGlow()) {
+            LivingEntity entity = effectInstance.getCauseEntity();
+            if (entity instanceof ServerPlayer player)
+                PayloadHandler.updateGlowEffect(player, livingEntity.getId(), true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onEffectExpired(MobEffectEvent.Expired event) {
+        LivingEntity livingEntity = event.getEntity();
+        if (event.getEffectInstance() != null && event.getEffectInstance().getEffect().value() instanceof SBEffect effect)
             effect.onEffectRemoved(livingEntity, event.getEffectInstance().getAmplifier());
 
         if (event.getEffectInstance() instanceof SBEffectInstance effectInstance && effectInstance.willGlow()) {
@@ -304,8 +329,22 @@ public class NeoForgeEvents {
     }
 
     @SubscribeEvent
+    public static void onLivingCastSpell(SpellCastEvent event) {
+        if (event.getEntity().level().isClientSide) return;
+
+        SpellUtil.getSpellHandler(event.getEntity()).getListener().fireEvent(SpellEventListener.Events.CAST_SPELL, new CastSpellEvent(event.getEntity(), event));
+    }
+
+    @SubscribeEvent
     public static void onChangeTarget(LivingChangeTargetEvent event) {
         if (event.getEntity().level().isClientSide) return;
+
+        LivingEntity target = event.getNewAboutToBeSetTarget();
+        if (target == null || target.hasEffect(SBEffects.MAGI_INVISIBILITY)) {
+            event.setNewAboutToBeSetTarget(null);
+//            event.setCanceled(true);
+            return;
+        }
 
         SpellUtil.getSpellHandler(event.getEntity()).getListener().fireEvent(SpellEventListener.Events.CHANGE_TARGET, new ChangeTargetEvent(event.getEntity(), event));
     }
@@ -355,5 +394,14 @@ public class NeoForgeEvents {
 
         SpellUtil.getSpellHandler(event.getEntity()).getListener().fireEvent(SpellEventListener.Events.JUMP, new JumpEvent(event.getEntity(), event));
 
+    }
+
+    @SubscribeEvent
+    public static void onEffectApplicable(MobEffectEvent.Applicable event) {
+        LivingEntity entity = event.getEntity();
+        if (entity.level().isClientSide)
+            return;
+
+        SpellUtil.getSpellHandler(entity).getListener().fireEvent(SpellEventListener.Events.EFFECT_APPLICABLE, new EffectApplicableEvent(entity, event));
     }
 }

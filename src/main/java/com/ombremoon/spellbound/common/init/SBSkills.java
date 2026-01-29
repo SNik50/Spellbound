@@ -24,17 +24,17 @@ public class SBSkills {
     public static final DeferredRegister<Skill> SKILLS = DeferredRegister.create(REGISTRY, Constants.MOD_ID);
 
     //Flame Jet
-    public static final Holder<Skill> FLAME_JET = registerSkill("flame_jet");
-    public static final Holder<Skill> JET_ENGINE = registerSkill("jet_engine", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> FLAME_GEYSER = registerSkill("flame_geyser", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> TWIN_JETS = registerSkill("twin_jets", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> IGNITION_BURST = registerSkill("ignition_burst", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> TURBO_CHARGE = registerSkill("turbo_charge", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> EXPULSION_BLAST = registerSkill("expulsion_blast", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> TURBULENCE_STREAM = registerSkill("turbulence_stream", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> JET_STABILIZATION = registerSkill("jet_stabilization", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> AFTERSHOCK_COMPRESSION = registerSkill("aftershock_compression", 0, 0, preReqs(FLAME_JET));
-    public static final Holder<Skill> IRON_MAN = registerSkill("iron_man", 0, 0, preReqs(FLAME_JET));
+    public static final Holder<Skill> FLAME_JET = registerRadialSkill("flame_jet");
+    public static final Holder<Skill> FLAME_GEYSER = registerRadialSkill("flame_geyser", -75, 50, preReqs(FLAME_JET));
+    public static final Holder<Skill> EXPULSION_BLAST = registerSkill("expulsion_blast", 0, 50, preReqs(FLAME_JET));
+    public static final Holder<Skill> JET_ENGINE = registerRadialSkill("jet_engine", -50, 100, preReqs(EXPULSION_BLAST));
+    public static final Holder<Skill> FLAME_INFERNO = registerRadialSkill("flame_inferno", 0, 100, preReqs(EXPULSION_BLAST));
+    public static final Holder<Skill> IGNITION_BURST = registerSkill("ignition_burst", 50, 100, preReqs(EXPULSION_BLAST));
+    public static final Holder<Skill> TURBO_CHARGE = registerRadialSkill("turbo_charge", 100, 100, preReqs(EXPULSION_BLAST));
+    public static final Holder<Skill> JET_STABILIZATION = registerSkill("jet_stabilization", 0, 150, preReqs(JET_ENGINE, FLAME_INFERNO, IGNITION_BURST));
+    public static final Holder<Skill> TURBULENCE_STREAM = registerSkill("turbulence_stream", -50, 200, preReqs(JET_STABILIZATION));
+    public static final Holder<Skill> AFTERSHOCK_COMPRESSION = registerSkill("aftershock_compression", 50, 200, preReqs(JET_STABILIZATION));
+    public static final Holder<Skill> IRON_MAN = registerRadialSkill("iron_man", 0, 250, preReqs(TURBULENCE_STREAM, AFTERSHOCK_COMPRESSION));
 
     //Solar Ray
     public static final Holder<Skill> SOLAR_RAY = registerSkill("solar_ray");
@@ -127,19 +127,6 @@ public class SBSkills {
 //    public static final Holder<Skill> STATIC_CHARGE = registerSkill("static_charge", 50, 150, preReqs(WHIRLING_TEMPEST));
 //    public static final Holder<Skill> HAILSTORM = registerConditionalSkill("hailstorm", 0, 200, preReqs(GALE_FORCE, FROSTFRONT, STATIC_CHARGE), (player, holder) -> holder.hasSkill(FROSTFRONT.value()) && holder.hasSkill(STATIC_CHARGE.value()));
 
-    //Shadow Gate
-    public static final Holder<Skill> SHADOW_GATE = registerRadialSkill("shadow_gate");
-    public static final Holder<Skill> REACH = registerSkill("reach", -50, 50, preReqs(SHADOW_GATE));
-    public static final Holder<Skill> BLINK = registerSkill("blink", -75, 100, preReqs(REACH));
-    public static final Holder<Skill> SHADOW_ESCAPE = registerSkill("shadow_escape", -75, 150, preReqs(BLINK));
-    public static final Holder<Skill> OPEN_INVITATION = registerSkill("open_invitation", 50, 50, preReqs(SHADOW_GATE));
-    public static final Holder<Skill> QUICK_RECHARGE = registerSkill("quick_recharge", 50, 100, preReqs(OPEN_INVITATION));
-    public static final Holder<Skill> UNWANTED_GUESTS = registerSkill("unwanted_guests", 100, 100, preReqs(OPEN_INVITATION));
-    public static final Holder<Skill> BAIT_AND_SWITCH = registerSkill("bait_and_switch", 100, 150, preReqs(UNWANTED_GUESTS));
-    public static final Holder<Skill> DARKNESS_PREVAILS = registerSkill("darkness_prevails", 0, 100, preReqs(SHADOW_GATE));
-    public static final Holder<Skill> GRAVITY_SHIFT = registerRadialSkill("gravity_shift", -25, 150, preReqs(DARKNESS_PREVAILS));
-    public static final Holder<Skill> DUAL_DESTINATION = registerSkill("dual_destination", 25, 150, preReqs(DARKNESS_PREVAILS));
-
     //Stride
     public static final Holder<Skill> STRIDE = registerSkill("stride");
     public static final Holder<Skill> QUICK_SPRINT = registerSkill("quick_sprint", 0, 50, preReqs(STRIDE));
@@ -152,6 +139,31 @@ public class SBSkills {
     public static final Holder<Skill> MOMENTUM = registerSkill("momentum", -25, 200, preReqs(ENDURANCE));
     public static final Holder<Skill> STAMPEDE = registerSkill("stampede", 25, 200, preReqs(ENDURANCE));
     public static final Holder<Skill> MARATHON = registerSkill("marathon", 0, 250, preReqs(MOMENTUM, STAMPEDE));
+
+    public static final Holder<Skill> DOLPHINS_FIN = registerRadialSkill("dolphins_fin");
+    public static final Holder<Skill> MERMAIDS_TAIL = registerSkill("mermaids_tail", 0, 50, preReqs(DOLPHINS_FIN));
+    public static final Holder<Skill> POD_LEADER = registerSkill("pod_leader", -75, 50, preReqs(DOLPHINS_FIN));
+    public static final Holder<Skill> SLIPSTREAM = registerSkill("slipstream", 0, 100, preReqs(MERMAIDS_TAIL));
+    public static final Holder<Skill> ECHOLOCATION = registerRadialSkill("echolocation", 50, 100, preReqs(MERMAIDS_TAIL));
+    public static final Holder<Skill> SONAR_BLAST = registerRadialSkill("sonar_blast", -50, 100, preReqs(MERMAIDS_TAIL));
+    public static final Holder<Skill> AQUATIC_DASH = registerRadialSkill("aquatic_dash", 0, 150, preReqs(SLIPSTREAM, ECHOLOCATION, SONAR_BLAST));
+    public static final Holder<Skill> SHARK_ATTACK = registerSkill("shark_attack", 0, 200, preReqs(AQUATIC_DASH));
+    public static final Holder<Skill> HAMMERHEAD = registerSkill("hammerhead", -50, 200, preReqs(AQUATIC_DASH));
+    public static final Holder<Skill> KELP_VEIL = registerSkill("kelp_veil", 50, 200, preReqs(AQUATIC_DASH));
+    public static final Holder<Skill> OCEAN_DWELLER = registerSkill("ocean_dweller", 0, 250, preReqs(SHARK_ATTACK, HAMMERHEAD, KELP_VEIL));
+
+    //Shadow Gate
+    public static final Holder<Skill> SHADOW_GATE = registerRadialSkill("shadow_gate");
+    public static final Holder<Skill> REACH = registerSkill("reach", -50, 50, preReqs(SHADOW_GATE));
+    public static final Holder<Skill> BLINK = registerSkill("blink", -75, 100, preReqs(REACH));
+    public static final Holder<Skill> SHADOW_ESCAPE = registerSkill("shadow_escape", -75, 150, preReqs(BLINK));
+    public static final Holder<Skill> OPEN_INVITATION = registerSkill("open_invitation", 50, 50, preReqs(SHADOW_GATE));
+    public static final Holder<Skill> QUICK_RECHARGE = registerSkill("quick_recharge", 50, 100, preReqs(OPEN_INVITATION));
+    public static final Holder<Skill> UNWANTED_GUESTS = registerSkill("unwanted_guests", 100, 100, preReqs(OPEN_INVITATION));
+    public static final Holder<Skill> BAIT_AND_SWITCH = registerSkill("bait_and_switch", 100, 150, preReqs(UNWANTED_GUESTS));
+    public static final Holder<Skill> DARKNESS_PREVAILS = registerSkill("darkness_prevails", 0, 100, preReqs(SHADOW_GATE));
+    public static final Holder<Skill> GRAVITY_SHIFT = registerRadialSkill("gravity_shift", -25, 150, preReqs(DARKNESS_PREVAILS));
+    public static final Holder<Skill> DUAL_DESTINATION = registerSkill("dual_destination", 25, 150, preReqs(DARKNESS_PREVAILS));
 
     //Mystic Armor
     public static final Holder<Skill> MYSTIC_ARMOR = registerSkill("mystic_armor");

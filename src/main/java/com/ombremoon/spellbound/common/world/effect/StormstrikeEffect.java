@@ -23,7 +23,9 @@ import net.minecraft.world.item.ItemStack;
 import net.tslat.smartbrainlib.util.RandomUtil;
 
 public class StormstrikeEffect extends SBEffect {
+    public static final ResourceLocation CHARGED_ATMOSPHERE = CommonClass.customLocation("charged_atmosphere");
     public static final ResourceLocation ELECTRIFY = CommonClass.customLocation("electrify");
+    public static final ResourceLocation SUPERCHARGE = CommonClass.customLocation("supercharge");
 
     public StormstrikeEffect(MobEffectCategory category, int color) {
         super(category, color);
@@ -41,6 +43,7 @@ public class StormstrikeEffect extends SBEffect {
                 spell.addSkillBuff(
                         owner,
                         SBSkills.CHARGED_ATMOSPHERE,
+                        CHARGED_ATMOSPHERE,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.SPELL_MODIFIER,
                         SpellModifier.CHARGED_ATMOSPHERE,
@@ -50,6 +53,7 @@ public class StormstrikeEffect extends SBEffect {
                 spell.addSkillBuff(
                         livingEntity,
                         SBSkills.ELECTRIFY,
+                        ELECTRIFY,
                         BuffCategory.HARMFUL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(SBAttributes.SHOCK_SPELL_RESIST, new AttributeModifier(ELECTRIFY, spell.potency(-0.3F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
@@ -99,6 +103,7 @@ public class StormstrikeEffect extends SBEffect {
                         spell.addSkillBuff(
                                 owner,
                                 SBSkills.SUPERCHARGE,
+                                SUPERCHARGE,
                                 BuffCategory.BENEFICIAL,
                                 SkillBuff.SPELL_MODIFIER,
                                 SpellModifier.SUPERCHARGE,

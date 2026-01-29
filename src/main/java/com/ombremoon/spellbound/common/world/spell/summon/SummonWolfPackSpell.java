@@ -9,7 +9,7 @@ public class SummonWolfPackSpell extends SummonSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 }

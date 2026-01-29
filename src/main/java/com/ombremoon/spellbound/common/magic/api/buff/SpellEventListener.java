@@ -133,10 +133,12 @@ public class SpellEventListener {
     }
 
     public static class Events<T extends SpellEvent> implements IEvent<T> {
+        public static Events<CastSpellEvent> CAST_SPELL = new Events<>(false);
         public static Events<JumpEvent> JUMP = new Events<>(false);
         public static Events<PlayerAttackEvent> ATTACK = new Events<>(false);
         public static Events<DamageEvent.Post> POST_DAMAGE = new Events<>(false);
         public static Events<DamageEvent.Pre> PRE_DAMAGE = new Events<>(false);
+        public static Events<EffectApplicableEvent> EFFECT_APPLICABLE = new Events<>(false);
         public static Events<LivingBlockEvent> BLOCK = new Events<>(false);
         public static Events<ChangeTargetEvent> CHANGE_TARGET = new Events<>(false);
         public static Events<DeathEvent> ENTITY_KILL = new Events<>(false);

@@ -36,6 +36,9 @@ public class WildMushroomSpell extends SummonSpell {
     protected static final SpellDataKey<Integer> MINI_MUSHROOM = SyncedSpellData.registerDataKey(WildMushroomSpell.class, SBDataTypes.INT.get());
     protected static final SpellDataKey<Integer> GIANT_MUSHROOM = SyncedSpellData.registerDataKey(WildMushroomSpell.class, SBDataTypes.INT.get());
     private static final ResourceLocation FUNGAL_HARVEST = CommonClass.customLocation("fungal_harvest");
+    private static final ResourceLocation SYNTHESIS = CommonClass.customLocation("synthesis");
+    private static final ResourceLocation POISON_ESSENCE = CommonClass.customLocation("poison_essence");
+    private static final ResourceLocation ENVENOM = CommonClass.customLocation("envenom");
 
     public static Builder<WildMushroomSpell> createMushroomBuilder() {
         return createSummonBuilder(WildMushroomSpell.class)
@@ -80,6 +83,7 @@ public class WildMushroomSpell extends SummonSpell {
                 this.addSkillBuff(
                         caster,
                         SBSkills.FUNGAL_HARVEST,
+                        FUNGAL_HARVEST,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(SBAttributes.MANA_REGEN, new AttributeModifier(FUNGAL_HARVEST, 0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
@@ -109,6 +113,7 @@ public class WildMushroomSpell extends SummonSpell {
                                 this.addSkillBuff(
                                         entity,
                                         SBSkills.ENVENOM,
+                                        ENVENOM,
                                         BuffCategory.HARMFUL,
                                         SkillBuff.MOB_EFFECT,
                                         new MobEffectInstance(MobEffects.POISON, 80),
@@ -124,6 +129,7 @@ public class WildMushroomSpell extends SummonSpell {
                                     this.addSkillBuff(
                                             caster,
                                             SBSkills.POISON_ESSENCE,
+                                            POISON_ESSENCE,
                                             BuffCategory.BENEFICIAL,
                                             SkillBuff.SPELL_MODIFIER,
                                             SpellModifier.POISON_ESSENCE,
@@ -133,7 +139,8 @@ public class WildMushroomSpell extends SummonSpell {
                                 if (context.hasSkill(SBSkills.SYNTHESIS))
                                     this.addSkillBuff(
                                             caster,
-                                            SBSkills.POISON_ESSENCE,
+                                            SBSkills.SYNTHESIS,
+                                            SYNTHESIS,
                                             BuffCategory.BENEFICIAL,
                                             SkillBuff.SPELL_MODIFIER,
                                             SpellModifier.SYNTHESIS,
@@ -180,7 +187,7 @@ public class WildMushroomSpell extends SummonSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 

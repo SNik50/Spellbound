@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.main;
 
+import com.ombremoon.spellbound.client.AnimationHelper;
 import com.ombremoon.spellbound.client.gui.guide.GuideTooltipRenderer;
 import com.ombremoon.spellbound.client.gui.guide.elements.*;
 import com.ombremoon.spellbound.client.gui.guide.renderers.*;
@@ -84,8 +85,14 @@ public class Spellbound {
 
         event.enqueueWork(() -> {
             PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
-                    CommonClass.customLocation("spell_cast"),
+                    AnimationHelper.SPELL_CAST_ANIMATION,
                     1000,
+                    player -> new PlayerAnimationController(player, (controller, state, setter) -> PlayState.STOP)
+            );
+
+            PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
+                    AnimationHelper.MOVEMENT_ANIMATION,
+                    1,
                     player -> new PlayerAnimationController(player, (controller, state, setter) -> PlayState.STOP)
             );
         });

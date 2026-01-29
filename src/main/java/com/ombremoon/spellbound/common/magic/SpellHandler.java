@@ -4,10 +4,8 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerDivineActions;
-import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
-import com.ombremoon.spellbound.common.magic.api.ChanneledSpell;
-import com.ombremoon.spellbound.common.magic.api.SpellType;
-import com.ombremoon.spellbound.common.magic.api.SummonSpell;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
+import com.ombremoon.spellbound.common.magic.api.*;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
@@ -23,6 +21,8 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
@@ -60,7 +60,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private final Multimap<SpellType<?>, AbstractSpell> activeSpells = ArrayListMultimap.create();
     private SpellType<?> selectedSpell;
     private AbstractSpell currentlyCastingSpell;
+    public AbstractSpell previouslyCastSpell;
+    public long lastCastTick;
     private final Map<SkillBuff<?>, Integer> skillBuffs = new Object2IntOpenHashMap<>();
+    private final DataComponentStorage spellData = new DataComponentStorage(new ArrayList<>());
     private final Set<Integer> glowEntities = new IntOpenHashSet();
     private IntOpenHashSet openArenas = new IntOpenHashSet();
     public int castTick;
@@ -69,6 +72,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private float zoomModifier = 1.0F;
     private boolean initialized;
     private boolean receivedBook;
+    private Map<ResourceLocation, SpellAnimation> animationForLayer = new Object2ObjectOpenHashMap<>();
 
     //TEMPORARY
     public Vec3 handPos;
@@ -356,7 +360,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      * @param <T>
      */
     public <T extends AbstractSpell> T getSpell(SpellType<T> spellType) {
-        return getSpell(spellType, 1);
+        if (this.getActiveSpells(spellType).isEmpty())
+            return null;
+
+        return (T) this.getActiveSpells(spellType).getFirst();
     }
 
     /**
@@ -455,6 +462,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         return this.skillBuffs.keySet().stream().filter(skillBuff -> skillBuff.isSkill(skill)).findAny();
     }
 
+    public boolean hasSkillBuff(Skill skill) {
+        return this.skillBuffs.keySet().stream().anyMatch(skillBuff -> skillBuff.isSkill(skill));
+    }
+
     private void tickSkillBuffs() {
         this.skillBuffs.entrySet().removeIf(entry -> {
             if (entry.getValue() > 0 && entry.getValue() <= this.caster.tickCount) {
@@ -464,6 +475,18 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
             return false;
         });
+    }
+
+    public <T> void setData(DataComponentType<T> type, T value) {
+        this.spellData.dataComponents().add(DataComponentStorage.createUnchecked(type, value));
+    }
+
+    public <T> T getData(DataComponentType<T> type) {
+        return (T) this.spellData.dataComponents().stream()
+                .filter(component -> component.type().equals(type))
+                .map(TypedDataComponent::value)
+                .findFirst()
+                .orElse(null);
     }
 
     public void applyFearEffect(LivingEntity target, Vec3 source, int ticks) {
@@ -492,11 +515,24 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     /**
      * Plays an animation for the player. This is called server-side for all players to see the animation
      * @param player The player performing the animation
-     * @param animationName The animation path location
+     * @param animation The animation information
      */
-    public void playAnimation(Player player, ResourceLocation animationName, float animationSpeed) {
-        if (!player.level().isClientSide)
-            PayloadHandler.handleAnimation(player, animationName, animationSpeed, false);
+    public void playAnimation(Player player, SpellAnimation animation, float animationSpeed) {
+        this.animationForLayer.put(animation.type().getAnimationLayer(), animation);
+        if (!player.level().isClientSide) {
+            PayloadHandler.handleAnimation(player, animation, animationSpeed, false);
+        }
+    }
+
+    public void stopAnimation(Player player, SpellAnimation animation) {
+        this.animationForLayer.remove(animation.type().getAnimationLayer());
+        if (!player.level().isClientSide) {
+            PayloadHandler.handleAnimation(player, animation, 0.0F, true);
+        }
+    }
+
+    public SpellAnimation getAnimationForLayer(ResourceLocation layer) {
+        return this.animationForLayer.get(layer);
     }
 
     /**

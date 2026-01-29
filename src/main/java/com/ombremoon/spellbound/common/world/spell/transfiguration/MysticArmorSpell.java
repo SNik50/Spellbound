@@ -24,6 +24,7 @@ public class MysticArmorSpell extends AnimatedSpell {
     private static final ResourceLocation PRE_DAMAGE = CommonClass.customLocation("mystic_armor_pre_damage");
     private static final ResourceLocation POST_DAMAGE = CommonClass.customLocation("mystic_armor_post_damage");
     private static final ResourceLocation ARCANE_VENGEANCE = CommonClass.customLocation("arcane_vengeance");
+    private static final ResourceLocation ARCANE_VENGEANCE_DAMAGE = CommonClass.customLocation("arcane_vengeance_damage");
     private static final ResourceLocation PURSUIT = CommonClass.customLocation("pursuit");
     private static final ResourceLocation CRYSTALLINE_ARMOR = CommonClass.customLocation("crystalline_armor");
 
@@ -31,7 +32,7 @@ public class MysticArmorSpell extends AnimatedSpell {
         return createSimpleSpellBuilder(MysticArmorSpell.class)
                 .duration(1200)
                 .manaCost(28)
-                .fullRecast();
+                .fullRecast(true);
     }
 
     public MysticArmorSpell() {
@@ -92,9 +93,10 @@ public class MysticArmorSpell extends AnimatedSpell {
                     blockEvent -> addSkillBuff(
                             caster,
                             SBSkills.ARCANE_VENGEANCE,
+                            ARCANE_VENGEANCE_DAMAGE,
                             BuffCategory.BENEFICIAL,
                             SkillBuff.ATTRIBUTE_MODIFIER,
-                            new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(ARCANE_VENGEANCE, 0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                            new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(ARCANE_VENGEANCE_DAMAGE, 0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                             200));
         }
 
@@ -102,6 +104,7 @@ public class MysticArmorSpell extends AnimatedSpell {
             addSkillBuff(
                     caster,
                     SBSkills.PURSUIT,
+                    PURSUIT,
                     BuffCategory.BENEFICIAL,
                     SkillBuff.ATTRIBUTE_MODIFIER,
                     new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(PURSUIT, 0.15F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
@@ -110,6 +113,7 @@ public class MysticArmorSpell extends AnimatedSpell {
             addSkillBuff(
                     caster,
                     SBSkills.CRYSTALLINE_ARMOR,
+                    CRYSTALLINE_ARMOR,
                     BuffCategory.BENEFICIAL,
                     SkillBuff.ATTRIBUTE_MODIFIER,
                     new ModifierData(Attributes.ARMOR, new AttributeModifier(CRYSTALLINE_ARMOR, 0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
@@ -121,7 +125,7 @@ public class MysticArmorSpell extends AnimatedSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 

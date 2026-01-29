@@ -9,7 +9,7 @@ public class SummonVillagerSpell extends SummonSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 }

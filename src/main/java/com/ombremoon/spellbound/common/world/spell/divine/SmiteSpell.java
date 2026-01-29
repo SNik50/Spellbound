@@ -9,7 +9,7 @@ public class SmiteSpell extends ImbuementSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 }

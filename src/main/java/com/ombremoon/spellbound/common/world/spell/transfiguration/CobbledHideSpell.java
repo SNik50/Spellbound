@@ -42,7 +42,7 @@ public class CobbledHideSpell extends AnimatedSpell {
 
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 
@@ -68,6 +68,7 @@ public class CobbledHideSpell extends AnimatedSpell {
         addSkillBuff(
                 context.getCaster(),
                 SBSkills.COBBLED_HIDE,
+                hideMod,
                 BuffCategory.BENEFICIAL,
                 SkillBuff.ATTRIBUTE_MODIFIER,
                 new ModifierData(Attributes.ARMOR, new AttributeModifier(hideMod, modAmount, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),

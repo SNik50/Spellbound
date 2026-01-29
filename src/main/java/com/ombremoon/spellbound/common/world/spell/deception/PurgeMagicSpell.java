@@ -12,9 +12,11 @@ import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntitySelector;
@@ -25,6 +27,10 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
+    private static final ResourceLocation DOMINANT_MAGIC = CommonClass.customLocation("dominant_magic");
+    private static final ResourceLocation RESIDUAL_DISRUPTION = CommonClass.customLocation("residual_disruption");
+    private static final ResourceLocation UNFOCUSED = CommonClass.customLocation("unfocused");
+
     private static Builder<PurgeMagicSpell> createPurgeMagicBuilder() {
         return createSimpleSpellBuilder(PurgeMagicSpell.class)
                 .duration(10)
@@ -34,7 +40,7 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                         return context.hasSkill(SBSkills.RADIO_WAVES) || context.getTarget() instanceof LivingEntity;
                     return true;
                 })
-                .fullRecast();
+                .fullRecast(true);
     }
 
     public PurgeMagicSpell() {
@@ -71,6 +77,7 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                         addSkillBuff(
                                 target,
                                 SBSkills.DOMINANT_MAGIC,
+                                DOMINANT_MAGIC,
                                 BuffCategory.HARMFUL,
                                 SkillBuff.MOB_EFFECT,
                                 new MobEffectInstance(SBEffects.SILENCED, 100, 0, false, false),
@@ -81,6 +88,7 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                         addSkillBuff(
                                 target,
                                 SBSkills.RESIDUAL_DISRUPTION,
+                                RESIDUAL_DISRUPTION,
                                 BuffCategory.HARMFUL,
                                 SkillBuff.SPELL_MODIFIER,
                                 SpellModifier.RESIDUAL_DISRUPTION,
@@ -92,6 +100,7 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                         addSkillBuff(
                                 target,
                                 SBSkills.UNFOCUSED,
+                                UNFOCUSED,
                                 BuffCategory.HARMFUL,
                                 SkillBuff.SPELL_MODIFIER,
                                 SpellModifier.UNFOCUSED,
@@ -138,7 +147,7 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 }
