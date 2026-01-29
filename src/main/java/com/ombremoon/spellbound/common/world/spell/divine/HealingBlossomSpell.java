@@ -44,7 +44,7 @@ public class HealingBlossomSpell extends AnimatedSpell {
                 .duration(400)
                 .castTime(20)
                 .castCondition((context, spell) -> spell.hasValidSpawnPos())
-                .fullRecast();
+                .fullRecast(true);
     }
 
     public HealingBlossomSpell() {
@@ -52,7 +52,7 @@ public class HealingBlossomSpell extends AnimatedSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 
@@ -97,6 +97,7 @@ public class HealingBlossomSpell extends AnimatedSpell {
             this.addSkillBuff(
                 context.getCaster(),
                 SBSkills.PETAL_SHIELD,
+                PETAL_SHIELD,
                 BuffCategory.BENEFICIAL,
                 SkillBuff.ATTRIBUTE_MODIFIER,
                 new ModifierData(Attributes.ARMOR, new AttributeModifier(PETAL_SHIELD,

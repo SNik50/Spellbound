@@ -30,7 +30,8 @@ public class ModLangProvider extends LanguageProvider {
             "sus", "",
             "magis", "Magi's",
             "architects", "Architect's",
-            "swindlers", "Swindler's"
+            "swindlers", "Swindler's",
+            "mermaids", "Mermaids's"
     );
 
     public ModLangProvider(PackOutput gen) {
@@ -443,23 +444,43 @@ public class ModLangProvider extends LanguageProvider {
     protected void skillDescriptions() {
         add("spellbound.skill_tooltip.more_details", "Press §fShift§r for Details");
         add("spellbound.skill_tooltip.details", "When Unlocked:");
-        add("spellbound.skill_tooltip.target_debuffs", "Target Buffs");
-        add("spellbound.skill_tooltip.ally_buffs", "Ally Buffs");
         add("spellbound.skill_tooltip.damage", "%s %s");
         add("spellbound.skill_tooltip.duration", "%s Duration");
         add("spellbound.skill_tooltip.radius", "%s Block Radius");
+        add("spellbound.skill_tooltip.range", "%s Range");
         add("spellbound.skill_tooltip.mana_cost", "%s%% Mana Cost");
+        add("spellbound.skill_tooltip.mana_tick_cost", "%s Mana/s");
         add("spellbound.skill_tooltip.mana", "%s Mana");
         add("spellbound.skill_tooltip.potency", "%s%% Potency");
         add("spellbound.skill_tooltip.cooldown", "%s Cooldown");
         add("spellbound.skill_tooltip.effect_duration", "%s Effect Duration");
         add("spellbound.skill_tooltip.proc_chance", "%s%% Proc Chance");
+        add("spellbound.skill_tooltip.charge_duration", "%s Charge Duration");
+        add("spellbound.skill_tooltip.max_charges", "%s Charges");
+        add("spellbound.skill_tooltip.modify_damage", "%s%% %s");
         add("spellbound.skill_tooltip.modify_duration", "%s%% Duration");
         add("spellbound.skill_tooltip.mana_to_damage", "%s%% Mana to Damage");
+        add("spellbound.skill_tooltip.damage_per_charge", "%s%% %s per Charge");
+        add("spellbound.skill_tooltip.range_per_charge", "%s%% Range per Charge");
+        add("spellbound.skill_tooltip.radius_per_charge", "%s%% Radius per Charge");
         add("spellbound.skill_tooltip.target_fire_resist", "%s%% Fire Resist on Target");
         add("spellbound.skill_tooltip.target_ice_resist", "%s%% Ice Resist on Target");
         add("spellbound.skill_tooltip.target_shock_resist", "%s%% Shock Resist on Target");
+        add("spellbound.skill_tooltip.explosion_radius", "%s Explosion Radius");
         add("spellbound.skill_tooltip.potency_scaling", "Scales with Potency");
+        add("spellbound.skill_tooltip.choice", "If ");
+
+        addSkillTooltip(SBSkills.FLAME_JET, "Releases a short, concentrated burst of fire in front of the caster.");
+        addSkillTooltip(SBSkills.JET_ENGINE, "Propels the caster in the direction they are facing, dealing Fire damage to enemies behind.");
+        addSkillTooltip(SBSkills.FLAME_GEYSER, "Flame Jet originates from the position the caster points at, increasing the jet's length.");
+        addSkillTooltip(SBSkills.FLAME_INFERNO, "Flame Jet fires in a ring around the caster, dealing reduced damage.");
+        addSkillTooltip(SBSkills.TURBO_CHARGE, "Flame Jet can be charged. The longer the charge, the longer the length of the jet and damage dealt.");
+        addSkillTooltip(SBSkills.IGNITION_BURST, "Flame Jet explodes at the end of its range at max charge, dealing extra Fire damage.");
+        addSkillTooltip(SBSkills.EXPULSION_BLAST, "Flame Jet sends enemies flying in the opposite direction of the caster.");
+        addSkillTooltip(SBSkills.JET_STABILIZATION, "Flame Jet can be cast while walking or sprinting.");
+        addSkillTooltip(SBSkills.TURBULENCE_STREAM, "If Flame Jet is recast within a short duration, its range is increased.");
+        addSkillTooltip(SBSkills.AFTERSHOCK_COMPRESSION, "If Flame Jet is recast within a short duration, its damage is increased.");
+        addSkillTooltip(SBSkills.IRON_MAN, "Consume a Smoldering Shard. Flame Jet can be channeled to continuously propel the caster.");
 
         addSkillTooltip(SBSkills.SOLAR_RAY, "Fire a thin beam of light that deals 5 fire damage per second.");
         addSkillTooltip(SBSkills.SUNSHINE, "Doubles the range of Solar Ray.");

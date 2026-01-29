@@ -13,6 +13,7 @@ import com.ombremoon.spellbound.common.world.spell.ruin.shock.ElectricChargeSpel
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormRiftSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormstrikeSpell;
 import com.ombremoon.spellbound.common.world.spell.summon.WildMushroomSpell;
+import com.ombremoon.spellbound.common.world.spell.transfiguration.DolphinsFinSpell;
 import com.ombremoon.spellbound.common.world.spell.transfiguration.MysticArmorSpell;
 import com.ombremoon.spellbound.common.world.spell.transfiguration.ShadowGateSpell;
 import com.ombremoon.spellbound.common.world.spell.transfiguration.StrideSpell;
@@ -69,14 +70,18 @@ public class SBSpells {
 //                    SBSkills.GALE_FORCE, SBSkills.FROSTFRONT, SBSkills.STATIC_CHARGE, SBSkills.HAILSTORM));
 
     //Transfiguration
-    public static final Supplier<SpellType<ShadowGateSpell>> SHADOW_GATE = registerSpell("shadow_gate", trasnfigurationBuilder("shadow_gate", SpellMastery.ADEPT, ShadowGateSpell::new)
-            .skills(SBSkills.SHADOW_GATE, SBSkills.REACH, SBSkills.BLINK, SBSkills.SHADOW_ESCAPE,
-                    SBSkills.OPEN_INVITATION, SBSkills.QUICK_RECHARGE, SBSkills.UNWANTED_GUESTS, SBSkills.BAIT_AND_SWITCH,
-                    SBSkills.DARKNESS_PREVAILS, SBSkills.GRAVITY_SHIFT, SBSkills.DUAL_DESTINATION));
     public static final Supplier<SpellType<StrideSpell>> STRIDE = registerSpell("stride", trasnfigurationBuilder("stride", SpellMastery.NOVICE, StrideSpell::new)
             .skills(SBSkills.STRIDE, SBSkills.QUICK_SPRINT, SBSkills.GALLOPING_STRIDE,
                     SBSkills.RIDERS_RESILIENCE, SBSkills.FLEETFOOTED, SBSkills.SUREFOOTED, SBSkills.AQUA_TREAD,
                     SBSkills.ENDURANCE, SBSkills.MOMENTUM, SBSkills.STAMPEDE, SBSkills.MARATHON));
+    public static final Supplier<SpellType<DolphinsFinSpell>> DOLPHINS_FIN = registerSpell("dolphins_fin", trasnfigurationBuilder("dolphins_fin", SpellMastery.NOVICE, DolphinsFinSpell::new)
+            .skills(SBSkills.DOLPHINS_FIN, SBSkills.MERMAIDS_TAIL, SBSkills.AQUATIC_DASH,
+                    SBSkills.SHARK_ATTACK, SBSkills.ECHOLOCATION, SBSkills.POD_LEADER, SBSkills.SLIPSTREAM,
+                    SBSkills.SONAR_BLAST, SBSkills.KELP_VEIL, SBSkills.HAMMERHEAD, SBSkills.OCEAN_DWELLER));
+    public static final Supplier<SpellType<ShadowGateSpell>> SHADOW_GATE = registerSpell("shadow_gate", trasnfigurationBuilder("shadow_gate", SpellMastery.ADEPT, ShadowGateSpell::new)
+            .skills(SBSkills.SHADOW_GATE, SBSkills.REACH, SBSkills.BLINK, SBSkills.SHADOW_ESCAPE,
+                    SBSkills.OPEN_INVITATION, SBSkills.QUICK_RECHARGE, SBSkills.UNWANTED_GUESTS, SBSkills.BAIT_AND_SWITCH,
+                    SBSkills.DARKNESS_PREVAILS, SBSkills.GRAVITY_SHIFT, SBSkills.DUAL_DESTINATION));
     public static final Supplier<SpellType<MysticArmorSpell>> MYSTIC_ARMOR = registerSpell("mystic_armor", trasnfigurationBuilder("mystic_armor", SpellMastery.ADEPT, MysticArmorSpell::new)
             .skills(SBSkills.MYSTIC_ARMOR, SBSkills.FORESIGHT, SBSkills.ARCANE_VENGEANCE,
                     SBSkills.EQUILIBRIUM, SBSkills.PLANAR_DEFLECTION, SBSkills.PURSUIT, SBSkills.COMBAT_PERCEPTION,

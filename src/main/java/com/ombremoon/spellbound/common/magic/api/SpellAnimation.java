@@ -16,6 +16,9 @@ public record SpellAnimation(ResourceLocation animation, Type type, boolean stat
             SpellAnimation::new
     );
 
+    //AnimProperties
+    //isMotionTracking
+
     public SpellAnimation(String animation, Type type, boolean stationary) {
         this(CommonClass.customLocation(animation), type, stationary);
     }

@@ -8,8 +8,10 @@ import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.main.CommonClass;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
@@ -24,6 +26,7 @@ import java.util.Set;
 
 public class ElectricChargeSpell extends AnimatedSpell {
     private static final SpellDataKey<Integer> DISCHARGE_TICK = SyncedSpellData.registerDataKey(ElectricChargeSpell.class, SBDataTypes.INT.get());
+    private static final ResourceLocation HIGH_VOLTAGE = CommonClass.customLocation("high_voltage");
     public static Builder<ElectricChargeSpell> createElectricChargeBuilder() {
         return createSimpleSpellBuilder(ElectricChargeSpell.class)
                 .duration(200)
@@ -48,7 +51,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
                     }
                 })
                 .instantCast()
-                .fullRecast()
+                .fullRecast(false)
                 .updateInterval(1);
     }
 
@@ -61,7 +64,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 
@@ -209,6 +212,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
                                 addSkillBuff(
                                         livingEntity,
                                         SBSkills.HIGH_VOLTAGE,
+                                        HIGH_VOLTAGE,
                                         BuffCategory.HARMFUL,
                                         SkillBuff.MOB_EFFECT,
                                         new MobEffectInstance(SBEffects.STUNNED, 60, 0, false, false),
@@ -222,6 +226,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
                     addSkillBuff(
                             target,
                             SBSkills.HIGH_VOLTAGE,
+                            HIGH_VOLTAGE,
                             BuffCategory.HARMFUL,
                             SkillBuff.MOB_EFFECT,
                             new MobEffectInstance(SBEffects.STUNNED, 60, 0, false, false),

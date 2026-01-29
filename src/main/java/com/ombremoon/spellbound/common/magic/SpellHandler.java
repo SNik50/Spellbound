@@ -4,6 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerDivineActions;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
 import com.ombremoon.spellbound.common.magic.api.*;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
@@ -20,6 +21,8 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
@@ -60,6 +63,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     public AbstractSpell previouslyCastSpell;
     public long lastCastTick;
     private final Map<SkillBuff<?>, Integer> skillBuffs = new Object2IntOpenHashMap<>();
+    private final DataComponentStorage spellData = new DataComponentStorage(new ArrayList<>());
     private final Set<Integer> glowEntities = new IntOpenHashSet();
     private IntOpenHashSet openArenas = new IntOpenHashSet();
     public int castTick;
@@ -458,6 +462,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         return this.skillBuffs.keySet().stream().filter(skillBuff -> skillBuff.isSkill(skill)).findAny();
     }
 
+    public boolean hasSkillBuff(Skill skill) {
+        return this.skillBuffs.keySet().stream().anyMatch(skillBuff -> skillBuff.isSkill(skill));
+    }
+
     private void tickSkillBuffs() {
         this.skillBuffs.entrySet().removeIf(entry -> {
             if (entry.getValue() > 0 && entry.getValue() <= this.caster.tickCount) {
@@ -467,6 +475,18 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
             return false;
         });
+    }
+
+    public <T> void setData(DataComponentType<T> type, T value) {
+        this.spellData.dataComponents().add(DataComponentStorage.createUnchecked(type, value));
+    }
+
+    public <T> T getData(DataComponentType<T> type) {
+        return (T) this.spellData.dataComponents().stream()
+                .filter(component -> component.type().equals(type))
+                .map(TypedDataComponent::value)
+                .findFirst()
+                .orElse(null);
     }
 
     public void applyFearEffect(LivingEntity target, Vec3 source, int ticks) {

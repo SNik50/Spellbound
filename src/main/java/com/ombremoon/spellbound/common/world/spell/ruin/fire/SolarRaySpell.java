@@ -39,7 +39,6 @@ import net.tslat.smartbrainlib.util.RandomUtil;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
@@ -51,7 +50,9 @@ public class SolarRaySpell extends ChanneledSpell {
     protected static final SpellDataKey<Integer> SOLAR_RAY_ID = SyncedSpellData.registerDataKey(SolarRaySpell.class, SBDataTypes.INT.get());
     protected static final ResourceLocation OVERPOWER_WALK = CommonClass.customLocation("overpower_walk");
     protected static final ResourceLocation OVERPOWER_JUMP = CommonClass.customLocation("overpower_jump");
+    protected static final ResourceLocation BLINDING_LIGHT = CommonClass.customLocation("blinding_light");
     protected static final ResourceLocation AFTERGLOW = CommonClass.customLocation("afterglow");
+    protected static final ResourceLocation AFTERGLOW_GLOW = CommonClass.customLocation("afterglow_glow");
     protected static final BiPredicate<Entity, LivingEntity> NO_ATTACK = (entity, livingEntity) -> false;
     private static final List<SentinelBox> BOXES = new ObjectArrayList<>();
     protected static final BiConsumer<Entity, LivingEntity> SOLAR_RAY_HURT = (entity, livingEntity) -> {
@@ -114,7 +115,7 @@ public class SolarRaySpell extends ChanneledSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 
@@ -169,6 +170,7 @@ public class SolarRaySpell extends ChanneledSpell {
                 this.addSkillBuff(
                         caster,
                         SBSkills.OVERPOWER,
+                        OVERPOWER_WALK,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(OVERPOWER_WALK, -0.75, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
@@ -176,6 +178,7 @@ public class SolarRaySpell extends ChanneledSpell {
                 this.addSkillBuff(
                         caster,
                         SBSkills.OVERPOWER,
+                        OVERPOWER_JUMP,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(Attributes.JUMP_STRENGTH, new AttributeModifier(OVERPOWER_JUMP, -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
@@ -278,6 +281,7 @@ public class SolarRaySpell extends ChanneledSpell {
                                         spell.addSkillBuff(
                                                 livingEntity,
                                                 SBSkills.BLINDING_LIGHT,
+                                                BLINDING_LIGHT,
                                                 BuffCategory.HARMFUL,
                                                 SkillBuff.MOB_EFFECT,
                                                 new MobEffectInstance(MobEffects.BLINDNESS, 100, 0, true, true),
@@ -288,9 +292,10 @@ public class SolarRaySpell extends ChanneledSpell {
                                         spell.addSkillBuff(
                                                 livingEntity,
                                                 SBSkills.AFTERGLOW,
+                                                AFTERGLOW_GLOW,
                                                 BuffCategory.HARMFUL,
                                                 SkillBuff.MOB_EFFECT,
-                                                new SBEffectInstance(caster, SBEffects.AFTERGLOW, 100, true, 0, true, true),
+                                                new SBEffectInstance(caster, SBEffects.TARGET_AURA, 100, true, 0, true, true),
                                                 100
                                         );
                                         spell.addEventBuff(

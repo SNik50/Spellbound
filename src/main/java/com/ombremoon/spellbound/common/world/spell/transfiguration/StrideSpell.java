@@ -7,7 +7,6 @@ import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
-import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -23,7 +22,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
 public class StrideSpell extends AnimatedSpell {
-    protected static final ResourceLocation THUNDEROUS_HOOVES = CommonClass.customLocation("thunderous_hooves");
+    protected static final ResourceLocation STRIDE = CommonClass.customLocation("thunderous_hooves");
     protected static final ResourceLocation QUICK_SPRINT = CommonClass.customLocation("quick_sprint");
     protected static final ResourceLocation SUREFOOTED = CommonClass.customLocation("surefooted");
     protected static final ResourceLocation FLEETFOOTED = CommonClass.customLocation("fleetfooted");
@@ -35,7 +34,7 @@ public class StrideSpell extends AnimatedSpell {
                 .manaCost(12)
                 .selfBuffCast()
                 .hasLayer()
-                .fullRecast();
+                .fullRecast(true);
     }
 
     private int initialFoodLevel;
@@ -66,7 +65,7 @@ public class StrideSpell extends AnimatedSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 
@@ -105,6 +104,7 @@ public class StrideSpell extends AnimatedSpell {
                     addSkillBuff(
                             ally,
                             SBSkills.FLEETFOOTED,
+                            FLEETFOOTED,
                             BuffCategory.BENEFICIAL,
                             SkillBuff.ATTRIBUTE_MODIFIER,
                             new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(FLEETFOOTED, 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
@@ -144,6 +144,7 @@ public class StrideSpell extends AnimatedSpell {
                             addSkillBuff(
                                     caster,
                                     SBSkills.MOMENTUM,
+                                    MOMENTUM,
                                     BuffCategory.BENEFICIAL,
                                     SkillBuff.ATTRIBUTE_MODIFIER,
                                     new ModifierData(Attributes.ATTACK_SPEED, new AttributeModifier(MOMENTUM, Math.min(0.04 * this.movementTicks / 20, 0.2), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
@@ -174,13 +175,15 @@ public class StrideSpell extends AnimatedSpell {
             addSkillBuff(
                     livingEntity,
                     SBSkills.STRIDE,
+                    STRIDE,
                     BuffCategory.BENEFICIAL,
                     SkillBuff.ATTRIBUTE_MODIFIER,
-                    new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(THUNDEROUS_HOOVES, potency(context.hasSkill(SBSkills.GALLOPING_STRIDE) ? 1.5F : 1.25F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
+                    new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(STRIDE, potency(context.hasSkill(SBSkills.GALLOPING_STRIDE) ? 1.5F : 1.25F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
             if (context.hasSkill(SBSkills.QUICK_SPRINT))
                 addSkillBuff(
                         livingEntity,
                         SBSkills.QUICK_SPRINT,
+                        QUICK_SPRINT,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(QUICK_SPRINT, 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)));
@@ -189,6 +192,7 @@ public class StrideSpell extends AnimatedSpell {
                 addSkillBuff(
                         livingEntity,
                         SBSkills.SUREFOOTED,
+                        SUREFOOTED,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(Attributes.STEP_HEIGHT, new AttributeModifier(SUREFOOTED, 0.4, AttributeModifier.Operation.ADD_VALUE)));

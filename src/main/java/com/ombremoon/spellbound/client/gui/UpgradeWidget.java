@@ -50,7 +50,8 @@ public class UpgradeWidget {
         this.x = skill.getX();
         this.y = -skill.getY();
         int j = 29 + minecraft.font.width(this.title);
-        this.spell = skill.getSpell().createSpell();
+        this.spell = skill.getSpell().createSpellWithData(this.minecraft.player);
+        this.spell.registerSkillTooltips();
         SpellPath path = spell.spellType().getIdentifiablePath();
         this.color = path.getColor();
         this.skillDetails = this.createSkillTooltip(minecraft.font, skill);

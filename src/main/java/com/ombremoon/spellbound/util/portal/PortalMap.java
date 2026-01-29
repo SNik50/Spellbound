@@ -12,7 +12,10 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class PortalMap<T extends PortalEntity<?>> extends Int2ObjectOpenHashMap<PortalInfo> {
@@ -59,6 +62,9 @@ public class PortalMap<T extends PortalEntity<?>> extends Int2ObjectOpenHashMap<
 
     @SuppressWarnings("unchecked")
     private <E extends Entity> void shiftPortals(Level level, int portalID, Vec3 position, Consumer<E> onShift) {
+        List<Integer> entriesToRemove = new ArrayList<>();
+        Map<Integer, PortalInfo> entriesToUpdate = new HashMap<>();
+
         for (var entry : this.entrySet()) {
             var info = entry.getValue();
             if (info.id() == 0) {
@@ -67,13 +73,20 @@ public class PortalMap<T extends PortalEntity<?>> extends Int2ObjectOpenHashMap<
                     onShift.accept(entity);
                     entity.discard();
                 }
-
-                this.remove(entry.getKey());
+                entriesToRemove.add(entry.getKey());
             } else {
                 PortalInfo newInfo = new PortalInfo(info.id() - 1, info.position());
-                this.replace(entry.getKey(), newInfo);
+                entriesToUpdate.put(entry.getKey(), newInfo);
             }
         }
+
+        for (int key : entriesToRemove) {
+            this.remove(key);
+        }
+        for (var entry : entriesToUpdate.entrySet()) {
+            this.replace(entry.getKey(), entry.getValue());
+        }
+
         PortalInfo info = new PortalInfo(this.size(), position);
         this.put(portalID, info);
     }

@@ -33,6 +33,8 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
     protected static final SpellDataKey<Integer> CRYSTAL = SyncedSpellData.registerDataKey(ShatteringCrystalSpell.class, SBDataTypes.INT.get());
     private static final ResourceLocation FRIGID_BLAST = CommonClass.customLocation("frigid_blast");
     private static final ResourceLocation HYPOTHERMIA = CommonClass.customLocation("hypothermia");
+    private static final ResourceLocation GLACIAL_IMPACT_PERMAFROST = CommonClass.customLocation("glacial_impact_permafrost");
+    private static final ResourceLocation GLACIAL_IMPACT_FROZEN = CommonClass.customLocation("glacial_impact_frozen");
     private static final Predicate<SpellContext> CRYSTAL_PREDICATE = context -> context.getTarget() instanceof ShatteringCrystal crystal && context.getCaster() == crystal.getOwner();
 
     public static Builder<ShatteringCrystalSpell> createShatteringCrystalBuild() {
@@ -154,7 +156,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 
@@ -191,6 +193,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                         this.addSkillBuff(
                                 livingEntity,
                                 SBSkills.FRIGID_BLAST,
+                                FRIGID_BLAST,
                                 BuffCategory.HARMFUL,
                                 SkillBuff.ATTRIBUTE_MODIFIER,
                                 new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(FRIGID_BLAST, -0.5, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
@@ -201,6 +204,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                         this.addSkillBuff(
                                 livingEntity,
                                 SBSkills.HYPOTHERMIA,
+                                HYPOTHERMIA,
                                 BuffCategory.HARMFUL,
                                 SkillBuff.ATTRIBUTE_MODIFIER,
                                 new ModifierData(SBAttributes.FROST_SPELL_RESIST, new AttributeModifier(HYPOTHERMIA, -0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
@@ -211,6 +215,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                         this.addSkillBuff(
                                 livingEntity,
                                 SBSkills.GLACIAL_IMPACT,
+                                GLACIAL_IMPACT_FROZEN,
                                 BuffCategory.HARMFUL,
                                 SkillBuff.MOB_EFFECT,
                                 new MobEffectInstance(SBEffects.FROZEN, 60, 0, false, true)
@@ -218,6 +223,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                         this.addSkillBuff(
                                 livingEntity,
                                 SBSkills.GLACIAL_IMPACT,
+                                GLACIAL_IMPACT_PERMAFROST,
                                 BuffCategory.HARMFUL,
                                 SkillBuff.MOB_EFFECT,
                                 new MobEffectInstance(SBEffects.PERMAFROST, 200, 0, false, true)

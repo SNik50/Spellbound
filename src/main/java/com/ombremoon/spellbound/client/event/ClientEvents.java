@@ -169,7 +169,7 @@ public class ClientEvents {
                 boolean cycleSpellDown = KeyBinds.CYCLE_SPELL_BINDING.consumeClick();
                 if (handler.inCastMode()) {
                     if (spellBindingDown) {
-                        if (handler.isChargingOrChannelling())
+                        if (handler.isChargingOrChannelling() || handler.castTick > 0)
                             return;
 
                         Screen screen = minecraft.screen;
@@ -226,6 +226,18 @@ public class ClientEvents {
                 if (forward != handler.forwardImpulse || left != handler.leftImpulse) {
                     PayloadHandler.updateMovement(event.getInput().forwardImpulse, event.getInput().leftImpulse);
                 }
+            }
+        }
+
+        @SubscribeEvent
+        public static void onRenderLivingPre(RenderLivingEvent.Pre<? extends LivingEntity, ? extends EntityModel<? extends LivingEntity>> event) {
+            var player = Minecraft.getInstance().player;
+            if (player == null)
+                return;
+
+            var livingEntity = event.getEntity();
+            if (livingEntity.hasEffect(SBEffects.MAGI_INVISIBILITY)/* && livingEntity.isInvisibleTo(player)*/) {
+                event.setCanceled(true);
             }
         }
 

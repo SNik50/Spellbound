@@ -10,7 +10,7 @@ public class SiphonSpell extends AnimatedSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 

@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.spell.transfiguration;
 
+import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -31,6 +32,12 @@ import java.util.List;
 //TODO: ADD OPEN/CLOSE ANIMATIONS
 
 public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
+    private static final ResourceLocation BLINK = CommonClass.customLocation("blink");
+    private static final ResourceLocation UNWANTED_GUESTS = CommonClass.customLocation("unwanted_guests");
+    private static final ResourceLocation SHADOW_ESCAPE = CommonClass.customLocation("shadow_escape");
+    private static final ResourceLocation GRAVITY_SHIFT = CommonClass.customLocation("gravity_shift");
+    private final PortalMap<ShadowGate> portalMap = new PortalMap<>();
+
     private static Builder<ShadowGateSpell> createShadowGateBuilder() {
         return createSimpleSpellBuilder(ShadowGateSpell.class)
                 .manaCost(25)
@@ -47,12 +54,9 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                     return i <= 9;
                 })
                 .summonCast()
-                .fullRecast()
+                .fullRecast(false)
                 .skipEndOnRecast();
     }
-    private static final ResourceLocation UNWANTED_GUESTS = CommonClass.customLocation("unwanted_guests");
-
-    private final PortalMap<ShadowGate> portalMap = new PortalMap<>();
 
     public ShadowGateSpell() {
         super(SBSpells.SHADOW_GATE.get(), createShadowGateBuilder());
@@ -99,9 +103,10 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                                     addSkillBuff(
                                             caster,
                                             SBSkills.BLINK,
+                                            BLINK,
                                             BuffCategory.BENEFICIAL,
                                             SkillBuff.ATTRIBUTE_MODIFIER,
-                                            new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(CommonClass.customLocation("blink"), 0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
+                                            new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(BLINK, 0.25F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
                                             100);
 
                                 if (context.hasSkillReady(SBSkills.QUICK_RECHARGE)) {
@@ -109,13 +114,14 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                                     addCooldown(SBSkills.QUICK_RECHARGE, 200);
                                 }
 
-                                if (context.hasSkill(SBSkills.SHADOW_ESCAPE) && isCaster(entity) && caster.getHealth() < caster.getMaxHealth() * 0.5F && !caster.hasEffect(MobEffects.INVISIBILITY)) {
+                                if (context.hasSkill(SBSkills.SHADOW_ESCAPE) && isCaster(entity) && caster.getHealth() < caster.getMaxHealth() * 0.5F && !caster.hasEffect(SBEffects.MAGI_INVISIBILITY)) {
                                     addSkillBuff(
                                             caster,
                                             SBSkills.SHADOW_ESCAPE,
+                                            SHADOW_ESCAPE,
                                             BuffCategory.BENEFICIAL,
                                             SkillBuff.MOB_EFFECT,
-                                            new MobEffectInstance(MobEffects.INVISIBILITY, 100, 0, false, false, true),
+                                            new MobEffectInstance(SBEffects.MAGI_INVISIBILITY, 100, 0, false, false, true),
                                             100
                                     );
                                 }
@@ -132,6 +138,7 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                                     addSkillBuff(
                                             entity,
                                             SBSkills.UNWANTED_GUESTS,
+                                            UNWANTED_GUESTS,
                                             BuffCategory.HARMFUL,
                                             SkillBuff.SPELL_MODIFIER,
                                             SpellModifier.UNWANTED_GUESTS,
@@ -152,6 +159,7 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                                         addSkillBuff(
                                                 caster,
                                                 SBSkills.GRAVITY_SHIFT,
+                                                GRAVITY_SHIFT,
                                                 BuffCategory.BENEFICIAL,
                                                 SkillBuff.MOB_EFFECT,
                                                 new MobEffectInstance(MobEffects.SLOW_FALLING, 100),
@@ -180,7 +188,7 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 

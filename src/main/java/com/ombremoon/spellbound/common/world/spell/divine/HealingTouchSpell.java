@@ -35,7 +35,7 @@ public class HealingTouchSpell extends AnimatedSpell {
                 .manaCost(15)
                 .duration(100)
                 .selfBuffCast()
-                .fullRecast();
+                .fullRecast(true);
     }
 
 
@@ -59,6 +59,7 @@ public class HealingTouchSpell extends AnimatedSpell {
                 this.addSkillBuff(
                         caster,
                         SBSkills.TRANQUILITY_OF_WATER,
+                        TRANQUILITY,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(SBAttributes.MANA_REGEN, new AttributeModifier(TRANQUILITY, 0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
@@ -89,6 +90,7 @@ public class HealingTouchSpell extends AnimatedSpell {
                 this.addSkillBuff(
                         caster,
                         SBSkills.OVERGROWTH,
+                        OVERGROWTH,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(Attributes.MAX_HEALTH, new AttributeModifier(OVERGROWTH, 0.1 * this.overgrowthStacks, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
@@ -101,6 +103,7 @@ public class HealingTouchSpell extends AnimatedSpell {
                 this.addSkillBuff(
                         caster,
                         SBSkills.OAK_BLESSING,
+                        ARMOR_MOD,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(Attributes.ARMOR, new AttributeModifier(ARMOR_MOD, 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
@@ -141,7 +144,7 @@ public class HealingTouchSpell extends AnimatedSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 

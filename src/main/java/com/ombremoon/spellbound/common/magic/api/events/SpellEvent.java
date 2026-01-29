@@ -5,8 +5,8 @@ import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 public class SpellEvent {
-    private final LivingEntity caster;
-    private final Event event;
+    protected final LivingEntity caster;
+    protected final Event event;
     protected boolean cancelled;
 
     public SpellEvent(LivingEntity caster, Event event) {

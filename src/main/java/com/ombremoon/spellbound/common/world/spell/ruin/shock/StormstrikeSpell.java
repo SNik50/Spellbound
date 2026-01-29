@@ -28,12 +28,12 @@ public class StormstrikeSpell extends AnimatedSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
         this.addSkillDetails(SBSkills.STORMSTRIKE,
-                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, 3)),
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, 2)),
                 SkillTooltip.DURATION.tooltip(60)
         );
-        this.addSkillDetails(SBSkills.STATIC_SHOCK, SkillTooltip.RADIUS.tooltip(3));
+        this.addSkillDetails(SBSkills.STATIC_SHOCK, SkillTooltip.RADIUS.tooltip(3F));
         this.addSkillDetails(SBSkills.ELECTRIFY,
                 SkillTooltip.TARGET_SHOCK_RESIST.tooltip(-30F),
                 SkillTooltip.POTENCY_SCALING.tooltip()

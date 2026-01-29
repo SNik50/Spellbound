@@ -1,10 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.deception;
 
-import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
-import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
@@ -12,9 +9,9 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.EntityUtil;
-import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.particles.ParticleTypes;
@@ -29,11 +26,15 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.UnknownNullability;
 
 public class ShadowbondSpell extends AnimatedSpell {
+    private static final ResourceLocation SHADOWBOND_INVIS = CommonClass.customLocation("shadowbond_invis");
+    private static final ResourceLocation SHADOWBOND_TARGET_INVIS = CommonClass.customLocation("shadowbond_target_invis");
+    private static final ResourceLocation SHADOW_STEP = CommonClass.customLocation("shadow_step");
     private static final ResourceLocation SNEAK_ATTACK = CommonClass.customLocation("sneak_attack");
+    private static final ResourceLocation SILENT_EXCHANGE = CommonClass.customLocation("silent_exchange");
+    private static final ResourceLocation SNARE = CommonClass.customLocation("snare");
     private static final ResourceLocation DISORIENTED = CommonClass.customLocation("disoriented");
     private static final SpellDataKey<Boolean> EARLY_END = SyncedSpellData.registerDataKey(ShadowbondSpell.class, SBDataTypes.BOOLEAN.get());
     public static Builder<ShadowbondSpell> createShadowbondBuilder() {
@@ -54,7 +55,7 @@ public class ShadowbondSpell extends AnimatedSpell {
                     return !context.isRecast() && context.getTarget() instanceof LivingEntity target && !spell.checkForCounterMagic(target) && !EntityUtil.isBoss(target);
                 })
                 .instantCast()
-                .fullRecast()
+                .fullRecast(true)
                 .skipEndOnRecast();
     }
 
@@ -95,10 +96,11 @@ public class ShadowbondSpell extends AnimatedSpell {
         }
 
         if (!this.canReverse) {
-            MobEffectInstance mobEffectInstance = new SBEffectInstance(caster, MobEffects.INVISIBILITY, -1, context.hasSkill(SBSkills.OBSERVANT), 0, false, false);
+            MobEffectInstance mobEffectInstance = new SBEffectInstance(caster, SBEffects.MAGI_INVISIBILITY, -1, context.hasSkill(SBSkills.OBSERVANT), 0, false, false);
             addSkillBuff(
                     caster,
                     SBSkills.SHADOWBOND,
+                    SHADOWBOND_INVIS,
                     BuffCategory.BENEFICIAL,
                     SkillBuff.MOB_EFFECT,
                     mobEffectInstance);
@@ -110,6 +112,7 @@ public class ShadowbondSpell extends AnimatedSpell {
                     addSkillBuff(
                             living,
                             SBSkills.SHADOWBOND,
+                            SHADOWBOND_TARGET_INVIS,
                             BuffCategory.HARMFUL,
                             SkillBuff.MOB_EFFECT,
                             mobEffectInstance);
@@ -181,7 +184,7 @@ public class ShadowbondSpell extends AnimatedSpell {
     }
 
     @Override
-    protected void registerSkillTooltips() {
+    public void registerSkillTooltips() {
 
     }
 
@@ -234,6 +237,7 @@ public class ShadowbondSpell extends AnimatedSpell {
             addSkillBuff(
                     caster,
                     SBSkills.SHADOW_STEP,
+                    SHADOW_STEP,
                     BuffCategory.BENEFICIAL,
                     SkillBuff.ATTRIBUTE_MODIFIER,
                     new ModifierData(Attributes.MOVEMENT_SPEED, new AttributeModifier(CommonClass.customLocation("shadow_step"), 1.3F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
@@ -243,6 +247,7 @@ public class ShadowbondSpell extends AnimatedSpell {
             addSkillBuff(
                     caster,
                     SBSkills.SNEAK_ATTACK,
+                    SNEAK_ATTACK,
                     BuffCategory.BENEFICIAL,
                     SkillBuff.ATTRIBUTE_MODIFIER,
                     new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(SNEAK_ATTACK, 0.5F, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
@@ -268,6 +273,7 @@ public class ShadowbondSpell extends AnimatedSpell {
                     addSkillBuff(
                             living,
                             SBSkills.SILENT_EXCHANGE,
+                            SILENT_EXCHANGE,
                             BuffCategory.HARMFUL,
                             SkillBuff.MOB_EFFECT,
                             new MobEffectInstance(SBEffects.SILENCED, 100, 0, false, false),
@@ -278,6 +284,7 @@ public class ShadowbondSpell extends AnimatedSpell {
                     addSkillBuff(
                             living,
                             SBSkills.SNARE,
+                            SNARE,
                             BuffCategory.HARMFUL,
                             SkillBuff.MOB_EFFECT,
                             new MobEffectInstance(SBEffects.ROOTED, 100, 0, false, false),
@@ -288,6 +295,7 @@ public class ShadowbondSpell extends AnimatedSpell {
                     addSkillBuff(
                             living,
                             SBSkills.DISORIENTED,
+                            DISORIENTED,
                             BuffCategory.HARMFUL,
                             SkillBuff.MOB_EFFECT,
                             new MobEffectInstance(MobEffects.CONFUSION, 200, 0, false, false),
@@ -311,9 +319,10 @@ public class ShadowbondSpell extends AnimatedSpell {
             addSkillBuff(
                     caster,
                     SBSkills.SHADOWBOND,
+                    SHADOWBOND_INVIS,
                     BuffCategory.BENEFICIAL,
                     SkillBuff.MOB_EFFECT,
-                    new MobEffectInstance(MobEffects.INVISIBILITY, 100, 0, false, false));
+                    new MobEffectInstance(SBEffects.MAGI_INVISIBILITY, 100, 0, false, false));
         }
     }
 

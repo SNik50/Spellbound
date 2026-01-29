@@ -8,11 +8,13 @@ import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
 import com.ombremoon.spellbound.networking.PayloadHandler;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -131,6 +133,10 @@ public class SpellUtil {
 
     public static boolean isSpellActive(SpellType<?> spellType, LivingEntity caster) {
         return !SpellUtil.getSpellHandler(caster).getActiveSpells(spellType).isEmpty();
+    }
+
+    public static boolean hasSkillBuff(LivingEntity livingEntity, Holder<Skill> skill) {
+        return SpellUtil.getSpellHandler(livingEntity).hasSkillBuff(skill.value());
     }
 
     /**
