@@ -1,17 +1,18 @@
 package com.ombremoon.spellbound.common.magic.api;
 
 import com.ombremoon.spellbound.common.events.EventFactory;
-import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.SpellMastery;
-import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.networking.PayloadHandler;
+import com.ombremoon.spellbound.util.SpellUtil;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -20,8 +21,7 @@ import java.util.function.Predicate;
  * The main class most spells will extend from. Primary utility is to handle spells casting animations.
  */
 public abstract class AnimatedSpell extends AbstractSpell {
-    private final Function<SpellContext, String> castAnimation;
-    private final Function<SpellContext, String> failAnimation;
+    private final Function<SpellContext, SpellAnimation> castAnimation;
 
     public static <T extends AnimatedSpell> Builder<T> createSimpleSpellBuilder(Class<T> spellClass) {
         return new Builder<>();
@@ -30,29 +30,51 @@ public abstract class AnimatedSpell extends AbstractSpell {
     public AnimatedSpell(SpellType<?> spellType, Builder<?> builder) {
         super(spellType, EventFactory.getAnimatedBuilder(spellType, builder));
         this.castAnimation = builder.castAnimation;
-        this.failAnimation = builder.failAnimation;
     }
 
     @Override
     public void onCastStart(SpellContext context) {
         super.onCastStart(context);
-        Level level = context.getLevel();
         LivingEntity caster = context.getCaster();
-        String animation = this.castAnimation.apply(context);
-        if (!level.isClientSide) {
-            if (!animation.isEmpty() && caster instanceof Player player)
-                this.playAnimation(player, animation);
+        SpellAnimation animation = this.castAnimation.apply(context);
+        if (animation != null && caster instanceof Player player) {
+            this.playAnimation(player, animation);
         }
     }
 
-    @Override
-    public void onCastReset(SpellContext context) {
-        super.onCastReset(context);
+    /**
+     * Plays an animation for the player. This is called server-side for all players to see the animation
+     * @param player The player performing the animation
+     * @param animation The animation information
+     */
+    protected void playAnimation(Player player, SpellAnimation animation) {
+        var handler = SpellUtil.getSpellHandler(player);
+        handler.playAnimation(player, animation, SpellUtil.getCastSpeed(player));
+    }
+
+    protected void stopAnimation(Player player, SpellAnimation animation) {
+        var handler = SpellUtil.getSpellHandler(player);
+        handler.stopAnimation(player, animation);
+    }
+
+    protected void playMovementAnimation(Player player, ResourceLocation movementAnimation, @Nullable SpellAnimation fallbackAnimation) {
+        var handler = SpellUtil.getSpellHandler(player);
+        SpellAnimation animation = new SpellAnimation(movementAnimation, SpellAnimation.Type.CAST, false);
+        if (handler.isMoving() && !handler.movementDirty) {
+            handler.movementDirty = true;
+            playAnimation(player, animation);
+        } else if (!handler.isMoving() && handler.movementDirty) {
+            handler.movementDirty = false;
+            if (fallbackAnimation != null) {
+                playAnimation(player, fallbackAnimation);
+            } else {
+                stopAnimation(player, animation);
+            }
+        }
     }
 
     public static class Builder<T extends AnimatedSpell> extends AbstractSpell.Builder<T> {
-        protected Function<SpellContext, String> castAnimation = context -> "simple_cast";
-        protected Function<SpellContext, String> failAnimation = context -> "spell_fail";
+        protected Function<SpellContext, SpellAnimation> castAnimation = context -> new SpellAnimation(CommonClass.customLocation("simple_cast"), SpellAnimation.Type.CAST, true);
 
         public Builder<T> manaCost(int manaCost) {
             this.manaCost = manaCost;
@@ -78,30 +100,25 @@ public abstract class AnimatedSpell extends AbstractSpell {
             return this;
         }
 
-        public Builder<T> castAnimation(Function<SpellContext, String> castAnimationName) {
+        public Builder<T> castAnimation(Function<SpellContext, SpellAnimation> castAnimationName) {
             this.castAnimation = castAnimationName;
             return this;
         }
 
-        public Builder<T> failAnimation(Function<SpellContext, String> failAnimationName) {
-            this.failAnimation = failAnimationName;
-            return this;
-        }
-
         public Builder<T> instantCast() {
-            this.castAnimation = context -> "instant_cast";
+            this.castAnimation = context -> new SpellAnimation("instant_cast", SpellAnimation.Type.CAST, true);
             this.castTime = 5;
             return this;
         }
 
         public Builder<T> summonCast() {
-            this.castAnimation = context -> "summon";
+            this.castAnimation = context -> new SpellAnimation("summon", SpellAnimation.Type.CAST, true);
             this.castTime = 30;
             return this;
         }
 
         public Builder<T> selfBuffCast() {
-            this.castAnimation = context -> "self_buff";
+            this.castAnimation = context -> new SpellAnimation("self_buff", SpellAnimation.Type.CAST, true);
             return this;
         }
 
@@ -125,8 +142,9 @@ public abstract class AnimatedSpell extends AbstractSpell {
             return this;
         }
 
-        public Builder<T> fullRecast() {
+        public Builder<T> fullRecast(boolean resetDuration) {
             this.fullRecast = true;
+            this.resetDuration = resetDuration;
             return this;
         }
         public Builder<T> skipEndOnRecast(Predicate<SpellContext> skipIf) {

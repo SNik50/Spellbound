@@ -30,7 +30,9 @@ public class ModLangProvider extends LanguageProvider {
             "sus", "",
             "magis", "Magi's",
             "architects", "Architect's",
-            "swindlers", "Swindler's"
+            "swindlers", "Swindler's",
+            "dolphins", "Dolphin's",
+            "mermaids", "Mermaids's"
     );
 
     public ModLangProvider(PackOutput gen) {
@@ -99,6 +101,11 @@ public class ModLangProvider extends LanguageProvider {
         add("chat.spelltome.nospell", "This spells tome is blank.");
         add("chat.spelltome.spellunlocked", "Spell unlocked: ");
         add("tooltip.spellbound.holdshift", "Hold shift for more information.");
+
+        add("spellbound.sb_generic", "Magic Damage");
+        add("spellbound.ruin_fire", "Fire Damage");
+        add("spellbound.ruin_frost", "Frost Damage");
+        add("spellbound.ruin_shock", "Shock Damage");
 
         add("spellbound.path.level", "Lvl");
 
@@ -427,7 +434,7 @@ public class ModLangProvider extends LanguageProvider {
 
         addSpellContents(SpellPath.DECEPTION, SBSpells.SHADOWBOND.get(),
                 "Someone has requested my help turning them invisible so they can sneak into a jungle temple's vault. If only I could reverse our roles...",
-                "Well that has done the trick! As soon as they passed the traps, I swapped places with them. Lets just hope they don't track me down.");
+                "Well that has done the trick! As soon as they passed the traps, I swapped places with them. Let's just hope they don't track me down.");
 
 
         addSpellContents(SpellPath.DECEPTION, SBSpells.PURGE_MAGIC.get(),
@@ -436,6 +443,52 @@ public class ModLangProvider extends LanguageProvider {
     }
 
     protected void skillDescriptions() {
+        add("spellbound.skill_tooltip.more_details", "Press §fShift§r for Details");
+        add("spellbound.skill_tooltip.details", "When Unlocked:");
+        add("spellbound.skill_tooltip.damage", "%s %s");
+        add("spellbound.skill_tooltip.duration", "%s Duration");
+        add("spellbound.skill_tooltip.radius", "%s Block Radius");
+        add("spellbound.skill_tooltip.range", "%s Range");
+        add("spellbound.skill_tooltip.mana_cost", "%s%% Mana Cost");
+        add("spellbound.skill_tooltip.mana_tick_cost", "%s Mana/s");
+        add("spellbound.skill_tooltip.mana", "%s Mana");
+        add("spellbound.skill_tooltip.potency", "%s%% Potency");
+        add("spellbound.skill_tooltip.cooldown", "%s Cooldown");
+        add("spellbound.skill_tooltip.effect_duration", "%s Effect Duration");
+        add("spellbound.skill_tooltip.proc_chance", "%s%% Proc Chance");
+        add("spellbound.skill_tooltip.proc_duration", "%s Proc Duration");
+        add("spellbound.skill_tooltip.charge_duration", "%s Charge Duration");
+        add("spellbound.skill_tooltip.max_charges", "%s Charges");
+        add("spellbound.skill_tooltip.modify_damage", "%s%% %s");
+        add("spellbound.skill_tooltip.modify_duration", "%s%% Duration");
+        add("spellbound.skill_tooltip.mana_to_damage", "%s%% Mana to Damage");
+        add("spellbound.skill_tooltip.damage_per_charge", "%s%% %s per Charge");
+        add("spellbound.skill_tooltip.range_per_charge", "%s%% Range per Charge");
+        add("spellbound.skill_tooltip.radius_per_charge", "%s%% Radius per Charge");
+        add("spellbound.skill_tooltip.knockback_per_charge", "%s%% Knockback per Charge");
+        add("spellbound.skill_tooltip.ally_range", "%s Ally Buff Range");
+        add("spellbound.skill_tooltip.target_fire_resist", "%s%% Fire Resist on Target");
+        add("spellbound.skill_tooltip.target_ice_resist", "%s%% Ice Resist on Target");
+        add("spellbound.skill_tooltip.target_shock_resist", "%s%% Shock Resist on Target");
+        add("spellbound.skill_tooltip.knockback", "%s Knockback Strength");
+        add("spellbound.skill_tooltip.explosion_radius", "%s Explosion Radius");
+        add("spellbound.skill_tooltip.potency_scaling", "Scales with Potency");
+        add("spellbound.skill_tooltip.choice", "Choice Upgrade");
+        add("spellbound.skill_tooltip.choice_condition", "If ");
+        add("spellbound.skill_tooltip.dolphins_fin", "%s%% Water Slowdown");
+
+        addSkillTooltip(SBSkills.FLAME_JET, "Releases a short, concentrated burst of fire in front of the caster.");
+        addSkillTooltip(SBSkills.JET_ENGINE, "Propels the caster in the direction they are facing, dealing Fire damage to enemies behind.");
+        addSkillTooltip(SBSkills.FLAME_GEYSER, "Flame Jet originates from the position the caster points at, increasing the jet's length.");
+        addSkillTooltip(SBSkills.FLAME_INFERNO, "Flame Jet fires in a ring around the caster, dealing reduced damage.");
+        addSkillTooltip(SBSkills.TURBO_CHARGE, "Flame Jet can be charged. The longer the charge, the longer the length of the jet and damage dealt.");
+        addSkillTooltip(SBSkills.IGNITION_BURST, "Flame Jet explodes at the end of its range at max charge, dealing extra Fire damage.");
+        addSkillTooltip(SBSkills.EXPULSION_BLAST, "Flame Jet sends enemies flying in the opposite direction of the caster.");
+        addSkillTooltip(SBSkills.JET_STABILIZATION, "Flame Jet can be cast while walking or sprinting.");
+        addSkillTooltip(SBSkills.TURBULENCE_STREAM, "If Flame Jet is recast within a short duration, its range is increased.");
+        addSkillTooltip(SBSkills.AFTERSHOCK_COMPRESSION, "If Flame Jet is recast within a short duration, its damage is increased.");
+        addSkillTooltip(SBSkills.IRON_MAN, "Consume a Smoldering Shard. Flame Jet can be channeled to continuously propel the caster.");
+
         addSkillTooltip(SBSkills.SOLAR_RAY, "Fire a thin beam of light that deals 5 fire damage per second.");
         addSkillTooltip(SBSkills.SUNSHINE, "Doubles the range of Solar Ray.");
         addSkillTooltip(SBSkills.HEALING_LIGHT, "Allies hit by the ray are healed for 2 health per second.");
@@ -453,17 +506,17 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.EXPLOSIVE_BARRAGE, "Each lava bomb explodes on impact.");
         addSkillTooltip(SBSkills.LAVA_FLOW, "Lava bombs turn into lava pools on impact.");
 
-        addSkillTooltip(SBSkills.STORMSTRIKE, "Send out a bolt of lightning that charges a target, dealing 2 shock damage per second for 3 seconds.");
+        addSkillTooltip(SBSkills.STORMSTRIKE, "Send out a bolt of lightning that charges a target");
         addSkillTooltip(SBSkills.STATIC_SHOCK, "Hitting a block now creates a small explosion that applies Stormstrike to anyone it hits.");
-        addSkillTooltip(SBSkills.ELECTRIFY, "Decrease the target's shock resistance by 30%.");
-        addSkillTooltip(SBSkills.SHOCK_FACTOR, "Deals extra damage equal to 1% of your current mana each damage tick.");
-        addSkillTooltip(SBSkills.PURGE, "Deals extra damage to summoned targets, equal to 10% of the caster's current mana.");
-        addSkillTooltip(SBSkills.REFRACTION, "When the target takes damage from your shock-based Ruin spells while affected with Stormstrike, restores 15 mana back to the caster.");
+        addSkillTooltip(SBSkills.ELECTRIFY, "Decreases the target's shock resistance.");
+        addSkillTooltip(SBSkills.SHOCK_FACTOR, "Deals extra damage scaling with the caster's mana.");
+        addSkillTooltip(SBSkills.PURGE, "Deals extra damage to summoned targets, scaling with the caster's mana.");
+        addSkillTooltip(SBSkills.REFRACTION, "Restores mana back to the caster when the target takes Shock damage from sources other than Stormstrike.");
         addSkillTooltip(SBSkills.PULSATION, "Chance to paralyze the target for 1 second each damage tick.");
-        addSkillTooltip(SBSkills.STORM_SHARD, "If the target dies while affected by Stormstrike, the caster is awarded a Storm Shard. 30 sec. cooldown.");
-        addSkillTooltip(SBSkills.CHARGED_ATMOSPHERE, "Decreases shock-based Ruin spells' mana costs by 25% for 8 seconds.");
+        addSkillTooltip(SBSkills.STORM_SHARD, "If the target dies while affected by Stormstrike, the caster is awarded a Storm Shard.");
+        addSkillTooltip(SBSkills.CHARGED_ATMOSPHERE, "Decreases the mana cost of Shock spells for a duration.");
         addSkillTooltip(SBSkills.DISARM, "Chance to disarm the target each damage tick.");
-        addSkillTooltip(SBSkills.SUPERCHARGE, "If the target dies while affected by Stormstrike, increases the damage of shock-based Ruin spells by 50% for 10 seconds.");
+        addSkillTooltip(SBSkills.SUPERCHARGE, "Increases the potency of Shock spells for a duration if the target dies while affected by Stormstrike.");
 
         addSkillTooltip(SBSkills.ELECTRIC_CHARGE, "Sneakily apply an electric charge to the target. Recast to discharge.");
         addSkillTooltip(SBSkills.ELECTRIFICATION, "Applies Stormstrike on discharge.");
@@ -513,6 +566,18 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.STAMPEDE, "You can charge through enemies, knocking them back and dealing 3 damage.");
         addSkillTooltip(SBSkills.MARATHON, "Food consumption is halted.");
 
+        addSkillTooltip(SBSkills.DOLPHINS_FIN, "Increases the caster's swim speed and water movement efficiency. Also reduces the caster's water speed reduction.");
+        addSkillTooltip(SBSkills.MERMAIDS_TAIL, "Increases the swim speed and water speed reduction bonuses.");
+        addSkillTooltip(SBSkills.AQUATIC_DASH, "Recast to perform an instant dash forward through the water.");
+        addSkillTooltip(SBSkills.SHARK_ATTACK, "Passing through an enemy with Aquatic Dash deals minor damage and knockback.");
+        addSkillTooltip(SBSkills.ECHOLOCATION, "Recast to emit a sonar ping, highlighting all entities in the water within range.");
+        addSkillTooltip(SBSkills.POD_LEADER, "Nearby allies gain the swim speed benefits.");
+        addSkillTooltip(SBSkills.SLIPSTREAM, "Continuously swimming increases the swim speed bonus and grants immunity to Mining Fatigue.");
+        addSkillTooltip(SBSkills.SONAR_BLAST, "Recast to emit a conical wave of force in the direction the caster is facing.");
+        addSkillTooltip(SBSkills.KELP_VEIL, "Remaining motionless underwater grants the caster invisibility until the next movement or action.");
+        addSkillTooltip(SBSkills.HAMMERHEAD, "Underwater mining speed reduction is negated.");
+        addSkillTooltip(SBSkills.OCEAN_DWELLER, "Gain the ability to breathe underwater.");
+
         addSkillTooltip(SBSkills.SHADOW_GATE, "Deploy 2 shadow portals (must be in a low light level), allowing passage in both directions with 50 blocks.");
         addSkillTooltip(SBSkills.REACH, "Double the range of the portals");
         addSkillTooltip(SBSkills.BLINK, "Passing through the portals increases the caster's movement speed for 25 seconds.");
@@ -541,13 +606,13 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.VILE_INFLUENCE, "Increases the spore radius.");
         addSkillTooltip(SBSkills.HASTENED_GROWTH, "Decreases the explosion interval by 1 second.");
         addSkillTooltip(SBSkills.ENVENOM, "Spores now poison targets for 4 seconds.");
-        addSkillTooltip(SBSkills.PARASITIC_FUNGUS, "Spores deal extra damage, scaling with the caster's current mana, to poisoned or diseased enemies.");
+        addSkillTooltip(SBSkills.PARASITIC_FUNGUS, "Enemies hit by a mushroom explosion are taunted for 3 seconds.");
         addSkillTooltip(SBSkills.NATURES_DOMINANCE, "Each active mushroom increases the spell's damage by 10%.");
         addSkillTooltip(SBSkills.FUNGAL_HARVEST, "When 3 mushrooms are active, gain increased mana regeneration.");
         addSkillTooltip(SBSkills.POISON_ESSENCE, "If a target dies to a mushroom, the spell deals 25% more damage for 10 seconds.");
         addSkillTooltip(SBSkills.SYNTHESIS, "If a target dies to a mushroom, the casting cost of the spell is decreased by 100% for 5 seconds.");
-        addSkillTooltip(SBSkills.LIVING_FUNGUS, "When the spell ends, restores 7 - 15 mana back to the caster.");
-        addSkillTooltip(SBSkills.PROLIFERATION, "Getting hit by the same mushroom twice petrifies the target for 4 seconds.");
+        addSkillTooltip(SBSkills.LIVING_FUNGUS, "Recast on a mushroom to spawn a Mini Mushroom minion for 5 minutes.");
+        addSkillTooltip(SBSkills.PROLIFERATION, "Mini Mushroom minions can be bonemealed to spawn a Giant Mushroom.");
 
         addSkillTooltip(SBSkills.SUMMON_CAT_SPIRIT, "Summons a totem spirit for 60 seconds. It changes between warrior form (fighting stance) and cat form (healing stance).");
         addSkillTooltip(SBSkills.CATS_AGILITY, "In cat form, the spirit gains increased movement speed.");
@@ -563,14 +628,14 @@ public class ModLangProvider extends LanguageProvider {
 
         addSkillTooltip(SBSkills.HEALING_TOUCH, "Heals the caster 2 health per second for 5 seconds.");
         addSkillTooltip(SBSkills.BLASPHEMY, "When the caster is hit, applies Disease to the attacker for 3 seconds. 5 sec. cooldown");
-        addSkillTooltip(SBSkills.CONVALESCENCE, "Restores 1 health when the caster attack a target affected by poison or disease.");
+        addSkillTooltip(SBSkills.CONVALESCENCE, "Restores 1 health when the caster attacks a target affected by poison or disease.");
         addSkillTooltip(SBSkills.DIVINE_BALANCE, "Increases the duration of the spell by 100% and the mana cost by 50%.");
         addSkillTooltip(SBSkills.NATURES_TOUCH, "Instantly restores 4 health to the caster.");
         addSkillTooltip(SBSkills.CLEANSING_TOUCH, "Removes a random negative effect from the caster.");
         addSkillTooltip(SBSkills.ACCELERATED_GROWTH, "Instantly restores 2 hunger to the caster.");
         addSkillTooltip(SBSkills.HEALING_STREAM, "Each tick restores extra health equal to 2% of the caster's missing mana.");
         addSkillTooltip(SBSkills.TRANQUILITY_OF_WATER, "Increases mana regeneration by 25%");
-        addSkillTooltip(SBSkills.OVERGROWTH, "While at full health, each tick applies a stack of Overgrowth (up to a max of 5 stacks.) When hit, Overgrowth restores 4 health, consuming 1 stack.");
+        addSkillTooltip(SBSkills.OVERGROWTH, "While at full health, each heal tick applies a stack of Overgrowth (up to a max of 5 stacks). When hit, Overgrowth restores 4 health, consuming 1 stack.");
         addSkillTooltip(SBSkills.OAK_BLESSING, "Increases armor by 15% for 10 seconds if the caster's health drops below 30% while Healing Touch is active. 30 sec. cooldown.");
 
         addSkillTooltip(SBSkills.HEALING_BLOSSOM, "Plants a divine blossom. The blossom blooms 10 seconds after casting and last 10 seconds. The blossom heals the caster 2 health per seconds when within 5 blocks.");
@@ -593,8 +658,8 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.SNARE, "After the swap, the target is rooted.");
         addSkillTooltip(SBSkills.DISORIENTED, "After the swap, the target gets dizzy and deals 20% less damage for 5 seconds.");
         addSkillTooltip(SBSkills.OBSERVANT, "The target is outlined to the caster while invisible.");
-        addSkillTooltip(SBSkills.REVERSAL, "After the swap, the caster can recast with a fool's shard within 5 seconds to swap back with the target.");
-        addSkillTooltip(SBSkills.LIVING_SHADOW, "After the swap, the caster remains invisible for another 5 seconds and leaves behind a decoy for 10 seconds.");
+        addSkillTooltip(SBSkills.REVERSAL, "After the swap, the caster can recast within 5 seconds to swap back with the target.");
+        addSkillTooltip(SBSkills.LIVING_SHADOW, "After the swap, the caster remains invisible for another 5 seconds and leaves behind a decoy for up to 10 seconds.");
         addSkillTooltip(SBSkills.SHADOW_CHAIN, "The spell can now affect an additional target. Swapping order is in the order of targets affected.");
 
         addSkillTooltip(SBSkills.PURGE_MAGIC, "Stops all of the targets active spells.");
@@ -606,12 +671,12 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.RESIDUAL_DISRUPTION, "Targets hit with Purge Magic have a 50% chance to fail spells cast within the next 5 seconds.");
         addSkillTooltip(SBSkills.UNFOCUSED, "Reduces the target's spell power by 10% for 20 seconds.");
         addSkillTooltip(SBSkills.MAGIC_POISONING, "Mana is reduced by 20 points for each active spell purged.");
-        addSkillTooltip(SBSkills.NULLIFICATION, "Removes a random enchantment from the target's armor or weapon.");
+        addSkillTooltip(SBSkills.NULLIFICATION, "Removes a random enchantment from the target's equipment");
         addSkillTooltip(SBSkills.EXPUNGE, "Cast with a fool's shard to remove a spell from the target's knowledge. Can only be used once a day.");
 
         addSkillTooltip(SBSkills.SHATTERING_CRYSTAL, "Creates a crystal of Ice. Cast again to detonate it, dealing damage to nearby enemies.");
         addSkillTooltip(SBSkills.FRIGID_BLAST, "Enemies hit by the blast are slower by 50% for 5 seconds.");
-        addSkillTooltip(SBSkills.ICE_SHARD, "Recast on a crystal: destroy it to make it drop a frozen shard. 30 sec. cooldown.");
+        addSkillTooltip(SBSkills.ICE_SHARD, "Recast on a crystal: destroy it to make it drop a frozen shard. 1 day cooldown.");
         addSkillTooltip(SBSkills.CHILL, "Crystal passively emits a freezing aura, dealing frost damage every second.");
         addSkillTooltip(SBSkills.FROZEN_SHRAPNEL, "The crystal now sends out ice shards that deal extra frost damage.");
         addSkillTooltip(SBSkills.HYPOTHERMIA, "Enemies hit by the explosion have their frost resistance reduced by 10% for 10 seconds.");

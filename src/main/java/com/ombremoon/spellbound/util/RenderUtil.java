@@ -6,9 +6,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.ombremoon.spellbound.client.gui.BasicGuideScreen;
 import com.ombremoon.spellbound.client.gui.GuideBookScreen;
 import com.ombremoon.spellbound.client.gui.WorkbenchScreen;
-import com.ombremoon.spellbound.client.gui.toasts.PageScrapUnlockedToast;
 import com.ombremoon.spellbound.client.gui.toasts.LevelUpToast;
+import com.ombremoon.spellbound.client.gui.toasts.PageScrapUnlockedToast;
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
+import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
@@ -30,9 +31,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
-
-import javax.annotation.Nullable;
 
 public class RenderUtil {
 
@@ -89,10 +89,10 @@ public class RenderUtil {
                 .addToast(new PageScrapUnlockedToast(scrap));
     }
 
-    public static void sendLevelUpToast(int level, SpellboundToasts toast, @Nullable SpellType<?> spell) {
+    public static void sendLevelUpToast(int level, SpellboundToasts toast, @Nullable SpellType<?> spell, @Nullable SpellPath path) {
         Minecraft.getInstance()
                 .getToasts()
-                .addToast(new LevelUpToast(level, toast, spell));
+                .addToast(new LevelUpToast(level, toast, spell, path));
     }
 
     public static void openBasicBook() {

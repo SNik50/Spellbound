@@ -18,6 +18,10 @@ public interface MultiblockPart extends Loggable {
 
     boolean isAssigned();
 
+    default boolean shouldAssign() {
+        return true;
+    }
+
     default void onCleared(Level level, BlockPos blockPos) {
 
     }

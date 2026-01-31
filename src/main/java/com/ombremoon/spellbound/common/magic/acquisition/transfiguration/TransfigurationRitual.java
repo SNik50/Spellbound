@@ -4,26 +4,23 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.main.Keys;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.Level;
 
 import java.util.*;
 
@@ -34,7 +31,7 @@ public class TransfigurationRitual {
                             RitualDefinition.CODEC.fieldOf("definition").forGetter(TransfigurationRitual::definition),
                             Value.CODEC
                                     .listOf()
-                                    .fieldOf("values")
+                                    .fieldOf("ingredients")
                                     .flatXmap(list -> {
                                         Value[] avalue = list.toArray(Value[]::new);
                                         if (avalue.length == 0) {
@@ -45,7 +42,7 @@ public class TransfigurationRitual {
                                                     : DataResult.success(NonNullList.of(Value.EMPTY, avalue));
                                         }
                                     }, DataResult::success)
-                                    .forGetter(recipe -> recipe.materials),
+                                    .forGetter(recipe -> recipe.elementMaterials),
                             RitualEffect.CODEC.listOf().fieldOf("effects").forGetter(TransfigurationRitual::effects)
                     )
                     .apply(p_344998_, TransfigurationRitual::new)
@@ -53,73 +50,50 @@ public class TransfigurationRitual {
     public static final Codec<Holder<TransfigurationRitual>> CODEC = RegistryFixedCodec.create(Keys.RITUAL);
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<TransfigurationRitual>> STREAM_CODEC = ByteBufCodecs.holderRegistry(Keys.RITUAL);
     private final RitualDefinition definition;
-    private final NonNullList<Value> materials;
+    private final NonNullList<Value> elementMaterials;
+    private final NonNullList<Ingredient> materials = NonNullList.create();
     private final List<RitualEffect> effects;
-    final Map<Ingredient, Integer> ingredients = new Object2IntOpenHashMap<>();
-    final Set<Item> filteredItems = new ObjectOpenHashSet<>();
+    private final int startupTime;
 
-    TransfigurationRitual(RitualDefinition definition, NonNullList<Value> materials, List<RitualEffect> effects) {
+    TransfigurationRitual(RitualDefinition definition, NonNullList<Value> elementMaterials, List<RitualEffect> effects) {
         this.definition = definition;
-        this.materials = materials;
+        this.elementMaterials = elementMaterials;
         this.effects = effects;
+        this.startupTime = 5 * definition.tier * 20;
 
-        materials.forEach(value -> ingredients.put(value.ingredient, value.count));
+        this.materials.addAll(this.convertValueToIngredient(elementMaterials));
     }
 
     public boolean matches(TransfigurationMultiblock input, List<ItemStack> items) {
-        if (items.size() < this.materials.size() || items.size() > this.materials.size()) {
+        if (items.size() != this.materials.size()) {
             return false;
-        } else if (this.matches(items, this.getIngredients())) {
-            for (Item item : this.filteredItems) {
-                if (this.countItem(item, items) < this.getIngredientCount(new ItemStack(item)))
-                    return false;
-            }
-            return this.definition.tier == input.getRings() && this.hasValidEffects(input);
+        } else {
+            return this.matches(items, this.materials) && this.definition.tier == input.getRings() && this.hasValidEffects(input);
         }
-        return false;
     }
 
     public boolean matches(List<ItemStack> from, NonNullList<Ingredient> to) {
-        int matchedIngredients = 0;
+        Iterator<Ingredient> iter = NonNullList.copyOf(to).iterator();
         for (ItemStack itemStack : from) {
-            if (matchedIngredients >= to.size()) {
-                return true;
-            } else {
-                for (Ingredient ingredient : to) {
-                    if (ingredient.test(itemStack)) {
-                        matchedIngredients++;
-                        this.filteredItems.add(itemStack.getItem());
-                        break;
-                    }
+            while (iter.hasNext()) {
+                if (iter.next().test(itemStack)) {
+                    iter.remove();
+                    break;
                 }
             }
         }
-        return matchedIngredients == to.size();
+        return !iter.hasNext();
     }
 
-    private NonNullList<Ingredient> getIngredients() {
-        NonNullList<Ingredient> nonNullList = NonNullList.create();
-        nonNullList.addAll(this.ingredients.keySet());
-        return nonNullList;
-    }
-
-    private int getIngredientCount(ItemStack ingredient) {
-        for (var entry : this.ingredients.entrySet()) {
-            if (entry.getKey().getItems()[0].is(ingredient.getItem()))
-                return entry.getValue();
-        }
-        return 0;
-    }
-
-    private int countItem(Item item, List<ItemStack> items) {
-        int i = 0;
-        for(ItemStack stack : items) {
-            if (stack.is(item)) {
-                i += stack.getCount();
+    private NonNullList<Ingredient> convertValueToIngredient(NonNullList<Value> values) {
+        NonNullList<Ingredient> list = NonNullList.create();
+        for (Value value : values) {
+            for (int i = 0; i < value.count; i++) {
+                list.add(value.ingredient);
             }
         }
 
-        return i;
+        return list;
     }
 
     public boolean hasValidEffects(TransfigurationMultiblock multiblock) {
@@ -135,24 +109,24 @@ public class TransfigurationRitual {
         return this.definition;
     }
 
-    public NonNullList<Value> materials() {
-        return this.materials;
+    public NonNullList<Value> clientMaterials() {
+        return this.elementMaterials;
     }
 
     public List<RitualEffect> effects() {
         return this.effects;
     }
 
-    public static Builder ritual(int tier, int startupTime, int duration) {
-        return new Builder(new RitualDefinition(tier, startupTime, duration));
+    public int getStartupTime() {
+        return this.startupTime;
     }
 
-    public static Builder ritual(int tier, int duration) {
-        return ritual(tier, 100, duration);
+    public static Builder ritual(int tier, int duration, int pathXP, SpellMastery mastery) {
+        return new Builder(new RitualDefinition(tier, duration, pathXP, mastery));
     }
 
-    public static Builder ritual(int tier) {
-        return ritual(tier, DEFAULT_RITUAL_DURATION);
+    public static Builder ritual(int tier, int pathXP, SpellMastery mastery) {
+        return ritual(tier, DEFAULT_RITUAL_DURATION, pathXP, mastery);
     }
 
     public static class Builder {
@@ -183,12 +157,13 @@ public class TransfigurationRitual {
         }
     }
 
-    public record RitualDefinition(int tier, int startupTime, int duration) {
+    public record RitualDefinition(int tier, int duration, int pathXP, SpellMastery mastery) {
         public static final MapCodec<RitualDefinition> CODEC = RecordCodecBuilder.mapCodec(
                 p_344890_ -> p_344890_.group(
                                 ExtraCodecs.intRange(1, 3).fieldOf("tier").forGetter(RitualDefinition::tier),
-                                ExtraCodecs.NON_NEGATIVE_INT.fieldOf("startupTime").forGetter(RitualDefinition::startupTime),
-                                ExtraCodecs.NON_NEGATIVE_INT.fieldOf("duration").forGetter(RitualDefinition::duration)
+                                ExtraCodecs.NON_NEGATIVE_INT.fieldOf("duration").forGetter(RitualDefinition::duration),
+                                ExtraCodecs.NON_NEGATIVE_INT.fieldOf("path_xp").forGetter(RitualDefinition::pathXP),
+                                SpellMastery.CODEC.fieldOf("mastery_requirement").forGetter(RitualDefinition::mastery)
                         )
                         .apply(p_344890_, RitualDefinition::new)
         );

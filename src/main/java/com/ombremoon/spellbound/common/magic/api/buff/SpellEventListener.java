@@ -2,7 +2,7 @@ package com.ombremoon.spellbound.common.magic.api.buff;
 
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
-import com.ombremoon.spellbound.common.magic.api.buff.events.*;
+import com.ombremoon.spellbound.common.magic.api.events.*;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
@@ -133,10 +133,12 @@ public class SpellEventListener {
     }
 
     public static class Events<T extends SpellEvent> implements IEvent<T> {
+        public static Events<CastSpellEvent> CAST_SPELL = new Events<>(false);
         public static Events<JumpEvent> JUMP = new Events<>(false);
         public static Events<PlayerAttackEvent> ATTACK = new Events<>(false);
         public static Events<DamageEvent.Post> POST_DAMAGE = new Events<>(false);
         public static Events<DamageEvent.Pre> PRE_DAMAGE = new Events<>(false);
+        public static Events<EffectApplicableEvent> EFFECT_APPLICABLE = new Events<>(false);
         public static Events<LivingBlockEvent> BLOCK = new Events<>(false);
         public static Events<ChangeTargetEvent> CHANGE_TARGET = new Events<>(false);
         public static Events<DeathEvent> ENTITY_KILL = new Events<>(false);

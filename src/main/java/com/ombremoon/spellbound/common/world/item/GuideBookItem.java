@@ -28,7 +28,6 @@ public class GuideBookItem extends Item {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-//        Constants.LOG.info("{}", this.bookId);
         if (this.bookId == null) return InteractionResultHolder.fail(player.getItemInHand(usedHand));
         if (GuideBookManager.getBook(this.bookId) == null) return InteractionResultHolder.fail(player.getItemInHand(usedHand));
 

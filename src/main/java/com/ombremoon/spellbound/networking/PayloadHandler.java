@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.networking;
 
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
+import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockHolder;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -47,11 +48,11 @@ public class PayloadHandler {
     }
 
     public static void sendPathLevelUp(ServerPlayer player, int level, SpellboundToasts toast) {
-        PacketDistributor.sendToPlayer(player, new PathLevelUpToastPayload(level, toast.ordinal()));
+        PacketDistributor.sendToPlayer(player, new PathLevelUpToastPayload(level, toast));
     }
 
-    public static void sendSpellLevelUp(ServerPlayer player, int level, SpellType<?> spellType) {
-        PacketDistributor.sendToPlayer(player, new SpellLevelUpToastPayload(level, spellType));
+    public static void sendSpellLevelUp(ServerPlayer player, int level, SpellboundToasts toast, SpellType<?> spellType) {
+        PacketDistributor.sendToPlayer(player, new SpellLevelUpToastPayload(level, toast, spellType));
     }
 
     public static void switchMode() {
@@ -66,8 +67,8 @@ public class PayloadHandler {
         PacketDistributor.sendToServer(new EquipSpellPayload(spellType, equip));
     }
 
-    public static void castSpell() {
-        PacketDistributor.sendToServer(new CastSpellPayload());
+    public static void castSpell(int charges) {
+        PacketDistributor.sendToServer(new CastSpellPayload(charges));
     }
 
     public static void setCastingSpell(SpellType<?> spellType, SpellContext context) {
@@ -106,7 +107,7 @@ public class PayloadHandler {
         PacketDistributor.sendToServer(new PlayerMovementPayload(PlayerMovementPayload.Movement.ROTATE, 0, 0, yRot));
     }
 
-    public static void handleAnimation(Player player, String animation, float animationSpeed, boolean stopAnimation) {
+    public static void handleAnimation(Player player, SpellAnimation animation, float animationSpeed, boolean stopAnimation) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new HandleAnimationPayload(player.getUUID().toString(), animation, animationSpeed, stopAnimation));
     }
 

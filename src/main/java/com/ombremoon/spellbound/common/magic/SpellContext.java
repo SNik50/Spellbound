@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.magic;
 
+import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
@@ -127,15 +128,28 @@ public class SpellContext {
         return this.skillHolder.getSpellLevel(this.spellType);
     }
 
+    public int getPathLevel() {
+        return getPathLevel(this.spellType.getIdentifiablePath());
+    }
+
+    public int getPathLevel(SpellPath path) {
+        return this.skillHolder.getPathLevel(path);
+    }
+
     public boolean canCastWithLevel() {
         return this.getActiveSpells() <= this.getSpellLevel();
     }
 
     public boolean isChoice(Holder<Skill> skill) {
-        return this.spellHandler.getChoice(this.spellType).equals(skill.value());
+        return this.skillHolder.getChoice(this.spellType).equals(skill.value());
     }
 
-    public String quickOrSimpleCast(boolean isInstant) {
-        return isInstant ? "instant_cast" : "simple_cast";
+    public boolean hasSkillBuff(Holder<Skill> skill) {
+        return this.spellHandler.hasSkillBuff(skill.value());
+    }
+
+    public SpellAnimation quickOrSimpleCast(boolean isInstant) {
+        String animation = isInstant ? "instant_cast" : "simple_cast";
+        return new SpellAnimation(animation, SpellAnimation.Type.CAST, true);
     }
 }

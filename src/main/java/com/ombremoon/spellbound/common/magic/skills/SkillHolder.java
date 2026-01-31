@@ -40,6 +40,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
     protected final Map<SpellPath, Float> pathXp = new Object2FloatOpenHashMap<>();
     protected final Map<SpellType<?>, Float> spellXp = new Object2FloatOpenHashMap<>();
     protected final Map<SpellType<?>, Integer> skillPoints = new Object2IntOpenHashMap<>();
+    private final Map<SpellType<?>, Skill> skillChoices = new Object2ObjectOpenHashMap<>();
     public final Map<SpellType<?>, Set<Skill>> unlockedSkills = new Object2ObjectOpenHashMap<>();
     private final Set<SpellModifier> permanentModifiers = new ObjectOpenHashSet<>();
     private final Set<SpellModifier> timedModifiers = new ObjectOpenHashSet<>();
@@ -88,28 +89,12 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
     }
 
     public void awardSpellXp(SpellType<?> spellType, float xp) {
-        SpellPath path = spellType.getPath();
+        SpellPath path = spellType.getIdentifiablePath();
         int spellLevel = this.getSpellLevel(spellType);
-        int pathLevel = this.getPathLevel(path);
         this.spellXp.put(spellType, Math.min(getSpellXp(spellType) + xp, getXPGoal(MAX_SPELL_LEVEL)));
 
-        SpellPath subPath = spellType.getSubPath();
-        if (subPath != null) {
-            this.pathXp.put(path, pathLevel + (xp * 0.3F));
-            this.pathXp.put(subPath, getPathXp(subPath) + (xp * 0.2F));
-        } else {
-            this.pathXp.put(path, pathLevel + (xp * 0.5F));
-        }
-        int newPathLevel = getPathLevel(path);
-        if (newPathLevel > pathLevel && newPathLevel > 0) {
-            NeoForge.EVENT_BUS.post(new PathLevelUpEvent(this.caster, path, newPathLevel));
-            float f = newPathLevel > 10 ? 1.0F : (float)newPathLevel / 10.0F;
-            caster.level().playSound(null, caster.getX(), caster.getY(), caster.getZ(), SoundEvents.PLAYER_LEVELUP, caster.getSoundSource(), f * 0.75F, 1.0F);
-
-            if (this.caster instanceof ServerPlayer serverPlayer) {
-                PayloadHandler.sendPathLevelUp(serverPlayer, newPathLevel, SpellboundToasts.values()[path.getToastOrdinal()]);
-            }
-        }
+        float pathXP = xp * 0.5F;
+        this.awardPathXP(path, pathXP, false);
 
         int newSpellLevel = this.getSpellLevel(spellType);
         if (newSpellLevel > spellLevel && newSpellLevel > 0) {
@@ -119,10 +104,39 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
             caster.level().playSound(null, caster.getX(), caster.getY(), caster.getZ(), SoundEvents.PLAYER_LEVELUP, caster.getSoundSource(), f * 0.75F, 1.0F);
 
             if (this.caster instanceof ServerPlayer serverPlayer) {
-                PayloadHandler.sendSpellLevelUp(serverPlayer, newSpellLevel, spellType);
+                PayloadHandler.sendSpellLevelUp(serverPlayer, newSpellLevel, SpellboundToasts.values()[path.getToastOrdinal()], spellType);
             }
         }
         sync();
+    }
+
+    public void awardPathXP(SpellPath path, float xp) {
+        this.awardPathXP(path, xp, true);
+    }
+
+    public void awardPathXP(SpellPath path, float xp, boolean sync) {
+        int pathLevel = this.getPathLevel(path);
+        float pathXP = this.getPathXp(path);
+        if (path.isSubPath()) {
+            this.pathXp.put(SpellPath.RUIN, this.getPathXp(SpellPath.RUIN) + xp);
+            this.pathXp.put(path, getPathXp(path) + xp);
+        } else {
+            this.pathXp.put(path, pathXP + xp);
+        }
+
+        int newPathLevel = getPathLevel(path);
+        if (!path.isSubPath() && newPathLevel > pathLevel && newPathLevel > 0) {
+            NeoForge.EVENT_BUS.post(new PathLevelUpEvent(this.caster, path, newPathLevel));
+            float f = newPathLevel > 10 ? 1.0F : (float) newPathLevel / 10.0F;
+            caster.level().playSound(null, caster.getX(), caster.getY(), caster.getZ(), SoundEvents.PLAYER_LEVELUP, caster.getSoundSource(), f * 0.75F, 1.0F);
+
+            if (this.caster instanceof ServerPlayer serverPlayer) {
+                PayloadHandler.sendPathLevelUp(serverPlayer, newPathLevel, SpellboundToasts.values()[path.getToastOrdinal()]);
+            }
+        }
+
+        if (sync)
+            this.sync();
     }
 
     public int getSkillPoints(SpellType<?> spellType) {
@@ -130,7 +144,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
     }
 
     public void awardSkillPoints(SpellType<?> spellType, int points) {
-        this.skillPoints.put(spellType, Mth.clamp(this.getSkillPoints(spellType) + points, 0, 11 - this.unlockedSkills.get(spellType).size()));
+        this.skillPoints.put(spellType, Mth.clamp(this.getSkillPoints(spellType) + points, 0, 11 - this.unlockedSkills.getOrDefault(spellType, new HashSet<>()).size()));
     }
 
     public <T extends AbstractSpell> void resetSkills(SpellType<T> spellType) {
@@ -149,12 +163,9 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
 
     public void unlockSkill(Skill skill, boolean consumePoints) {
         SpellType<?> spellType = skill.getSpell();
-        Set<Skill> unlocked = this.unlockedSkills.get(spellType);
-        if (unlocked == null)
-            unlocked = new HashSet<>();
-
+        Set<Skill> unlocked = this.unlockedSkills.getOrDefault(spellType, new HashSet<>());
         unlocked.add(skill);
-        this.unlockedSkills.put(skill.getSpell(), unlocked);
+        this.unlockedSkills.put(spellType, unlocked);
 
         if (this.caster instanceof Player player)
             skill.onSkillUnlock(player);
@@ -170,8 +181,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
         if (hasSkill(skill)) return false;
         if (skill.isRoot() || skill.getPrereqs() == null) return false;
 
-        Set<Skill> unlocked = unlockedSkills.get(spellType);
-        if (unlocked == null) return false;
+        Set<Skill> unlocked = unlockedSkills.getOrDefault(spellType, new HashSet<>());
         if (unlocked.size() > MAX_SPELL_LEVEL + 1) return false;
         if (!skill.canUnlockSkill((Player) this.caster, this)) return false;
         if (this.getSkillPoints(spellType) <= 0) return false;
@@ -191,8 +201,8 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
 
     public boolean hasSkill(Skill skill) {
         var spellType = skill.getSpell();
-        if (unlockedSkills.get(spellType) == null) return false;
-        return unlockedSkills.get(spellType).contains(skill) || skill.isRoot();
+        Set<Skill> unlocked = unlockedSkills.getOrDefault(spellType, new HashSet<>());
+        return unlocked.contains(skill) || skill.isRoot();
     }
 
     public boolean hasSkillReady(Skill skill) {
@@ -201,6 +211,24 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
 
     public boolean hasSkillReady(Holder<Skill> skill) {
         return hasSkillReady(skill.value());
+    }
+
+    public Skill getChoice(SpellType<?> spellType) {
+        return this.skillChoices.getOrDefault(spellType, spellType.getRootSkill());
+    }
+
+    public void setChoice(SpellType<?> spellType, Skill skill) {
+        this.skillChoices.put(spellType, skill);
+        if (this.caster.level().isClientSide)
+            PayloadHandler.updateChoice(spellType, skill);
+    }
+
+    public void removeChoice(SpellType<?> spellType) {
+        this.skillChoices.remove(spellType);
+    }
+
+    public void clearChoices() {
+        this.skillChoices.clear();
     }
 
     public void addModifier(SpellModifier spellModifier) {

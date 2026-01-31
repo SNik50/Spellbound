@@ -2,7 +2,6 @@ package com.ombremoon.spellbound.common.world.multiblock;
 
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
-import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -23,7 +22,7 @@ public abstract class TransfigurationMultiblockPart extends BlockEntity implemen
     private Multiblock multiblock;
     private MultiblockIndex index;
     private Direction facing;
-    private TransfigurationRitual ritual;
+    private int startupTime;
 
     public TransfigurationMultiblockPart(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -56,17 +55,19 @@ public abstract class TransfigurationMultiblockPart extends BlockEntity implemen
         return this.multiblock != null;
     }
 
-    public TransfigurationRitual getRitual() {
-        return this.ritual;
+    public int getRitualStartTicks() {
+        return this.startupTime;
     }
 
-    public void setRitual(TransfigurationRitual ritual) {
-        this.ritual = ritual;
+    public void setStartupTime(int startupTime) {
+        this.startupTime = startupTime;
     }
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
-        return this.saveWithoutMetadata(registries);
+        CompoundTag tag = super.getUpdateTag(registries);
+        saveAdditional(tag, registries);
+        return tag;
     }
 
     @Override
@@ -108,13 +109,7 @@ public abstract class TransfigurationMultiblockPart extends BlockEntity implemen
                     .resultOrPartial(LOGGER::error)
                     .ifPresent(nbt -> tag.put("Direction", nbt));
         }
-
-        if (this.ritual != null) {
-            TransfigurationRitual.DIRECT_CODEC
-                    .encodeStart(NbtOps.INSTANCE, this.ritual)
-                    .resultOrPartial(LOGGER::error)
-                    .ifPresent(nbt -> tag.put("Ritual", nbt));
-        }
+        tag.putInt("StartupTime", this.startupTime);
     }
 
     @Override
@@ -134,9 +129,6 @@ public abstract class TransfigurationMultiblockPart extends BlockEntity implemen
             DataResult<Direction> dataResult = Direction.CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("Direction")));
             dataResult.resultOrPartial(LOGGER::error).ifPresent(direction -> this.facing = direction);
         }
-        if (tag.contains("Ritual", 10)) {
-            DataResult<TransfigurationRitual> dataResult = TransfigurationRitual.DIRECT_CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("Ritual")));
-            dataResult.resultOrPartial(LOGGER::error).ifPresent(ritual -> this.ritual = ritual);
-        }
+        this.startupTime = tag.getInt("StartupTime");
     }
 }

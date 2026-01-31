@@ -1,15 +1,18 @@
 package com.ombremoon.spellbound.common.world.spell.divine;
 
+import com.ombremoon.spellbound.common.init.SBAttributes;
+import com.ombremoon.spellbound.common.init.SBParticles;
+import com.ombremoon.spellbound.common.init.SBSkills;
+import com.ombremoon.spellbound.common.init.SBSpells;
+import com.ombremoon.spellbound.common.magic.SpellContext;
+import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
-import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
-import com.ombremoon.spellbound.common.init.*;
-import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
-import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
-import com.ombremoon.spellbound.common.magic.api.buff.events.DamageEvent;
+import com.ombremoon.spellbound.common.magic.api.events.DamageEvent;
+import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
+import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,7 +35,7 @@ public class HealingTouchSpell extends AnimatedSpell {
                 .manaCost(15)
                 .duration(100)
                 .selfBuffCast()
-                .fullRecast();
+                .fullRecast(true);
     }
 
 
@@ -45,18 +48,18 @@ public class HealingTouchSpell extends AnimatedSpell {
     protected void onSpellStart(SpellContext context) {
         context.getSpellHandler().getListener().addListener(SpellEventListener.Events.POST_DAMAGE, PLAYER_DAMAGE, this::onDamagePost);
         if (!context.getLevel().isClientSide) {
-            SkillHolder skills = context.getSkills();
             LivingEntity caster = context.getCaster();
-            if (skills.hasSkill(SBSkills.NATURES_TOUCH))
+            if (context.hasSkill(SBSkills.NATURES_TOUCH))
                 this.heal(caster, 4f);
 
-            if (skills.hasSkill(SBSkills.CLEANSING_TOUCH))
+            if (context.hasSkill(SBSkills.CLEANSING_TOUCH))
                 this.cleanseCaster(1);
 
-            if (skills.hasSkill(SBSkills.TRANQUILITY_OF_WATER.value()))
+            if (context.hasSkill(SBSkills.TRANQUILITY_OF_WATER))
                 this.addSkillBuff(
                         caster,
                         SBSkills.TRANQUILITY_OF_WATER,
+                        TRANQUILITY,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(SBAttributes.MANA_REGEN, new AttributeModifier(TRANQUILITY, 0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
@@ -87,6 +90,7 @@ public class HealingTouchSpell extends AnimatedSpell {
                 this.addSkillBuff(
                         caster,
                         SBSkills.OVERGROWTH,
+                        OVERGROWTH,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(Attributes.MAX_HEALTH, new AttributeModifier(OVERGROWTH, 0.1 * this.overgrowthStacks, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
@@ -99,6 +103,7 @@ public class HealingTouchSpell extends AnimatedSpell {
                 this.addSkillBuff(
                         caster,
                         SBSkills.OAK_BLESSING,
+                        ARMOR_MOD,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(Attributes.ARMOR, new AttributeModifier(ARMOR_MOD, 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)),
@@ -139,14 +144,21 @@ public class HealingTouchSpell extends AnimatedSpell {
     }
 
     @Override
+    public void registerSkillTooltips() {
+
+    }
+
+    @Override
     public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
-        compoundTag.putInt("overgrowth", this.overgrowthStacks);
-        compoundTag.putInt("blessing", this.blessingDuration);
-        return compoundTag;
+        CompoundTag nbt = super.saveData(compoundTag);
+        nbt.putInt("overgrowth", this.overgrowthStacks);
+        nbt.putInt("blessing", this.blessingDuration);
+        return nbt;
     }
 
     @Override
     public void loadData(CompoundTag nbt) {
+        super.loadData(nbt);
         this.overgrowthStacks = nbt.getInt("overgrowth");
         this.blessingDuration = nbt.getInt("blessing");
     }

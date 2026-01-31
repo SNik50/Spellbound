@@ -1,6 +1,5 @@
 package com.ombremoon.spellbound.common.world.spell.divine;
 
-import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.common.world.entity.spell.HealingBlossom;
 import com.ombremoon.spellbound.common.init.*;
@@ -10,10 +9,12 @@ import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
-import com.ombremoon.spellbound.common.magic.api.buff.events.DamageEvent;
+import com.ombremoon.spellbound.common.magic.api.events.DamageEvent;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.entity.spell.HealingBlossom;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -43,11 +44,16 @@ public class HealingBlossomSpell extends AnimatedSpell {
                 .duration(400)
                 .castTime(20)
                 .castCondition((context, spell) -> spell.hasValidSpawnPos())
-                .fullRecast();
+                .fullRecast(true);
     }
 
     public HealingBlossomSpell() {
         super(SBSpells.HEALING_BLOSSOM.get(), createHealingBlossomSpell());
+    }
+
+    @Override
+    public void registerSkillTooltips() {
+
     }
 
     @Override
@@ -68,13 +74,12 @@ public class HealingBlossomSpell extends AnimatedSpell {
     @Override
     protected void onSpellStart(SpellContext context) {
         if (context.getLevel().isClientSide) return;
-        SkillHolder skills = context.getSkills();
         this.summonEntity(context, SBEntities.HEALING_BLOSSOM.get(), SpellUtil.getCastRange(context.getCaster()), blossom -> {
-            if (skills.hasSkill(SBSkills.BLOOM)) {
+            if (context.hasSkill(SBSkills.BLOOM)) {
                 blossom.fastBloom();
                 this.fastBloomed = true;
             }
-            if (skills.hasSkill(SBSkills.REBIRTH) && context.hasCatalyst(SBItems.HOLY_SHARD.get())) {
+            if (context.hasSkill(SBSkills.REBIRTH) && context.hasCatalyst(SBItems.HOLY_SHARD.get())) {
                 context.useCatalyst(SBItems.HOLY_SHARD.get());
                 blossom.setEmpowered(true);
             }
@@ -88,10 +93,11 @@ public class HealingBlossomSpell extends AnimatedSpell {
                 PLAYER_DAMAGE,
                 this::onDamagePre);
 
-        if (skills.hasSkill(SBSkills.PETAL_SHIELD))
+        if (context.hasSkill(SBSkills.PETAL_SHIELD))
             this.addSkillBuff(
                 context.getCaster(),
                 SBSkills.PETAL_SHIELD,
+                PETAL_SHIELD,
                 BuffCategory.BENEFICIAL,
                 SkillBuff.ATTRIBUTE_MODIFIER,
                 new ModifierData(Attributes.ARMOR, new AttributeModifier(PETAL_SHIELD,
@@ -107,10 +113,9 @@ public class HealingBlossomSpell extends AnimatedSpell {
         HealingBlossom blossom = getBlossom(context);
         if (blossom == null) return;
         LivingEntity caster = context.getCaster();
-        SkillHolder skills = context.getSkills();
         Level level = context.getLevel();
 
-        if (skills.hasSkill(SBSkills.HEALING_WINDS)) {
+        if (context.hasSkill(SBSkills.HEALING_WINDS)) {
             float distance = caster.distanceTo(blossom);
             if (distance > 20) {
                 blossom.teleportToAroundBlockPos(caster.blockPosition().above());
@@ -126,19 +131,19 @@ public class HealingBlossomSpell extends AnimatedSpell {
         }
         if (context.getLevel().isClientSide) return;
 
-        if (!this.hasBursted && skills.hasSkill(SBSkills.BURST_OF_LIFE)) {
+        if (!this.hasBursted && context.hasSkill(SBSkills.BURST_OF_LIFE)) {
             context.getCaster().heal(4f);
             this.hasBursted = true;
         }
 
         //Damage is done separately to healing to sync with animation better
         List<LivingEntity> effectedEntities = level.getEntitiesOfClass(LivingEntity.class, blossom.getBoundingBox().inflate(2.5));
-        if (skills.hasSkill(SBSkills.THORNY_VINES) && (tickCount -8) % 31 == 0) {
+        if (context.hasSkill(SBSkills.THORNY_VINES) && (tickCount -8) % 31 == 0) {
             for (LivingEntity entity : effectedEntities) {
                 if (canAttack(entity))
                     this.hurt(blossom, entity, 4f);
             }
-        } else if (skills.hasSkill(SBSkills.THORNY_VINES) && tickCount % 31 == 0) {
+        } else if (context.hasSkill(SBSkills.THORNY_VINES) && tickCount % 31 == 0) {
             for (LivingEntity entity : effectedEntities) {
                 if (canAttack(entity)) {
                     blossom.triggerAnim("actionController", "attack");
@@ -150,10 +155,10 @@ public class HealingBlossomSpell extends AnimatedSpell {
         float healingAmount = 2f;
         for (LivingEntity entity : effectedEntities) {
             if (entity.is(caster)) {
-                if (skills.hasSkill(SBSkills.VERDANT_RENEWAL))
+                if (context.hasSkill(SBSkills.VERDANT_RENEWAL))
                     this.cleanseCaster();
 
-                if (skills.hasSkill(SBSkills.FLOURISHING_GROWTH)) {
+                if (context.hasSkill(SBSkills.FLOURISHING_GROWTH)) {
                     float maxHp = caster.getMaxHealth();
                     float currentHp = caster.getHealth();
                     float overflowHp = (currentHp + healingAmount) - maxHp;
@@ -163,7 +168,7 @@ public class HealingBlossomSpell extends AnimatedSpell {
                     }
                 }
                 this.heal(caster, healingAmount);
-            } else if (entity instanceof Player && skills.hasSkill(SBSkills.FLOWER_FIELD)) {
+            } else if (entity instanceof Player && context.hasSkill(SBSkills.FLOWER_FIELD)) {
                 this.heal(entity, healingAmount / 2.0F);
             }
         }
@@ -205,13 +210,15 @@ public class HealingBlossomSpell extends AnimatedSpell {
 
     @Override
     public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
-        compoundTag.putBoolean("FastBloomed", fastBloomed);
-        compoundTag.putBoolean("HasBursted", hasBursted);
-        return compoundTag;
+        CompoundTag nbt = super.saveData(compoundTag);
+        nbt.putBoolean("FastBloomed", fastBloomed);
+        nbt.putBoolean("HasBursted", hasBursted);
+        return nbt;
     }
 
     @Override
     public void loadData(CompoundTag nbt) {
+        super.loadData(nbt);
         this.fastBloomed = nbt.getBoolean("FastBloomed");
         this.hasBursted = nbt.getBoolean("HasBursted");
     }

@@ -5,12 +5,15 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.ombremoon.spellbound.common.init.SBSkills;
+import com.ombremoon.spellbound.common.magic.SpellHandler;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.SpellUtil;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -21,7 +24,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.slf4j.Logger;
 
@@ -30,7 +35,7 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
 @SuppressWarnings("unchecked")
-public record SkillBuff<T>(SkillProvider skill, BuffCategory category, BuffObject<T> buffObject, T object) {
+public record SkillBuff<T>(SkillProvider skill, ResourceLocation id, BuffCategory category, BuffObject<T> buffObject, T object) {
     private static final Logger LOGGER = Constants.LOG;
     private static final Map<String, BuffObject<?>> REGISTERED_OBJECTS = Maps.newHashMap();
     public static final StreamCodec<RegistryFriendlyByteBuf, SkillBuff<?>> STREAM_CODEC = StreamCodec.ofMember(
@@ -41,7 +46,6 @@ public record SkillBuff<T>(SkillProvider skill, BuffCategory category, BuffObjec
             "mob_effect",
             (source, livingEntity, effectInstance) -> livingEntity.addEffect(effectInstance, source),
             (livingEntity, mobEffectInstance) -> livingEntity.removeEffect(mobEffectInstance.getEffect()),
-            (effectInstance, effectInstance2) -> effectInstance.is(effectInstance2.getEffect()),
             MobEffectInstance.CODEC,
             MobEffectInstance.STREAM_CODEC);
 
@@ -57,7 +61,6 @@ public record SkillBuff<T>(SkillProvider skill, BuffCategory category, BuffObjec
                 if (instance != null && instance.hasModifier(modifierData.attributeModifier().id()))
                     instance.removeModifier(modifierData.attributeModifier());
             },
-            (data, data1) -> data.attributeModifier().is(data1.attributeModifier().id()),
             ModifierData.CODEC,
             ModifierData.STREAM_CODEC);
 
@@ -71,9 +74,23 @@ public record SkillBuff<T>(SkillProvider skill, BuffCategory category, BuffObjec
                 var skills = SpellUtil.getSkills(livingEntity);
                 skills.removeModifier(spellModifier);
             },
-            SpellModifier::equals,
             SpellModifier.CODEC,
             SpellModifier.STREAM_CODEC);
+
+    public static final BuffObject<DataComponentStorage> DATA_ATTACHMENT = registerBuffObject(
+            "data_attachment",
+            (source, livingEntity, dataComponentStorage) -> {
+                var handler = SpellUtil.getSpellHandler(livingEntity);
+                for (TypedDataComponent<?> component : dataComponentStorage.dataComponents())
+                    setComponentData(handler, component);
+            },
+            (livingEntity, dataComponentStorage) -> {
+                var handler = SpellUtil.getSpellHandler(livingEntity);
+                for (TypedDataComponent<?> component : dataComponentStorage.dataComponents())
+                    removeComponentData(handler, component);
+            },
+            DataComponentStorage.CODEC,
+            DataComponentStorage.STREAM_CODEC);
 
     public static final BuffObject<ResourceLocation> EVENT = registerBuffObject(
             "event",
@@ -83,14 +100,25 @@ public record SkillBuff<T>(SkillProvider skill, BuffCategory category, BuffObjec
                 var handler = SpellUtil.getSpellHandler(livingEntity);
                 handler.getListener().removeListener(resourceLocation);
             },
-            ResourceLocation::equals,
             ResourceLocation.CODEC,
             ResourceLocation.STREAM_CODEC);
+
+    private static <T> void setComponentData(SpellHandler handler, TypedDataComponent<T> component) {
+        handler.setData(component.type(), component.value());
+    }
+
+    private static <T> void removeComponentData(SpellHandler handler, TypedDataComponent<T> component) {
+        handler.setData(component.type(), null);
+    }
 
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();
         tag.putString("SkillProviderType", this.skill.getType().name());
         tag.putString("Skill", this.skill.location().toString());
+        ResourceLocation.CODEC
+                .encodeStart(NbtOps.INSTANCE, this.id)
+                .resultOrPartial(LOGGER::error)
+                .ifPresent(nbt -> tag.put("Id", nbt));
         BuffCategory.CODEC
                 .encodeStart(NbtOps.INSTANCE, this.category)
                 .resultOrPartial(LOGGER::error)
@@ -113,6 +141,10 @@ public record SkillBuff<T>(SkillProvider skill, BuffCategory category, BuffObjec
                 SkillProvider.Type.valueOf(tag.getString("SkillProviderType")),
                 ResourceLocation.parse(tag.getString("Skill"))
         );
+        ResourceLocation id = ResourceLocation.CODEC
+                .parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("Id")))
+                .resultOrPartial(LOGGER::error)
+                .orElse(null);
         BuffCategory category = BuffCategory.CODEC
                 .parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("Category")))
                 .resultOrPartial(LOGGER::error)
@@ -128,12 +160,13 @@ public record SkillBuff<T>(SkillProvider skill, BuffCategory category, BuffObjec
                     .resultOrPartial(LOGGER::error)
                     .orElse(null);
         }
-        return new SkillBuff<>(skill, category, buffObject, object);
+        return new SkillBuff<>(skill, id, category, buffObject, object);
     }
 
     private void toNetwork(RegistryFriendlyByteBuf buf) {
         buf.writeUtf(this.skill.getType().name());
         this.skill.encode(buf);
+        ResourceLocation.STREAM_CODEC.encode(buf, this.id);
         NeoForgeStreamCodecs.enumCodec(BuffCategory.class).encode(buf, this.category);
         BuffObject.STREAM_CODEC.encode(buf, this.buffObject);
         this.buffObject.objectStreamCodec.encode(buf, this.object);
@@ -141,19 +174,19 @@ public record SkillBuff<T>(SkillProvider skill, BuffCategory category, BuffObjec
 
     private static <T> SkillBuff<T> fromNetwork(RegistryFriendlyByteBuf buf) {
         SkillProvider skill = SkillProvider.decode(SkillProvider.Type.valueOf(buf.readUtf()), buf);
+        ResourceLocation id = ResourceLocation.STREAM_CODEC.decode(buf);
         BuffCategory category = NeoForgeStreamCodecs.enumCodec(BuffCategory.class).decode(buf);
         BuffObject<T> buffObject = (BuffObject<T>) BuffObject.STREAM_CODEC.decode(buf);
         T object = buffObject.objectStreamCodec.decode(buf);
-        return new SkillBuff<>(skill, category, buffObject, object);
+        return new SkillBuff<>(skill, id, category, buffObject, object);
     }
 
     private static <T> BuffObject<T> registerBuffObject(String name,
                                                         TriConsumer<Entity, LivingEntity, T> addObject,
                                                         BiConsumer<LivingEntity, T> removeObject,
-                                                        BiPredicate<T, T> equalCondition,
                                                         Codec<T> objectCodec,
                                                         StreamCodec<? super RegistryFriendlyByteBuf, T> objectStreamCodec) {
-        BuffObject<T> object = new BuffObject<>(name, addObject, removeObject, equalCondition, objectCodec, objectStreamCodec);
+        BuffObject<T> object = new BuffObject<>(name, addObject, removeObject, objectCodec, objectStreamCodec);
         REGISTERED_OBJECTS.put(name, object);
         return object;
     }
@@ -183,8 +216,16 @@ public record SkillBuff<T>(SkillProvider skill, BuffCategory category, BuffObjec
         } else if (!(obj instanceof SkillBuff<?> skillBuff)) {
             return false;
         } else {
-            return this.isSkill(skillBuff.skill) && this.isType(skillBuff) && this.buffObject.equalCondition.test(this.object, (T) skillBuff.object);
+            return this.isSkill(skillBuff.skill) && this.isType(skillBuff) && this.id.equals(skillBuff.id);
         }
+    }
+
+    @Override
+    public int hashCode() {
+        int result = skill.hashCode();
+        result = 31 * result + id.hashCode();
+        result = 31 * result + category.hashCode();
+        return result;
     }
 
     private boolean isType(SkillBuff<?> buff) {
@@ -200,7 +241,6 @@ public record SkillBuff<T>(SkillProvider skill, BuffCategory category, BuffObjec
             String name,
             TriConsumer<Entity, LivingEntity, T> addObject,
             BiConsumer<LivingEntity, T> removeObject,
-            BiPredicate<T, T> equalCondition,
             Codec<T> objectCodec,
             StreamCodec<? super RegistryFriendlyByteBuf, T> objectStreamCodec) {
 

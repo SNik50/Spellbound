@@ -37,7 +37,8 @@ public class SBEffects {
     public static final Holder<MobEffect> CRYOMANCER = EFFECTS.register("cryomancer_set", () -> new SBEffect(MobEffectCategory.BENEFICIAL, 8889187).addSpellModifiers(SpellModifier.CRYOMANCER_SET));
     public static final Holder<MobEffect> CREATIONIST = EFFECTS.register("creationist_set", () -> new SBEffect(MobEffectCategory.BENEFICIAL, 8889187).addSpellModifiers(SpellModifier.TRANSFIG_SET));
 
-    public static final Holder<MobEffect> AFTERGLOW = EFFECTS.register("afterglow", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
+    public static final Holder<MobEffect> MAGI_INVISIBILITY = EFFECTS.register("magi_invisibility", () -> new SBEffect(MobEffectCategory.NEUTRAL, 8889187));
+    public static final Holder<MobEffect> TARGET_AURA = EFFECTS.register("target_aura", () -> new SBEffect(MobEffectCategory.NEUTRAL, 8889187));
     public static final Holder<MobEffect> PERMAFROST = EFFECTS.register("permafrost", () -> new SBEffect(MobEffectCategory.HARMFUL, 8889187));
     public static final Holder<MobEffect> STORMSTRIKE = EFFECTS.register("stormstrike", () -> new StormstrikeEffect(MobEffectCategory.HARMFUL, 8889187));
     public static final Holder<MobEffect> BATTLE_CRY = EFFECTS.register("battle_cry", () -> new SBEffect(MobEffectCategory.BENEFICIAL, 8889187)); //Increase damage by 15%

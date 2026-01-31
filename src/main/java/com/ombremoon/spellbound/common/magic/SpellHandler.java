@@ -4,10 +4,8 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerDivineActions;
-import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
-import com.ombremoon.spellbound.common.magic.api.ChanneledSpell;
-import com.ombremoon.spellbound.common.magic.api.SpellType;
-import com.ombremoon.spellbound.common.magic.api.SummonSpell;
+import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
+import com.ombremoon.spellbound.common.magic.api.*;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
@@ -24,8 +22,11 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -60,8 +61,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private final Multimap<SpellType<?>, AbstractSpell> activeSpells = ArrayListMultimap.create();
     private SpellType<?> selectedSpell;
     private AbstractSpell currentlyCastingSpell;
-    private final Map<SpellType<?>, Skill> spellChoices = new Object2ObjectOpenHashMap<>();
+    public AbstractSpell previouslyCastSpell;
+    public long lastCastTick;
     private final Map<SkillBuff<?>, Integer> skillBuffs = new Object2IntOpenHashMap<>();
+    private final DataComponentStorage spellData = new DataComponentStorage(new ArrayList<>());
     private final Set<Integer> glowEntities = new IntOpenHashSet();
     private IntOpenHashSet openArenas = new IntOpenHashSet();
     public int castTick;
@@ -70,6 +73,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private float zoomModifier = 1.0F;
     private boolean initialized;
     private boolean receivedBook;
+    private Map<ResourceLocation, SpellAnimation> animationForLayer = new Object2ObjectOpenHashMap<>();
 
     //TEMPORARY
     public Vec3 handPos;
@@ -278,7 +282,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         var locations = spellType.getSkills().stream().map(Skill::location).collect(Collectors.toSet());
         this.spellSet.remove(spellType);
         this.equippedSpellSet.remove(spellType);
-        this.spellChoices.remove(spellType);
+        this.skillHolder.removeChoice(spellType);
         this.upgradeTree.remove(locations);
         if (this.caster instanceof Player player) {
             this.upgradeTree.update(player, locations);
@@ -293,14 +297,18 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         this.spellSet.forEach(skillHolder::resetSkills);
         this.spellSet.forEach(skillHolder::resetSpellXP);
         this.skillHolder.clearModifiers();
+        this.skillHolder.clearChoices();
         this.spellSet.clear();
         this.equippedSpellSet.clear();
-        this.spellChoices.clear();
         this.selectedSpell = null;
         if (this.caster instanceof Player player) {
             this.upgradeTree.clear(player);
             sync();
         }
+    }
+
+    public boolean isCasting() {
+        return this.castTick > 0;
     }
 
     /**
@@ -357,7 +365,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      * @param <T>
      */
     public <T extends AbstractSpell> T getSpell(SpellType<T> spellType) {
-        return getSpell(spellType, 1);
+        if (this.getActiveSpells(spellType).isEmpty())
+            return null;
+
+        return (T) this.getActiveSpells(spellType).getFirst();
     }
 
     /**
@@ -456,6 +467,10 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         return this.skillBuffs.keySet().stream().filter(skillBuff -> skillBuff.isSkill(skill)).findAny();
     }
 
+    public boolean hasSkillBuff(Skill skill) {
+        return this.skillBuffs.keySet().stream().anyMatch(skillBuff -> skillBuff.isSkill(skill));
+    }
+
     private void tickSkillBuffs() {
         this.skillBuffs.entrySet().removeIf(entry -> {
             if (entry.getValue() > 0 && entry.getValue() <= this.caster.tickCount) {
@@ -467,14 +482,16 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         });
     }
 
-    public Skill getChoice(SpellType<?> spellType) {
-        return this.spellChoices.getOrDefault(spellType, spellType.getRootSkill());
+    public <T> void setData(DataComponentType<T> type, T value) {
+        this.spellData.dataComponents().add(DataComponentStorage.createUnchecked(type, value));
     }
 
-    public void setChoice(SpellType<?> spellType, Skill skill) {
-        this.spellChoices.put(spellType, skill);
-        if (this.caster.level().isClientSide)
-            PayloadHandler.updateChoice(spellType, skill);
+    public <T> T getData(DataComponentType<T> type) {
+        return (T) this.spellData.dataComponents().stream()
+                .filter(component -> component.type().equals(type))
+                .map(TypedDataComponent::value)
+                .findFirst()
+                .orElse(null);
     }
 
     public void applyFearEffect(LivingEntity target, Vec3 source, int ticks) {
@@ -503,11 +520,24 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     /**
      * Plays an animation for the player. This is called server-side for all players to see the animation
      * @param player The player performing the animation
-     * @param animationName The animation pathTexture location
+     * @param animation The animation information
      */
-    public void playAnimation(Player player, String animationName, float animationSpeed) {
-        if (!player.level().isClientSide)
-            PayloadHandler.handleAnimation(player, animationName, animationSpeed, false);
+    public void playAnimation(Player player, SpellAnimation animation, float animationSpeed) {
+        this.animationForLayer.put(animation.type().getAnimationLayer(), animation);
+        if (!player.level().isClientSide) {
+            PayloadHandler.handleAnimation(player, animation, animationSpeed, false);
+        }
+    }
+
+    public void stopAnimation(Player player, SpellAnimation animation) {
+        this.animationForLayer.remove(animation.type().getAnimationLayer());
+        if (!player.level().isClientSide) {
+            PayloadHandler.handleAnimation(player, animation, 0.0F, true);
+        }
+    }
+
+    public SpellAnimation getAnimationForLayer(ResourceLocation layer) {
+        return this.animationForLayer.get(layer);
     }
 
     /**

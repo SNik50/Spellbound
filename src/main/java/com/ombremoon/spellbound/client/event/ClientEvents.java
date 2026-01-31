@@ -11,6 +11,8 @@ import com.ombremoon.spellbound.client.renderer.ArenaDebugRenderer;
 import com.ombremoon.spellbound.client.renderer.blockentity.*;
 import com.ombremoon.spellbound.client.renderer.entity.*;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.FrogModel;
+import com.ombremoon.spellbound.client.renderer.entity.LivingShadowRenderer;
+import com.ombremoon.spellbound.client.renderer.entity.SpellBrokerRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.projectile.MushroomProjectileRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.projectile.StormstrikeBoltRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.spell.*;
@@ -29,7 +31,7 @@ import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
-import com.ombremoon.spellbound.common.magic.api.buff.events.MouseInputEvent;
+import com.ombremoon.spellbound.common.magic.api.events.MouseInputEvent;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
@@ -176,7 +178,7 @@ public class ClientEvents {
                 boolean cycleSpellDown = KeyBinds.CYCLE_SPELL_BINDING.consumeClick();
                 if (handler.inCastMode()) {
                     if (spellBindingDown) {
-                        if (handler.isChargingOrChannelling())
+                        if (handler.isChargingOrChannelling() || handler.castTick > 0)
                             return;
 
                         Screen screen = minecraft.screen;
@@ -233,6 +235,18 @@ public class ClientEvents {
                 if (forward != handler.forwardImpulse || left != handler.leftImpulse) {
                     PayloadHandler.updateMovement(event.getInput().forwardImpulse, event.getInput().leftImpulse);
                 }
+            }
+        }
+
+        @SubscribeEvent
+        public static void onRenderLivingPre(RenderLivingEvent.Pre<? extends LivingEntity, ? extends EntityModel<? extends LivingEntity>> event) {
+            var player = Minecraft.getInstance().player;
+            if (player == null)
+                return;
+
+            var livingEntity = event.getEntity();
+            if (livingEntity.hasEffect(SBEffects.MAGI_INVISIBILITY)/* && livingEntity.isInvisibleTo(player)*/) {
+                event.setCanceled(true);
             }
         }
 

@@ -1,12 +1,8 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
 import com.ombremoon.spellbound.client.particle.EffectBuilder;
-import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
-import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.MiniMushroom;
-import com.ombremoon.spellbound.common.world.entity.spell.WildMushroom;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.api.SummonSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
@@ -14,6 +10,9 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
+import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.MiniMushroom;
+import com.ombremoon.spellbound.common.world.entity.spell.WildMushroom;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -37,6 +36,9 @@ public class WildMushroomSpell extends SummonSpell {
     protected static final SpellDataKey<Integer> MINI_MUSHROOM = SyncedSpellData.registerDataKey(WildMushroomSpell.class, SBDataTypes.INT.get());
     protected static final SpellDataKey<Integer> GIANT_MUSHROOM = SyncedSpellData.registerDataKey(WildMushroomSpell.class, SBDataTypes.INT.get());
     private static final ResourceLocation FUNGAL_HARVEST = CommonClass.customLocation("fungal_harvest");
+    private static final ResourceLocation SYNTHESIS = CommonClass.customLocation("synthesis");
+    private static final ResourceLocation POISON_ESSENCE = CommonClass.customLocation("poison_essence");
+    private static final ResourceLocation ENVENOM = CommonClass.customLocation("envenom");
 
     public static Builder<WildMushroomSpell> createMushroomBuilder() {
         return createSummonBuilder(WildMushroomSpell.class)
@@ -44,8 +46,7 @@ public class WildMushroomSpell extends SummonSpell {
                 .manaCost(30)
                 .baseDamage(4.0F)
                 .castCondition((context, spell) -> {
-                    var skills = context.getSkills();
-                    if (skills.hasSkill(SBSkills.LIVING_FUNGUS) && context.getTarget() instanceof WildMushroom mushroom && context.getCaster() == mushroom.getSummoner()) {
+                    if (context.hasSkill(SBSkills.LIVING_FUNGUS) && context.getTarget() instanceof WildMushroom mushroom && context.getCaster() == mushroom.getSummoner()) {
                         WildMushroomSpell mushroomSpell = mushroom.getSpell();
                         MiniMushroom miniMushroom = mushroomSpell.summonEntity(context, SBEntities.MINI_MUSHROOM.get(), mushroom.position());
                         mushroomSpell.setMiniMushroom(miniMushroom.getId());
@@ -75,14 +76,14 @@ public class WildMushroomSpell extends SummonSpell {
         Level level = context.getLevel();
         if (!level.isClientSide) {
             LivingEntity caster = context.getCaster();
-            var skills = context.getSkills();
             WildMushroom mushroom = this.summonEntity(context, SBEntities.MUSHROOM.get());
             this.setMushroom(mushroom.getId());
 
-            if (skills.hasSkill(SBSkills.FUNGAL_HARVEST) && context.hasActiveSpells(3))
+            if (context.hasSkill(SBSkills.FUNGAL_HARVEST) && context.hasActiveSpells(3))
                 this.addSkillBuff(
                         caster,
                         SBSkills.FUNGAL_HARVEST,
+                        FUNGAL_HARVEST,
                         BuffCategory.BENEFICIAL,
                         SkillBuff.ATTRIBUTE_MODIFIER,
                         new ModifierData(SBAttributes.MANA_REGEN, new AttributeModifier(FUNGAL_HARVEST, 0.25, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
@@ -112,6 +113,7 @@ public class WildMushroomSpell extends SummonSpell {
                                 this.addSkillBuff(
                                         entity,
                                         SBSkills.ENVENOM,
+                                        ENVENOM,
                                         BuffCategory.HARMFUL,
                                         SkillBuff.MOB_EFFECT,
                                         new MobEffectInstance(MobEffects.POISON, 80),
@@ -127,6 +129,7 @@ public class WildMushroomSpell extends SummonSpell {
                                     this.addSkillBuff(
                                             caster,
                                             SBSkills.POISON_ESSENCE,
+                                            POISON_ESSENCE,
                                             BuffCategory.BENEFICIAL,
                                             SkillBuff.SPELL_MODIFIER,
                                             SpellModifier.POISON_ESSENCE,
@@ -136,7 +139,8 @@ public class WildMushroomSpell extends SummonSpell {
                                 if (context.hasSkill(SBSkills.SYNTHESIS))
                                     this.addSkillBuff(
                                             caster,
-                                            SBSkills.POISON_ESSENCE,
+                                            SBSkills.SYNTHESIS,
+                                            SYNTHESIS,
                                             BuffCategory.BENEFICIAL,
                                             SkillBuff.SPELL_MODIFIER,
                                             SpellModifier.SYNTHESIS,
@@ -166,13 +170,12 @@ public class WildMushroomSpell extends SummonSpell {
         Level level = context.getLevel();
         if (!level.isClientSide) {
             LivingEntity caster = context.getCaster();
-            var skills = context.getSkills();
             WildMushroom mushroom = this.getMushroom(context);
 
             if (mushroom != null)
                 mushroom.setEndTick(5);
 
-            if (skills.hasSkill(SBSkills.FUNGAL_HARVEST) && context.hasActiveSpells(3))
+            if (context.hasSkill(SBSkills.FUNGAL_HARVEST) && context.hasActiveSpells(3))
                 this.removeSkillBuff(caster, SBSkills.FUNGAL_HARVEST);
 
         }
@@ -181,6 +184,11 @@ public class WildMushroomSpell extends SummonSpell {
     @Override
     protected int getDuration(SpellContext context) {
         return this.hasEvolvedMushroom(context) ? 24000 : super.getDuration(context);
+    }
+
+    @Override
+    public void registerSkillTooltips() {
+
     }
 
     private boolean hasEvolvedMushroom(SpellContext context) {

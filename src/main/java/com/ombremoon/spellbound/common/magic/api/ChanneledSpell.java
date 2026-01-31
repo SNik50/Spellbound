@@ -19,8 +19,8 @@ import java.util.function.Predicate;
 
 public abstract class ChanneledSpell extends AnimatedSpell {
     protected int manaTickCost;
-    protected Function<SpellContext, String> channelAnimation;
-    protected String channelStopAnimation;
+    protected Function<SpellContext, SpellAnimation> channelAnimation;
+    protected SpellAnimation channelStopAnimation;
 
     public static <T extends ChanneledSpell> Builder<T> createChannelledSpellBuilder(Class<T> spellClass) {
         return new Builder<>();
@@ -39,16 +39,13 @@ public abstract class ChanneledSpell extends AnimatedSpell {
 
     @Override
     protected void onSpellStart(SpellContext context) {
-        Level level = context.getLevel();
         LivingEntity caster = context.getCaster();
         var handler = SpellUtil.getSpellHandler(caster);
         handler.setChargingOrChannelling(true);
 
-        if (!level.isClientSide) {
-            String animation = this.channelAnimation.apply(context);
-            if (!animation.isEmpty() && context.getCaster() instanceof Player player)
-                playAnimation(player, animation);
-        }
+        SpellAnimation animation = this.channelAnimation.apply(context);
+        if (animation != null && context.getCaster() instanceof Player player)
+            playAnimation(player, animation);
     }
 
     @Override
@@ -68,23 +65,26 @@ public abstract class ChanneledSpell extends AnimatedSpell {
         LivingEntity caster = context.getCaster();
         var handler = SpellUtil.getSpellHandler(caster);
         handler.setChargingOrChannelling(false);
-        if (!caster.level().isClientSide) {
-            if (context.getCaster() instanceof Player player) {
-                if (!this.channelStopAnimation.isEmpty()) {
-                    playAnimation(player, this.channelStopAnimation);
-                } else {
-                    stopAnimation(player, this.channelAnimation.apply(context));
-                }
+        if (context.getCaster() instanceof Player player) {
+            if (this.channelStopAnimation != null) {
+                playAnimation(player, this.channelStopAnimation);
+            } else {
+                stopAnimation(player, this.channelAnimation.apply(context));
             }
-        } else {
+        }
+
+        if (caster.level().isClientSide) {
             KeyBinds.getSpellCastMapping().setDown(false);
         }
+    }
+    public SpellAnimation getChannelAnimation(SpellContext context) {
+        return this.channelAnimation.apply(context);
     }
 
     public static class Builder<T extends ChanneledSpell> extends AnimatedSpell.Builder<T> {
         protected int manaTickCost;
-        protected Function<SpellContext, String> channelAnimation;
-        protected String channelStopAnimation;
+        protected Function<SpellContext, SpellAnimation> channelAnimation;
+        protected SpellAnimation channelStopAnimation;
 
         public Builder() {
             this.castType = CastType.CHANNEL;
@@ -115,23 +115,18 @@ public abstract class ChanneledSpell extends AnimatedSpell {
             return this;
         }
 
-        public Builder<T> castAnimation(Function<SpellContext, String> castAnimation) {
+        public Builder<T> castAnimation(Function<SpellContext, SpellAnimation> castAnimation) {
             this.castAnimation = castAnimation;
             return this;
         }
 
-        public Builder<T> channelAnimation(Function<SpellContext, String> channelAnimation) {
+        public Builder<T> channelAnimation(Function<SpellContext, SpellAnimation> channelAnimation) {
             this.channelAnimation = channelAnimation;
             return this;
         }
 
-        public Builder<T> stopChannelAnimation(String channelStopAnimation) {
+        public Builder<T> stopChannelAnimation(SpellAnimation channelStopAnimation) {
             this.channelStopAnimation = channelStopAnimation;
-            return this;
-        }
-
-        public Builder<T> failAnimation(Function<SpellContext, String> failAnimationName) {
-            this.failAnimation = failAnimationName;
             return this;
         }
 

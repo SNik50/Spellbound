@@ -57,7 +57,6 @@ public class HailstormSavedData extends SavedData implements HailstormData, Logg
         nbt.putInt("HailTime", this.hailTime);
         nbt.putFloat("InitialHailLevel", this.oHailLevel);
         nbt.putFloat("HailLevel", this.hailLevel);
-        log("Successfully saved hailstorm data.");
         return nbt;
     }
 

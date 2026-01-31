@@ -8,8 +8,10 @@ import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.main.CommonClass;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
@@ -24,6 +26,7 @@ import java.util.Set;
 
 public class ElectricChargeSpell extends AnimatedSpell {
     private static final SpellDataKey<Integer> DISCHARGE_TICK = SyncedSpellData.registerDataKey(ElectricChargeSpell.class, SBDataTypes.INT.get());
+    private static final ResourceLocation HIGH_VOLTAGE = CommonClass.customLocation("high_voltage");
     public static Builder<ElectricChargeSpell> createElectricChargeBuilder() {
         return createSimpleSpellBuilder(ElectricChargeSpell.class)
                 .duration(200)
@@ -48,7 +51,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
                     }
                 })
                 .instantCast()
-                .fullRecast()
+                .fullRecast(false)
                 .updateInterval(1);
     }
 
@@ -58,6 +61,11 @@ public class ElectricChargeSpell extends AnimatedSpell {
 
     public ElectricChargeSpell() {
         super(SBSpells.ELECTRIC_CHARGE.get(), createElectricChargeBuilder());
+    }
+
+    @Override
+    public void registerSkillTooltips() {
+
     }
 
     @Override
@@ -77,18 +85,22 @@ public class ElectricChargeSpell extends AnimatedSpell {
     protected void onSpellRecast(SpellContext context) {
         super.onSpellRecast(context);
         Level level = context.getLevel();
+        var handler = context.getSpellHandler();
         boolean hasShard = context.hasCatalyst(SBItems.STORM_SHARD.get());
-        if (context.hasSkill(SBSkills.AMPLIFY)) {
-            return;
-        }
-
-        if (context.getTarget() == null || this.discharged) {
-            for (Integer entityId : this.entityIds) {
-                Entity entity = level.getEntity(entityId);
-                if (entity instanceof LivingEntity livingEntity)
-                    discharge(context, livingEntity, hasShard);
+        if (!level.isClientSide) {
+            if (context.hasSkill(SBSkills.AMPLIFY)) {
+                handler.setChargingOrChannelling(true);
+                return;
             }
-            endSpell();
+
+            if (context.getTarget() == null || this.discharged) {
+                for (Integer entityId : this.entityIds) {
+                    Entity entity = level.getEntity(entityId);
+                    if (entity instanceof LivingEntity livingEntity)
+                        discharge(context, livingEntity, hasShard);
+                }
+                endSpell();
+            }
         }
     }
 
@@ -161,7 +173,6 @@ public class ElectricChargeSpell extends AnimatedSpell {
                         handler.awardMana(10 + (context.getSpellLevel() * 2));
 
                     if (context.hasSkill(SBSkills.UNLEASHED_STORM)) {
-//                        this.spawnDischargeParticles(target);
                         for (Entity entity : entities) {
                             if (entity instanceof LivingEntity targetEntity) {
                                 if (!isCaster(targetEntity)
@@ -201,6 +212,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
                                 addSkillBuff(
                                         livingEntity,
                                         SBSkills.HIGH_VOLTAGE,
+                                        HIGH_VOLTAGE,
                                         BuffCategory.HARMFUL,
                                         SkillBuff.MOB_EFFECT,
                                         new MobEffectInstance(SBEffects.STUNNED, 60, 0, false, false),
@@ -214,6 +226,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
                     addSkillBuff(
                             target,
                             SBSkills.HIGH_VOLTAGE,
+                            HIGH_VOLTAGE,
                             BuffCategory.HARMFUL,
                             SkillBuff.MOB_EFFECT,
                             new MobEffectInstance(SBEffects.STUNNED, 60, 0, false, false),
@@ -225,7 +238,7 @@ public class ElectricChargeSpell extends AnimatedSpell {
                 }
 
                 if (context.hasSkill(SBSkills.ALTERNATING_CURRENT)) {
-                    if (RandomUtil.percentChance(potency(0.03F)) && target.getHealth() < caster.getHealth() * 2) {
+                    if (RandomUtil.percentChance(potency(target, 0.03F)) && target.getHealth() < caster.getHealth() * 2) {
                         target.kill();
                         if (context.hasSkill(SBSkills.PIEZOELECTRIC) && caster instanceof Player) {
                             RitualHelper.createItem(level, target.position(), new ItemStack(SBItems.STORM_SHARD.get()));
@@ -258,14 +271,16 @@ public class ElectricChargeSpell extends AnimatedSpell {
 
     @Override
     public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
-        compoundTag.putIntArray("ChargedTargets", this.entityIds.stream().toList());
-        compoundTag.putBoolean("Discharged", this.discharged);
-        compoundTag.putBoolean("Discharging", this.discharging);
-        return compoundTag;
+        CompoundTag nbt = super.saveData(compoundTag);
+        nbt.putIntArray("ChargedTargets", this.entityIds.stream().toList());
+        nbt.putBoolean("Discharged", this.discharged);
+        nbt.putBoolean("Discharging", this.discharging);
+        return nbt;
     }
 
     @Override
     public void loadData(CompoundTag nbt) {
+        super.loadData(nbt);
         this.entityIds = new IntOpenHashSet(nbt.getIntArray("ChargedTargets"));
         this.discharged = nbt.getBoolean("Discharged");
         this.discharging = nbt.getBoolean("Discharging");

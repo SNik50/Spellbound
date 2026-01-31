@@ -5,17 +5,18 @@ import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.SpellMastery;
-import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
+import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntitySelector;
@@ -26,16 +27,20 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 
 public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
+    private static final ResourceLocation DOMINANT_MAGIC = CommonClass.customLocation("dominant_magic");
+    private static final ResourceLocation RESIDUAL_DISRUPTION = CommonClass.customLocation("residual_disruption");
+    private static final ResourceLocation UNFOCUSED = CommonClass.customLocation("unfocused");
+
     private static Builder<PurgeMagicSpell> createPurgeMagicBuilder() {
         return createSimpleSpellBuilder(PurgeMagicSpell.class)
                 .duration(10)
                 .manaCost(27)
                 .castCondition((context, purgeMagicSpell) -> {
                     if (context.isChoice(SBSkills.PURGE_MAGIC))
-                        return context.getSkills().hasSkill(SBSkills.RADIO_WAVES) || context.getTarget() instanceof LivingEntity;
+                        return context.hasSkill(SBSkills.RADIO_WAVES) || context.getTarget() instanceof LivingEntity;
                     return true;
                 })
-                .fullRecast();
+                .fullRecast(true);
     }
 
     public PurgeMagicSpell() {
@@ -46,15 +51,14 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
     protected void onSpellStart(SpellContext context) {
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
-        var skills = context.getSkills();
         if (!level.isClientSide) {
             if (context.isChoice(SBSkills.COUNTER_MAGIC)) {
                 caster.addEffect(new MobEffectInstance(SBEffects.COUNTER_MAGIC, 200, 0, false, false));
-                if (skills.hasSkill(SBSkills.CLEANSE.value()))
+                if (context.hasSkill(SBSkills.CLEANSE))
                     this.cleanseCaster();
             } else {
                 List<LivingEntity> targets = new ObjectArrayList<>();
-                if (skills.hasSkill(SBSkills.RADIO_WAVES.value())) {
+                if (context.hasSkill(SBSkills.RADIO_WAVES)) {
                     targets.addAll(level.getEntitiesOfClass(LivingEntity.class, caster.getBoundingBox().inflate(3), EntitySelector.NO_CREATIVE_OR_SPECTATOR));
                 } else {
                     targets.add((LivingEntity) context.getTarget());
@@ -69,20 +73,22 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                         spell.endSpell();
                     }
 
-                    if (skills.hasSkill(SBSkills.DOMINANT_MAGIC.value()))
+                    if (context.hasSkill(SBSkills.DOMINANT_MAGIC))
                         addSkillBuff(
                                 target,
                                 SBSkills.DOMINANT_MAGIC,
+                                DOMINANT_MAGIC,
                                 BuffCategory.HARMFUL,
                                 SkillBuff.MOB_EFFECT,
                                 new MobEffectInstance(SBEffects.SILENCED, 100, 0, false, false),
                                 100
                         );
 
-                    if (skills.hasSkill(SBSkills.RESIDUAL_DISRUPTION.value())) {
+                    if (context.hasSkill(SBSkills.RESIDUAL_DISRUPTION)) {
                         addSkillBuff(
                                 target,
                                 SBSkills.RESIDUAL_DISRUPTION,
+                                RESIDUAL_DISRUPTION,
                                 BuffCategory.HARMFUL,
                                 SkillBuff.SPELL_MODIFIER,
                                 SpellModifier.RESIDUAL_DISRUPTION,
@@ -90,20 +96,21 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                         );
                     }
 
-                    if (skills.hasSkill(SBSkills.UNFOCUSED))
+                    if (context.hasSkill(SBSkills.UNFOCUSED))
                         addSkillBuff(
                                 target,
                                 SBSkills.UNFOCUSED,
+                                UNFOCUSED,
                                 BuffCategory.HARMFUL,
                                 SkillBuff.SPELL_MODIFIER,
                                 SpellModifier.UNFOCUSED,
                                 200
                         );
 
-                    if (skills.hasSkill(SBSkills.MAGIC_POISONING.value()))
+                    if (context.hasSkill(SBSkills.MAGIC_POISONING))
                         targetHandler.consumeMana(Math.max(20 * activeSpells.size(), 20));
 
-                    if (skills.hasSkill(SBSkills.NULLIFICATION.value())) {
+                    if (context.hasSkill(SBSkills.NULLIFICATION)) {
                         List<ItemStack> itemSlots = new ObjectArrayList<>();
                         target.getAllSlots().forEach(itemSlots::add);
                         itemSlots = itemSlots.stream().filter(ItemStack::isEnchanted).toList();
@@ -117,7 +124,7 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                     }
 
                     var spellList = targetHandler.getSpellList();
-                    if (skills.hasSkillReady(SBSkills.EXPUNGE.value()) && context.hasCatalyst(SBItems.FOOL_SHARD.get()) && !spellList.isEmpty()) {
+                    if (context.hasSkillReady(SBSkills.EXPUNGE) && context.hasCatalyst(SBItems.FOOL_SHARD.get()) && !spellList.isEmpty()) {
                         int randSpell = target.getRandom().nextInt(0, spellList.size());
                         SpellType<?> spellType = targetHandler.getSpellList().stream().toList().get(randSpell);
                         targetHandler.removeSpell(spellType);
@@ -137,5 +144,10 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
     @Override
     protected int getDuration(SpellContext context) {
         return context.isChoice(SBSkills.COUNTER_MAGIC) ? 200 : super.getDuration(context);
+    }
+
+    @Override
+    public void registerSkillTooltips() {
+
     }
 }

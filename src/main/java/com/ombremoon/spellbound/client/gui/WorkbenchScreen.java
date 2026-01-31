@@ -2,15 +2,15 @@ package com.ombremoon.spellbound.client.gui;
 
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
-import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.init.SBData;
+import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.magic.tree.SkillNode;
 import com.ombremoon.spellbound.common.magic.tree.UpgradeTree;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.ConfigHandler;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.RenderUtil;
@@ -20,7 +20,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -258,7 +257,7 @@ public class WorkbenchScreen extends Screen {
                     }
                     Component component = spellType.createSpell().getName();
                     int height = component.getString().length() > 12 ? 35 : 40;
-                    RenderUtil.drawWordWrap(guiGraphics, this.font, component, xPos + 55, yPos + height + (i * 28), 68, textColor);
+                    RenderUtil.drawWordWrap(guiGraphics, this.font, component, xPos + 55, yPos + height + (i * 28), 60, textColor);
                 }
             }
         }
