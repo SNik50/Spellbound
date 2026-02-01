@@ -337,16 +337,21 @@ public class NeoForgeEvents {
 
     @SubscribeEvent
     public static void onChangeTarget(LivingChangeTargetEvent event) {
-        if (event.getEntity().level().isClientSide) return;
+        LivingEntity entity = event.getEntity();
+        if (entity.level().isClientSide) return;
 
         LivingEntity target = event.getNewAboutToBeSetTarget();
-        if (target == null || target.hasEffect(SBEffects.MAGI_INVISIBILITY)) {
+        if (target != null && target.hasEffect(SBEffects.MAGI_INVISIBILITY)) {
             event.setNewAboutToBeSetTarget(null);
-//            event.setCanceled(true);
             return;
         }
 
-        SpellUtil.getSpellHandler(event.getEntity()).getListener().fireEvent(SpellEventListener.Events.CHANGE_TARGET, new ChangeTargetEvent(event.getEntity(), event));
+        if (target == null)
+            return;
+
+        if (SpellUtil.isSummonOf(entity, target)) {
+            event.setNewAboutToBeSetTarget(null);
+        }
     }
 
     @SubscribeEvent

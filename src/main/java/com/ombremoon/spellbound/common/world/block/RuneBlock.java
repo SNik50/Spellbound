@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.world.block;
 
 import com.mojang.serialization.MapCodec;
+import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.world.block.entity.RuneBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -53,7 +54,8 @@ public class RuneBlock extends BaseEntityBlock {
 
     @Override
     protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        return !level.isEmptyBlock(pos.below());
+        BlockPos belowPos = pos.below();
+        return !level.isEmptyBlock(belowPos) && !level.getBlockState(belowPos).is(SBBlocks.RUNE.get());
     }
 
     @Override

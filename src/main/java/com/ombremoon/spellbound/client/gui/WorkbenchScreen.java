@@ -256,7 +256,7 @@ public class WorkbenchScreen extends Screen {
                         guiGraphics.blit(TEXTURE, xPos + 19, yPos + 27 + (i * 28), 183, 204, 73, 26);
                     }
                     Component component = spellType.createSpell().getName();
-                    int height = component.getString().length() > 12 ? 35 : 40;
+                    int height = font.split(component, 60).size() > 1 ? 35 : 40;
                     RenderUtil.drawWordWrap(guiGraphics, this.font, component, xPos + 55, yPos + height + (i * 28), 60, textColor);
                 }
             }

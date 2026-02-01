@@ -17,6 +17,8 @@ import net.neoforged.neoforge.registries.RegistryBuilder;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class SBDataTypes {
@@ -33,6 +35,7 @@ public class SBDataTypes {
     public static final Supplier<SpellDataType<Component>> COMPONENT = registerDataType("component", ComponentSerialization.TRUSTED_STREAM_CODEC);
     public static final Supplier<SpellDataType<BlockPos>> BLOCK_POS = registerDataType("block_pos", BlockPos.STREAM_CODEC);
     public static final Supplier<SpellDataType<Vector3f>> VECTOR3 = registerDataType("vec3", ByteBufCodecs.VECTOR3F);
+    public static final Supplier<SpellDataType<Set<Integer>>> INT_SET = registerDataType("int_set", ByteBufCodecs.INT.apply(ByteBufCodecs.collection(HashSet::new)));
 
     private static <T> Supplier<SpellDataType<T>> registerDataType(String name, StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec) {
         return DATA_TYPES.register(name, () -> SpellDataType.forValueType(streamCodec));

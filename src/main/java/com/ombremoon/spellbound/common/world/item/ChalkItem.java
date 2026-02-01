@@ -9,30 +9,32 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.DyedItemColor;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.IntStream;
 
-public class ChalkItem extends Item {
+public class ChalkItem extends BlockItem {
+
     public ChalkItem(Properties properties) {
-        super(properties);
+        super(SBBlocks.RUNE.get(), properties);
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
-        Level level = context.getLevel();
-        BlockPos pos = context.getClickedPos().above();
-        ItemStack stack = context.getItemInHand();
-        BlockState state = level.getBlockState(pos);
-        if (state.canBeReplaced()) {
-            int type = this.getRuneType(stack);
-            level.setBlock(pos, SBBlocks.RUNE.get().defaultBlockState().setValue(RuneBlock.RUNE_TYPE, type), 3);
+    public InteractionResult place(BlockPlaceContext context) {
+        if (super.place(context) != InteractionResult.FAIL) {
+            Level level = context.getLevel();
+            BlockPos pos = context.getClickedPos();
+            ItemStack stack = context.getItemInHand();
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof RuneBlockEntity runeBlock) {
                 DyedItemColor color = stack.get(DataComponents.DYED_COLOR);
@@ -40,11 +42,26 @@ public class ChalkItem extends Item {
                     runeBlock.setData(SBData.RUNE_COLOR, color.rgb());
                 }
             }
-
-            return InteractionResult.CONSUME;
         }
+        return super.place(context);
+    }
 
-        return InteractionResult.FAIL;
+    @Override
+    public Block getBlock() {
+        return SBBlocks.RUNE.get();
+    }
+
+    @Override
+    protected @Nullable BlockState getPlacementState(BlockPlaceContext context) {
+        ItemStack stack = context.getItemInHand();
+        int type = this.getRuneType(stack);
+        BlockState blockState = this.getBlock().defaultBlockState().setValue(RuneBlock.RUNE_TYPE, type);
+        return this.canPlace(context, blockState) ? blockState : null;
+    }
+
+    @Override
+    public String getDescriptionId() {
+        return this.getOrCreateDescriptionId();
     }
 
     private int getRuneType(ItemStack stack) {

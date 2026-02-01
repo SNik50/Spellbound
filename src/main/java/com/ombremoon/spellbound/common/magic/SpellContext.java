@@ -140,8 +140,12 @@ public class SpellContext {
         return this.getActiveSpells() <= this.getSpellLevel();
     }
 
+    public boolean isChoice(Skill skill) {
+        return this.skillHolder.getChoice(this.spellType).equals(skill);
+    }
+
     public boolean isChoice(Holder<Skill> skill) {
-        return this.skillHolder.getChoice(this.spellType).equals(skill.value());
+        return this.isChoice(skill.value());
     }
 
     public boolean hasSkillBuff(Holder<Skill> skill) {

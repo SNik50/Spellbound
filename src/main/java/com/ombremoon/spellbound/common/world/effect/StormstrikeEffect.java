@@ -37,7 +37,7 @@ public class StormstrikeEffect extends SBEffect {
         Entity entity = livingEntity.level().getEntity(ownerId);
         if (entity instanceof LivingEntity owner) {
             var skills = SpellUtil.getSkills(owner);
-            StormstrikeSpell spell = SBSpells.STORMSTRIKE.get().createSpell();
+            StormstrikeSpell spell = SBSpells.STORMSTRIKE.get().createSpellWithData(owner);
 
             if (skills.hasSkill(SBSkills.CHARGED_ATMOSPHERE))
                 spell.addSkillBuff(

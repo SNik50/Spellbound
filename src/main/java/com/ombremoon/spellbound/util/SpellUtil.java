@@ -87,10 +87,18 @@ public class SpellUtil {
         return handler.consumeMana(spell.getManaCost(livingEntity), false);
     }
 
-    public static <T extends SpellType<?>> void cycle(SpellHandler handler, T activeSpell) {
+    public static <T extends SpellType<?>> void cycleSpells(SpellHandler handler, T activeSpell) {
         var spellType = findNextSpellInList(handler.getEquippedSpells(), activeSpell);
         if (spellType != activeSpell) {
             handler.setSelectedSpell(spellType);
+        }
+    }
+
+    public static <T extends Skill> void cycleChoices(SkillHolder skills, T activeChoice) {
+        SpellType<?> skillSpell = activeChoice.getSpell();
+        var choice = findNextSpellInList(skills.getChoices(skillSpell), activeChoice);
+        if (choice != activeChoice) {
+            skills.setChoice(skillSpell, choice);
         }
     }
 
@@ -200,6 +208,8 @@ public class SpellUtil {
         } else {
             summon.setData(SBData.TARGET_ID, target.getId());
         }
+
+        summon.setLastHurtByMob(target);
     }
 
     /**

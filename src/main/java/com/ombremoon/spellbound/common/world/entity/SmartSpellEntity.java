@@ -137,6 +137,11 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
         return this.checkHurt(target, flag);
     }
 
+    @Override
+    public boolean doHurtTarget(Entity entity) {
+        return super.doHurtTarget(entity);
+    }
+
     private boolean checkHurt(LivingEntity target, boolean hurt) {
         if (hurt) {
             this.setLastHurtMob(target);

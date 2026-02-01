@@ -39,6 +39,7 @@ import org.jetbrains.annotations.UnknownNullability;
 import org.slf4j.Logger;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -345,8 +346,12 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      * @param spellType The spells type
      * @return The list of spells active
      */
+
     public List<AbstractSpell> getActiveSpells(SpellType<?> spellType) {
-        return this.activeSpells.get(spellType).stream().toList();
+        return this.getActiveSpells(spellType, abstractSpell -> true);
+    }
+    public List<AbstractSpell> getActiveSpells(SpellType<?> spellType, Predicate<AbstractSpell> spellCondition) {
+        return this.activeSpells.get(spellType).stream().filter(spellCondition).toList();
     }
 
     /**
