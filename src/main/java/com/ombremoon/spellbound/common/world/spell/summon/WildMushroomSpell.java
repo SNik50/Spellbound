@@ -65,6 +65,7 @@ public class WildMushroomSpell extends SummonSpell {
 
     @Override
     protected void defineSpellData(SyncedSpellData.Builder builder) {
+        super.defineSpellData(builder);
         builder.define(MUSHROOM, 0);
         builder.define(MINI_MUSHROOM, 0);
         builder.define(GIANT_MUSHROOM, 0);

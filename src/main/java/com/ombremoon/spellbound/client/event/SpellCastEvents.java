@@ -8,11 +8,14 @@ import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
+import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
+import com.zigythebird.playeranim.animation.PlayerAnimationController;
+import com.zigythebird.playeranim.api.PlayerAnimationAccess;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.world.entity.Entity;
@@ -69,13 +72,13 @@ public class SpellCastEvents {
                 return;
             }
 
-            if (!isAbleToSpellCast() || !handler.inCastMode()) {
+            if (!isAbleToSpellCast(handler) || !handler.inCastMode()) {
                 spell.resetCast(handler, spell.getCastContext());
                 return;
             }
 
             boolean isCastKeyPressed = KeyBinds.getSpellCastMapping().isDown();
-            boolean castKeyJustPressed = isCastKeyPressed && !wasCastKeyPressed;
+            boolean castKeyJustPressed = isCastKeyPressed && !wasCastKeyPressed/* && !isPlayingCastingAnimation(player, handler)*/;
 
             if (castKeyJustPressed) {
                 if (canChargeSpell(spell)) {
@@ -96,7 +99,7 @@ public class SpellCastEvents {
             if (handler.castTick > 0) {
                 int castTime = spell.getCastTime();
                 if (spell instanceof ChargeableSpell chargeable && handler.isChargingOrChannelling()) {
-                    int maxCharges = chargeable.maxCharges();
+                    int maxCharges = chargeable.maxCharges(spell.getCurrentContext());
                     int ticksPerCharge = castTime / maxCharges;
                     if (handler.castTick % ticksPerCharge == 0 && spell.getCharges() < maxCharges) {
                         spell.incrementCharges();
@@ -136,7 +139,8 @@ public class SpellCastEvents {
     }
 
     private static boolean canChargeSpell(AbstractSpell spell) {
-        return spell instanceof ChargeableSpell chargeable && chargeable.canCharge(spell.getCurrentContext());
+        SpellContext context = spell.getCurrentContext();
+        return spell instanceof ChargeableSpell chargeable && chargeable.canCharge(context) && chargeable.maxCharges(context) > 0;
     }
 
     private static void startCasting(Player player, SpellHandler handler, AbstractSpell spell) {
@@ -159,13 +163,19 @@ public class SpellCastEvents {
         }
     }
 
-    private static boolean isAbleToSpellCast() {
+    private static boolean isAbleToSpellCast(SpellHandler handler) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.getOverlay() != null) return false;
         if (minecraft.screen != null) return false;
         if (!minecraft.mouseHandler.isMouseGrabbed()) return false;
         if (EffectManager.isSilenced(minecraft.player)) return false;
         return minecraft.isWindowActive();
+    }
+
+    private static boolean isPlayingCastingAnimation(AbstractClientPlayer player, SpellHandler handler) {
+        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, AnimationHelper.SPELL_CAST_ANIMATION);
+        SpellAnimation animation = handler.getAnimationForLayer(AnimationHelper.SPELL_CAST_ANIMATION);
+        return animation != null && AnimationHelper.isAnimationPlaying(spellController, animation) && animation.stationary();
     }
 
     public static void castSpell(Player player, int charges) {

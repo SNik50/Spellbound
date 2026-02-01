@@ -5,7 +5,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.magic.api.RadialSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -14,6 +16,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.LayeredDraw;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
@@ -61,33 +64,62 @@ public class CastModeOverlay implements LayeredDraw.Layer {
         SpellType<?> spell = caster.getSelectedSpell();
         if (spell == null) return;
 
-        ResourceLocation texture = spell.createSpell().getTexture();
+        ResourceLocation texture = this.getSpellTexture(player, spell.createSpell());
         guiGraphics.blit(texture, x, y, 0, 0, 24, 24, 24, 24);
         guiGraphics.blit(BACKGROUND, x - 1, y - 1, 0, 0, 26, 26, 26, 26);
         guiGraphics.drawString(Minecraft.getInstance().font,
-                spell.createSpell().getName(),
+                this.getSpellName(player, spell.createSpell()),
                 guiGraphics.guiWidth() / 2 - 173, guiGraphics.guiHeight() - 57,
                 8889187, false);
     }
 
+    private Component getSpellName(Player player, AbstractSpell spell) {
+        if (spell instanceof RadialSpell) {
+            var skills = SpellUtil.getSkills(player);
+            Skill skill = skills.getChoice(spell.spellType());
+            return skill.getName();
+        }
+        return spell.getName();
+    }
+
+    private ResourceLocation getSpellTexture(Player player, AbstractSpell spell) {
+        if (spell instanceof RadialSpell) {
+            var skills = SpellUtil.getSkills(player);
+            Skill skill = skills.getChoice(spell.spellType());
+            return skill.getTexture();
+        }
+        return spell.getTexture();
+    }
+
     private void renderActiveSpells(GuiGraphics guiGraphics, SpellHandler handler) {
-        Set<AbstractSpell> spells = new ObjectOpenHashSet<>(
-                handler.getActiveSpells()
-                        .stream()
-                        .filter(spell -> spell.shouldRender(spell.getContext()))
-                        .sorted(Comparator.comparing(AbstractSpell::location))
-                        .toList());
+        // Group spells by type and count instances
+        var groupedSpells = handler.getActiveSpells()
+                .stream()
+                .filter(spell -> spell.shouldRender(spell.getContext()))
+                .collect(Collectors.groupingBy(
+                        AbstractSpell::spellType,
+                        Collectors.collectingAndThen(
+                                Collectors.toList(),
+                                list -> list.stream().sorted(Comparator.comparing(AbstractSpell::location)).toList()
+                        )
+                ));
+
+        // Sort spell types by the location of their first spell
+        var sortedSpellTypes = groupedSpells.entrySet().stream()
+                .sorted(Comparator.comparing(entry -> entry.getValue().get(0).location()))
+                .toList();
+
         RenderSystem.enableBlend();
         int j1 = 0;
-        SpellType<?> spellType = null;
-        List<Runnable> list = Lists.newArrayListWithExpectedSize(spells.size());
+        List<Runnable> list = Lists.newArrayListWithExpectedSize(sortedSpellTypes.size());
 
-        for (AbstractSpell spell : spells) {
+        for (var entry : sortedSpellTypes) {
+            List<AbstractSpell> spellsOfType = entry.getValue();
+            AbstractSpell spell = spellsOfType.get(0); // Use first spell as representative
+            int count = spellsOfType.size();
+
             int i = 1;
             int j = 1;
-            if (spellType != spell.spellType()) {
-                spellType = spell.spellType();
-            }
 
             i += 2 + (27 * j1);
             j1++;
@@ -103,10 +135,20 @@ public class CastModeOverlay implements LayeredDraw.Layer {
             int l1 = i + 1;
             int i1 = j + 1;
             float f1 = f;
+            int finalI = i;
+            int finalJ = j;
             list.add(() -> {
                 guiGraphics.setColor(1.0F, 1.0F, 1.0F, f1);
                 guiGraphics.blit(spell.getTexture(), l1, i1, 0, 0, 24, 24, 24, 24);
                 guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+
+                // Render count if more than one spell of this type
+                if (count > 1) {
+                    String countText = String.valueOf(count);
+                    int textX = finalI + 26 - Minecraft.getInstance().font.width(countText) - 2;
+                    int textY = finalJ + 26 - Minecraft.getInstance().font.lineHeight;
+                    guiGraphics.drawString(Minecraft.getInstance().font, countText, textX, textY, 0xFFFFFF, true);
+                }
             });
         }
 

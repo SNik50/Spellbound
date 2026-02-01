@@ -51,7 +51,7 @@ public class AnimationHelper {
         }
     }
 
-    private static boolean isAnimationPlaying(PlayerAnimationController controller, SpellAnimation animation) {
+    public static boolean isAnimationPlaying(PlayerAnimationController controller, SpellAnimation animation) {
         return controller != null && controller.getCurrentAnimation() != null && controller.getCurrentAnimation().animation().getNameOrId().equals(animation.animation().getPath());
     }
 }

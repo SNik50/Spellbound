@@ -1,12 +1,17 @@
 package com.ombremoon.spellbound.common.magic.api;
 
+import com.ombremoon.spellbound.common.init.SBDataTypes;
+import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
+import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.entity.SmartSpellEntity;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
-import com.ombremoon.spellbound.common.magic.api.events.ChangeTargetEvent;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.Keys;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.Entity;
@@ -16,6 +21,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Consumer;
@@ -23,34 +30,96 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 
 public abstract class SummonSpell extends AnimatedSpell {
-    private static final ResourceLocation TARGETING_EVENT = CommonClass.customLocation("summon_targeting_event");
-    private final Set<Integer> summons = new IntOpenHashSet();
+    private static final SpellDataKey<Set<Integer>> SUMMONS = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.INT_SET.get());
+    private static final ResourceLocation POST_DAMAGE_EVENT = CommonClass.customLocation("summon_post_damage");
+    private static final ResourceLocation CASTER_ATTACK_EVENT = CommonClass.customLocation("summon_caster_attack");
     private boolean summonedEntity;
+    private boolean isChoice;
+    private Skill choice;
 
     @SuppressWarnings("unchecked")
     public static <T extends SummonSpell> Builder<T> createSummonBuilder(Class<T> spellClass) {
         return (Builder<T>) new Builder<>()
-                .castCondition((context, spell) -> spell.hasValidSpawnPos());
+                .castCondition((context, spell) -> {
+                    var handler = context.getSpellHandler();
+                    if (spell.isChoice) {
+                        int summonCount = spell.getSummonSize(context);
+                        int maxSummons = spell.getMaxSummons(context);
+                        var list = handler.getActiveSpells(spell.spellType(), abstractSpell -> abstractSpell instanceof SummonSpell summonSpell && context.isChoice(summonSpell.choice));
+                        if (!list.isEmpty()) {
+                            list.forEach(AbstractSpell::endSpell);
+                            return false;
+                        } else if (summonCount + spell.getCharges() >= maxSummons) {
+                            if (summonCount < maxSummons) {
+                                spell.setCharges(maxSummons - summonCount - 1);
+                                return true;
+                            }
+
+                            return false;
+                        }
+                    }
+
+                    return spell.hasValidSpawnPos();
+                });
     }
 
     public SummonSpell(SpellType<?> spellType, Builder<?> builder) {
         super(spellType, builder);
+        this.isChoice = builder.isChoice;
     }
 
-   /**
-     * Attaches event listeners to hande summon targeting
-     * @param context the context of the spells
-     */
+    @Override
+    protected void defineSpellData(SyncedSpellData.Builder builder) {
+        super.defineSpellData(builder);
+        builder.define(SUMMONS, new HashSet<>());
+    }
+
+    @Override
+    public void onCastStart(SpellContext context) {
+        super.onCastStart(context);
+        var skills = context.getSkills();
+        if (this.isChoice)
+            this.choice = skills.getChoice(this.spellType());
+    }
+
     @Override
     protected void onSpellStart(SpellContext context) {
-        context.getSpellHandler().getListener().addListener(SpellEventListener.Events.CHANGE_TARGET, TARGETING_EVENT, this::changeTargetEvent);
+        var handler = context.getSpellHandler();
+        Level level = context.getLevel();
+        if (!level.isClientSide) {
+            handler.getListener().addListener(SpellEventListener.Events.POST_DAMAGE, POST_DAMAGE_EVENT, post -> {
+                Entity entity = post.getSource().getEntity();
+                var summons = this.getSummons();
+                for (int id : summons) {
+                    Entity summon = level.getEntity(id);
+                    if (summon instanceof LivingEntity livingEntity && entity instanceof LivingEntity attacker) {
+                        SpellUtil.setTarget(livingEntity, attacker);
+                    }
+                }
+            });
+            handler.getListener().addListener(SpellEventListener.Events.ATTACK, CASTER_ATTACK_EVENT, attack -> {
+                Entity entity = attack.getTarget();
+                var summons = this.getSummons();
+                for (int id : summons) {
+                    Entity summon = level.getEntity(id);
+                    if (summon instanceof LivingEntity livingEntity && entity instanceof LivingEntity target && !target.is(livingEntity)) {
+                        SpellUtil.setTarget(livingEntity, target);
+                    }
+                }
+            });
+        }
     }
 
     @Override
     protected void onSpellTick(SpellContext context) {
         Level level = context.getLevel();
-        if (!level.isClientSide && this.summonedEntity && this.summons.isEmpty())
+        var summons = this.getSummons();
+        if (!level.isClientSide && this.summonedEntity && summons.isEmpty())
             endSpell();
+    }
+
+    protected  void onEntityRemoved(LivingEntity entity, SpellContext context) {
+
     }
 
     /**
@@ -60,22 +129,23 @@ public abstract class SummonSpell extends AnimatedSpell {
     @Override
     protected void onSpellStop(SpellContext context) {
         Level level = context.getLevel();
+        var handler = context.getSpellHandler();
         if (!level.isClientSide) {
+            var summons = this.getSummons();
             for (int summonId : summons) {
                 Entity entity = level.getEntity(summonId);
                 if (entity instanceof LivingEntity livingEntity && livingEntity.isAlive()) {
+                    this.onEntityRemoved(livingEntity, context);
                     if (entity instanceof SmartSpellEntity) {
                         //SET DESPAWN ANIMATIONS
-//                        log("Smart Entity");
-                        entity.discard();
-                    } else {
-                        entity.discard();
                     }
+                    entity.discard();
                 }
             }
-        }
 
-        context.getSpellHandler().getListener().removeListener(SpellEventListener.Events.CHANGE_TARGET, TARGETING_EVENT);
+            handler.getListener().removeListener(POST_DAMAGE_EVENT);
+            handler.getListener().removeListener(CASTER_ATTACK_EVENT);
+        }
     }
 
     /**
@@ -83,37 +153,63 @@ public abstract class SummonSpell extends AnimatedSpell {
      * @return Set of entity IDs
      */
     public Set<Integer> getSummons() {
-        return this.summons;
+        return this.spellData.get(SUMMONS);
+    }
+
+    private void summonEntity(LivingEntity livingEntity) {
+        var summons = this.getSummons();
+        summons.add(livingEntity.getId());
+        this.spellData.set(SUMMONS, summons, true);
     }
 
     public void removeSummon(LivingEntity livingEntity) {
-        this.summons.remove(livingEntity.getId());
+        var summons = this.getSummons();
+        summons.remove(livingEntity.getId());
+        this.spellData.set(SUMMONS, summons, true);
+    }
+
+    protected int getSummonSize(SpellContext context) {
+        var handler = context.getSpellHandler();
+        List<AbstractSpell> summonSpells = handler.getActiveSpells(this.spellType());
+        int summons = 0;
+        for (AbstractSpell spell : summonSpells) {
+            summons += ((SummonSpell) spell).getSummons().size();
+        }
+
+        return summons;
+    }
+
+    protected int getMaxSummons(SpellContext context) {
+        int i = this.hasSummonStaffBuff(context) ? 1 : 0;
+        return context.getSpellLevel() + 1 + i;
+    }
+
+    protected Vec3 getSurroundingSpawnPosition(Vec3 origin, float yaw, float radius, int charge, int maxCharges) {
+        double angleStep = 2 * Math.PI / maxCharges;
+        double angle = angleStep * charge;
+        double totalAngle = angle + Math.toRadians(yaw);
+        double xOffset = -Math.sin(totalAngle) * radius;
+        double zOffset = Math.cos(totalAngle) * radius;
+        return new Vec3(origin.x + xOffset, origin.y, origin.z + zOffset);
+    }
+
+    public Skill getChoice() {
+        return this.choice;
     }
 
     @Override
     public <T extends Entity> T summonEntity(SpellContext context, EntityType<T> entityType, Vec3 spawnPos, Consumer<T> extraData) {
         T entity = super.summonEntity(context, entityType, spawnPos, extraData);
-        if (entity instanceof LivingEntity) {
-            this.summons.add(entity.getId());
+        if (entity instanceof LivingEntity livingEntity) {
+            this.summonEntity(livingEntity);
             this.summonedEntity = true;
         }
 
         return entity;
     }
 
-    private void changeTargetEvent(ChangeTargetEvent targetEvent) {
-        LivingChangeTargetEvent event = targetEvent.getTargetEvent();
-
-        if (event.getNewAboutToBeSetTarget() == null) return;
-
-        Entity owner = SpellUtil.getOwner(event.getEntity());
-        if (owner == null) return;
-
-        LivingEntity target = SpellUtil.getTarget(event.getEntity());
-        event.setNewAboutToBeSetTarget(target);
-    }
-
     public static class Builder<T extends SummonSpell> extends AnimatedSpell.Builder<T> {
+        private boolean isChoice;
 
         public Builder() {
             this.summonCast();
@@ -180,6 +276,11 @@ public abstract class SummonSpell extends AnimatedSpell {
 
         public Builder<T> updateInterval(int updateInterval) {
             this.updateInterval = updateInterval;
+            return this;
+        }
+
+        public Builder<T> isChoice() {
+            this.isChoice = true;
             return this;
         }
 

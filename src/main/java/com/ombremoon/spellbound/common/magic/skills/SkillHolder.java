@@ -30,6 +30,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -215,6 +216,10 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
 
     public Skill getChoice(SpellType<?> spellType) {
         return this.skillChoices.getOrDefault(spellType, spellType.getRootSkill());
+    }
+
+    public List<Skill> getChoices(SpellType<?> spellType) {
+        return this.unlockedSkills.get(spellType).stream().filter(Skill::isRadial).toList();
     }
 
     public void setChoice(SpellType<?> spellType, Skill skill) {

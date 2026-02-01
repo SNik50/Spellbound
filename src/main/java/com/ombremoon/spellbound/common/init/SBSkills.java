@@ -193,17 +193,17 @@ public class SBSkills {
     public static final Holder<Skill> VIRAL = registerSkill("viral", 0, 50, preReqs(COBBLED_HIDE));
 
     //Summon Undead
-    public static final Holder<Skill> SUMMON_UNDEAD = registerSkill("summon_undead");
-    public static final Holder<Skill> SUMMON_HUSK = registerSkill("summon_husk", 0, 0, preReqs(SUMMON_UNDEAD));
-    public static final Holder<Skill> SUMMON_SKELETON = registerSkill("summon_skeleton", 0, 0, preReqs(SUMMON_UNDEAD));
-    public static final Holder<Skill> SUMMON_PHANTOM = registerSkill("summon_phantom", 0, 0, preReqs(SUMMON_UNDEAD));
-    public static final Holder<Skill> SUMMON_DROWNED = registerSkill("summon_drowned", 0, 0, preReqs(SUMMON_UNDEAD));
-    public static final Holder<Skill> ROTTEN_SOLDIERS = registerSkill("rotten_soldiers", 0, 0, preReqs(SUMMON_UNDEAD));
-    public static final Holder<Skill> DESERT_RESILIENCE = registerSkill("desert_resilience", 0, 0, preReqs(SUMMON_UNDEAD));
-    public static final Holder<Skill> DAYWALKER = registerSkill("daywalker", 0, 0, preReqs(SUMMON_UNDEAD));
-    public static final Holder<Skill> HALL_OF_THE_DEAD = registerSkill("hall_of_the_dead", 0, 0, preReqs(SUMMON_UNDEAD));
-    public static final Holder<Skill> SILENT_NIGHT = registerSkill("silent_night", 0, 0, preReqs(SUMMON_UNDEAD));
-    public static final Holder<Skill> SUNKEN_BREATH = registerSkill("sunken_breath", 0, 0, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> SUMMON_UNDEAD = registerRadialSkill("summon_undead");
+    public static final Holder<Skill> SUMMON_HUSK = registerRadialSkill("summon_husk", -100, 50, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> SUMMON_SKELETON = registerRadialSkill("summon_skeleton", -50, 50, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> SUMMON_PHANTOM = registerRadialSkill("summon_phantom", 50, 50, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> SUMMON_DROWNED = registerRadialSkill("summon_drowned", 100, 50, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> ROTTEN_SOLDIERS = registerSkill("rotten_soldiers", 0, 100, preReqs(SUMMON_UNDEAD));
+    public static final Holder<Skill> DESERT_RESILIENCE = registerSkill("desert_resilience", -100, 100, preReqs(SUMMON_HUSK));
+    public static final Holder<Skill> HALL_OF_THE_DEAD = registerSkill("hall_of_the_dead", -50, 100, preReqs(SUMMON_SKELETON));
+    public static final Holder<Skill> SILENT_NIGHT = registerSkill("silent_night", 50, 100, preReqs(SUMMON_PHANTOM));
+    public static final Holder<Skill> SUNKEN_BREATH = registerSkill("sunken_breath", 100, 100, preReqs(SUMMON_DROWNED));
+    public static final Holder<Skill> DAYWALKER = registerSkill("daywalker", 0, 150, preReqs(ROTTEN_SOLDIERS, DESERT_RESILIENCE, HALL_OF_THE_DEAD, SILENT_NIGHT, SUNKEN_BREATH));
 
     //Wild Mushroom
     public static final Holder<Skill> WILD_MUSHROOM = registerSkill("wild_mushroom");

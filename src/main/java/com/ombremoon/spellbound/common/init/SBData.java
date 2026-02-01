@@ -56,9 +56,9 @@ public class SBData {
 
     //Summons
     public static final Supplier<AttachmentType<Integer>> OWNER_ID = ATTACHMENT_TYPES.register(
-            "owner_id", () -> AttachmentType.builder(() -> 0).build());
+            "owner_id", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Integer>> TARGET_ID = ATTACHMENT_TYPES.register(
-            "target_id", () -> AttachmentType.builder(() -> 0).build());
+            "target_id", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
 
     //Spell Data
     public static final Supplier<AttachmentType<ResourceLocation>> SPELL_TYPE = ATTACHMENT_TYPES.register(

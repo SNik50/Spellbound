@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface ChargeableSpell {
 
-    int maxCharges();
+    int maxCharges(SpellContext context);
 
     boolean canCharge(SpellContext context);
 }

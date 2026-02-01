@@ -428,7 +428,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * The specific cast id for this spells type within the caster's active spells. Useful for getting a specific instance(s) of a spells.
+     * The specific cast id for this spells type within the caster's active spells. Useful for getting a specific instance(s) of a spell.
      * @return The spells's cast id
      */
     public int getId() {
@@ -461,7 +461,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @return A compound tag with new save data
      */
     public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
-        if (!this.resetDuration)
+        if (this.fullRecast && !this.resetDuration)
             compoundTag.putInt("previous_duration", this.tickCount);
 
         return compoundTag;
@@ -472,7 +472,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @param nbt The saved data tag
      */
     public void loadData(CompoundTag nbt) {
-        if (!this.resetDuration)
+        if (this.fullRecast && !this.resetDuration)
             this.tickCount = nbt.getInt("previous_duration");
     }
 
@@ -498,7 +498,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         }
 
         if (!this.level.isClientSide) {
-            if (this.spellData.isDirty() || this.tickCount % this.updateInterval == 0)
+            if (this.spellData.isDirty() || this.tickCount != 0 && this.tickCount % this.updateInterval == 0)
                 this.sendDirtySpellData();
         } else {
             this.handleFXRemoval();
@@ -1031,15 +1031,12 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     public <T extends Entity> T summonEntity(SpellContext context, EntityType<T> entityType, double range, Consumer<T> extraData) {
-        Vec3 spawnPos = this.getLowestSpawnablePosition(range);
+        Vec3 spawnPos = this.getSpawnVec(range);
         return this.summonEntity(context, entityType, spawnPos, extraData);
     }
 
-    protected Vec3 getLowestSpawnablePosition(double range) {
+    protected Vec3 getSpawnVec(double range) {
         BlockPos blockPos = this.getSpawnPos(range);
-        while (!this.context.getLevel().getBlockState(blockPos.below()).isSolid()) {
-            blockPos = blockPos.below();
-        }
         return Vec3.atBottomCenterOf(blockPos);
     }
 
@@ -1119,7 +1116,12 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         if (hitResult.getType() == HitResult.Type.MISS) return null;
         if (hitResult.getDirection() == Direction.DOWN) return null;
 
-        return hitResult.getBlockPos().above();
+        BlockPos blockPos = hitResult.getBlockPos().above();
+        while (!this.context.getLevel().getBlockState(blockPos.below()).isSolid()) {
+            blockPos = blockPos.below();
+        }
+
+        return blockPos;
     }
 
     protected boolean hasValidSpawnPos() {
@@ -1429,7 +1431,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
             this.castId = SPELL_COUNTER.incrementAndGet();
 
-            if (!SpellUtil.canCastSpell(caster, this) || !(this.castPredicate.test(this.context, this) && RandomUtil.percentChance(getCastChance()))) {
+            if (!(this.castPredicate.test(this.context, this) && RandomUtil.percentChance(getCastChance())) || !SpellUtil.canCastSpell(caster, this)) {
                 onCastReset(this.context);
                 CompoundTag initTag = this.initTag(this.isRecast, true);
                 PayloadHandler.updateSpells(caster, this.spellType, this.castId, initTag, nbt);

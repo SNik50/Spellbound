@@ -24,6 +24,8 @@ import com.ombremoon.spellbound.client.renderer.types.EmissiveSpellProjectileRen
 import com.ombremoon.spellbound.client.renderer.types.GenericLivingEntityRenderer;
 import com.ombremoon.spellbound.client.renderer.types.GenericSpellRenderer;
 import com.ombremoon.spellbound.client.shader.SBShaders;
+import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.block.entity.RuneBlockEntity;
 import com.ombremoon.spellbound.common.world.weather.ClientHailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
@@ -68,6 +70,7 @@ public class ClientEvents {
             event.register(KeyBinds.SWITCH_MODE_BINDING);
             event.register(KeyBinds.SELECT_SPELL_BINDING);
             event.register(KeyBinds.CYCLE_SPELL_BINDING);
+            event.register(KeyBinds.CYCLE_CHOICE_BINDING);
         }
 
         @SubscribeEvent
@@ -169,6 +172,7 @@ public class ClientEvents {
             Player player = minecraft.player;
             if (player != null) {
                 SpellHandler handler = SpellUtil.getSpellHandler(player);
+                SkillHolder skills = SpellUtil.getSkills(player);
                 if (KeyBinds.SWITCH_MODE_BINDING.consumeClick()) {
                     handler.switchMode();
                     player.displayClientMessage(Component.literal("Switched to " + (handler.inCastMode() ? "Cast mode" : "Normal mode")), true);
@@ -176,9 +180,14 @@ public class ClientEvents {
                 }
                 boolean spellBindingDown = KeyBinds.SELECT_SPELL_BINDING.consumeClick();
                 boolean cycleSpellDown = KeyBinds.CYCLE_SPELL_BINDING.consumeClick();
+                boolean cycleChoiceDown = KeyBinds.CYCLE_CHOICE_BINDING.consumeClick();
+                SpellType<?> selectedSpell = handler.getSelectedSpell();
                 if (handler.inCastMode()) {
+                    if (handler.isChargingOrChannelling())
+                        return;
+
                     if (spellBindingDown) {
-                        if (handler.isChargingOrChannelling() || handler.castTick > 0)
+                        if (handler.isCasting())
                             return;
 
                         Screen screen = minecraft.screen;
@@ -190,17 +199,24 @@ public class ClientEvents {
                     }
                     if (cycleSpellDown) {
                         if (handler.getSpellList().isEmpty()) return;
-                        if (handler.castTick > 0) {
+                        if (handler.isCasting()) {
                             AbstractSpell spell = handler.getCurrentlyCastSpell();
                             spell.resetCast(handler);
                         }
 
-                        if (handler.isChargingOrChannelling())
-                            return;
+                        KeyBinds.getSpellCastMapping().setDown(false);
+                        SpellUtil.cycleSpells(handler, selectedSpell);
+                        PayloadHandler.setSpell(selectedSpell);
+                    }
+                    if (cycleChoiceDown && selectedSpell.getRootSkill().isRadial()) {
+                        if (handler.getSpellList().isEmpty()) return;
+                        if (handler.isCasting()) {
+                            AbstractSpell spell = handler.getCurrentlyCastSpell();
+                            spell.resetCast(handler);
+                        }
 
                         KeyBinds.getSpellCastMapping().setDown(false);
-                        SpellUtil.cycle(handler, handler.getSelectedSpell());
-                        PayloadHandler.setSpell(handler.getSelectedSpell());
+                        SpellUtil.cycleChoices(skills, skills.getChoice(selectedSpell));
                     }
                 }
             }
