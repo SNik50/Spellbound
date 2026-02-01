@@ -89,11 +89,6 @@ public class FrogEntity extends SBFamiliarEntity {
     }
 
     @Override
-    public Vec3 getRidingOffset() {
-        return new Vec3(0, 0, 0);
-    }
-
-    @Override
     public void tick() {
         super.tick();
 

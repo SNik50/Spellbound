@@ -21,7 +21,7 @@ public class SBFamiliars {
 
     public static final FamiliarHolder<FrogEntity, FrogFamiliar> FROG = createFamiliar(
             "frog", SBEntities.FROG, SpellMastery.NOVICE, FrogFamiliar::new,
-            SBAffinities.SPECTRAL_HOPS, SBAffinities.WARTFUL_SKIN, SBAffinities.MAGMA_DIGESTION,
+            SBAffinities.SPECTRAL_HOPS, SBAffinities.SUBMERGED, SBAffinities.MAGMA_DIGESTION,
             SBAffinities.ELONGATED_TONGUE, SBAffinities.MURKY_HABITAT, SBAffinities.SLIMEY_EXPULSION);
 
     private static <E extends LivingEntity, F extends Familiar<E>> FamiliarHolder<E, F> createFamiliar(String name, Supplier<EntityType<E>> entity, SpellMastery reqMastery, FamiliarHolder.FamiliarBuilder<F> constructor, FamiliarAffinity... affinities) {

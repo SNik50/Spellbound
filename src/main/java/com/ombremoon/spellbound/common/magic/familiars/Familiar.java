@@ -7,7 +7,7 @@ import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
-import com.ombremoon.spellbound.common.magic.api.buff.events.SpellEvent;
+import com.ombremoon.spellbound.common.magic.api.events.SpellEvent;
 import com.ombremoon.spellbound.common.magic.skills.FamiliarAffinity;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -237,9 +237,9 @@ public abstract class Familiar<T extends LivingEntity> {
      * @param duration The length in ticks the buff persists
      * @param <T> The buff
      */
-    public <T> void addSkillBuff(LivingEntity livingEntity, FamiliarAffinity affinity, BuffCategory buffCategory, SkillBuff.BuffObject<T> buffObject, T skillObject, int duration) {
+    public <T> void addSkillBuff(LivingEntity livingEntity, FamiliarAffinity affinity, ResourceLocation buffName, BuffCategory buffCategory, SkillBuff.BuffObject<T> buffObject, T skillObject, int duration) {
         if (livingEntity.level().isClientSide || checkForCounterMagic(livingEntity) && buffCategory == BuffCategory.HARMFUL) return;
-        SkillBuff<T> skillBuff = new SkillBuff<>(affinity, buffCategory, buffObject, skillObject);
+        SkillBuff<T> skillBuff = new SkillBuff<>(affinity, buffName, buffCategory, buffObject, skillObject);
         var handler = SpellUtil.getSpellHandler(livingEntity);
         handler.addSkillBuff(skillBuff, livingEntity, duration);
     }
@@ -284,8 +284,8 @@ public abstract class Familiar<T extends LivingEntity> {
      * @param skillObject The actual buff being applied to the entity
      * @param <T> the buff
      */
-    public <T> void addSkillBuff(LivingEntity livingEntity, FamiliarAffinity affinity, BuffCategory buffCategory, SkillBuff.BuffObject<T> buffObject, T skillObject) {
-        this.addSkillBuff(livingEntity, affinity, buffCategory, buffObject, skillObject, -1);
+    public <T> void addSkillBuff(LivingEntity livingEntity, FamiliarAffinity affinity, ResourceLocation buffName, BuffCategory buffCategory, SkillBuff.BuffObject<T> buffObject, T skillObject) {
+        this.addSkillBuff(livingEntity, affinity, buffName, buffCategory, buffObject, skillObject, -1);
     }
 
     /**

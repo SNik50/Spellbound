@@ -20,7 +20,7 @@ public class SBAffinities {
 
     //Frog
     public static final FamiliarAffinity SPECTRAL_HOPS = createAffinity("spectral_hops", 0);
-    public static final FamiliarAffinity WARTFUL_SKIN = createAffinity("wartful_skin", 1);
+    public static final FamiliarAffinity SUBMERGED = createAffinity("submerged", 1200, 1);
     public static final FamiliarAffinity MAGMA_DIGESTION = createAffinity("magma_digestion", 2);
     public static final FamiliarAffinity ELONGATED_TONGUE = createAffinity("elongated_tongue", 3);
     public static final FamiliarAffinity MURKY_HABITAT = createAffinity("murky_habitat", 4);

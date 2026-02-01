@@ -145,7 +145,7 @@ public abstract class SBFamiliarEntity extends SBLivingEntity {
     }
 
     public Vec3 getRidingOffset() {
-        return new Vec3(1, 0, 0);
+        return new Vec3(0.5, 0, 0);
     }
 
     @Override
