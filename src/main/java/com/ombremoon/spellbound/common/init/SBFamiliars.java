@@ -25,7 +25,7 @@ public class SBFamiliars {
             SBAffinities.ELONGATED_TONGUE, SBAffinities.MURKY_HABITAT, SBAffinities.SLIMEY_EXPULSION);
 
     private static <E extends LivingEntity, F extends Familiar<E>> FamiliarHolder<E, F> createFamiliar(String name, Supplier<EntityType<E>> entity, SpellMastery reqMastery, FamiliarHolder.FamiliarBuilder<F> constructor, FamiliarAffinity... affinities) {
-        var holder = new FamiliarHolder<E, F>(CommonClass.customLocation(name), entity, reqMastery, constructor, 5, affinities);
+        var holder = new FamiliarHolder<>(CommonClass.customLocation(name), entity, reqMastery, constructor, 5, affinities);
         REGISTRY.put(CommonClass.customLocation(name), holder);
         return holder;
     }

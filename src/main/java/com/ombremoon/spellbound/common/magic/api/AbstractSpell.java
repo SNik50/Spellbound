@@ -64,6 +64,7 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.tslat.smartbrainlib.util.RandomUtil;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -1251,6 +1252,28 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return true;
     }
 
+    public Vec3 findTeleportLocation(Level level, LivingEntity entity, float maxDistance) {
+        BlockHitResult result = this.getTargetBlock(maxDistance);
+        return findTeleportLocation(level, entity, result.getBlockPos(), result.getLocation());
+    }
+
+    private Vec3 findTeleportLocation(Level level, LivingEntity entity, BlockPos pos, Vec3 vec3) {
+        Vec3 offset = entity.getForward().normalize().multiply(entity.getBbWidth() / 3, 0, entity.getBbHeight() / 3);
+        Vec3 bbImpact = vec3.subtract(offset);
+
+        BlockHitResult result = level.clip(new ClipContext(Vec3.atBottomCenterOf(pos).add(0, 3, 0), Vec3.atBottomCenterOf(pos), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, CollisionContext.empty()));
+        double ledgeY = result.getLocation().y;
+        boolean isAir = level.getBlockState(BlockPos.containing(pos.getX(), ledgeY, pos.getZ()).above()).isAir();
+        boolean isMiss = level.clip(new ClipContext(bbImpact, bbImpact.add(0, ledgeY - pos.getY(), 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity)).getType() == HitResult.Type.MISS;
+
+        if (isAir && isMiss && Math.abs(ledgeY - pos.getY()) <= 3) {
+            return new Vec3(pos.getX() + .5, ledgeY + 0.001, pos.getZ() + .5);
+        }
+
+        HitResult teleportResult = level.clip(new ClipContext(bbImpact, bbImpact.add(0, -entity.getBbHeight(), 0), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity));
+        return teleportResult.getLocation().add(0, 0.001, 0);
+    }
+
     /**
      * Returns a {@link BlockHitResult} of where the caster is looking within a certain range.
      * @param range The hit result range
@@ -1258,6 +1281,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      */
     public BlockHitResult getTargetBlock(double range) {
         return this.level.clip(setupRayTraceContext(this.caster, range, ClipContext.Fluid.NONE));
+    }
+
+    public BlockHitResult getTargetBlock() {
+        return this.getTargetBlock(SpellUtil.getCastRange(this.caster));
     }
 
     public Vec3 getTargetPosition(double range) {

@@ -8,11 +8,8 @@ import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMus
 import com.ombremoon.spellbound.common.world.entity.spell.WildMushroom;
 import com.ombremoon.spellbound.common.world.spell.summon.WildMushroomSpell;
 import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -27,7 +24,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.tslat.smartbrainlib.util.RandomUtil;
-import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
@@ -87,7 +83,7 @@ public class MushroomProjectile extends SpellProjectile<WildMushroomSpell> {
         if (!level.isClientSide) {
             Entity entity = result.getEntity();
             if (!(entity instanceof MushroomProjectile || entity instanceof WildMushroom)) {
-                if (this.getOwner() instanceof GiantMushroom mushroom) {
+                if (this.getSummoner() instanceof GiantMushroom mushroom) {
                     DamageSource damagesource = mushroom.spellDamageSource(level);
                     if (entity instanceof LivingEntity livingEntity && mushroom.hurtTarget(livingEntity, damagesource, 8.0F * mushroom.getPhase())) {
                         livingEntity.addEffect(new MobEffectInstance(MobEffects.POISON, 60, mushroom.getPhase()));
@@ -110,7 +106,7 @@ public class MushroomProjectile extends SpellProjectile<WildMushroomSpell> {
         super.onHitBlock(result);
         Level level = this.level();
         if (!level.isClientSide) {
-            Entity entity = this.getOwner();
+            Entity entity = this.getSummoner();
             if (entity instanceof GiantMushroom mushroom && result.getDirection() == Direction.UP) {
                 if (mushroom.getPhase() >= 2 && this.isPrimaryProjectile()) {
                     int numMushrooms = RandomUtil.randomNumberBetween(4, 6);

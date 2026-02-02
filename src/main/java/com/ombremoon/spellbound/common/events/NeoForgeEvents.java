@@ -413,21 +413,13 @@ public class NeoForgeEvents {
                 summonSpell.onMobPostDamage(spell.getContext(), event);
             }
         }
-        if (event.getSource().getEntity() instanceof LivingEntity sourceEntity) {
-            var handler = SpellUtil.getSpellHandler(sourceEntity);
-            for (int id : handler.getSummons()) {
-                Entity summon = sourceEntity.level().getEntity(id);
-                if (summon instanceof LivingEntity livingSummon) SpellUtil.setTarget(livingSummon, event.getEntity());
-            }
 
-            var familiarHandler = SpellUtil.getFamiliarHandler(sourceEntity);
-            if (familiarHandler.hasActiveFamiliar()) {
-                SpellUtil.setTarget(familiarHandler.getActiveEntity(), event.getEntity());
+        if (event.getSource().getEntity() instanceof LivingEntity sourceEntity) {
+            var familiars = SpellUtil.getFamiliarHandler(sourceEntity);
+            if (familiars.hasActiveFamiliar()) {
+                SpellUtil.setTarget(familiars.getActiveEntity(), event.getEntity());
             }
         }
-
-        LivingEntity entity = event.getEntity();
-        SpellUtil.getSpellHandler(entity).getListener().fireEvent(SpellEventListener.Events.POST_DAMAGE, new DamageEvent.Post(entity, event));
     }
 
     @SubscribeEvent

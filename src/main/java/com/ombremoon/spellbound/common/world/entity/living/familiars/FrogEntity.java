@@ -53,6 +53,16 @@ public class FrogEntity extends SBFamiliarEntity {
         builder.define(DATA_TONGUE_TARGET_ID, OptionalInt.empty());
     }
 
+    @Override
+    public int getStartTick() {
+        return 0;
+    }
+
+    @Override
+    public int getEndTick() {
+        return 0;
+    }
+
     public void eraseTongueTarget() {
         this.entityData.set(DATA_TONGUE_TARGET_ID, OptionalInt.empty());
     }

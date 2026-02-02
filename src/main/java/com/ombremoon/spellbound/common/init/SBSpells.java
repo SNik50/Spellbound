@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.SpellMastery;
+import com.ombremoon.spellbound.common.world.spell.deception.FlickerSpell;
 import com.ombremoon.spellbound.common.world.spell.deception.PurgeMagicSpell;
 import com.ombremoon.spellbound.common.world.spell.deception.ShadowbondSpell;
 import com.ombremoon.spellbound.common.world.spell.divine.BlessingSpell;
@@ -117,6 +118,10 @@ public class SBSpells {
                     SBSkills.PETAL_SHIELD, SBSkills.VERDANT_RENEWAL, SBSkills.REBIRTH));
 
     //Deception
+    public static final Supplier<SpellType<FlickerSpell>> FLICKER = registerSpell("flicker", deceptionBuilder("flicker", SpellMastery.NOVICE, FlickerSpell::new)
+            .skills(SBSkills.FLICKER, SBSkills.DISTANT_FLICKER, SBSkills.SWIFT_SHADOWS, SBSkills.STEP_INTO_SHADOW,
+                    SBSkills.SILENT_STEP, SBSkills.CONFUSION, SBSkills.BLINDING_MIRAGE,
+                    SBSkills.PHANTOM_LURE, SBSkills.SHADOW_FEINT, SBSkills.LOOK_OVER_HERE, SBSkills.HALL_OF_MIRRORS));
     public static final Supplier<SpellType<ShadowbondSpell>> SHADOWBOND = registerSpell("shadowbond", deceptionBuilder("shadowbond", SpellMastery.ADEPT, ShadowbondSpell::new)
             .skills(SBSkills.SHADOWBOND, SBSkills.EVERLASTING_BOND, SBSkills.SHADOW_STEP, SBSkills.SNEAK_ATTACK,
                     SBSkills.SILENT_EXCHANGE, SBSkills.SNARE, SBSkills.DISORIENTED,

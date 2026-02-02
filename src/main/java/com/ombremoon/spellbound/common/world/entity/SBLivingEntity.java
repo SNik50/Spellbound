@@ -297,8 +297,4 @@ public abstract class SBLivingEntity extends PathfinderMob implements SmartBrain
         Entity owner = this.getSummoner();
         return owner != null && owner.isAlive();
     }
-
-    public DamageSource spellDamageSource(Level level) {
-        return SpellUtil.damageSource(level, SBDamageTypes.SB_GENERIC, this.getSummoner(), this);
-    }
 }

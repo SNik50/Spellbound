@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -74,6 +75,10 @@ public class SpellType<S extends AbstractSpell> {
 
     public List<Skill> getSkills() {
         return this.availableSkills.stream().map(Holder::value).collect(Collectors.toList());
+    }
+
+    public <T extends AbstractSpell> boolean is(Supplier<SpellType<T>> spellType) {
+        return this == spellType.get();
     }
 
     public S createSpell() {

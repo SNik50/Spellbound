@@ -24,9 +24,15 @@ public interface ISpellEntity<T extends AbstractSpell> extends GeoEntity, FXEmit
 
     T getSpell();
 
+    Entity getSummoner();
+
     boolean isSpellCast();
 
     default boolean requiresSpellToPersist() {
         return true;
+    }
+
+    default DamageSource spellDamageSource(Level level) {
+        return SpellUtil.damageSource(level, SBDamageTypes.SB_GENERIC, this.getSummoner(), this.getEntity());
     }
 }

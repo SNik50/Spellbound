@@ -16,6 +16,16 @@ public class OwlEntity extends SBLivingEntity {
     }
 
     @Override
+    public int getStartTick() {
+        return 0;
+    }
+
+    @Override
+    public int getEndTick() {
+        return 0;
+    }
+
+    @Override
     public List<? extends ExtendedSensor<? extends SBLivingEntity>> getSensors() {
         return List.of();
     }

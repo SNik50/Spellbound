@@ -24,7 +24,6 @@ public class SBItems {
     public static final List<Supplier<? extends Item>> EXCLUDED_ITEMS = new ArrayList<>();
     public static final List<Supplier<? extends Item>> BLOCK_ITEM_LIST = new ArrayList<>();
 
-//    public static final Supplier<Item> DEBUG = ITEMS.register("debug", () -> new DebugItem(getItemProperties()));
     public static final Supplier<Item> SOUL_SHARD = registerSimpleItem("soul_shard");
     public static final Supplier<Item> SMOLDERING_SHARD = registerSimpleItem("smoldering_shard");
     public static final Supplier<Item> FROZEN_SHARD = registerSimpleItem("frozen_shard");
@@ -132,6 +131,10 @@ public class SBItems {
 
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
+        if (CommonClass.isDevEnv()) {
+            ITEMS.register("debug", () -> new DebugItem(getItemProperties()));
+        }
+
         CREATIVE_MODE_TABS.register(modEventBus);
     }
 }

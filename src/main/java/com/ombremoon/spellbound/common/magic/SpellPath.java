@@ -9,11 +9,11 @@ public enum SpellPath implements StringRepresentable {
     TRANSFIGURATION(0x32CD32, false, "transfiguration", null, 4),
     SUMMONS(0x055C9D, false, "summons", null, 3),
     DIVINE(0xD4AF37, false, "divine", null, 1),
-    DARK_DIVINE(0xD4AF37, true, "dark_divine", EffectManager.Effect.DISEASE, 1),
     DECEPTION(0x541675, false, "deception", null, 0),
     FIRE(0xD73502, true, "fire", EffectManager.Effect.FIRE, 2),
     FROST(0x4F9CC8, true, "frost", EffectManager.Effect.FROST, 2),
-    SHOCK(0x9543C9, true, "shock", EffectManager.Effect.SHOCK, 2);
+    SHOCK(0x9543C9, true, "shock", EffectManager.Effect.SHOCK, 2),
+    DARK_DIVINE(0xD4AF37, true, "dark_divine", EffectManager.Effect.DISEASE, 1);
 
     public static final Codec<SpellPath> CODEC = StringRepresentable.fromEnum(SpellPath::values);
     private final int color;

@@ -258,6 +258,19 @@ public class SBSkills {
     public static final Holder<Skill> VERDANT_RENEWAL = registerSkill("verdant_renewal", 75, 150, preReqs(PETAL_SHIELD));
     public static final Holder<Skill> REBIRTH = registerSkill("rebirth", 50, 200, preReqs(VERDANT_RENEWAL, HEALING_WINDS));
 
+    //Flicker
+    public static Holder<Skill> FLICKER = registerRadialSkill("flicker");
+    public static Holder<Skill> DISTANT_FLICKER = registerSkill("distant_flicker", 0, 50, preReqs(FLICKER));
+    public static Holder<Skill> SWIFT_SHADOWS = registerSkill("swift_shadows", 0, 50, preReqs(FLICKER));
+    public static Holder<Skill> STEP_INTO_SHADOW = registerSkill("step_into_shadow", 0, 50, preReqs(FLICKER));
+    public static Holder<Skill> SILENT_STEP = registerSkill("silent_step", 0, 50, preReqs(FLICKER));
+    public static Holder<Skill> CONFUSION = registerSkill("confusion", 0, 50, preReqs(FLICKER));
+    public static Holder<Skill> BLINDING_MIRAGE = registerSkill("blinding_mirage", 0, 50, preReqs(FLICKER));
+    public static Holder<Skill> PHANTOM_LURE = registerSkill("phantom_lure", 0, 50, preReqs(FLICKER));
+    public static Holder<Skill> SHADOW_FEINT = registerSkill("shadow_feint", 0, 50, preReqs(FLICKER));
+    public static Holder<Skill> LOOK_OVER_HERE = registerRadialSkill("look_over_here", 0, 50, preReqs(FLICKER));
+    public static Holder<Skill> HALL_OF_MIRRORS = registerSkill("hall_of_mirrors", 0, 50, preReqs(FLICKER));
+
     //Shadowbond
     public static Holder<Skill> SHADOWBOND = registerSkill("shadowbond");
     public static Holder<Skill> SHADOW_STEP = registerSkill("shadow_step", -50 , 50 , preReqs(SHADOWBOND));

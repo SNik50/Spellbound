@@ -315,7 +315,7 @@ public class ShadowbondSpell extends AnimatedSpell {
         }
 
         if (context.hasSkill(SBSkills.LIVING_SHADOW)) {
-            summonEntity(context, SBEntities.LIVING_SHADOW.get(), caster.position(), livingShadow -> {});
+            summonEntity(context, SBEntities.LIVING_SHADOW.get(), caster.position());
             addSkillBuff(
                     caster,
                     SBSkills.SHADOWBOND,

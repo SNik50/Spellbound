@@ -8,6 +8,7 @@ import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataCom
 import com.ombremoon.spellbound.common.magic.api.*;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
+import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
@@ -55,6 +56,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private SkillHolder skillHolder;
     private EffectManager effectManager;
     private UpgradeTree upgradeTree;
+    private FamiliarHandler familiars;
     private PlayerDivineActions divineActions;
     protected boolean castMode;
     private Set<SpellType<?>> spellSet = new ObjectOpenHashSet<>();
@@ -123,6 +125,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         this.skillHolder.init(caster);
         this.effectManager = SpellUtil.getSpellEffects(this.caster);
         this.effectManager.init(caster);
+        this.familiars = SpellUtil.getFamiliarHandler(caster);
         this.upgradeTree = this.caster.getData(SBData.UPGRADE_TREE);
         this.glowEntities.clear();
         this.skillBuffs.forEach((skillBuff, integer) -> this.removeSkillBuff(skillBuff));

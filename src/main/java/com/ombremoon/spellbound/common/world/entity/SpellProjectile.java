@@ -18,7 +18,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -120,7 +119,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
 
     @Override
     public void onAddedToLevel() {
-        if (this.getOwner() instanceof LivingEntity livingEntity) {
+        if (this.getSummoner() instanceof LivingEntity livingEntity) {
             this.handler = SpellUtil.getSpellHandler(livingEntity);
             this.skills = SpellUtil.getSkills(livingEntity);
         }
@@ -161,7 +160,7 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     }
 
     protected boolean isOwner(LivingEntity entity) {
-        return getOwner() != null && getOwner().is(entity);
+        return getSummoner() != null && getSummoner().is(entity);
     }
 
     public void setOwner(LivingEntity livingEntity) {
@@ -169,12 +168,12 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     }
 
     @Override
-    public @Nullable Entity getOwner() {
+    public @Nullable Entity getSummoner() {
         return this.level().getEntity(this.entityData.get(OWNER_ID));
     }
 
     public boolean hasOwner() {
-        return getOwner() != null;
+        return getSummoner() != null;
     }
 
     @Override
