@@ -15,7 +15,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -42,6 +41,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 .duration(2400)
                 .isSpecialChoice()
                 .additionalCondition((context, summonUndeadSpell) -> summonUndeadSpell.skipEndOnRecast(context) && context.getLevel().getDifficulty() != Difficulty.PEACEFUL)
+                .castAnimation(context -> new SpellAnimation(shouldExplodeCorpse(context) ? "instant_cast" : "summon", SpellAnimation.Type.CAST, true))
                 .skipEndOnRecast(context -> {
                     LivingEntity caster = context.getCaster();
                     if (context.hasSkill(SBSkills.CORPSE_EXPLOSION) && context.getTarget() instanceof LivingEntity livingEntity) {
@@ -65,6 +65,16 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 });
     }
 
+    private static boolean shouldExplodeCorpse(SpellContext context) {
+        LivingEntity caster = context.getCaster();
+        if (context.hasSkill(SBSkills.CORPSE_EXPLOSION) && context.getTarget() instanceof LivingEntity livingEntity) {
+            AbstractSpell spell = SpellUtil.getSpell(livingEntity);
+            return spell != null && spell.isSpellType(SBSpells.SUMMON_UNDEAD) && spell.isCaster(caster);
+        }
+
+        return false;
+    }
+
     public SummonUndeadSpell() {
         super(SBSpells.SUMMON_UNDEAD.get(), createSummonBuilder());
     }
@@ -72,6 +82,12 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
     @Override
     public void registerSkillTooltips() {
 
+    }
+
+    @Override
+    public int getCastTime(SpellContext context) {
+        log(shouldExplodeCorpse(context));
+        return shouldExplodeCorpse(context) ? 5 : this.maxCharges(context) * 20;
     }
 
     @Override

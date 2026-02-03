@@ -43,7 +43,14 @@ public class LivingShadow extends SBLivingEntity {
     @Override
     public void tick() {
         super.tick();
-        if (this.tickCount >= 200) discard();
+
+        if (!this.level().isClientSide) {
+
+
+            if (this.tickCount >= 200) {
+                discard();
+            }
+        }
     }
 
     @Override
@@ -55,8 +62,8 @@ public class LivingShadow extends SBLivingEntity {
             if (spell != null && entity instanceof LivingEntity owner && entity1 instanceof LivingEntity attacker && !attacker.is(owner)) {
                 var skills = SpellUtil.getSkills(owner);
                 if (spell.is(SBSpells.FLICKER)) {
+                    var handler = SpellUtil.getSpellHandler(attacker);
                     if (skills.hasSkill(SBSkills.BLINDING_MIRAGE)) {
-                        var handler = SpellUtil.getSpellHandler(attacker);
                         SkillBuff<?> skillBuff = new SkillBuff<>(
                                 SBSkills.BLINDING_MIRAGE.value(),
                                 BLINDING_MIRAGE,
@@ -64,6 +71,10 @@ public class LivingShadow extends SBLivingEntity {
                                 SkillBuff.MOB_EFFECT,
                                 new MobEffectInstance(MobEffects.BLINDNESS, 40));
                         handler.addSkillBuff(skillBuff, attacker, 40);
+                    }
+
+                    if (skills.hasSkill(SBSkills.CONFUSION)) {
+                        handler.applyTauntEffect(this, 60);
                     }
                 }
             }
