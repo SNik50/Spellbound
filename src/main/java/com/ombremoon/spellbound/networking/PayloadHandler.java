@@ -72,7 +72,7 @@ public class PayloadHandler {
     }
 
     public static void setCastingSpell(SpellType<?> spellType, SpellContext context) {
-        PacketDistributor.sendToServer(new SetCastingSpellPayload(spellType, context.getTarget() == null ? 0 : context.getTarget().getId(), context.isRecast()));
+        PacketDistributor.sendToServer(new SetCastingSpellPayload(spellType, context.isRecast()));
     }
 
     public static void castStart() {

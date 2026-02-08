@@ -21,32 +21,25 @@ public class SpellContext {
     private final BlockPos blockPos;
     private final ItemStack rightHandItem;
     private final ItemStack leftHandItem;
-    @Nullable
-    private final Entity target;
     private final SpellHandler spellHandler;
     private final SkillHolder skillHolder;
     private final boolean isRecast;
 
     public SpellContext(SpellType<?> spellType, LivingEntity caster, boolean isRecast) {
-        this(spellType, caster, null, isRecast);
+        this(spellType, caster, caster.level(), caster.getOnPos(), isRecast);
     }
 
-    public SpellContext(SpellType<?> spellType, LivingEntity caster, Entity target, boolean isRecast) {
-        this(spellType, caster, caster.level(), caster.getOnPos(), target, isRecast);
+    public SpellContext(SpellType<?> spellType, LivingEntity caster, Level level, BlockPos blockPos, boolean isRecast) {
+        this(spellType, caster, level, blockPos, caster.getMainHandItem(), caster.getOffhandItem(), isRecast);
     }
 
-    public SpellContext(SpellType<?> spellType, LivingEntity caster, Level level, BlockPos blockPos, Entity target, boolean isRecast) {
-        this(spellType, caster, level, blockPos, caster.getMainHandItem(), caster.getOffhandItem(), target, isRecast);
-    }
-
-    protected SpellContext(SpellType<?> spellType, LivingEntity caster, Level level, BlockPos blockPos, ItemStack rightHandItem, ItemStack leftHandItem, Entity target, boolean isRecast) {
+    protected SpellContext(SpellType<?> spellType, LivingEntity caster, Level level, BlockPos blockPos, ItemStack rightHandItem, ItemStack leftHandItem, boolean isRecast) {
         this.spellType = spellType;
         this.caster = caster;
         this.level = level;
         this.blockPos = blockPos;
         this.rightHandItem = rightHandItem;
         this.leftHandItem = leftHandItem;
-        this.target = target;
         this.spellHandler = SpellUtil.getSpellHandler(caster);
         this.skillHolder = SpellUtil.getSkills(caster);
         this.isRecast = isRecast;
@@ -89,7 +82,7 @@ public class SpellContext {
     }
 
     public @Nullable Entity getTarget() {
-        return this.target;
+        return this.spellHandler.getCachedTarget();
     }
 
     public float getRotation() {

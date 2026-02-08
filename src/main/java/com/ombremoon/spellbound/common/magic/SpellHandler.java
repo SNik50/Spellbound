@@ -32,11 +32,18 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 import org.slf4j.Logger;
 
@@ -77,6 +84,9 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private boolean initialized;
     private boolean receivedBook;
     private Map<ResourceLocation, SpellAnimation> animationForLayer = new Object2ObjectOpenHashMap<>();
+    @Nullable
+    private Entity cachedTarget;
+    private int cachedTargetTimer;
 
     //TEMPORARY
     public Vec3 handPos;
@@ -167,6 +177,11 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
         if (this.stationaryTicks > 0)
             this.stationaryTicks--;
+
+        this.updateCachedTarget();
+
+        if (this.caster instanceof Player)
+            log(this.cachedTarget);
 
         this.tickSkillBuffs();
         this.skillHolder.getCooldowns().tick();
@@ -535,6 +550,91 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         if (!player.level().isClientSide) {
             PayloadHandler.handleAnimation(player, animation, animationSpeed, false);
         }
+    }
+
+    /**
+     * Updates the cached target entity by performing a raycast.
+     * The target remains cached for 2 seconds (40 ticks) unless a new target is found.
+     */
+    private void updateCachedTarget() {
+        Entity newTarget = getTargetEntity(SpellUtil.getCastRange(this.caster));
+
+        if (newTarget != null) {
+            this.cachedTarget = newTarget;
+            this.cachedTargetTimer = 20;
+        } else if (this.cachedTargetTimer > 0) {
+            this.cachedTargetTimer--;
+        } else {
+            this.cachedTarget = null;
+        }
+    }
+
+    /**
+     * Gets the currently cached target entity.
+     * @return The cached target entity, or null if no target is found
+     */
+    @Nullable
+    public Entity getCachedTarget() {
+        return this.cachedTarget;
+    }
+
+    /**
+     * Gets the target entity using a raycast.
+     * @param range The maximum range to search for entities
+     * @return The target entity, or null if none found
+     */
+    @Nullable
+    private Entity getTargetEntity(double range) {
+        Vec3 startPosition = this.caster.getEyePosition(1.0F);
+        Vec3 lookVec = this.caster.getViewVector(1.0F);
+        Vec3 maxLength = startPosition.add(lookVec.x * range, lookVec.y * range, lookVec.z * range);
+        AABB aabb = this.caster.getBoundingBox().expandTowards(lookVec.scale(range)).inflate(2.0);
+        EntityHitResult hitResult = ProjectileUtil.getEntityHitResult(
+                this.caster,
+                startPosition,
+                maxLength,
+                aabb,
+                EntitySelector.NO_CREATIVE_OR_SPECTATOR,
+                range * range
+        );
+        BlockHitResult blockHitResult = this.caster.level().clip(setupRayTraceContext(this.caster, range, ClipContext.Fluid.NONE));
+
+        if (hitResult == null)
+            return null;
+
+        Entity targetEntity = hitResult.getEntity();
+        if (!blockHitResult.getType().equals(BlockHitResult.Type.MISS)) {
+            double blockDistance = blockHitResult.getLocation().distanceTo(startPosition);
+            if (blockDistance > targetEntity.distanceTo(this.caster)) {
+                return targetEntity;
+            }
+        } else {
+            return targetEntity;
+        }
+
+        return null;
+    }
+
+    /**
+     * Prepares a ClipContext for ray cast results.
+     * @param livingEntity The camera entity
+     * @param distance The maximum distance of the ray cast
+     * @param fluidContext The type of fluid context to determine if the ray cast should account for fluids
+     * @return The clip context of the camera entity
+     */
+    protected static ClipContext setupRayTraceContext(LivingEntity livingEntity, double distance, ClipContext.Fluid fluidContext) {
+        float pitch = livingEntity.getXRot();
+        float yaw = livingEntity.getYRot();
+        Vec3 fromPos = livingEntity.getEyePosition(1.0F);
+        float float_3 = Mth.cos(-yaw * 0.017453292F - 3.1415927F);
+        float float_4 = Mth.sin(-yaw * 0.017453292F - 3.1415927F);
+        float float_5 = -Mth.cos(-pitch * 0.017453292F);
+        float xComponent = float_4 * float_5;
+        float yComponent = Mth.sin(-pitch * 0.017453292F);
+        float zComponent = float_3 * float_5;
+        Vec3 toPos = fromPos.add((double) xComponent * distance, (double) yComponent * distance,
+                (double) zComponent * distance);
+        return new ClipContext(fromPos, toPos, ClipContext.Block.OUTLINE, fluidContext, livingEntity);
     }
 
     public void stopAnimation(Player player, SpellAnimation animation) {

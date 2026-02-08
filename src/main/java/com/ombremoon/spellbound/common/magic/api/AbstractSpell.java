@@ -840,7 +840,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
         if (effect == null)
             return;
-        
+
         this.incrementEffect(targetEntity, effect, amount);
     }
 
@@ -1438,7 +1438,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     public void castSpell(LivingEntity caster) {
-        castSpell(caster, caster.level(), caster.getOnPos(), this.getTargetEntity(caster, SpellUtil.getCastRange(caster)));
+        castSpell(caster, caster.level(), caster.getOnPos());
     }
 
     /**
@@ -1446,11 +1446,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @param caster The casting living entity
      * @param level The current level
      * @param blockPos The block position the caster is in when the cast timer ends
-     * @param target The target entity of the caster
      */
-    public void castSpell(LivingEntity caster, Level level, BlockPos blockPos, @Nullable Entity target) {
+    public void castSpell(LivingEntity caster, Level level, BlockPos blockPos) {
         if (!level.isClientSide) {
-            this.initNoCast(caster, level, blockPos, target);
+            this.initNoCast(caster, level, blockPos);
 
             var handler = SpellUtil.getSpellHandler(caster);
             CompoundTag nbt = new CompoundTag();
@@ -1525,7 +1524,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
         this.isRecast = initTag.getBoolean("isRecast");
         this.charges = initTag.getInt("charges");
-        this.context = new SpellContext(this.spellType(), this.caster, this.level, this.blockPos, this.getTargetEntity(), this.isRecast);
+        this.context = new SpellContext(this.spellType(), this.caster, this.level, this.blockPos, this.isRecast);
 
         if (initTag.getBoolean("forceReset")) {
             onCastReset(this.context);
@@ -1549,9 +1548,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @param caster The casting living entity
      * @param level The current level
      * @param blockPos The block position the caster is in when the cast timer ends
-     * @param target The target entity of the caster
      */
-    protected void initNoCast(LivingEntity caster, Level level, BlockPos blockPos, Entity target) {
+    protected void initNoCast(LivingEntity caster, Level level, BlockPos blockPos) {
         this.caster = caster;
         this.level = level;
         this.blockPos = blockPos;
@@ -1561,11 +1559,11 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         if (!list.isEmpty())
             this.isRecast = true;
 
-        this.context = new SpellContext(this.spellType(), this.caster, this.level, this.blockPos, target, this.isRecast);
+        this.context = new SpellContext(this.spellType(), this.caster, this.level, this.blockPos, this.isRecast);
     }
 
     public void initNoCast(LivingEntity caster) {
-        this.initNoCast(caster, caster.level(), caster.getOnPos(), this.getTargetEntity(caster, SpellUtil.getCastRange(caster)));
+        this.initNoCast(caster, caster.level(), caster.getOnPos());
     }
 
     /**

@@ -40,8 +40,7 @@ public class ServerPayloadHandler {
     }
 
     public static void handleNetworkSetCastSpell(final SetCastingSpellPayload payload, final IPayloadContext context) {
-        Level level = context.player().level();
-        var spellContext = new SpellContext(payload.spellType(), context.player(), level.getEntity(payload.targetID()), payload.isRecast());
+        var spellContext = new SpellContext(payload.spellType(), context.player(), payload.isRecast());
         AbstractSpell spell = payload.spellType().createSpell();
         var handler = SpellUtil.getSpellHandler(context.player());
         spell.setCastContext(spellContext);

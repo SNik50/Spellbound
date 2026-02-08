@@ -72,7 +72,7 @@ public class SpellCastEvents {
                 return;
             }
 
-            if (!isAbleToSpellCast(handler) || !handler.inCastMode()) {
+            if (!isAbleToSpellCast() || !handler.inCastMode()) {
                 spell.resetCast(handler, spell.getCastContext());
                 return;
             }
@@ -85,14 +85,14 @@ public class SpellCastEvents {
                     if (handler.isChargingOrChannelling()) {
                         stopChargeOrChannel(player, handler, spell, true);
                     } else if (handler.castTick == 0) {
-                        startCasting(player, handler, spell);
+                        startCasting(handler, spell);
                         handler.setChargingOrChannelling(true);
                         PayloadHandler.setChargeOrChannel(true);
                     }
                 } else if (handler.isChargingOrChannelling()) {
                     stopChargeOrChannel(player, handler, spell, false);
                 } else if (handler.castTick == 0) {
-                    startCasting(player, handler, spell);
+                    startCasting(handler, spell);
                 }
             }
 
@@ -125,13 +125,13 @@ public class SpellCastEvents {
             handler.setCurrentlyCastingSpell(null);
             spell = spellType.createSpellWithData(player);
             handler.setCurrentlyCastingSpell(spell);
-            createContext(player, spell);
+            createContext(spell);
         }
     }
 
-    public static SpellContext createContext(Player player, AbstractSpell spell) {
+    public static SpellContext createContext(AbstractSpell spell) {
         SpellContext prevContext = spell.getContext();
-        SpellContext context = new SpellContext(spell.spellType(), prevContext.getCaster(), spell.getTargetEntity(player, SpellUtil.getCastRange(player)), prevContext.isRecast());
+        SpellContext context = new SpellContext(spell.spellType(), prevContext.getCaster(), prevContext.isRecast());
 
         spell.setCastContext(context);
         PayloadHandler.setCastingSpell(spell.spellType(), context);
@@ -143,8 +143,8 @@ public class SpellCastEvents {
         return spell instanceof ChargeableSpell chargeable && chargeable.canCharge(context) && chargeable.maxCharges(context) > 0;
     }
 
-    private static void startCasting(Player player, SpellHandler handler, AbstractSpell spell) {
-        SpellContext spellContext = createContext(player, spell);
+    private static void startCasting(SpellHandler handler, AbstractSpell spell) {
+        SpellContext spellContext = createContext(spell);
         spell.onCastStart(spellContext);
         PayloadHandler.castStart();
         handler.castTick = 1;
@@ -163,7 +163,7 @@ public class SpellCastEvents {
         }
     }
 
-    private static boolean isAbleToSpellCast(SpellHandler handler) {
+    private static boolean isAbleToSpellCast() {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.getOverlay() != null) return false;
         if (minecraft.screen != null) return false;
