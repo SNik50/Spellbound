@@ -51,7 +51,7 @@ public abstract class SBFamiliarEntity extends SBLivingEntity {
 
     /**
      * Yes i did make this a bit flag system just cause i wanted to see how hard they are to do. Conclusion: very easy
-     * Flags: 1 = initialised, 2 = familiar, 4 = idle
+     * Flags: 1 = familiar, 2 = idle
      * @param i flag to set
      * @return If the flag is set as true
      */
