@@ -67,12 +67,12 @@ public class SpellCastEvents {
 
         AbstractSpell spell = handler.getCurrentlyCastSpell();
         if (spell != null) {
-            if (handler.castTick > 0 && !SpellUtil.canCastSpell(player, spell)) {
+            if (handler.castTick > 0 && (!SpellUtil.canCastSpell(player, spell) || !isAbleToSpellCast())) {
                 spell.resetCast(handler, spell.getCastContext());
                 return;
             }
 
-            if (!isAbleToSpellCast() || !handler.inCastMode()) {
+            if (!handler.inCastMode()) {
                 spell.resetCast(handler, spell.getCastContext());
                 return;
             }

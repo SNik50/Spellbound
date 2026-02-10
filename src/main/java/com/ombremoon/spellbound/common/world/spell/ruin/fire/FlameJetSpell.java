@@ -1,11 +1,13 @@
 package com.ombremoon.spellbound.common.world.spell.ruin.fire;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.sentinellib.api.box.AABBSentinelBox;
 import com.ombremoon.sentinellib.api.box.OBBSentinelBox;
 import com.ombremoon.sentinellib.api.box.SentinelBox;
 import com.ombremoon.sentinellib.common.ISentinel;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.particle.EffectBuilder;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
@@ -15,6 +17,7 @@ import com.ombremoon.spellbound.common.magic.api.ChargeableSpell;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Direction;
@@ -230,6 +233,10 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 SentinelBox geyserBox = FLAME_GEYSER_BOXES.get(Math.min(charges, 3));
                 boxOwner.triggerSentinelBox(geyserBox);
             }
+        } else {
+            this.addFX(
+                    EffectBuilder.Entity.of(CommonClass.customLocation("flame_jet"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+            );
         }
     }
 

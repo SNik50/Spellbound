@@ -52,7 +52,7 @@ public class LevelUpToast implements Toast {
 
         List<FormattedCharSequence> lines = font.split(comp, 154);
         for (int i = 0; i < lines.size(); i++) {
-            RenderUtil.drawCenteredString(guiGraphics, font, lines.get(i), (width()-font.width(comp))/2 + 95, (height()-13)/2 + (i * font.lineHeight), 0, false);
+            guiGraphics.drawString(font, lines.get(i), (width()-font.width(lines.get(i)))/2, (height()-13)/2 + (i * font.lineHeight), 0, false);
         }
         return timeVisible < 8000 ? Visibility.SHOW : Visibility.HIDE;
     }

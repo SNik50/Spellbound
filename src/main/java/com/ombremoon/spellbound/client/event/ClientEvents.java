@@ -60,250 +60,246 @@ import net.neoforged.neoforge.client.event.*;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.util.Color;
 
+@EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
 public class ClientEvents {
 
-    @EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
-    public static class ClientModBusEvents {
+    @SubscribeEvent
+    public static void onKeyRegister(RegisterKeyMappingsEvent event) {
+        event.register(KeyBinds.SWITCH_MODE_BINDING);
+        event.register(KeyBinds.SELECT_SPELL_BINDING);
+        event.register(KeyBinds.CYCLE_SPELL_BINDING);
+        event.register(KeyBinds.CYCLE_CHOICE_BINDING);
+    }
 
-        @SubscribeEvent
-        public static void onKeyRegister(RegisterKeyMappingsEvent event) {
-            event.register(KeyBinds.SWITCH_MODE_BINDING);
-            event.register(KeyBinds.SELECT_SPELL_BINDING);
-            event.register(KeyBinds.CYCLE_SPELL_BINDING);
-            event.register(KeyBinds.CYCLE_CHOICE_BINDING);
+    @SubscribeEvent
+    public static void onRegisterParticles(RegisterParticleProvidersEvent event) {
+        event.registerSpriteSet(SBParticles.SLUDGE.get(), GenericParticle.SludgeProvider::new);
+        event.registerSpriteSet(SBParticles.MUSHROOM_SPORE.get(), GenericParticle.MushroomSpore::new);
+        event.registerSpriteSet(SBParticles.SPARK.get(), SparkParticle.Provider::new);
+        event.registerSpriteSet(SBParticles.GOLD_HEART.get(), HeartParticle.Provider::new);
+        event.registerSpriteSet(SBParticles.TEST.get(), CircleAroundPositionParticle.Provider::new);
+    }
+
+    @SubscribeEvent
+    public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        event.registerEntityRenderer(SBEntities.TEST_DUMMY.get(), GenericLivingEntityRenderer::new);
+
+        event.registerEntityRenderer(SBEntities.MUSHROOM.get(), GenericSpellRenderer::new);
+        event.registerEntityRenderer(SBEntities.SHADOW_GATE.get(), ShadowGateRenderer::new);
+        event.registerEntityRenderer(SBEntities.SOLAR_RAY.get(), SolarRayRenderer::new);
+        event.registerEntityRenderer(SBEntities.SHATTERING_CRYSTAL.get(), ShatteringCrystalRenderer::new);
+        event.registerEntityRenderer(SBEntities.ICE_SHRAPNEL.get(), EmissiveSpellProjectileRenderer::new);
+        event.registerEntityRenderer(SBEntities.ICE_MIST.get(), EmissiveOutlineSpellRenderer::new);
+        event.registerEntityRenderer(SBEntities.STORMSTRIKE_BOLT.get(), StormstrikeBoltRenderer::new);
+        event.registerEntityRenderer(SBEntities.STORM_RIFT.get(), StormRiftRenderer::new);
+        event.registerEntityRenderer(SBEntities.STORM_CLOUD.get(), StormCloudRenderer::new);
+        event.registerEntityRenderer(SBEntities.STORM_BOLT.get(), StormBoltRenderer::new);
+//        event.registerEntityRenderer(SBEntities.CYCLONE.get(), CycloneRenderer::new);
+        event.registerEntityRenderer(SBEntities.HAIL.get(), HailRenderer::new);
+        event.registerEntityRenderer(SBEntities.HEALING_BLOSSOM.get(), HealingBlossomRenderer::new);
+
+        event.registerEntityRenderer(SBEntities.SPELL_BROKER.get(), SpellBrokerRenderer::new);
+        event.registerEntityRenderer(SBEntities.VALKYR.get(), GenericLivingEntityRenderer::new);
+        event.registerEntityRenderer(SBEntities.MINI_MUSHROOM.get(), MiniMushroomRenderer::new);
+        event.registerEntityRenderer(SBEntities.GIANT_MUSHROOM.get(), GiantMushroomRenderer::new);
+        event.registerEntityRenderer(SBEntities.LIVING_SHADOW.get(), LivingShadowRenderer::new);
+        event.registerEntityRenderer(SBEntities.DUNGEON_SHADOW.get(), GenericLivingEntityRenderer::new);
+
+        event.registerEntityRenderer(SBEntities.MUSHROOM_PROJECTILE.get(), MushroomProjectileRenderer::new);
+
+        event.registerEntityRenderer(SBEntities.FROG.get(), FrogRenderer::new);
+
+        event.registerBlockEntityRenderer(SBBlockEntities.VALKY_STATUE.get(), ValkyrStatueRenderer::new);
+        event.registerBlockEntityRenderer(SBBlockEntities.RUNE.get(), RuneBlockRenderer::new);
+        event.registerBlockEntityRenderer(SBBlockEntities.SUMMON_PORTAL.get(), SummonPortalRenderer::new);
+        event.registerBlockEntityRenderer(SBBlockEntities.TRANSFIGURATION_DISPLAY.get(), TransfigurationDisplayRenderer::new);
+    }
+
+    @SubscribeEvent
+    public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        event.registerLayerDefinition(SBModelLayerLocs.FROG, FrogModel::createBodyLayer);
+    }
+
+    @SubscribeEvent
+    public static void registerEntityLayers(EntityRenderersEvent.AddLayers event) {
+        for (final var skin : event.getSkins()) {
+            final LivingEntityRenderer<Player, PlayerModel<Player>> playerRenderer = event.getSkin(skin);
+            if (playerRenderer == null)
+                continue;
+
+            playerRenderer.addLayer(new GenericSpellLayer<>(playerRenderer));
+            playerRenderer.addLayer(new SpellCastRenderLayer<>(playerRenderer));
+            playerRenderer.addLayer(new FrozenLayer<>(playerRenderer));
         }
 
-        @SubscribeEvent
-        public static void onRegisterParticles(RegisterParticleProvidersEvent event) {
-            event.registerSpriteSet(SBParticles.SLUDGE.get(), GenericParticle.SludgeProvider::new);
-            event.registerSpriteSet(SBParticles.MUSHROOM_SPORE.get(), GenericParticle.MushroomSpore::new);
-            event.registerSpriteSet(SBParticles.SPARK.get(), SparkParticle.Provider::new);
-            event.registerSpriteSet(SBParticles.GOLD_HEART.get(), HeartParticle.Provider::new);
-            event.registerSpriteSet(SBParticles.TEST.get(), CircleAroundPositionParticle.Provider::new);
-        }
-
-        @SubscribeEvent
-        public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
-            event.registerEntityRenderer(SBEntities.TEST_DUMMY.get(), GenericLivingEntityRenderer::new);
-
-            event.registerEntityRenderer(SBEntities.MUSHROOM.get(), GenericSpellRenderer::new);
-            event.registerEntityRenderer(SBEntities.SHADOW_GATE.get(), ShadowGateRenderer::new);
-            event.registerEntityRenderer(SBEntities.SOLAR_RAY.get(), SolarRayRenderer::new);
-            event.registerEntityRenderer(SBEntities.SHATTERING_CRYSTAL.get(), ShatteringCrystalRenderer::new);
-            event.registerEntityRenderer(SBEntities.ICE_SHRAPNEL.get(), EmissiveSpellProjectileRenderer::new);
-            event.registerEntityRenderer(SBEntities.ICE_MIST.get(), EmissiveOutlineSpellRenderer::new);
-            event.registerEntityRenderer(SBEntities.STORMSTRIKE_BOLT.get(), StormstrikeBoltRenderer::new);
-            event.registerEntityRenderer(SBEntities.STORM_RIFT.get(), StormRiftRenderer::new);
-            event.registerEntityRenderer(SBEntities.STORM_CLOUD.get(), StormCloudRenderer::new);
-            event.registerEntityRenderer(SBEntities.STORM_BOLT.get(), StormBoltRenderer::new);
-//            event.registerEntityRenderer(SBEntities.CYCLONE.get(), CycloneRenderer::new);
-            event.registerEntityRenderer(SBEntities.HAIL.get(), HailRenderer::new);
-            event.registerEntityRenderer(SBEntities.HEALING_BLOSSOM.get(), HealingBlossomRenderer::new);
-
-            event.registerEntityRenderer(SBEntities.SPELL_BROKER.get(), SpellBrokerRenderer::new);
-            event.registerEntityRenderer(SBEntities.VALKYR.get(), GenericLivingEntityRenderer::new);
-            event.registerEntityRenderer(SBEntities.MINI_MUSHROOM.get(), MiniMushroomRenderer::new);
-            event.registerEntityRenderer(SBEntities.GIANT_MUSHROOM.get(), GiantMushroomRenderer::new);
-            event.registerEntityRenderer(SBEntities.LIVING_SHADOW.get(), LivingShadowRenderer::new);
-            event.registerEntityRenderer(SBEntities.DUNGEON_SHADOW.get(), GenericLivingEntityRenderer::new);
-
-            event.registerEntityRenderer(SBEntities.MUSHROOM_PROJECTILE.get(), MushroomProjectileRenderer::new);
-
-            event.registerEntityRenderer(SBEntities.FROG.get(), FrogRenderer::new);
-
-            event.registerBlockEntityRenderer(SBBlockEntities.VALKY_STATUE.get(), ValkyrStatueRenderer::new);
-            event.registerBlockEntityRenderer(SBBlockEntities.RUNE.get(), RuneBlockRenderer::new);
-            event.registerBlockEntityRenderer(SBBlockEntities.SUMMON_PORTAL.get(), SummonPortalRenderer::new);
-            event.registerBlockEntityRenderer(SBBlockEntities.TRANSFIGURATION_DISPLAY.get(), TransfigurationDisplayRenderer::new);
-        }
-
-        @SubscribeEvent
-        public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-            event.registerLayerDefinition(SBModelLayerLocs.FROG, FrogModel::createBodyLayer);
-        }
-
-        @SubscribeEvent
-        public static void registerEntityLayers(EntityRenderersEvent.AddLayers event) {
-            for (final var skin : event.getSkins()) {
-                final LivingEntityRenderer<Player, PlayerModel<Player>> playerRenderer = event.getSkin(skin);
-                if (playerRenderer == null)
-                    continue;
-
-                playerRenderer.addLayer(new GenericSpellLayer<>(playerRenderer));
-                playerRenderer.addLayer(new SpellCastRenderLayer<>(playerRenderer));
-                playerRenderer.addLayer(new FrozenLayer<>(playerRenderer));
-            }
-
-            for (var entity : event.getEntityTypes()) {
-                if (entity != EntityType.PLAYER) {
-                    var renderer = event.getRenderer(entity);
-                    if (renderer instanceof LivingEntityRenderer<?, ?>) {
-                        LivingEntityRenderer<LivingEntity, EntityModel<LivingEntity>> livingRenderer = (LivingEntityRenderer<LivingEntity, EntityModel<LivingEntity>>) renderer;
-                        livingRenderer.addLayer(new FrozenLayer<>(livingRenderer));
-                    }
+        for (var entity : event.getEntityTypes()) {
+            if (entity != EntityType.PLAYER) {
+                var renderer = event.getRenderer(entity);
+                if (renderer instanceof LivingEntityRenderer<?, ?>) {
+                    LivingEntityRenderer<LivingEntity, EntityModel<LivingEntity>> livingRenderer = (LivingEntityRenderer<LivingEntity, EntityModel<LivingEntity>>) renderer;
+                    livingRenderer.addLayer(new FrozenLayer<>(livingRenderer));
                 }
             }
-        }
-
-        @SubscribeEvent
-        public static void registerGuisOverlays(RegisterGuiLayersEvent event) {
-            event.registerAboveAll(CommonClass.customLocation("selected_spell_overlay"),
-                    CastModeOverlay::new);
-
-        }
-
-        @SubscribeEvent
-        public static void onRegisterItemColorHandlers(RegisterColorHandlersEvent.Item event) {
-            event.register((stack, tintIndex) -> tintIndex > 0 ? -1 : DyedItemColor.getOrDefault(stack, Color.WHITE.argbInt()), SBItems.CHALK.get());
-        }
-
-        @SubscribeEvent
-        public static void onRegisterBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
-            event.register((state, level, pos, tintIndex) ->  level != null && pos != null && level.getBlockEntity(pos) instanceof RuneBlockEntity runeBlock ? runeBlock.getData(SBData.RUNE_COLOR.get()) : -1, SBBlocks.RUNE.get());
         }
     }
 
-    @EventBusSubscriber(modid = Constants.MOD_ID, value = Dist.CLIENT)
-    public static class ClientModEvents {
+    @SubscribeEvent
+    public static void registerGuisOverlays(RegisterGuiLayersEvent event) {
+        event.registerAboveAll(CommonClass.customLocation("selected_spell_overlay"),
+                CastModeOverlay::new);
 
-        @SubscribeEvent
-        public static void onKeyInput(InputEvent.Key event) {
-            Minecraft minecraft = Minecraft.getInstance();
-            Player player = minecraft.player;
-            if (player != null) {
-                SpellHandler handler = SpellUtil.getSpellHandler(player);
-                SkillHolder skills = SpellUtil.getSkills(player);
-                if (KeyBinds.SWITCH_MODE_BINDING.consumeClick()) {
-                    handler.switchMode();
-                    player.displayClientMessage(Component.literal("Switched to " + (handler.inCastMode() ? "Cast mode" : "Normal mode")), true);
-                    PayloadHandler.switchMode();
-                }
-                boolean spellBindingDown = KeyBinds.SELECT_SPELL_BINDING.consumeClick();
-                boolean cycleSpellDown = KeyBinds.CYCLE_SPELL_BINDING.consumeClick();
-                boolean cycleChoiceDown = KeyBinds.CYCLE_CHOICE_BINDING.consumeClick();
-                SpellType<?> selectedSpell = handler.getSelectedSpell();
-                if (handler.inCastMode()) {
-                    if (handler.isChargingOrChannelling())
-                        return;
+    }
 
-                    if (spellBindingDown) {
-                        if (handler.isCasting())
-                            return;
+    @SubscribeEvent
+    public static void onRegisterItemColorHandlers(RegisterColorHandlersEvent.Item event) {
+        event.register((stack, tintIndex) -> tintIndex > 0 ? -1 : DyedItemColor.getOrDefault(stack, Color.WHITE.argbInt()), SBItems.CHALK.get());
+    }
 
-                        Screen screen = minecraft.screen;
-                        if (!handler.getEquippedSpells().isEmpty()) {
-                            minecraft.setScreen(new SpellSelectScreen());
-                        } else {
-                            minecraft.setScreen(screen);
-                        }
-                    }
-                    if (cycleSpellDown) {
-                        if (handler.getSpellList().isEmpty()) return;
-                        if (handler.isCasting()) {
-                            AbstractSpell spell = handler.getCurrentlyCastSpell();
-                            spell.resetCast(handler);
-                        }
+    @SubscribeEvent
+    public static void onRegisterBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
+        event.register((state, level, pos, tintIndex) ->  level != null && pos != null && level.getBlockEntity(pos) instanceof RuneBlockEntity runeBlock ? runeBlock.getData(SBData.RUNE_COLOR.get()) : -1, SBBlocks.RUNE.get());
+    }
 
-                        KeyBinds.getSpellCastMapping().setDown(false);
-                        SpellUtil.cycleSpells(handler, selectedSpell);
-                        PayloadHandler.setSpell(selectedSpell);
-                    }
-                    if (cycleChoiceDown && selectedSpell.getRootSkill().isRadial()) {
-                        if (handler.getSpellList().isEmpty()) return;
-                        if (handler.isCasting()) {
-                            AbstractSpell spell = handler.getCurrentlyCastSpell();
-                            spell.resetCast(handler);
-                        }
-
-                        KeyBinds.getSpellCastMapping().setDown(false);
-                        SpellUtil.cycleChoices(skills, skills.getChoice(selectedSpell));
-                    }
-                }
-            }
-        }
-
-        @SubscribeEvent
-        public static void onMouseInputPre(InputEvent.MouseButton.Pre event) {
-            Player player = Minecraft.getInstance().player;
-            if (player != null)
-                SpellUtil.getSpellHandler(player).getListener().fireEvent(SpellEventListener.Events.PRE_MOUSE_INPUT, new MouseInputEvent.Pre(player, event));
-        }
-
-        @SubscribeEvent
-        public static void onMouseInputPost(InputEvent.MouseButton.Post event) {
-            Player player = Minecraft.getInstance().player;
-            if (player != null)
-                SpellUtil.getSpellHandler(player).getListener().fireEvent(SpellEventListener.Events.POST_MOUSE_INPUT, new MouseInputEvent.Post(player, event));
-        }
-
-        @SubscribeEvent
-        public static void onMovementInput(MovementInputUpdateEvent event) {
-            var handler = SpellUtil.getSpellHandler(event.getEntity());
-            if (handler.isStationary()) {
-                event.getInput().leftImpulse = 0;
-                event.getInput().forwardImpulse = 0;
-                event.getInput().jumping = false;
-            } else if (event.getEntity().tickCount % 10 == 0) {
-                float forward = handler.forwardImpulse;
-                float left = handler.leftImpulse;
-                handler.forwardImpulse = event.getInput().forwardImpulse;
-                handler.leftImpulse = event.getInput().leftImpulse;
-                if (forward != handler.forwardImpulse || left != handler.leftImpulse) {
-                    PayloadHandler.updateMovement(event.getInput().forwardImpulse, event.getInput().leftImpulse);
-                }
-            }
-        }
-
-        @SubscribeEvent
-        public static void onRenderLivingPre(RenderLivingEvent.Pre<? extends LivingEntity, ? extends EntityModel<? extends LivingEntity>> event) {
-            var player = Minecraft.getInstance().player;
-            if (player == null)
+    @SubscribeEvent
+    public static void onKeyInput(InputEvent.Key event) {
+        Minecraft minecraft = Minecraft.getInstance();
+        Player player = minecraft.player;
+        if (player != null) {
+            SpellHandler handler = SpellUtil.getSpellHandler(player);
+            SkillHolder skills = SpellUtil.getSkills(player);
+            if (handler.isCasting())
                 return;
 
-            var livingEntity = event.getEntity();
-            if (livingEntity.hasEffect(SBEffects.MAGI_INVISIBILITY)/* && livingEntity.isInvisibleTo(player)*/) {
-                event.setCanceled(true);
+            if (KeyBinds.SWITCH_MODE_BINDING.consumeClick()) {
+                handler.switchMode();
+                player.displayClientMessage(Component.literal("Switched to " + (handler.inCastMode() ? "Cast mode" : "Normal mode")), true);
+                PayloadHandler.switchMode();
+            }
+            boolean spellBindingDown = KeyBinds.SELECT_SPELL_BINDING.consumeClick();
+            boolean cycleSpellDown = KeyBinds.CYCLE_SPELL_BINDING.consumeClick();
+            boolean cycleChoiceDown = KeyBinds.CYCLE_CHOICE_BINDING.consumeClick();
+            SpellType<?> selectedSpell = handler.getSelectedSpell();
+            if (handler.inCastMode()) {
+                if (handler.isChargingOrChannelling())
+                    return;
+
+                if (spellBindingDown) {
+                    if (handler.isCasting())
+                        return;
+
+                    Screen screen = minecraft.screen;
+                    if (!handler.getEquippedSpells().isEmpty()) {
+                        minecraft.setScreen(new SpellSelectScreen());
+                    } else {
+                        minecraft.setScreen(screen);
+                    }
+                }
+                if (cycleSpellDown) {
+                    if (handler.getSpellList().isEmpty()) return;
+                    if (handler.isCasting()) {
+                        AbstractSpell spell = handler.getCurrentlyCastSpell();
+                        spell.resetCast(handler);
+                    }
+
+                    KeyBinds.getSpellCastMapping().setDown(false);
+                    SpellUtil.cycleSpells(handler, selectedSpell);
+                    PayloadHandler.setSpell(selectedSpell);
+                }
+                if (cycleChoiceDown && selectedSpell.getRootSkill().isRadial()) {
+                    if (handler.getSpellList().isEmpty()) return;
+                    if (handler.isCasting()) {
+                        AbstractSpell spell = handler.getCurrentlyCastSpell();
+                        spell.resetCast(handler);
+                    }
+
+                    KeyBinds.getSpellCastMapping().setDown(false);
+                    SpellUtil.cycleChoices(skills, skills.getChoice(selectedSpell));
+                }
             }
         }
+    }
 
-        @SubscribeEvent
-        public static void onRenderLevel(RenderLevelStageEvent event) {
-            RenderLevelStageEvent.Stage stage = event.getStage();
-            PoseStack poseStack = event.getPoseStack();
-            Camera camera = event.getCamera();
-            Matrix4f projectionMatrix = event.getProjectionMatrix();
-            Minecraft minecraft = Minecraft.getInstance();
-            Level level = minecraft.level;
-            Frustum frustum = event.getFrustum();
-            DeltaTracker partialTick = event.getPartialTick();
+    @SubscribeEvent
+    public static void onMouseInputPre(InputEvent.MouseButton.Pre event) {
+        Player player = Minecraft.getInstance().player;
+        if (player != null)
+            SpellUtil.getSpellHandler(player).getListener().fireEvent(SpellEventListener.Events.PRE_MOUSE_INPUT, new MouseInputEvent.Pre(player, event));
+    }
 
-            if (stage == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
-                ClientHailstormData data = (ClientHailstormData) HailstormSavedData.get(level);
-//                data.renderHailstorm(event);
+    @SubscribeEvent
+    public static void onMouseInputPost(InputEvent.MouseButton.Post event) {
+        Player player = Minecraft.getInstance().player;
+        if (player != null)
+            SpellUtil.getSpellHandler(player).getListener().fireEvent(SpellEventListener.Events.POST_MOUSE_INPUT, new MouseInputEvent.Post(player, event));
+    }
+
+    @SubscribeEvent
+    public static void onMovementInput(MovementInputUpdateEvent event) {
+        var handler = SpellUtil.getSpellHandler(event.getEntity());
+        if (handler.isStationary()) {
+            event.getInput().leftImpulse = 0;
+            event.getInput().forwardImpulse = 0;
+            event.getInput().jumping = false;
+        } else if (event.getEntity().tickCount % 10 == 0) {
+            float forward = handler.forwardImpulse;
+            float left = handler.leftImpulse;
+            handler.forwardImpulse = event.getInput().forwardImpulse;
+            handler.leftImpulse = event.getInput().leftImpulse;
+            if (forward != handler.forwardImpulse || left != handler.leftImpulse) {
+                PayloadHandler.updateMovement(event.getInput().forwardImpulse, event.getInput().leftImpulse);
             }
+        }
+    }
 
-            if (stage == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
-                SBShaders.setupPoseStack(event.getPoseStack());
-                SBShaders.processShaders();
-            }
+    @SubscribeEvent
+    public static void onRenderLivingPre(RenderLivingEvent.Pre<? extends LivingEntity, ? extends EntityModel<? extends LivingEntity>> event) {
+        var player = Minecraft.getInstance().player;
+        if (player == null)
+            return;
 
-            if (stage == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
-                ArenaDebugRenderer.render(poseStack, camera, minecraft.renderBuffers().bufferSource());
-            }
+        var livingEntity = event.getEntity();
+        if (livingEntity.hasEffect(SBEffects.MAGI_INVISIBILITY)/* && livingEntity.isInvisibleTo(player)*/) {
+            event.setCanceled(true);
+        }
+    }
 
+    @SubscribeEvent
+    public static void onRenderLevel(RenderLevelStageEvent event) {
+        RenderLevelStageEvent.Stage stage = event.getStage();
+        PoseStack poseStack = event.getPoseStack();
+        Camera camera = event.getCamera();
+        Matrix4f projectionMatrix = event.getProjectionMatrix();
+        Minecraft minecraft = Minecraft.getInstance();
+        Level level = minecraft.level;
+        Frustum frustum = event.getFrustum();
+        DeltaTracker partialTick = event.getPartialTick();
+
+        if (stage == RenderLevelStageEvent.Stage.AFTER_WEATHER) {
+            ClientHailstormData data = (ClientHailstormData) HailstormSavedData.get(level);
+//            data.renderHailstorm(event);
         }
 
-        @SubscribeEvent
-        public static void onComputeFogColor(ViewportEvent.ComputeFogColor event) {
-            ClientHailstormData data = (ClientHailstormData) HailstormSavedData.get(Minecraft.getInstance().level);
-//            data.renderHailstormFog(event);
+        if (stage == RenderLevelStageEvent.Stage.AFTER_LEVEL) {
+            SBShaders.setupPoseStack(event.getPoseStack());
+            SBShaders.processShaders();
         }
 
-        @SubscribeEvent
-        public static void onSpellZoom(ComputeFovModifierEvent event) {
-            Player player = event.getPlayer();
-            var handler = SpellUtil.getSpellHandler(player);
-            event.setNewFovModifier(handler.getZoom());
+        if (stage == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
+            ArenaDebugRenderer.render(poseStack, camera, minecraft.renderBuffers().bufferSource());
         }
+
+    }
+
+    @SubscribeEvent
+    public static void onComputeFogColor(ViewportEvent.ComputeFogColor event) {
+        ClientHailstormData data = (ClientHailstormData) HailstormSavedData.get(Minecraft.getInstance().level);
+//        data.renderHailstormFog(event);
+    }
+
+    @SubscribeEvent
+    public static void onSpellZoom(ComputeFovModifierEvent event) {
+        Player player = event.getPlayer();
+        var handler = SpellUtil.getSpellHandler(player);
+        event.setNewFovModifier(handler.getZoom());
     }
 }
