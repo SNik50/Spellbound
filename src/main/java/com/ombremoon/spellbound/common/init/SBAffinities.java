@@ -26,6 +26,14 @@ public class SBAffinities {
     public static final FamiliarAffinity MURKY_HABITAT = createAffinity("murky_habitat", 4);
     public static final FamiliarAffinity SLIMEY_EXPULSION = createAffinity("slimey_expuslion", 5);
 
+    //Cat
+    public static final FamiliarAffinity SHARPENED_CLAWS = createAffinity("sharpened_claws", 0);
+    public static final FamiliarAffinity NATURAL_PREDATOR = createAffinity("natural_predator", 1);
+    public static final FamiliarAffinity BLOOD_THIRSTY = createAffinity("blood_thirsty", 2);
+    public static final FamiliarAffinity FELINE_POUNCE = createAffinity("feline_pounce", 3);
+    public static final FamiliarAffinity BLOOD_MAGIC = createAffinity("blood_magic", 4);
+    public static final FamiliarAffinity NINE_LIVES = createAffinity("nine_lives", 6000, 5);
+
     private static FamiliarAffinity createAffinity(String name, int requiredBond) {
         return createAffinity(name, 0, requiredBond);
     }

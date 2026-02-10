@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.magic.familiars;
 
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.skills.FamiliarAffinity;
+import com.ombremoon.spellbound.common.world.entity.living.familiars.SBFamiliarEntity;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -58,6 +59,6 @@ public class FamiliarHolder<T extends LivingEntity, F extends Familiar<T>> {
 
     @FunctionalInterface
     public interface FamiliarBuilder<F extends Familiar<?>> {
-        F create();
+        F create(int bond, int rebirths);
     }
 }

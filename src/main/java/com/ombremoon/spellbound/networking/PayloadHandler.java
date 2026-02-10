@@ -47,6 +47,13 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayer(player, GuideBookManager.getClientboundPayload());
     }
 
+    public static void syncFamiliarHandler(ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, new SyncFamiliarPayload(
+                player.getData(SBData.FAMILIAR_HANDLER.get())
+                        .serializeNBT(player.level().registryAccess())
+        ));
+    }
+
     public static void sendPathLevelUp(ServerPlayer player, int level, SpellboundToasts toast) {
         PacketDistributor.sendToPlayer(player, new PathLevelUpToastPayload(level, toast));
     }
@@ -389,6 +396,12 @@ public class PayloadHandler {
                 ArenaDebugPayload.TYPE,
                 ArenaDebugPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleArenaDebug
+        );
+
+        registrar.playToClient(
+                SyncFamiliarPayload.TYPE,
+                SyncFamiliarPayload.STREAM_CODEC,
+                SyncFamiliarPayload::handle
         );
     }
 }

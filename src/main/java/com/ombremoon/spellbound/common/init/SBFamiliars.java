@@ -5,7 +5,9 @@ import com.ombremoon.spellbound.common.magic.familiars.Familiar;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.common.magic.skills.FamiliarAffinity;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHolder;
+import com.ombremoon.spellbound.common.world.entity.living.familiars.CatEntity;
 import com.ombremoon.spellbound.common.world.entity.living.familiars.FrogEntity;
+import com.ombremoon.spellbound.common.world.familiars.CatFamiliar;
 import com.ombremoon.spellbound.common.world.familiars.FrogFamiliar;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.resources.ResourceLocation;
@@ -23,6 +25,11 @@ public class SBFamiliars {
             "frog", SBEntities.FROG, SpellMastery.NOVICE, FrogFamiliar::new,
             SBAffinities.SPECTRAL_HOPS, SBAffinities.SUBMERGED, SBAffinities.MAGMA_DIGESTION,
             SBAffinities.ELONGATED_TONGUE, SBAffinities.MURKY_HABITAT, SBAffinities.SLIMEY_EXPULSION);
+    public static final FamiliarHolder<CatEntity, CatFamiliar> CAT = createFamiliar(
+            "cat", SBEntities.CAT, SpellMastery.NOVICE, CatFamiliar::new,
+            SBAffinities.SHARPENED_CLAWS, SBAffinities.NATURAL_PREDATOR, SBAffinities.BLOOD_THIRSTY,
+            SBAffinities.FELINE_POUNCE, SBAffinities.BLOOD_MAGIC, SBAffinities.NINE_LIVES
+    );
 
     private static <E extends LivingEntity, F extends Familiar<E>> FamiliarHolder<E, F> createFamiliar(String name, Supplier<EntityType<E>> entity, SpellMastery reqMastery, FamiliarHolder.FamiliarBuilder<F> constructor, FamiliarAffinity... affinities) {
         var holder = new FamiliarHolder<>(CommonClass.customLocation(name), entity, reqMastery, constructor, 5, affinities);

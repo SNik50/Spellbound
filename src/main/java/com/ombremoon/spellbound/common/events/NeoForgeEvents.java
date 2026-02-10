@@ -422,8 +422,7 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onLivingDamage(LivingDamageEvent.Pre event) {
         LivingEntity livingEntity = event.getEntity();
-        if (livingEntity.level().isClientSide)
-            return;
+        if (livingEntity.level().isClientSide) return;
 
         var handler = SpellUtil.getSpellHandler(livingEntity);
         handler.getListener().fireEvent(SpellEventListener.Events.PRE_DAMAGE, new DamageEvent.Pre(livingEntity, event));
