@@ -13,6 +13,7 @@ public class SpiritWhistleItem extends Item {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
+        System.out.println(context.getLevel());
         var handler = SpellUtil.getFamiliarHandler(context.getPlayer());
         if (handler.hasActiveFamiliar()) {
             handler.discardFamiliar();

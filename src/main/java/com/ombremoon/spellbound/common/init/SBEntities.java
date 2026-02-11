@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.world.entity.living.*;
+import com.ombremoon.spellbound.common.world.entity.living.familiars.CatEntity;
 import com.ombremoon.spellbound.common.world.entity.living.familiars.FrogEntity;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.MiniMushroom;
@@ -29,7 +30,9 @@ public class SBEntities {
 
     //Familiars
     public static final Supplier<EntityType<FrogEntity>> FROG = registerMob("frog", FrogEntity::new, MobCategory.MISC, 1f, 1f, 8, FrogEntity::createAttributes, false);
+    public static final Supplier<EntityType<CatEntity>> CAT = registerMob("cat", CatEntity::new, MobCategory.MISC, 1f, 1f, 8, CatEntity::createAttributes, false);
 
+    //Spells
     public static final Supplier<EntityType<WildMushroom>> MUSHROOM = registerEntity("wild_mushroom", WildMushroom::new, 0.9f, 0.9f);
     public static final Supplier<EntityType<HealingBlossom>> HEALING_BLOSSOM = registerEntity("healing_blossom", HealingBlossom::new, 0.9f, 0.9f);
     public static final Supplier<EntityType<ShadowGate>> SHADOW_GATE = registerEntity("shadow_gate", ShadowGate::new, 1.2F, 2.5F);

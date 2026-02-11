@@ -1,21 +1,15 @@
 package com.ombremoon.spellbound.common.world.entity.living.familiars;
 
 import com.ombremoon.spellbound.common.init.SBDamageTypes;
-import com.ombremoon.spellbound.common.init.SBEffects;
-import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.familiars.Familiar;
-import com.ombremoon.spellbound.common.magic.familiars.FamiliarContext;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializer;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,7 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
 import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.CustomBehaviour;
 import net.tslat.smartbrainlib.api.core.behaviour.custom.target.TargetOrRetaliate;
 import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
 import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
@@ -37,33 +30,55 @@ import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import java.util.List;
 
 public abstract class SBFamiliarEntity extends SBLivingEntity {
-    public static final EntityDataAccessor<Boolean> IS_IDLE = SynchedEntityData.defineId(SBFamiliarEntity.class, EntityDataSerializers.BOOLEAN);
-    private boolean isFamiliar = false;
+    private static final EntityDataAccessor<Byte> FAMILIAR_DATA = SynchedEntityData.defineId(SBFamiliarEntity.class, EntityDataSerializers.BYTE);
 
     protected SBFamiliarEntity(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
     }
 
+    /**
+     * Yes i did make this a bit flag system just cause i wanted to see how hard they are to do. Conclusion: very easy
+     * Flags: 1 = familiar, 2 = idle
+     * @param i flag to set
+     * @param active whether to mark as true/false
+     */
+    public void setData(int i, boolean active) {
+        if (active)
+            this.entityData.set(FAMILIAR_DATA, (byte) (this.entityData.get(FAMILIAR_DATA) | i));
+        else
+            this.entityData.set(FAMILIAR_DATA, (byte) (this.entityData.get(FAMILIAR_DATA) & ~i));
+    }
+
+    /**
+     * Yes i did make this a bit flag system just cause i wanted to see how hard they are to do. Conclusion: very easy
+     * Flags: 1 = familiar, 2 = idle
+     * @param i flag to set
+     * @return If the flag is set as true
+     */
+    public boolean getData(int i) {
+        return (this.entityData.get(FAMILIAR_DATA) & i) != 0;
+    }
+
     public void markFamiliar() {
-        isFamiliar = true;
+        setData(1, true);
     }
 
     public boolean isFamiliar() {
-        return isFamiliar;
+        return getData(1);
+    }
+
+    public void setIdle(boolean idle) {
+        setData(2, idle);
+    }
+
+    public boolean isIdle() {
+        return getData(2);
     }
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(IS_IDLE, true);
-    }
-
-    public void setIdle(boolean idle) {
-        this.getEntityData().set(IS_IDLE, idle);
-    }
-
-    public boolean isIdle() {
-        return this.getEntityData().get(IS_IDLE);
+        builder.define(FAMILIAR_DATA, (byte) 0);
     }
 
     @Override
@@ -94,12 +109,20 @@ public abstract class SBFamiliarEntity extends SBLivingEntity {
     public void tick() {
         super.tick();
 
-        if (isFamiliar() && getSummoner() instanceof LivingEntity summoner) {
-            LivingEntity activeFam = SpellUtil.getFamiliarHandler(summoner).getActiveEntity();
+        if (isFamiliar()) {
+            Entity summonerEntity = getSummoner();
+            if (!(summonerEntity instanceof LivingEntity summoner)) {
+                discard();
+                return;
+            }
+
+            var handler = SpellUtil.getFamiliarHandler(summoner);
+            LivingEntity activeFam = handler.getActiveEntity();
             if (activeFam == null || !activeFam.is(this)) {
                 discard();
+                return;
             }
-        }
+        } else if (getVehicle() instanceof Player) discard();
 
         if (!level().isClientSide()) {
             boolean isBrainIdle = this.brain.getActiveNonCoreActivity().isPresent() && this.brain.getActiveNonCoreActivity().get() == Activity.IDLE;
@@ -179,7 +202,7 @@ public abstract class SBFamiliarEntity extends SBLivingEntity {
         if (flag) {
             if (getSummoner() instanceof LivingEntity summoner) {
                 var handler = SpellUtil.getFamiliarHandler(summoner);
-                handler.awardBond(handler.getActivatedFamiliarHolder(), calculateHurtXP(f));
+                handler.awardBond(handler.getSelectedFamiliar(), calculateHurtXP(f));
             }
             float f1 = this.getKnockback(entity, damagesource);
             if (f1 > 0.0F && entity instanceof LivingEntity) {
@@ -207,5 +230,15 @@ public abstract class SBFamiliarEntity extends SBLivingEntity {
      */
     private float calculateHurtXP(float amount) {
         return amount * (1.0F + Familiar.HURT_XP_MODIFIER);
+    }
+
+    @Override
+    public int getStartTick() {
+        return 0;
+    }
+
+    @Override
+    public int getEndTick() {
+        return 0;
     }
 }

@@ -37,6 +37,13 @@ public abstract class Familiar<T extends LivingEntity> {
     private LivingEntity owner;
     private Multimap<Holder<Attribute>, AttributeModifier> familiarModifiers;
     private Multimap<Holder<Attribute>, AttributeModifier> ownerModifiers;
+    protected int rebirths;
+    protected int bond;
+
+    public Familiar(int bond, int rebirths) {
+        this.bond = bond;
+        this.rebirths = rebirths;
+    }
 
     /**
      * Get a Random to use for any probabilities
@@ -48,114 +55,115 @@ public abstract class Familiar<T extends LivingEntity> {
 
     /**
      * Override to apply a set of attribute modifiers to the familiar entity, this is called before onSpawn and inside onBondUp and onRebirth
-     * @param context The familiar context instance
+     * @param handler The familiar handler
      * @param rebirths number of rebirths
      * @param bond the current bond
      * @return Attribute modifiers to apply
      */
-    public Multimap<Holder<Attribute>, AttributeModifier> modifyFamiliarAttributes(FamiliarContext context, int rebirths, int bond) {
+    public Multimap<Holder<Attribute>, AttributeModifier> modifyFamiliarAttributes(FamiliarHandler handler, int rebirths, int bond) {
         return ArrayListMultimap.create();
     }
 
     /**
      * Override to apply a set of attribute modifiers to the familiars owner, this is called before onSpawn and inside onBondUp and onRebirth
-     * @param context The familiar context instance
+     * @param handler The familiar handler
      * @param rebirths number of familiar rebirths
      * @param bond the current familiar bond
      * @return Attribute modifiers to apply
      */
-    public Multimap<Holder<Attribute>, AttributeModifier> modifyOwnerAttributes(FamiliarContext context, int rebirths, int bond) {
+    public Multimap<Holder<Attribute>, AttributeModifier> modifyOwnerAttributes(FamiliarHandler handler, int rebirths, int bond) {
         return ArrayListMultimap.create();
     }
 
     /**
      * Called when the familiar is first summoned, attribute modifiers are already applied at this point
-     * @param context The familiar context instance
+     * @param handler The familiar handler
      * @param spawnPos The position the entity was spawned
      */
-    public void onSpawn(FamiliarContext context, BlockPos spawnPos) {
-        this.owner = context.getOwner();
+    public void onSpawn(FamiliarHandler handler, BlockPos spawnPos) {
+        this.owner = handler.getOwner();
     }
 
     /**
      * Called when the familiar is removed from the world
-     * @param context The familiar context instance
+     * @param handler The familiar handler
      * @param removePos The position the entity was when removed
      */
-    public void onRemove(FamiliarContext context, BlockPos removePos) {
-        context.getOwner().getAttributes().removeAttributeModifiers(ownerModifiers);
+    public void onRemove(FamiliarHandler handler, BlockPos removePos) {
+        handler.getOwner().getAttributes().removeAttributeModifiers(ownerModifiers);
     }
 
     /**
-     * Called whenever {@link #shouldTick(FamiliarContext, int)} returns true
-     * @param context The familiar context
+     * Called whenever {@link #shouldTick(FamiliarHandler, int)} returns true
+     * @param handler The familiar handler
+     * @param tickCount the entities tickcount
      */
-    public void tick(FamiliarContext context) {
+    public void tick(FamiliarHandler handler, int tickCount) {
 
     }
 
     /**
      * Determines if the entity should tick
-     * @param context The familiar context
+     * @param handler The familiar handler
      * @param tickCount the current tick count
      * @return true if should tick, false otherwise, default false
      */
-    public boolean shouldTick(FamiliarContext context, int tickCount) {
+    public boolean shouldTick(FamiliarHandler handler, int tickCount) {
         return false;
     }
 
     /**
      * Called when the familiars bond increases, by default refreshed attributes and heals the entity to full
-     * @param context The familiar context instance
+     * @param handler The familiar handler
      * @param oldLevel The bond before increasing
      * @param newLevel The bond after increasing
      */
-    public void onBondUp(FamiliarContext context, int oldLevel, int newLevel) {
-        refreshAttributes(context);
-        context.getEntity().setHealth(context.getEntity().getMaxHealth());
+    public void onBondUp(FamiliarHandler handler, int oldLevel, int newLevel) {
+        refreshAttributes(handler);
+        handler.getActiveEntity().setHealth(handler.getActiveEntity().getMaxHealth());
     }
 
     /**
      * Called when the player rebirths the familiar, by default refreshes attributes and heals entity to full
-     * @param context The familiar context instance
+     * @param handler The familiar handler
      * @param rebirths current number of rebirths
      */
-    public void onRebirth(FamiliarContext context, int rebirths) {
-        refreshAttributes(context);
-        context.getEntity().setHealth(context.getEntity().getMaxHealth());
+    public void onRebirth(FamiliarHandler handler, int rebirths) {
+        refreshAttributes(handler);
+        handler.getActiveEntity().setHealth(handler.getActiveEntity().getMaxHealth());
     }
 
     /**
      * Called when an affinity comes off cooldown
-     * @param context The familiar context instance
+     * @param handler The familiar handler
      * @param affinity The affinity off cooldown
      */
-    public void onAffinityOffCooldown(FamiliarContext context, FamiliarAffinity affinity) {
+    public void onAffinityOffCooldown(FamiliarHandler handler, FamiliarAffinity affinity) {
 
     }
 
     /**
-     * Removes current attribute modifiers that were defined in {@link #modifyFamiliarAttributes(FamiliarContext, int, int)} and {@link #modifyOwnerAttributes(FamiliarContext, int, int)} and adds them fresh
-     * @param context The familiar context instance
+     * Removes current attribute modifiers that were defined in {@link #modifyFamiliarAttributes(FamiliarHandler, int, int)} and {@link #modifyOwnerAttributes(FamiliarHandler, int, int)} and adds them fresh
+     * @param handler The familiar handler
      */
-    public final void refreshAttributes(FamiliarContext context) {
+    public final void refreshAttributes(FamiliarHandler handler) {
         if (this.familiarModifiers == null || this.familiarModifiers.isEmpty()) {
-            this.familiarModifiers = modifyFamiliarAttributes(context, context.getRebirths(), context.getBond());
-            context.getEntity().getAttributes().addTransientAttributeModifiers(this.familiarModifiers);
+            this.familiarModifiers = modifyFamiliarAttributes(handler, getRebirths(), getBond());
+            handler.getActiveEntity().getAttributes().addTransientAttributeModifiers(this.familiarModifiers);
         } else {
-            context.getEntity().getAttributes().removeAttributeModifiers(familiarModifiers);
-            this.familiarModifiers = modifyFamiliarAttributes(context, context.getRebirths(), context.getBond());
-            context.getEntity().getAttributes().addTransientAttributeModifiers(this.familiarModifiers);
+            handler.getActiveEntity().getAttributes().removeAttributeModifiers(familiarModifiers);
+            this.familiarModifiers = modifyFamiliarAttributes(handler, getRebirths(), getBond());
+            handler.getActiveEntity().getAttributes().addTransientAttributeModifiers(this.familiarModifiers);
         }
 
 
         if (this.ownerModifiers == null || this.ownerModifiers.isEmpty()) {
-            this.ownerModifiers = modifyOwnerAttributes(context, context.getRebirths(), context.getBond());
-            context.getOwner().getAttributes().addTransientAttributeModifiers(this.ownerModifiers);
+            this.ownerModifiers = modifyOwnerAttributes(handler, getRebirths(), getBond());
+            handler.getOwner().getAttributes().addTransientAttributeModifiers(this.ownerModifiers);
         } else {
-            context.getOwner().getAttributes().removeAttributeModifiers(ownerModifiers);
-            this.ownerModifiers = modifyOwnerAttributes(context, context.getRebirths(), context.getBond());
-            context.getEntity().getAttributes().addTransientAttributeModifiers(this.ownerModifiers);
+            handler.getOwner().getAttributes().removeAttributeModifiers(ownerModifiers);
+            this.ownerModifiers = modifyOwnerAttributes(handler, getRebirths(), getBond());
+            handler.getOwner().getAttributes().addTransientAttributeModifiers(this.ownerModifiers);
         }
 
     }
@@ -168,50 +176,58 @@ public abstract class Familiar<T extends LivingEntity> {
         return owner;
     }
 
+    public int getRebirths() {
+        return rebirths;
+    }
+
+    public int getBond() {
+        return bond;
+    }
+
     /**
      * Puts a given affinity on cooldown
-     * @param context The familiar context instance
+     * @param handler The familiar handler
      * @param affinity The affinity to put on cooldown
      */
-    public void useAffinity(FamiliarContext context, FamiliarAffinity affinity) {
-        context.getHandler().putSkillOnCooldown(affinity);
+    public void useAffinity(FamiliarHandler handler, FamiliarAffinity affinity) {
+        handler.putSkillOnCooldown(affinity);
     }
 
     /**
      * Checks if an affnity is unlocked, belongs to the current familiar and isnt on cooldown
-     * @param context The familiar context instance
+     * @param handler The familiar handler
      * @param affinity The affinity to check
      * @return true if ready, false otherwise
      */
-    public boolean hasAffinity(FamiliarContext context, FamiliarAffinity affinity) {
-        return context.getBond() >= affinity.getRequiredBond()
-                && context.getHolder().getAffinities().contains(affinity)
-                && context.getHandler().isSkillReady(affinity);
+    public boolean hasAffinity(FamiliarHandler handler, FamiliarAffinity affinity) {
+        return getBond() >= affinity.getRequiredBond()
+                && handler.getSelectedFamiliar().getAffinities().contains(affinity)
+                && handler.isSkillReady(affinity);
     }
 
     /**
      * Create a new attribute modifier that only applies if required affinity is available
      * @param modifierName suffix to append the modifiers name
-     * @param context The familiar context instance
+     * @param handler The familiar handler
      * @param reqAffinity The affinity needed for it to apply
      * @param amount The amount to modify attribute by
      * @param op The AttributeModifier Operation
      * @return AttributeModifier instance
      */
-    public AttributeModifier affinityModifier(String modifierName, FamiliarContext context, FamiliarAffinity reqAffinity, double amount, AttributeModifier.Operation op){
-        return new AttributeModifier(reqAffinity.location().withSuffix("." + modifierName), hasAffinity(context, reqAffinity) ? amount : 0D, op);
+    public AttributeModifier affinityModifier(String modifierName, FamiliarHandler handler, FamiliarAffinity reqAffinity, double amount, AttributeModifier.Operation op){
+        return new AttributeModifier(reqAffinity.location().withSuffix("." + modifierName), hasAffinity(handler, reqAffinity) ? amount : 0D, op);
     }
 
     /**
-     * Adds a spell event listener, These should be removed when the familiar is discarded inside {@link #onRemove(FamiliarContext, BlockPos)}
-     * @param context The familiar context instance
+     * Adds a spell event listener, These should be removed when the familiar is discarded inside {@link #onRemove(FamiliarHandler, BlockPos)}
+     * @param handler The familiar handler
      * @param spellEvent The event to add a listener for
      * @param identifier Idenfitier for the spell event
      * @param consumer the event callback
      * @param <T> The spell event
      */
-    public <T extends SpellEvent> void addEventListener(FamiliarContext context, SpellEventListener.IEvent<T> spellEvent, ResourceLocation identifier, Consumer<T> consumer) {
-        context.getSpellHandler().getListener().addListener(
+    public <T extends SpellEvent> void addEventListener(FamiliarHandler handler, SpellEventListener.IEvent<T> spellEvent, ResourceLocation identifier, Consumer<T> consumer) {
+        handler.getSpellHandler().getListener().addListener(
                 spellEvent,
                 identifier,
                 consumer
@@ -220,11 +236,11 @@ public abstract class Familiar<T extends LivingEntity> {
 
     /**
      * Removes a spell event listener
-     * @param context The familiar context instance
+     * @param handler The familiar handler
      * @param identifier Identifier of the listener to remove
      */
-    public void removeEventListener(FamiliarContext context, ResourceLocation identifier) {
-        context.getSpellHandler().getListener().removeListener(identifier);
+    public void removeEventListener(FamiliarHandler handler, ResourceLocation identifier) {
+        handler.getSpellHandler().getListener().removeListener(identifier);
     }
 
     /**
@@ -308,22 +324,22 @@ public abstract class Familiar<T extends LivingEntity> {
 
     /**
      * Hurts the target entity, taking path level, potency, and magic resistance into account. Suitable for modded damage types.
-     * @param context context
+     * @param handler familiar handler
      * @param targetEntity The hurt entity
      * @param damageType The damage type
      * @param hurtAmount The amount of damage the entity takesW
      * @return Whether the entity takes damage or not
      */
-    private boolean hurt(FamiliarContext context, LivingEntity targetEntity, ResourceKey<DamageType> damageType, float hurtAmount) {
-        if (!SpellUtil.CAN_ATTACK_ENTITY.test(context.getOwner(), targetEntity))
+    private boolean hurt(FamiliarHandler handler, LivingEntity targetEntity, ResourceKey<DamageType> damageType, float hurtAmount) {
+        if (!SpellUtil.CAN_ATTACK_ENTITY.test(handler.getOwner(), targetEntity))
             return false;
 
-        float damageAfterResistance = this.getDamageAfterResistances(context.getOwner(), targetEntity, context.getBond(), damageType, hurtAmount);
-        boolean flag = targetEntity.hurt(SpellUtil.damageSource(context.getLevel(), damageType, context.getOwner(), context.getEntity()), damageAfterResistance);
-        if (flag) context.getHandler().awardBond(context.getHolder(), calculateHurtXP(damageAfterResistance));
-        if (flag && !context.getLevel().isClientSide) {
-            targetEntity.setLastHurtByMob(context.getEntity());
-            context.getOwner().setLastHurtMob(targetEntity);
+        float damageAfterResistance = this.getDamageAfterResistances(handler.getOwner(), targetEntity, getBond(), damageType, hurtAmount);
+        boolean flag = targetEntity.hurt(SpellUtil.damageSource(handler.getLevel(), damageType, handler.getOwner(), handler.getActiveEntity()), damageAfterResistance);
+        if (flag) handler.awardBond(handler.getSelectedFamiliar(), calculateHurtXP(damageAfterResistance));
+        if (flag && !handler.getLevel().isClientSide) {
+            targetEntity.setLastHurtByMob(handler.getActiveEntity());
+            handler.getOwner().setLastHurtMob(targetEntity);
         }
         return flag;
     }

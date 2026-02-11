@@ -1,19 +1,21 @@
 package com.ombremoon.spellbound.common.magic.familiars;
 
 import com.ombremoon.spellbound.common.init.SBFamiliars;
+import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.skills.FamiliarAffinity;
 import com.ombremoon.spellbound.common.world.entity.living.familiars.SBFamiliarEntity;
+import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
@@ -26,14 +28,28 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
     private static Map<SpellMastery, Set<FamiliarHolder<?, ?>>> MASTERY_SORTED_FAMILIARS = new HashMap<>();
 
     private boolean isInitialised;
+    private SpellHandler spellHandler;
     private Level level;
     private LivingEntity owner;
     private Map<FamiliarHolder<?, ?>, Integer> familiarRebirths = new HashMap<>();
     private Map<FamiliarHolder<?, ?>, Float> familiarBond = new HashMap<>();
     private FamiliarHolder<?, ?> selectedFamiliar = null;
-    private FamiliarContext summonedContext = null;
+    private LivingEntity summonedEntity = null;
+    private Familiar<?> summonedFamiliar = null;
     private Map<FamiliarAffinity, Integer> skillCooldowns = new HashMap<>();
     private int familiarHpPercent = 1;
+
+    public LivingEntity getOwner() {
+        return this.owner;
+    }
+
+    public SpellHandler getSpellHandler() {
+        return spellHandler;
+    }
+
+    public Level getLevel() {
+        return level;
+    }
 
     /**
      * Adds a familiar to its mastery group
@@ -50,8 +66,9 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
      * Initialises the handler
      * @param owner The familiar summoner
      */
-    public void init(LivingEntity owner) {
+    public void init(LivingEntity owner, SpellHandler spellHandler) {
         this.level = owner.level();
+        this.spellHandler = spellHandler;
         this.owner = owner;
         unlockFamiliars(SpellUtil.getSkills(owner).getMaster(SpellPath.SUMMONS));
 
@@ -83,8 +100,8 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
     public boolean selectFamiliar(FamiliarHolder<?, ?> holder) {
         if (!this.familiarBond.containsKey(holder)) return false;
 
-        if (this.summonedContext != null) {
-            BlockPos pos = this.summonedContext.getEntity().blockPosition();
+        if (this.summonedEntity != null) {
+            BlockPos pos = this.summonedEntity.blockPosition();
             this.discardFamiliar();
             this.familiarHpPercent = 1;
             this.selectedFamiliar = holder;
@@ -102,51 +119,45 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
      * @param pos The spawn pos
      */
     public void summonFamiliar(BlockPos pos) {
-        createContext();
-        if (this.summonedContext == null) return;
+        if (level.isClientSide()) return;
+        if ((this.summonedEntity != null && this.summonedFamiliar != null) || this.selectedFamiliar == null) return;
 
-        LivingEntity entity = summonedContext.getEntity();
+        this.summonedEntity = this.selectedFamiliar.getEntity().create(level);
+        this.summonedFamiliar = this.selectedFamiliar.getBuilder().create(getLevelForFamiliar(selectedFamiliar), getRebirths(selectedFamiliar));
 
-        if (entity instanceof SBFamiliarEntity familairEntity) {
-            entity.setPos(owner.position()
+        if (summonedEntity instanceof SBFamiliarEntity familairEntity) {
+            familairEntity.markFamiliar();
+            familairEntity.setIdle(true);
+            summonedEntity.setPos(owner.position()
                     .subtract(familairEntity.getVehicleAttachmentPoint(owner))
                     .add(0, owner.getBbHeight(), 0));
-            familairEntity.setIdle(true);
         }
-        else entity.setPos(pos.getCenter().add(0, 1, 0));
+        else summonedEntity.setPos(pos.getCenter().add(0, 1, 0));
 
-        summonedContext.getFamiliar().refreshAttributes(summonedContext);
-        if (summonedContext.getEntity().getMaxHealth() * familiarHpPercent <= 2) {
-            summonedContext = null;
+        summonedFamiliar.refreshAttributes(this);
+        if (summonedEntity.getMaxHealth() * familiarHpPercent <= 2) {
+            this.summonedEntity = null;
+            this.summonedFamiliar = null;
             return;
         }
 
-        summonedContext.getEntity().setHealth(summonedContext.getEntity().getMaxHealth() * familiarHpPercent);
 
-        SpellUtil.setOwner(entity, this.owner);
-        level.addFreshEntity(entity);
-        summonedContext.getFamiliar().onSpawn(summonedContext, entity instanceof SBFamiliarEntity ? owner.blockPosition() : pos);
+        summonedEntity.setHealth(summonedEntity.getMaxHealth() * familiarHpPercent);
+
+        SpellUtil.setOwner(summonedEntity, this.owner);
+        summonedFamiliar.onSpawn(this, summonedEntity instanceof SBFamiliarEntity ? owner.blockPosition() : pos);
+        if (this.owner instanceof ServerPlayer serverPlayer)
+            PayloadHandler.syncFamiliarHandler(serverPlayer);
+
+        level.addFreshEntity(summonedEntity);
     }
 
-    /**
-     * Creates familiar context ready for spawning
-     */
-    private void createContext() {
-        if (this.selectedFamiliar == null) return;
+    public void loadFamiliar(int id) {
+        Entity entity = this.level.getEntity(id);
+        if (!(entity instanceof LivingEntity fam)) return;
 
-        this.summonedContext = new FamiliarContext(
-                this.level,
-                this.owner,
-                this.selectedFamiliar,
-                this.selectedFamiliar.getBuilder().create(),
-                this.selectedFamiliar.getEntity().create(this.level),
-                this,
-                SpellUtil.getSpellHandler(this.owner),
-                SpellUtil.getSkills(this.owner),
-                this.getLevelForFamiliar(this.selectedFamiliar),
-                this.getRebirths(this.selectedFamiliar)
-        );
-
+        this.summonedEntity = fam;
+        this.summonedFamiliar = this.selectedFamiliar.getBuilder().create(getLevelForFamiliar(selectedFamiliar), getRebirths(selectedFamiliar));
     }
 
     /**
@@ -173,12 +184,12 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
         for (var entry : skillCooldowns.entrySet()) {
             if (entry.getValue() >= owner.tickCount) {
                 skillCooldowns.remove(entry.getKey());
-                this.summonedContext.getFamiliar().onAffinityOffCooldown(this.summonedContext, entry.getKey());
+                this.summonedFamiliar.onAffinityOffCooldown(this, entry.getKey());
             }
         }
 
-        if (this.summonedContext != null)
-            this.summonedContext.tick();
+        if (this.summonedFamiliar != null)
+            this.summonedFamiliar.tick(this, this.summonedEntity.tickCount);
     }
 
     /**
@@ -186,7 +197,7 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
      * @return Familiar that is currently in use, null if non active
      */
     public Familiar<?> getActiveFamiliar() {
-        return this.summonedContext == null ? null : this.summonedContext.getFamiliar();
+        return this.summonedFamiliar;
     }
 
     /**
@@ -194,15 +205,7 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
      * @return The entity of the familiar, null if non active
      */
     public LivingEntity getActiveEntity() {
-        return this.summonedContext == null ? null : this.summonedContext.getEntity();
-    }
-
-    /**
-     * Gets the familiar holder of currently active familiar (if this doesnt match {@link #getSelectedFamiliar()} i will cry)
-     * @return The familiar holder for current familiar
-     */
-    public FamiliarHolder<?, ?> getActivatedFamiliarHolder() {
-        return this.summonedContext == null || selectedFamiliar == null ? null : selectedFamiliar;
+        return this.summonedEntity;
     }
 
     /**
@@ -210,19 +213,22 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
      * @return true if familiar active, false otherwise
      */
     public boolean hasActiveFamiliar() {
-        return this.summonedContext != null;
+        if (this.getActiveEntity() != null && getActiveEntity().isRemoved()) {
+            this.discardFamiliar();
+        }
+        return this.summonedFamiliar != null;
     }
 
     /**
      * Removes the currently active familiar
      */
     public void discardFamiliar() {
-        if (this.selectedFamiliar == null || this.summonedContext == null) return;
+        if (this.summonedFamiliar == null || this.summonedEntity == null) return;
 
-        LivingEntity summon = summonedContext.getEntity();
-        summonedContext.getFamiliar().onRemove(summonedContext, summon.blockPosition());
-        summon.discard();
-        this.summonedContext = null;
+        this.summonedFamiliar.onRemove(this, this.summonedEntity.blockPosition());
+        this.summonedEntity.discard();
+        this.summonedFamiliar = null;
+        this.summonedEntity = null;
     }
 
     /**
@@ -258,7 +264,10 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
         int rebirths = familiarRebirths.get(familiar) + 1;
         familiarRebirths.put(familiar, rebirths);
         familiarBond.put(familiar, 0F);
-        if (this.summonedContext != null) this.summonedContext.rebirth(rebirths);
+        if (this.summonedFamiliar != null) {
+            this.summonedFamiliar.rebirths = rebirths;
+            this.summonedFamiliar.onRebirth(this, rebirths);
+        }
         return true;
     }
 
@@ -312,6 +321,8 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
 
         tag.put("rebirths", rebirths);
         tag.put("bond", bond);
+        if (summonedEntity != null)
+            tag.putInt("entity", summonedEntity.getId());
         if (this.selectedFamiliar != null)
             tag.putString("selected", selectedFamiliar.getIdentifier().toString());
 
@@ -339,6 +350,9 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
 
         String familiarId = compoundTag.getString("selected");
         this.selectedFamiliar = familiarId.isEmpty() ? null : SBFamiliars.REGISTRY.get(ResourceLocation.parse(familiarId));
+
+        int entityId = compoundTag.getInt("entity");
+        if (entityId != 0) loadFamiliar(entityId);
     }
 
     public void awardBond(FamiliarHolder<?, ?> familiar, float xp) {
@@ -349,13 +363,15 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
         if (currentBond == maxXp) return;
         if (newBond > maxXp) newBond = maxXp;
 
-        if (this.summonedContext != null) {
+        if (this.summonedFamiliar != null) {
             int level = getLevelForFamiliar(familiar);
             this.familiarBond.put(familiar, newBond);
             int newLevel = getLevelForFamiliar(familiar);
 
-            if (newLevel != level)
-                this.summonedContext.levelUp(level, newLevel);
+            if (newLevel != level) {
+                this.summonedFamiliar.bond = newLevel;
+                this.summonedFamiliar.onBondUp(this, level, newLevel);
+            }
         } else
             this.familiarBond.put(familiar, newBond);
 
