@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.common.world.item;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.entity.projectile.MushroomProjectile;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormRiftSpell;
@@ -16,6 +17,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -63,10 +65,9 @@ public class DebugItem extends Item implements Loggable {
     }
 
     private void ombreDebug(Level level, Player player, InteractionHand usedHand, SpellHandler spellHandler, SkillHolder skillHolder) {
-        List<ArmorStand> entities = level.getEntitiesOfClass(ArmorStand.class, player.getBoundingBox().inflate(0.5));
-        log(entities);
-        for (ArmorStand stand : entities) {
-            stand.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(SBItems.CREATIONIST_STAFF.get()));
+        if (!level.isClientSide) {
+            PuzzleDungeonData data = PuzzleDungeonData.get((ServerLevel) level);
+            log(data.getCurrentDungeon());
         }
     }
 

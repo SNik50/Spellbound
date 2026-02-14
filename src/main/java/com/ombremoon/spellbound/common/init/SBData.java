@@ -86,6 +86,8 @@ public class SBData {
             "interact_heal_target", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Integer>> EFFECT_HEAL_TARGET = ATTACHMENT_TYPES.register(
             "effect_heal_target", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
+    public static final Supplier<AttachmentType<Boolean>> INVISIBILITY_DIRTY = ATTACHMENT_TYPES.register(
+            "invisibility_dirty", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
     public static final Supplier<AttachmentType<Boolean>> NO_FLY_DUNGEON = ATTACHMENT_TYPES.register(
             "no_fly_dungeon", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build()
     );

@@ -28,6 +28,10 @@ public record StaticLevelSpawnData(Vec3 playerOffset, float playerRotation, Vec3
        private Vec3 spellOffset = Vec3.ZERO;
        private Optional<ResourceLocation> spellFX = Optional.empty();
 
+       public static Builder create() {
+           return new Builder();
+       }
+
        public Builder playerOffset(Vec3 offset) {
            this.playerOffset = offset;
            return this;

@@ -90,7 +90,7 @@ public record SpellAction(ActionRewards rewards, Map<String, ActionCriterion<?>>
             return this;
         }
 
-        public Builder requirements(int cooldown) {
+        public Builder cooldown(int cooldown) {
             this.cooldown = cooldown;
             return this;
         }

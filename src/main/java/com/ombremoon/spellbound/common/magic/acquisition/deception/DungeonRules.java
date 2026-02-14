@@ -8,13 +8,13 @@ import java.util.List;
 
 public class DungeonRules {
     private static List<ResourceLocation> RULES = new ArrayList<>();
-    public static ResourceLocation NO_BUILDING = makeRule("no_building");
-    public static ResourceLocation NO_INTERACT = makeRule("no_interact");
-    public static ResourceLocation NO_PVP = makeRule("no_pvp");
-    public static ResourceLocation NO_PVE = makeRule("no_pve");
-    public static ResourceLocation NO_PVE_OR_PVP = makeRule("no_pve_or_pvp");
-    public static ResourceLocation NO_FLYING = makeRule("no_flying");
-    public static ResourceLocation NO_SPELL_CASTING = makeRule("no_spell_casting");
+    public static final ResourceLocation NO_BUILDING = makeRule("no_building");
+    public static final ResourceLocation NO_INTERACT = makeRule("no_interact");
+    public static final ResourceLocation NO_PVP = makeRule("no_pvp");
+    public static final ResourceLocation NO_PVE = makeRule("no_pve");
+    public static final ResourceLocation NO_PVE_OR_PVP = makeRule("no_pve_or_pvp");
+    public static final ResourceLocation NO_FLYING = makeRule("no_flying");
+    public static final ResourceLocation NO_SPELL_CASTING = makeRule("no_spell_casting");
 
     public static boolean isRule(ResourceLocation rule) {
         return RULES.contains(rule);

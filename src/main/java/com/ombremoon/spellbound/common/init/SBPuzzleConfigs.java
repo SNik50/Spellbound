@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.init;
 
+import com.ombremoon.spellbound.common.magic.acquisition.bosses.StaticLevelSpawnData;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.DungeonRules;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
@@ -15,6 +16,7 @@ import net.minecraft.advancements.critereon.TagPredicate;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 
 public interface SBPuzzleConfigs {
     ResourceKey<PuzzleConfiguration> FLICKER = key("flicker");
@@ -44,10 +46,17 @@ public interface SBPuzzleConfigs {
                                                                                         TagPredicate.is(SBTags.DamageTypes.SPELL_DAMAGE)
                                                                                 )
                                                                         ))
-                                                        ))
+                                                        )
+                                                        .cooldown(5))
+                                        .spawnData(
+                                                StaticLevelSpawnData.Builder.create()
+                                                        .playerOffset(new Vec3(0, -5, -14))
+                                                        .spellOffset(new Vec3(0, -4, 14))
+                                        )
                                         .withAlternativeConfig(CommonClass.customLocation("flicker_1"))
                                         .withAlternativeConfig(CommonClass.customLocation("flicker_2"))
                                         .withAlternativeConfig(CommonClass.customLocation("flicker_3"))
+                                        .withAlternativeConfig(CommonClass.customLocation("flicker_4"))
                                         .addRule(DungeonRules.NO_BUILDING)
                                         .addRule(DungeonRules.NO_FLYING)
                                         .addRule(DungeonRules.NO_PVE)

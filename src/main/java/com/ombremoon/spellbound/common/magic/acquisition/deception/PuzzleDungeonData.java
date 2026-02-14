@@ -206,10 +206,6 @@ public class PuzzleDungeonData extends SavedData implements StructureHolderData 
                 this.spawnSpellTome(level, player);
             }
 
-            if (hasRule(level, DungeonRules.NO_FLYING)) {
-//                player.
-            }
-
             this.setDirty();
             return;
         }
@@ -225,7 +221,7 @@ public class PuzzleDungeonData extends SavedData implements StructureHolderData 
     }
 
     public boolean checkFlightRule(ServerLevel level, Player player) {
-        if (hasRule(level, DungeonRules.NO_FLYING)) {
+        if (/*hasRule(level, DungeonRules.NO_FLYING)*/false) {
             player.getAbilities().mayfly = false;
             return true;
         }

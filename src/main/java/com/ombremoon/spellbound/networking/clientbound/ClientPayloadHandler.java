@@ -3,9 +3,11 @@ package com.ombremoon.spellbound.networking.clientbound;
 import com.ombremoon.spellbound.client.AnimationHelper;
 import com.ombremoon.spellbound.client.renderer.ArenaDebugRenderer;
 import com.ombremoon.spellbound.common.init.SBData;
+import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
 import com.ombremoon.spellbound.common.world.weather.HailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
@@ -17,12 +19,12 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.Set;
@@ -187,7 +189,7 @@ public class ClientPayloadHandler {
         });
     }
 
-    public static void handleUpdateGlowEffect(UpdateGlowEffectPayload payload, IPayloadContext context) {
+    public static void handleUpdateGlowEffect(UpdateGlowPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
             var handler = SpellUtil.getSpellHandler(context.player());
@@ -197,6 +199,22 @@ public class ClientPayloadHandler {
                     handler.removeGlowEffect(livingEntity);
                 } else {
                     handler.addGlowEffect(livingEntity);
+                }
+            }
+        });
+    }
+
+    public static void handleUpdateInvisibility(UpdateInvisibilityPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            Level level = context.player().level();
+            Entity entity = level.getEntity(payload.entityId());
+            if (entity instanceof LivingEntity livingEntity) {
+                var optional = payload.effect();
+                if (optional.isPresent()) {
+                    MobEffectInstance effect = optional.get();
+                    livingEntity.forceAddEffect(effect, effect instanceof SBEffectInstance instance ? instance.getCauseEntity() : null);
+                } else {
+                    livingEntity.removeEffectNoUpdate(SBEffects.MAGI_INVISIBILITY);
                 }
             }
         });

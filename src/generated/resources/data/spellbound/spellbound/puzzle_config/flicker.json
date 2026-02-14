@@ -4,7 +4,8 @@
       "alternative_configs": [
         "spellbound:flicker_1",
         "spellbound:flicker_2",
-        "spellbound:flicker_3"
+        "spellbound:flicker_3",
+        "spellbound:flicker_4"
       ],
       "objectives": [
         {
@@ -28,6 +29,7 @@
       "puzzle_id": "spellbound:flicker",
       "reset_conditions": [
         {
+          "cooldown": 5,
           "criteria": {
             "hurt_by_magic": {
               "conditions": {
@@ -63,14 +65,14 @@
       "spawn_data": {
         "player_offset": [
           0.0,
-          0.0,
-          0.0
+          -5.0,
+          -14.0
         ],
         "player_rotation": 0.0,
         "spell_offset": [
           0.0,
-          0.0,
-          0.0
+          -4.0,
+          14.0
         ]
       }
     }

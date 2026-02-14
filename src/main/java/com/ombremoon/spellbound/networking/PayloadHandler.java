@@ -22,8 +22,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -38,6 +38,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
@@ -177,7 +178,11 @@ public class PayloadHandler {
     }
 
     public static void updateGlowEffect(Player player, int entityId, boolean remove) {
-        PacketDistributor.sendToPlayer((ServerPlayer) player, new UpdateGlowEffectPayload(entityId, remove));
+        PacketDistributor.sendToPlayer((ServerPlayer) player, new UpdateGlowPayload(entityId, remove));
+    }
+
+    public static void updateInvisibilityEffect(Player player, int entityId, @Nullable MobEffectInstance effect) {
+        PacketDistributor.sendToPlayer((ServerPlayer) player, new UpdateInvisibilityPayload(entityId, Optional.ofNullable(effect)));
     }
 
     public static void updateDimensions(MinecraftServer server, Set<ResourceKey<Level>> keys, boolean add) {
@@ -293,9 +298,14 @@ public class PayloadHandler {
                 ClientPayloadHandler::handleUpdateAbilities
         );
         registrar.playToClient(
-                UpdateGlowEffectPayload.TYPE,
-                UpdateGlowEffectPayload.STREAM_CODEC,
+                UpdateGlowPayload.TYPE,
+                UpdateGlowPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleUpdateGlowEffect
+        );
+        registrar.playToClient(
+                UpdateInvisibilityPayload.TYPE,
+                UpdateInvisibilityPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleUpdateInvisibility
         );
         registrar.playToClient(
                 ChangeHailLevelPayload.TYPE,

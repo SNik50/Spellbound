@@ -33,10 +33,14 @@ import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.core.Holder;
 import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -215,26 +219,48 @@ public class NeoForgeEvents {
     @SubscribeEvent
     public static void onEffectRemoved(MobEffectEvent.Remove event) {
         LivingEntity livingEntity = event.getEntity();
-        if (event.getEffect().value() instanceof SBEffect effect && event.getEffectInstance() != null)
-            effect.onEffectRemoved(livingEntity, event.getEffectInstance().getAmplifier());
+        MobEffectInstance instance = event.getEffectInstance();
+        Holder<MobEffect> effect = event.getEffect();
+        if (event.getEffect().value() instanceof SBEffect sbEffect && instance != null)
+            sbEffect.onEffectRemoved(livingEntity, instance.getAmplifier());
 
         if (event.getEffectInstance() instanceof SBEffectInstance effectInstance && effectInstance.willGlow()) {
             LivingEntity entity = effectInstance.getCauseEntity();
             if (entity instanceof ServerPlayer player)
                 PayloadHandler.updateGlowEffect(player, livingEntity.getId(), true);
         }
+
+        if (effect == SBEffects.MAGI_INVISIBILITY) {
+            livingEntity.setData(SBData.INVISIBILITY_DIRTY, true);
+        }
     }
 
     @SubscribeEvent
     public static void onEffectExpired(MobEffectEvent.Expired event) {
         LivingEntity livingEntity = event.getEntity();
-        if (event.getEffectInstance() != null && event.getEffectInstance().getEffect().value() instanceof SBEffect effect)
-            effect.onEffectRemoved(livingEntity, event.getEffectInstance().getAmplifier());
+        MobEffectInstance instance = event.getEffectInstance();
+        if (instance != null && instance.getEffect().value() instanceof SBEffect effect)
+            effect.onEffectRemoved(livingEntity, instance.getAmplifier());
 
-        if (event.getEffectInstance() instanceof SBEffectInstance effectInstance && effectInstance.willGlow()) {
-            LivingEntity entity = effectInstance.getCauseEntity();
-            if (entity instanceof ServerPlayer player)
-                PayloadHandler.updateGlowEffect(player, livingEntity.getId(), true);
+        if (instance instanceof SBEffectInstance effectInstance) {
+            if (effectInstance.willGlow()) {
+                LivingEntity entity = effectInstance.getCauseEntity();
+                if (entity instanceof ServerPlayer player)
+                    PayloadHandler.updateGlowEffect(player, livingEntity.getId(), true);
+            }
+        }
+
+        if (instance != null && instance.getEffect() == SBEffects.MAGI_INVISIBILITY) {
+            livingEntity.setData(SBData.INVISIBILITY_DIRTY, true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onStartEntityTracking(PlayerEvent.StartTracking event) {
+        Entity entity = event.getTarget();
+        Player player = event.getEntity();
+        if (entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(SBEffects.MAGI_INVISIBILITY)) {
+            PayloadHandler.updateInvisibilityEffect(player, livingEntity.getId(), livingEntity.getEffect(SBEffects.MAGI_INVISIBILITY));
         }
     }
 
@@ -282,15 +308,14 @@ public class NeoForgeEvents {
     }
 
     @SubscribeEvent
-    public static void onSpellPickUp(ItemEntityPickupEvent.Post event) {
+    public static void onSpellPickUp(ItemEntityPickupEvent.Pre event) {
         Player player = event.getPlayer();
         Level level = player.level();
-        ItemStack itemStack = event.getOriginalStack();
-        ItemStack newStack = event.getCurrentStack();
+        ItemStack itemStack = event.getItemEntity().getItem();
         Boolean bool = itemStack.get(SBData.SPECIAL_PICKUP);
         if (!level.isClientSide && bool != null && bool) {
             ServerLevel serverLevel = (ServerLevel) level;
-            newStack.set(SBData.SPECIAL_PICKUP, false);
+            itemStack.set(SBData.SPECIAL_PICKUP, false);
             if (ArenaSavedData.isArena(level)) {
                 ArenaSavedData arena = ArenaSavedData.get(serverLevel);
                 arena.destroyDimension(serverLevel);
@@ -414,10 +439,10 @@ public class NeoForgeEvents {
     public static void onLivingIncomingDamage(LivingIncomingDamageEvent event) {
         LivingEntity livingEntity = event.getEntity();
         Level level = livingEntity.level();
+        DamageSource source = event.getSource();
+        Entity attacker = source.getEntity();
         if (SpellUtil.isSummon(livingEntity)) {
             Entity owner = SpellUtil.getOwner(livingEntity);
-            DamageSource source = event.getSource();
-            Entity attacker = source.getEntity();
             if (attacker != null && SpellUtil.isSummonOf(attacker, owner)) {
                 event.setCanceled(true);
             }
@@ -427,6 +452,9 @@ public class NeoForgeEvents {
                 summonSpell.onMobIncomingHurt(spell.getContext(), event);
             }
         }
+
+        if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY))
+            return;
 
         if (!level.isClientSide) {
             ServerLevel serverLevel = (ServerLevel) level;

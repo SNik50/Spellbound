@@ -1,9 +1,7 @@
 package com.ombremoon.spellbound.common.world.block;
 
-import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBSpells;
-import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
@@ -11,8 +9,6 @@ import com.ombremoon.spellbound.common.world.dimension.DynamicDimensionFactory;
 import com.ombremoon.spellbound.main.Keys;
 import com.ombremoon.spellbound.mixin.ConnectionAccessor;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -50,9 +46,6 @@ public class DeceptionTestBlock extends Block {
         ServerLevel overworld = server.getLevel(Level.OVERWORLD);
         PuzzleDungeonData data = PuzzleDungeonData.get(overworld);
         int dungeonId = data.incrementId();
-        for (var serverPlayer : server.getPlayerList().getPlayers()) {
-            ((ConnectionAccessor) serverPlayer.connection.getConnection()).invokeFlush();
-        }
         ResourceKey<Level> levelKey = data.getOrCreateKey(server, dungeonId);
         ServerLevel dungeon = DynamicDimensionFactory.getOrCreateDimension(server, levelKey);
 //        SpellType<?> spell = stack.get(SBData.DUNGEON_SPELL);
@@ -62,6 +55,7 @@ public class DeceptionTestBlock extends Block {
             ResourceKey<PuzzleConfiguration> configKey = ResourceKey.create(Keys.PUZZLE_CONFIG, spell.location());
             PuzzleConfiguration config = level.registryAccess().registryOrThrow(Keys.PUZZLE_CONFIG).getOrThrow(configKey);
             dungeonData.initializeDungeon(player, configKey, config);
+            dungeonData.spawnInDungeon(dungeon, player);
         }
 
         if (!player.getAbilities().instabuild)
