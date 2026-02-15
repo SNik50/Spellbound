@@ -7,6 +7,7 @@ import com.ombremoon.spellbound.common.world.spell.deception.ShadowbondSpell;
 import com.ombremoon.spellbound.common.world.spell.divine.BlessingSpell;
 import com.ombremoon.spellbound.common.world.spell.divine.HealingBlossomSpell;
 import com.ombremoon.spellbound.common.world.spell.divine.HealingTouchSpell;
+import com.ombremoon.spellbound.common.world.spell.divine.SiphonSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.ice.ShatteringCrystalSpell;
@@ -112,6 +113,10 @@ public class SBSpells {
             .skills(SBSkills.BLESSING, SBSkills.FORTIFIED_HEARTS, SBSkills.ARCANE_RESTORATION, SBSkills.SATIATING_BLESSING,
                     SBSkills.AIR_BUBBLE, SBSkills.PURIFYING_WARD, SBSkills.EXTENDED_GRACE, SBSkills.SHARED_BOON,
                     SBSkills.OVERFLOWING_AID, SBSkills.CONSECRATED_PRESENCE, SBSkills.UPLIFTING_CHORUS));
+    public static final Supplier<SpellType<SiphonSpell>> SIPHON = registerSpell("siphon", divineBuilder(SpellMastery.NOVICE, SiphonSpell::new)
+            .skills(SBSkills.SIPHON, SBSkills.GRIM_REACH, SBSkills.GLUTTONY, SBSkills.WITHERING,
+                    SBSkills.SOUL_TAP, SBSkills.PARASITIC_LINK, SBSkills.UNRELENTING, SBSkills.OVERHEAL,
+                    SBSkills.IRON_MAIDEN, SBSkills.ARCANE_FEEDBACK, SBSkills.HARVEST));
     public static final Supplier<SpellType<HealingBlossomSpell>> HEALING_BLOSSOM = registerSpell("healing_blossom", divineBuilder(SpellMastery.EXPERT, HealingBlossomSpell::new)
             .skills(SBSkills.HEALING_BLOSSOM, SBSkills.THORNY_VINES, SBSkills.BLOOM, SBSkills.ETERNAL_SPRING,
                     SBSkills.FLOWER_FIELD, SBSkills.FLOURISHING_GROWTH, SBSkills.HEALING_WINDS, SBSkills.BURST_OF_LIFE,

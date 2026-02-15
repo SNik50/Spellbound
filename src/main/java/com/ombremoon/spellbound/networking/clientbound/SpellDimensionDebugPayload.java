@@ -6,13 +6,13 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-public record ArenaDebugPayload(boolean enabled, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockPos spawnPos, BlockPos originPos) implements CustomPacketPayload {
-    public static final Type<ArenaDebugPayload> TYPE = new Type<>(CommonClass.customLocation("arena_debug"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ArenaDebugPayload> STREAM_CODEC = StreamCodec.ofMember(
-            ArenaDebugPayload::write, ArenaDebugPayload::new
+public record SpellDimensionDebugPayload(boolean enabled, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, BlockPos spawnPos, BlockPos originPos) implements CustomPacketPayload {
+    public static final Type<SpellDimensionDebugPayload> TYPE = new Type<>(CommonClass.customLocation("spell_dimension_debug"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, SpellDimensionDebugPayload> STREAM_CODEC = StreamCodec.ofMember(
+            SpellDimensionDebugPayload::write, SpellDimensionDebugPayload::new
     );
 
-    public ArenaDebugPayload(RegistryFriendlyByteBuf byteBuf) {
+    public SpellDimensionDebugPayload(RegistryFriendlyByteBuf byteBuf) {
         this(
                 byteBuf.readBoolean(),
                 byteBuf.readInt(),

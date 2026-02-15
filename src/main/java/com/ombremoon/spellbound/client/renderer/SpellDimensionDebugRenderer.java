@@ -2,8 +2,8 @@ package com.ombremoon.spellbound.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.ombremoon.spellbound.common.world.SpellDimensionData;
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -15,10 +15,10 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.Nullable;
 
 @OnlyIn(Dist.CLIENT)
-public class ArenaDebugRenderer {
+public class SpellDimensionDebugRenderer {
     private static boolean enabled = false;
     @Nullable
-    private static AABB arenaBounds = null;
+    private static AABB structureBounds = null;
     @Nullable
     private static BlockPos spawnPos = null;
     @Nullable
@@ -36,8 +36,8 @@ public class ArenaDebugRenderer {
         enabled = !enabled;
     }
 
-    public static void setArenaBounds(@Nullable AABB bounds) {
-        arenaBounds = bounds;
+    public static void setStructureBounds(@Nullable AABB bounds) {
+        structureBounds = bounds;
     }
 
     public static void setSpawnPos(@Nullable BlockPos pos) {
@@ -49,7 +49,7 @@ public class ArenaDebugRenderer {
     }
 
     public static void clear() {
-        arenaBounds = null;
+        structureBounds = null;
         spawnPos = null;
         originPos = null;
     }
@@ -57,14 +57,16 @@ public class ArenaDebugRenderer {
     public static void render(PoseStack poseStack, Camera camera, MultiBufferSource.BufferSource bufferSource) {
         if (!enabled) return;
 
+        if (!SpellDimensionData.isStatic(camera.getEntity().level())) return;
+
         Vec3 camPos = camera.getPosition();
         poseStack.pushPose();
         poseStack.translate(-camPos.x, -camPos.y, -camPos.z);
 
         VertexConsumer lineConsumer = bufferSource.getBuffer(RenderType.lines());
 
-        if (arenaBounds != null) {
-            LevelRenderer.renderLineBox(poseStack, lineConsumer, arenaBounds, 1.0f, 0.0f, 0.0f, 1.0f);
+        if (structureBounds != null) {
+            LevelRenderer.renderLineBox(poseStack, lineConsumer, structureBounds, 1.0f, 0.0f, 0.0f, 1.0f);
         }
 
         if (spawnPos != null) {

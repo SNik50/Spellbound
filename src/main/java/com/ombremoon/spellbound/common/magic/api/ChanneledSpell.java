@@ -13,6 +13,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -115,7 +116,7 @@ public abstract class ChanneledSpell extends AnimatedSpell {
             return this;
         }
 
-        public Builder<T> castAnimation(Function<SpellContext, SpellAnimation> castAnimation) {
+        public Builder<T> castAnimation(BiFunction<SpellContext, T, SpellAnimation> castAnimation) {
             this.castAnimation = castAnimation;
             return this;
         }

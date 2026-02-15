@@ -74,7 +74,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
 
                     return true;
                 })
-                .castAnimation(context -> {
+                .castAnimation((context, spell) -> {
                     boolean flag = !context.hasSkill(SBSkills.JET_STABILIZATION);
                     String castPrefix = flag ? "" : "walking_";
                     return new SpellAnimation(castPrefix + "instant_cast", SpellAnimation.Type.CAST, flag);
@@ -258,7 +258,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
         } else {
             if (context.isChoice(SBSkills.FLAME_JET) || context.isChoice(SBSkills.TURBO_CHARGE)) {
                 this.addFX(
-                        EffectBuilder.Entity.of(CommonClass.customLocation("flame_jet"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                        EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_jet"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
                 );
             } else if (context.isChoice(SBSkills.FLAME_GEYSER)) {
                 this.addFX(
@@ -343,7 +343,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
         name = charges != 0 ? name + "_" + charges : name;
         float range = 1.0F + (0.25F * charges);
         return OBBSentinelBox.Builder.of(name)
-                .sizeAndOffset(0.5F, 0.5F, range, 0.0F, 1.0F, range)
+                .sizeAndOffset(0.75F, 0.75F, range, 0.0F, 1.0F, range)
                 .moverType(SentinelBox.MoverType.HEAD)
                 .noDuration(entity -> entity instanceof LivingEntity livingEntity && !SpellUtil.isSpellActive(SBSpells.FLAME_JET.get(), livingEntity))
                 .activeTicks((entity, integer) -> integer == 1)

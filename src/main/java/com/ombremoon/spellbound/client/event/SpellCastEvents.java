@@ -18,6 +18,7 @@ import com.zigythebird.playeranim.animation.PlayerAnimationController;
 import com.zigythebird.playeranim.api.PlayerAnimationAccess;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
@@ -180,6 +181,9 @@ public class SpellCastEvents {
 
     public static void castSpell(Player player, int charges) {
         if (player.isSpectator()) return;
+
+        CompoundTag tag = new CompoundTag();
+        tag.putInt("Charges", charges);
         PayloadHandler.castSpell(charges);
     }
 }

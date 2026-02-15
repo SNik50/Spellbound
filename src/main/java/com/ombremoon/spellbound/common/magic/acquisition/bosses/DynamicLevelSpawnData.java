@@ -7,20 +7,19 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.Optional;
 
-public record StaticLevelSpawnData(Vec3 playerOffset, float playerRotation, Vec3 spellOffset, Optional<ResourceLocation> spellFX) {
-    public static final Codec<StaticLevelSpawnData> CODEC = RecordCodecBuilder.create(
+public record DynamicLevelSpawnData(Vec3 playerOffset, float playerRotation, Vec3 spellOffset, Optional<ResourceLocation> spellFX) {
+    public static final Codec<DynamicLevelSpawnData> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                    Vec3.CODEC.fieldOf("player_offset").forGetter(StaticLevelSpawnData::playerOffset),
-                    Codec.FLOAT.fieldOf("player_rotation").forGetter(StaticLevelSpawnData::playerRotation),
-                    Vec3.CODEC.fieldOf("spell_offset").forGetter(StaticLevelSpawnData::spellOffset),
-                    ResourceLocation.CODEC.optionalFieldOf("spell_fx").forGetter(StaticLevelSpawnData::spellFX)
-            ).apply(instance, StaticLevelSpawnData::new)
+                    Vec3.CODEC.fieldOf("player_offset").forGetter(DynamicLevelSpawnData::playerOffset),
+                    Codec.FLOAT.fieldOf("player_rotation").forGetter(DynamicLevelSpawnData::playerRotation),
+                    Vec3.CODEC.fieldOf("spell_offset").forGetter(DynamicLevelSpawnData::spellOffset),
+                    ResourceLocation.CODEC.optionalFieldOf("spell_fx").forGetter(DynamicLevelSpawnData::spellFX)
+            ).apply(instance, DynamicLevelSpawnData::new)
     );
 
-
-   public StaticLevelSpawnData(Vec3 playerOffset, float playerRotation, Vec3 spellOffset) {
+   public DynamicLevelSpawnData(Vec3 playerOffset, float playerRotation, Vec3 spellOffset) {
         this(playerOffset, playerRotation, spellOffset, Optional.empty());
-    }
+   }
 
     public static class Builder {
        private Vec3 playerOffset = Vec3.ZERO;
@@ -52,8 +51,8 @@ public record StaticLevelSpawnData(Vec3 playerOffset, float playerRotation, Vec3
            return this;
        }
 
-       public StaticLevelSpawnData build() {
-           return new StaticLevelSpawnData(this.playerOffset, this.playerRotation, this.spellOffset, this.spellFX);
+       public DynamicLevelSpawnData build() {
+           return new DynamicLevelSpawnData(this.playerOffset, this.playerRotation, this.spellOffset, this.spellFX);
        }
    }
 }

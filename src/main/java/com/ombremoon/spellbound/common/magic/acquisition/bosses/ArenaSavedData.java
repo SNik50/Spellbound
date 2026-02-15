@@ -4,7 +4,7 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.serialization.Dynamic;
 import com.ombremoon.spellbound.common.init.SBBlocks;
-import com.ombremoon.spellbound.common.world.StructureHolderData;
+import com.ombremoon.spellbound.common.world.SpellDimensionData;
 import com.ombremoon.spellbound.common.world.block.entity.SummonPortalBlockEntity;
 import com.ombremoon.spellbound.common.world.dimension.DynamicDimensionFactory;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -33,7 +33,7 @@ import org.slf4j.Logger;
 import java.util.Map;
 import java.util.UUID;
 
-public class ArenaSavedData extends SavedData implements StructureHolderData {
+public class ArenaSavedData extends SavedData implements SpellDimensionData {
     public static final Logger LOGGER = Constants.LOG;
 
     //Global
@@ -172,7 +172,7 @@ public class ArenaSavedData extends SavedData implements StructureHolderData {
 
     @Override
     public void destroyDimension(ServerLevel level) {
-        StructureHolderData.super.destroyDimension(level);
+        SpellDimensionData.super.destroyDimension(level);
         ServerLevel portalLevel = level.getServer().getLevel(this.portalCache.getPortalLevel());
         if (portalLevel != null)
             this.portalCache.destroyPortal(portalLevel);

@@ -106,6 +106,8 @@ public class PlayerSpellActions implements Loggable {
                         puzzle.completeObjective(action);
                 }
 
+                //Event for action completion
+
                 for (String s : progress.getCompletedCriteria()) {
                     this.revoke(action, s);
                 }

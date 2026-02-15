@@ -476,6 +476,8 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.choice", "Choice Upgrade");
         add("spellbound.skill_tooltip.choice_condition", "If ");
         add("spellbound.skill_tooltip.dolphins_fin", "%s%% Water Slowdown");
+        add("spellbound.skill_tooltip.invisibility_no_stack", "Invisibility Does Not Stack");
+        add("spellbound.skill_tooltip.invisibility_override", "Overrides Invisibility");
 
         addSkillTooltip(SBSkills.FLAME_JET, "Releases a short, concentrated burst of fire in front of the caster.");
         addSkillTooltip(SBSkills.JET_ENGINE, "Propels the caster in the direction they are facing, dealing Fire damage to enemies behind.");

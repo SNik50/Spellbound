@@ -229,7 +229,6 @@ public class ShadowbondSpell extends AnimatedSpell {
             handleSwapEffect(context, caster, level);
 
         level.playSound(null, caster.xo, caster.yo, caster.zo, SoundEvents.ENDERMAN_TELEPORT, caster.getSoundSource(), 1.0F, 1.0F);
-        caster.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
     }
 
     private void handleSwapEffect(SpellContext context, LivingEntity caster, Level level) {

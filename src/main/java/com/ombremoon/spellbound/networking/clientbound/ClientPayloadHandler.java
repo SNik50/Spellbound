@@ -1,10 +1,11 @@
 package com.ombremoon.spellbound.networking.clientbound;
 
 import com.ombremoon.spellbound.client.AnimationHelper;
-import com.ombremoon.spellbound.client.renderer.ArenaDebugRenderer;
+import com.ombremoon.spellbound.client.renderer.SpellDimensionDebugRenderer;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
@@ -70,7 +71,9 @@ public class ClientPayloadHandler {
             var level = context.player().level();
             Entity entity = level.getEntity(payload.entityId());
             if (entity instanceof LivingEntity livingEntity) {
-                AbstractSpell spell = payload.spellType().createSpell();
+                var handler = SpellUtil.getSpellHandler(livingEntity);
+//                AbstractSpell spell = payload.spellType().createSpell();
+                AbstractSpell spell = handler.getCurrentlyCastSpell();
                 if (spell != null) {
                     CompoundTag nbt = payload.initTag();
                     spell.clientCastSpell(livingEntity, level, livingEntity.getOnPos(), payload.castId(), payload.spellData(), nbt);
@@ -273,16 +276,16 @@ public class ClientPayloadHandler {
         });
     }
 
-    public static void handleArenaDebug(ArenaDebugPayload payload, IPayloadContext context) {
+    public static void handleArenaDebug(SpellDimensionDebugPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
-            ArenaDebugRenderer.setEnabled(payload.enabled());
+            SpellDimensionDebugRenderer.setEnabled(payload.enabled());
             if (payload.enabled()) {
                 AABB bounds = new AABB(payload.minX(), payload.minY(), payload.minZ(), payload.maxX(), payload.maxY(), payload.maxZ());
-                ArenaDebugRenderer.setArenaBounds(bounds);
-                ArenaDebugRenderer.setSpawnPos(payload.spawnPos());
-                ArenaDebugRenderer.setOriginPos(payload.originPos());
+                SpellDimensionDebugRenderer.setStructureBounds(bounds);
+                SpellDimensionDebugRenderer.setSpawnPos(payload.spawnPos());
+                SpellDimensionDebugRenderer.setOriginPos(payload.originPos());
             } else {
-                ArenaDebugRenderer.clear();
+                SpellDimensionDebugRenderer.clear();
             }
         });
     }

@@ -1,7 +1,6 @@
 package com.ombremoon.spellbound.client.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.ombremoon.spellbound.client.AnimationHelper;
 import com.ombremoon.spellbound.client.KeyBinds;
 import com.ombremoon.spellbound.client.gui.CastModeOverlay;
 import com.ombremoon.spellbound.client.gui.SpellSelectScreen;
@@ -11,7 +10,7 @@ import com.ombremoon.spellbound.client.gui.guide.renderers.*;
 import com.ombremoon.spellbound.client.particle.CircleAroundPositionParticle;
 import com.ombremoon.spellbound.client.particle.GenericParticle;
 import com.ombremoon.spellbound.client.particle.SparkParticle;
-import com.ombremoon.spellbound.client.renderer.ArenaDebugRenderer;
+import com.ombremoon.spellbound.client.renderer.SpellDimensionDebugRenderer;
 import com.ombremoon.spellbound.client.renderer.blockentity.*;
 import com.ombremoon.spellbound.client.renderer.entity.*;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.CatModel;
@@ -286,6 +285,8 @@ public class ClientEvents {
             boolean cycleSpellDown = KeyBinds.CYCLE_SPELL_BINDING.consumeClick();
             boolean cycleChoiceDown = KeyBinds.CYCLE_CHOICE_BINDING.consumeClick();
             SpellType<?> selectedSpell = handler.getSelectedSpell();
+            if (selectedSpell == null) return;
+
             if (handler.inCastMode()) {
                 if (handler.isChargingOrChannelling())
                     return;
@@ -392,7 +393,7 @@ public class ClientEvents {
         }
 
         if (stage == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
-            ArenaDebugRenderer.render(poseStack, camera, minecraft.renderBuffers().bufferSource());
+            SpellDimensionDebugRenderer.render(poseStack, camera, minecraft.renderBuffers().bufferSource());
         }
 
     }

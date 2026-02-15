@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.common.magic.skills;
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.events.custom.PathLevelUpEvent;
 import com.ombremoon.spellbound.common.events.custom.SpellLevelUpEvent;
+import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
@@ -10,6 +11,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.main.ConfigHandler;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
@@ -149,8 +151,9 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
     }
 
     public <T extends AbstractSpell> void resetSkills(SpellType<T> spellType) {
+        Skill root = spellType.getRootSkill();
         this.unlockedSkills.put(spellType, new HashSet<>() {{
-            add(spellType.getRootSkill());
+            add(root);
         }});
         this.resetSpellXP(spellType);
         for (Skill skill : spellType.getSkills()) {
@@ -160,6 +163,9 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
             }
         }
         this.skillPoints.put(spellType, 0);
+
+        if (root.isRadial())
+            this.setChoice(spellType, root);
     }
 
     public void unlockSkill(Skill skill, boolean consumePoints) {
@@ -276,6 +282,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
         ListTag skillPointTag = new ListTag();
         ListTag skillsTag = new ListTag();
         ListTag modifierList = new ListTag();
+        ListTag choiceTag = new ListTag();
 
         for (SpellType<?> spellType : this.spellXp.keySet()) {
             if (spellType == null) {
@@ -316,6 +323,12 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
             skillsTag.add(newTag);
         }
 
+        for (var entry : this.skillChoices.entrySet()) {
+            CompoundTag newTag = SpellUtil.storeSpell(entry.getKey());
+            newTag.putString("Choice", entry.getValue().location().toString());
+            choiceTag.add(newTag);
+        }
+
         for (SpellPath path : this.pathXp.keySet()) {
             CompoundTag newTag = new CompoundTag();
             newTag.putString("Path", path.toString());
@@ -335,6 +348,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
         tag.put("SkillPoints", skillPointTag);
         tag.put("Skills", skillsTag);
         tag.put("Modifiers", modifierList);
+        tag.put("Choices", choiceTag);
         return tag;
     }
 
@@ -344,6 +358,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
         ListTag spellTag = compoundTag.getList("SpellXp", 10);
         ListTag skillPointTag = compoundTag.getList("SkillPoints", 10);
         ListTag skillTag = compoundTag.getList("Skills", 10);
+        ListTag choiceTag = compoundTag.getList("Choices", 10);
 
         for (int i = 0; i < pathTag.size(); i++) {
             CompoundTag tag = pathTag.getCompound(i);
@@ -369,6 +384,14 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
                 skills.add(Skill.byName(ResourceLocation.tryParse(nbt.getString("Skill"))));
             }
             this.unlockedSkills.put(SBSpells.REGISTRY.get(ResourceLocation.tryParse(tag.getString("Spell"))), skills);
+        }
+
+        for (int i = 0; i < choiceTag.size(); i++) {
+            CompoundTag tag = choiceTag.getCompound(i);
+            Skill skill = Skill.byName(ResourceLocation.tryParse(tag.getString("Choice")));
+            SpellType<?> spellType = AbstractSpell.getSpellByName(ResourceLocation.tryParse(tag.getString("Spell")));
+            if (skill != null && spellType != null)
+                this.skillChoices.put(spellType, skill);
         }
 
         if (compoundTag.contains("Modifiers", 9)) {

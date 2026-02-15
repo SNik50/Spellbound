@@ -38,6 +38,7 @@ import net.minecraft.network.protocol.game.ClientboundPlayerAbilitiesPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -55,6 +56,8 @@ import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
@@ -436,6 +439,16 @@ public class NeoForgeEvents {
     }
 
     @SubscribeEvent
+    public static void onItemInteract(PlayerInteractEvent.RightClickItem event) {
+        if (event.getEntity() instanceof Player player && !player.level().isClientSide) {
+            if (PuzzleDungeonData.hasRule((ServerLevel) player.level(), DungeonRules.NO_INTERACT)) {
+                event.setCancellationResult(InteractionResult.SUCCESS_NO_ITEM_USED);
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void onLivingIncomingDamage(LivingIncomingDamageEvent event) {
         LivingEntity livingEntity = event.getEntity();
         Level level = livingEntity.level();
@@ -458,11 +471,12 @@ public class NeoForgeEvents {
 
         if (!level.isClientSide) {
             ServerLevel serverLevel = (ServerLevel) level;
-            if (PuzzleDungeonData.hasRule(serverLevel, DungeonRules.NO_PVE_OR_PVP)) {
+            boolean flag =  source.getEntity() != null;
+            if (PuzzleDungeonData.hasRule(serverLevel, DungeonRules.NO_PVE_OR_PVP) && flag) {
                 event.setCanceled(true);
-            } else if (PuzzleDungeonData.hasRule(serverLevel, DungeonRules.NO_PVP) && livingEntity instanceof Player) {
+            } else if (PuzzleDungeonData.hasRule(serverLevel, DungeonRules.NO_PVP) && source.getEntity() instanceof Player) {
                 event.setCanceled(true);
-            } else if (PuzzleDungeonData.hasRule(serverLevel, DungeonRules.NO_PVE)) {
+            } else if (PuzzleDungeonData.hasRule(serverLevel, DungeonRules.NO_PVE) && flag) {
                 event.setCanceled(true);
             }
         }
@@ -486,11 +500,15 @@ public class NeoForgeEvents {
             }
         }
 
-        if (event.getSource().getEntity() instanceof LivingEntity sourceEntity) {
+        if (source.getEntity() instanceof LivingEntity sourceEntity) {
             var familiars = SpellUtil.getFamiliarHandler(sourceEntity);
             if (familiars.hasActiveFamiliar()) {
                 SpellUtil.setTarget(familiars.getActiveEntity(), event.getEntity());
             }
+
+            var attackerHandler = SpellUtil.getSpellHandler(sourceEntity);
+            attackerHandler.getListener().fireEvent(SpellEventListener.Events.DEALT_DAMAGE_POST, new DealtDamageEvent.Post(sourceEntity, event));
+
         }
     }
 
@@ -523,6 +541,9 @@ public class NeoForgeEvents {
             if (spell instanceof SummonSpell summonSpell) {
                 summonSpell.onMobPreHurt(spell.getContext(), event);
             }
+        } else if (source.getEntity() instanceof LivingEntity living) {
+            var attackerHandler = SpellUtil.getSpellHandler(living);
+            attackerHandler.getListener().fireEvent(SpellEventListener.Events.DEALT_DAMAGE_PRE, new DealtDamageEvent.Pre(living, event));
         }
     }
 

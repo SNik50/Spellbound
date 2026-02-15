@@ -1,7 +1,8 @@
 package com.ombremoon.spellbound.common.world.dimension;
 
+import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
-import com.ombremoon.spellbound.common.world.StructureHolderData;
+import com.ombremoon.spellbound.common.world.SpellDimensionData;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFight;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
@@ -61,13 +62,14 @@ public class DynamicDimensionFactory {
         sendToDimension(entity, level, targetVec);
     }
 
-    public static void spawnInDungeon(ServerLevel level, Player player, PuzzleDefinition puzzle, StructureHolderData structure) {
+    public static void spawnInDungeon(ServerLevel level, Player player, PuzzleDefinition puzzle, SpellDimensionData structure) {
         BlockPos center = structure.getStructureCenter();
         if (center != null) {
             level.getChunkAt(center);
             Vec3 spawnOffset = puzzle.spawnData().playerOffset();
             BlockPos offsetPos = center.offset((int) spawnOffset.x, (int) spawnOffset.y, (int) spawnOffset.z);
             Vec3 targetVec = Vec3.atBottomCenterOf(offsetPos);
+            player.setData(SBData.PUZZLE_RULES, puzzle.rules());
             sendToDimension(player, level, targetVec);
         }
     }
@@ -80,13 +82,20 @@ public class DynamicDimensionFactory {
         return spawnSpellStructure(level, structureLoc, PuzzleDungeonData.get(level));
     }
 
-    public static boolean spawnSpellStructure(ServerLevel level, ResourceLocation structureLoc, StructureHolderData dimension) {
-        BlockPos origin = ORIGIN;
+    public static boolean spawnDungeon(ServerLevel level, ResourceLocation structureLoc, BlockPos dungeonOffset) {
+        return spawnSpellStructure(level, structureLoc, PuzzleDungeonData.get(level), dungeonOffset);
+    }
+
+    public static boolean spawnSpellStructure(ServerLevel level, ResourceLocation structureLoc, SpellDimensionData dimension) {
+        return spawnSpellStructure(level, ORIGIN, structureLoc, dimension);
+    }
+
+    public static boolean spawnSpellStructure(ServerLevel level, ResourceLocation structureLoc, SpellDimensionData dimension, BlockPos origin) {
         level.getChunkAt(origin);
         return spawnSpellStructure(level, origin, structureLoc, dimension);
     }
 
-    private static boolean spawnSpellStructure(ServerLevel level, BlockPos origin, ResourceLocation structureLoc, StructureHolderData dimension) {
+    private static boolean spawnSpellStructure(ServerLevel level, BlockPos origin, ResourceLocation structureLoc, SpellDimensionData dimension) {
         Structure structure = getSpellStructure(level, structureLoc).value();
         ChunkGenerator generator = level.getChunkSource().getGenerator();
         StructureStart start = structure.generate(

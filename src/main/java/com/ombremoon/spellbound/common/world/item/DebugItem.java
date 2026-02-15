@@ -8,6 +8,7 @@ import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.entity.projectile.MushroomProjectile;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormRiftSpell;
 import com.ombremoon.spellbound.common.world.spell.transfiguration.StrideSpell;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.main.Keys;
 import com.ombremoon.spellbound.networking.PayloadHandler;
@@ -59,21 +60,21 @@ public class DebugItem extends Item implements Loggable {
         BlockPos blockPos = context.getClickedPos();
         Player player = context.getPlayer();
         if (!level.isClientSide) {
-            log(level.getBlockState(blockPos).getShape(level, blockPos).max(Direction.Axis.Y));
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
     private void ombreDebug(Level level, Player player, InteractionHand usedHand, SpellHandler spellHandler, SkillHolder skillHolder) {
         if (!level.isClientSide) {
-            PuzzleDungeonData data = PuzzleDungeonData.get((ServerLevel) level);
-            log(data.getCurrentDungeon());
+//            PuzzleDungeonData data = PuzzleDungeonData.get((ServerLevel) level);
+//            log(data.getCurrentDungeon());
+            log(SBSkills.REGISTRY.get(CommonClass.customLocation("flame_jet")));
         }
     }
 
     private void duckDebug(Level level, Player player, InteractionHand hand, SpellHandler spellHandler, SkillHolder skillHolder) {
         var handler = SpellUtil.getFamiliarHandler(player);
-        handler.awardBond(SBFamiliars.CAT, handler.getMaxXPForFamiliar(SBFamiliars.CAT));
-        player.sendSystemMessage(handler.selectFamiliar(SBFamiliars.FROG) ? Component.literal("Selected cat") : Component.literal("Failed to set familiar"));
+//        handler.awardBond(SBFamiliars.CAT, handler.getMaxXPForFamiliar(SBFamiliars.CAT));
+//        player.sendSystemMessage(handler.selectFamiliar(SBFamiliars.FROG) ? Component.literal("Selected cat") : Component.literal("Failed to set familiar"));
     }
 }

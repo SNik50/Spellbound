@@ -42,7 +42,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                 .duration(400)
                 .manaCost(20)
                 .baseDamage(5)
-                .castAnimation(context -> context.quickOrSimpleCast(CRYSTAL_PREDICATE.test(context)))
+                .castAnimation((context, spell) -> context.quickOrSimpleCast(CRYSTAL_PREDICATE.test(context)))
                 .castCondition((context, shatteringCrystalSpell) -> {
                     if (context.getTarget() instanceof ShatteringCrystal crystal && context.getCaster() == crystal.getSummoner()) {
                         if (context.hasSkill(SBSkills.GLACIAL_IMPACT) && context.hasCatalyst(SBItems.FROZEN_SHARD.get()) && !crystal.marked) {

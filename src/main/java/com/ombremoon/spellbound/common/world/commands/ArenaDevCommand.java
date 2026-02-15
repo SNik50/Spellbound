@@ -2,7 +2,10 @@ package com.ombremoon.spellbound.common.world.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.ombremoon.spellbound.common.init.SBBlocks;
+import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
+import com.ombremoon.spellbound.common.world.SpellDimensionData;
 import com.ombremoon.spellbound.common.world.block.SummonStoneBlock;
 import com.ombremoon.spellbound.common.world.block.entity.SummonPortalBlockEntity;
 import com.ombremoon.spellbound.common.world.dimension.DimensionCreator;
@@ -11,6 +14,7 @@ import com.ombremoon.spellbound.networking.PayloadHandler;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -25,16 +29,25 @@ import net.minecraft.world.phys.Vec3;
 public class ArenaDevCommand {
 
     public ArenaDevCommand(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context) {
-        dispatcher.register(Commands.literal("arena")
+        dispatcher.register(Commands.literal("spell_dimension")
                 .requires(source -> source.hasPermission(2))
-                .then(Commands.literal("spawn")
-                        .executes(ctx -> spawnPortal(ctx.getSource())))
-                .then(Commands.literal("remove")
-                        .executes(ctx -> removeArena(ctx.getSource())))
-                .then(Commands.literal("reset")
-                        .executes(ctx -> resetAll(ctx.getSource())))
-                .then(Commands.literal("bounds")
-                        .executes(ctx -> toggleBounds(ctx.getSource()))));
+                        .then(Commands.literal("arena")
+                                .then(Commands.literal("spawn")
+                                        .executes(ctx -> spawnPortal(ctx.getSource())))
+                                .then(Commands.literal("remove")
+                                        .executes(ctx -> removeArena(ctx.getSource())))
+                                .then(Commands.literal("reset")
+                                        .executes(ctx -> resetAll(ctx.getSource())))
+                                .then(Commands.literal("bounds")
+                                        .executes(ctx -> toggleArenaBounds(ctx.getSource()))))
+                        .then(Commands.literal("deception")
+                                /*.then(Commands.literal("spawn")
+                                        .then(Commands.argument("spells", ResourceArgument.resource(context, SBSpells.SPELL_TYPE_REGISTRY_KEY))
+                                                .executes(ctx -> spawnPuzzleDungeon(ctx.getSource(),
+                                                        ResourceArgument.getResource(ctx, "spells", SBSpells.SPELL_TYPE_REGISTRY_KEY))))
+                                )*/
+                                .then(Commands.literal("bounds")
+                                        .executes(ctx -> toggleDungeonBounds(ctx.getSource())))));
     }
 
     private int spawnPortal(CommandSourceStack source) {
@@ -156,25 +169,25 @@ public class ArenaDevCommand {
         return 1;
     }
 
-    private static boolean boundsEnabled = false;
+    private static boolean arenaBoundsEnabled = false;
 
-    private int toggleBounds(CommandSourceStack source) {
+    private int toggleArenaBounds(CommandSourceStack source) {
         if (!source.isPlayer()) return 0;
         ServerPlayer player = source.getPlayer();
         ServerLevel level = source.getLevel();
 
-        boundsEnabled = !boundsEnabled;
+        arenaBoundsEnabled = !arenaBoundsEnabled;
 
-        if (!boundsEnabled) {
-            PayloadHandler.sendArenaDebugDisable(player);
+        if (!arenaBoundsEnabled) {
+            PayloadHandler.sendDimensionDebugDisable(player);
             source.sendSuccess(() -> Component.literal("Arena bounds rendering disabled"), true);
             return 1;
         }
 
-        if (!ArenaSavedData.isArena(level)) {
-            PayloadHandler.sendArenaDebugDisable(player);
-            source.sendFailure(Component.literal("Not in an arena dimension"));
-            boundsEnabled = false;
+        if (!SpellDimensionData.isStatic(level)) {
+            PayloadHandler.sendDimensionDebugDisable(player);
+            source.sendFailure(Component.literal("Not in a static dimension"));
+            arenaBoundsEnabled = false;
             return 0;
         }
 
@@ -182,9 +195,9 @@ public class ArenaDevCommand {
         BoundingBox bounds = data.getStructureBounds();
 
         if (bounds == null) {
-            PayloadHandler.sendArenaDebugDisable(player);
-            source.sendFailure(Component.literal("Arena bounds not available"));
-            boundsEnabled = false;
+            PayloadHandler.sendDimensionDebugDisable(player);
+            source.sendFailure(Component.literal("Structure bounds not available"));
+            arenaBoundsEnabled = false;
             return 0;
         }
 
@@ -193,8 +206,50 @@ public class ArenaDevCommand {
         BlockPos origin = DynamicDimensionFactory.ORIGIN;
         BlockPos spawnPos = origin.offset((int) spawnOffset.x, (int) spawnOffset.y, (int) spawnOffset.z);
 
-        PayloadHandler.sendArenaDebug(player, true, bounds, spawnPos, origin);
+        PayloadHandler.sendDimensionDebug(player, true, bounds, spawnPos, origin);
         source.sendSuccess(() -> Component.literal("Arena bounds rendering enabled. Red=bounds, Green=spawn, Blue=origin"), true);
+        return 1;
+    }
+
+    private static boolean dungeonBoundsEnabled = false;
+
+    private int toggleDungeonBounds(CommandSourceStack source) {
+        if (!source.isPlayer()) return 0;
+        ServerPlayer player = source.getPlayer();
+        ServerLevel level = source.getLevel();
+
+        dungeonBoundsEnabled = !dungeonBoundsEnabled;
+
+        if (!dungeonBoundsEnabled) {
+            PayloadHandler.sendDimensionDebugDisable(player);
+            source.sendSuccess(() -> Component.literal("Dungeon bounds rendering disabled"), true);
+            return 1;
+        }
+
+        if (!SpellDimensionData.isStatic(level)) {
+            PayloadHandler.sendDimensionDebugDisable(player);
+            source.sendFailure(Component.literal("Not in a static dimension"));
+            dungeonBoundsEnabled = false;
+            return 0;
+        }
+
+        PuzzleDungeonData data = PuzzleDungeonData.get(level);
+        BoundingBox bounds = data.getStructureBounds();
+
+        if (bounds == null) {
+            PayloadHandler.sendDimensionDebugDisable(player);
+            source.sendFailure(Component.literal("Structure bounds not available"));
+            dungeonBoundsEnabled = false;
+            return 0;
+        }
+
+        var puzzle = data.getCurrentDungeon();
+        Vec3 spawnOffset = puzzle != null ? puzzle.spawnData().playerOffset() : Vec3.ZERO;
+        BlockPos origin = bounds.getCenter();
+        BlockPos spawnPos = origin.offset((int) spawnOffset.x, (int) spawnOffset.y, (int) spawnOffset.z);
+
+        PayloadHandler.sendDimensionDebug(player, true, bounds, spawnPos, origin);
+        source.sendSuccess(() -> Component.literal("Dungeon bounds rendering enabled. Red=bounds, Green=spawn, Blue=origin"), true);
         return 1;
     }
 }

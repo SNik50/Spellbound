@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DungeonRules {
-    private static List<ResourceLocation> RULES = new ArrayList<>();
+    private static final List<ResourceLocation> RULES = new ArrayList<>();
     public static final ResourceLocation NO_BUILDING = makeRule("no_building");
     public static final ResourceLocation NO_INTERACT = makeRule("no_interact");
     public static final ResourceLocation NO_PVP = makeRule("no_pvp");

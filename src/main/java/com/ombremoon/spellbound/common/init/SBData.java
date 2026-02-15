@@ -12,9 +12,7 @@ import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.tree.UpgradeTree;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import net.minecraft.world.phys.Vec3;
@@ -88,6 +86,12 @@ public class SBData {
             "effect_heal_target", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Boolean>> INVISIBILITY_DIRTY = ATTACHMENT_TYPES.register(
             "invisibility_dirty", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
+    public static final Supplier<AttachmentType<List<ResourceLocation>>> PUZZLE_RULES = ATTACHMENT_TYPES.register(
+            "puzzle_rules", () -> AttachmentType.<List<ResourceLocation>>builder(() -> new ArrayList<>())
+                    .serialize(ResourceLocation.CODEC.listOf())
+                    .sync(ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()))
+                    .build()
+    );
     public static final Supplier<AttachmentType<Boolean>> NO_FLY_DUNGEON = ATTACHMENT_TYPES.register(
             "no_fly_dungeon", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build()
     );

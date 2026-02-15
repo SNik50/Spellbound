@@ -9,8 +9,10 @@ import com.ombremoon.spellbound.common.world.entity.SmartSpellEntity;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.world.entity.ai.goal.FollowSummonerGoal;
+import com.ombremoon.spellbound.common.world.spell.summon.SummonUndeadSpell;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.*;
@@ -18,17 +20,17 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.function.BiPredicate;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.function.*;
 
 public abstract class SummonSpell extends AnimatedSpell {
     private static final SpellDataKey<Set<Integer>> SUMMONS = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.INT_SET.get());
+    private static final SpellDataKey<Optional<Skill>> CHOICE = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.SKILL.get());
     private static final ResourceLocation POST_DAMAGE_EVENT = CommonClass.customLocation("summon_post_damage");
     private static final ResourceLocation CASTER_ATTACK_EVENT = CommonClass.customLocation("summon_caster_attack");
     private boolean summonedEntity;
@@ -70,14 +72,22 @@ public abstract class SummonSpell extends AnimatedSpell {
     protected void defineSpellData(SyncedSpellData.Builder builder) {
         super.defineSpellData(builder);
         builder.define(SUMMONS, new HashSet<>());
+        builder.define(CHOICE, Optional.empty());
+    }
+
+    protected boolean hasSpecialChoice(SummonSpell spell, SpellContext context) {
+        var handler = context.getSpellHandler();
+        var list = handler.getActiveSpells(spell.spellType(), abstractSpell -> abstractSpell instanceof SummonSpell summonSpell && context.isChoice(summonSpell.choice));
+        return !list.isEmpty();
     }
 
     @Override
     public void onCastStart(SpellContext context) {
-        super.onCastStart(context);
         var skills = context.getSkills();
         if (this.isSpecialChoice)
             this.choice = skills.getChoice(this.spellType());
+
+        super.onCastStart(context);
     }
 
     @Override
@@ -112,6 +122,7 @@ public abstract class SummonSpell extends AnimatedSpell {
     protected void onSpellTick(SpellContext context) {
         Level level = context.getLevel();
         var summons = this.getSummons();
+//        log(this);
         if (!level.isClientSide && this.summonedEntity && summons.isEmpty())
             endSpell();
     }
@@ -169,13 +180,6 @@ public abstract class SummonSpell extends AnimatedSpell {
             handler.getListener().removeListener(POST_DAMAGE_EVENT);
             handler.getListener().removeListener(CASTER_ATTACK_EVENT);
         }
-    }
-
-    protected boolean hasSpecialChoice(SummonSpell spell, SpellContext context) {
-        var handler = context.getSpellHandler();
-        var list = handler.getActiveSpells(spell.spellType(), abstractSpell -> abstractSpell instanceof SummonSpell summonSpell && context.isChoice(summonSpell.choice));
-        log(spell.choice);
-        return !list.isEmpty();
     }
 
     /**
@@ -239,6 +243,13 @@ public abstract class SummonSpell extends AnimatedSpell {
         return entity;
     }
 
+    @Override
+    public @UnknownNullability CompoundTag saveData(CompoundTag compoundTag) {
+        CompoundTag tag = super.saveData(compoundTag);
+        tag.putString("Choice", this.choice == null ? "" : this.choice.location().toString());
+        return tag;
+    }
+
     public static class Builder<T extends SummonSpell> extends AnimatedSpell.Builder<T> {
         private boolean isSpecialChoice;
 
@@ -271,7 +282,7 @@ public abstract class SummonSpell extends AnimatedSpell {
             return this;
         }
 
-        public Builder<T> castAnimation(Function<SpellContext, SpellAnimation> castAnimationName) {
+        public Builder<T> castAnimation(BiFunction<SpellContext, T, SpellAnimation> castAnimationName) {
             this.castAnimation = castAnimationName;
             return this;
         }

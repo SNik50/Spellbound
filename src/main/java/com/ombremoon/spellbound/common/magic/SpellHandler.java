@@ -48,6 +48,7 @@ import org.jetbrains.annotations.UnknownNullability;
 import org.slf4j.Logger;
 
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -604,6 +605,9 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
             return null;
 
         Entity targetEntity = hitResult.getEntity();
+        if (!targetEntity.isAlive() || targetEntity.isRemoved())
+            return null;
+
         if (!blockHitResult.getType().equals(BlockHitResult.Type.MISS)) {
             double blockDistance = blockHitResult.getLocation().distanceTo(startPosition);
             if (blockDistance > targetEntity.distanceTo(this.caster)) {

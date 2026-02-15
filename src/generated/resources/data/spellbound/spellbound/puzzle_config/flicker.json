@@ -1,12 +1,7 @@
 {
   "puzzles": [
     {
-      "alternative_configs": [
-        "spellbound:flicker_1",
-        "spellbound:flicker_2",
-        "spellbound:flicker_3",
-        "spellbound:flicker_4"
-      ],
+      "max_reset_count": 3,
       "objectives": [
         {
           "criteria": {
@@ -38,7 +33,7 @@
                     "tags": [
                       {
                         "expected": true,
-                        "id": "spellbound:spell_damage"
+                        "id": "minecraft:is_fire"
                       }
                     ]
                   }
@@ -55,24 +50,23 @@
         }
       ],
       "rules": [
+        "spellbound:no_interact",
         "spellbound:no_building",
         "spellbound:no_flying",
-        "spellbound:no_pve",
-        "spellbound:no_pvp",
         "spellbound:no_pve_or_pvp",
         "spellbound:no_spell_casting"
       ],
       "spawn_data": {
         "player_offset": [
-          0.0,
+          -14.0,
           -5.0,
-          -14.0
+          0.0
         ],
         "player_rotation": 0.0,
         "spell_offset": [
-          0.0,
+          14.0,
           -4.0,
-          14.0
+          0.0
         ]
       }
     }

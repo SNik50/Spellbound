@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.common.init;
 
-import com.ombremoon.spellbound.common.magic.acquisition.bosses.StaticLevelSpawnData;
+import com.ombremoon.spellbound.common.magic.acquisition.bosses.DynamicLevelSpawnData;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.DungeonRules;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
@@ -15,6 +15,7 @@ import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.TagPredicate;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
@@ -43,24 +44,20 @@ public interface SBPuzzleConfigs {
                                                                 PlayerHurtTrigger.Instance
                                                                         .entityHurtPlayer(DamagePredicate.Builder.damageInstance().type(
                                                                                 DamageSourcePredicate.Builder.damageType().tag(
-                                                                                        TagPredicate.is(SBTags.DamageTypes.SPELL_DAMAGE)
+                                                                                        TagPredicate.is(DamageTypeTags.IS_FIRE)
                                                                                 )
                                                                         ))
                                                         )
                                                         .cooldown(5))
+                                        .maxResetCount(3)
                                         .spawnData(
-                                                StaticLevelSpawnData.Builder.create()
-                                                        .playerOffset(new Vec3(0, -5, -14))
-                                                        .spellOffset(new Vec3(0, -4, 14))
+                                                DynamicLevelSpawnData.Builder.create()
+                                                        .playerOffset(new Vec3(-14, -5, 0))
+                                                        .spellOffset(new Vec3(14, -4, 0))
                                         )
-                                        .withAlternativeConfig(CommonClass.customLocation("flicker_1"))
-                                        .withAlternativeConfig(CommonClass.customLocation("flicker_2"))
-                                        .withAlternativeConfig(CommonClass.customLocation("flicker_3"))
-                                        .withAlternativeConfig(CommonClass.customLocation("flicker_4"))
+                                        .addRule(DungeonRules.NO_INTERACT)
                                         .addRule(DungeonRules.NO_BUILDING)
                                         .addRule(DungeonRules.NO_FLYING)
-                                        .addRule(DungeonRules.NO_PVE)
-                                        .addRule(DungeonRules.NO_PVP)
                                         .addRule(DungeonRules.NO_PVE_OR_PVP)
                                         .addRule(DungeonRules.NO_SPELL_CASTING)
                         ));

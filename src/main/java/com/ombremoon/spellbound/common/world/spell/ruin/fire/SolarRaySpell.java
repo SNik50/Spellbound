@@ -105,7 +105,7 @@ public class SolarRaySpell extends ChanneledSpell {
                 .manaTickCost(10)
                 .baseDamage(3)
                 .castTime(23)
-                .castAnimation(context -> new SpellAnimation("solar_ray_cast", SpellAnimation.Type.CAST, true))
+                .castAnimation((context, spell) -> new SpellAnimation("solar_ray_cast", SpellAnimation.Type.CAST, true))
                 .channelAnimation(context -> new SpellAnimation("solar_ray_channel", SpellAnimation.Type.CHANNEL, !context.hasSkill(SBSkills.OVERPOWER)))
                 .stopChannelAnimation(new SpellAnimation("solar_ray_end", SpellAnimation.Type.CAST, true));
     }

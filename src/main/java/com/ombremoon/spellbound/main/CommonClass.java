@@ -9,6 +9,7 @@ import net.neoforged.fml.loading.FMLLoader;
 public class CommonClass {
 
     public static void init(IEventBus modEventBus) {
+        SBAffinities.register();
         SBArmorMaterials.register(modEventBus);
         SBAttributes.register(modEventBus);
         SBBlockEntities.register(modEventBus);
@@ -19,6 +20,7 @@ public class CommonClass {
         SBDataTypes.register(modEventBus);
         SBEffects.register(modEventBus);
         SBEntities.register(modEventBus);
+        SBFamiliars.register();
         SBFeatures.register(modEventBus);
         SBItems.register(modEventBus);
         SBLootFunctions.register(modEventBus);
@@ -31,10 +33,9 @@ public class CommonClass {
         SBSkills.register(modEventBus);
         SBSpells.register(modEventBus);
         SBStats.register(modEventBus);
+        SBStructures.register(modEventBus);
         SBTriggers.register(modEventBus);
         SBLootModifiers.register(modEventBus);
-        SBAffinities.register();
-        SBFamiliars.register();
 
         MageArmorItem.armorAttributeInit();
 //        fixAttributes();

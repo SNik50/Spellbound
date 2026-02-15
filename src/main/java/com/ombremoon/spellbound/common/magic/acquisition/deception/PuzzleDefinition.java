@@ -3,22 +3,21 @@ package com.ombremoon.spellbound.common.magic.acquisition.deception;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.ombremoon.spellbound.common.magic.acquisition.bosses.StaticLevelSpawnData;
+import com.ombremoon.spellbound.common.magic.acquisition.bosses.DynamicLevelSpawnData;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public record PuzzleDefinition(
         ResourceLocation puzzleId,
         List<SpellAction> objectives,
         List<ResourceLocation> rules,
         List<SpellAction> resetConditions,
-        Optional<List<ResourceLocation>> alternativeConfigs,
-        StaticLevelSpawnData spawnData
+        int maxResetCount,
+        DynamicLevelSpawnData spawnData
 ) {
     public static final Codec<PuzzleDefinition> CODEC = RecordCodecBuilder.<PuzzleDefinition>create(
             instance -> instance.group(
@@ -26,8 +25,8 @@ public record PuzzleDefinition(
                     SpellAction.CODEC.listOf().fieldOf("objectives").forGetter(PuzzleDefinition::objectives),
                     ResourceLocation.CODEC.listOf().fieldOf("rules").forGetter(PuzzleDefinition::rules),
                     SpellAction.CODEC.listOf().fieldOf("reset_conditions").forGetter(PuzzleDefinition::resetConditions),
-                    ResourceLocation.CODEC.listOf().optionalFieldOf("alternative_configs").forGetter(PuzzleDefinition::alternativeConfigs),
-                    StaticLevelSpawnData.CODEC.fieldOf("spawn_data").forGetter(PuzzleDefinition::spawnData)
+                    Codec.INT.fieldOf("max_reset_count").forGetter(PuzzleDefinition::maxResetCount),
+                    DynamicLevelSpawnData.CODEC.fieldOf("spawn_data").forGetter(PuzzleDefinition::spawnData)
             ).apply(instance, PuzzleDefinition::new)
     ).validate(PuzzleDefinition::validate);
 
@@ -67,8 +66,8 @@ public record PuzzleDefinition(
         private final List<SpellAction> objectives = new ArrayList<>();
         private final List<ResourceLocation> rules = new ArrayList<>();
         private final List<SpellAction> resetConditions = new ArrayList<>();
-        private List<ResourceLocation> alternativeConfigs = new ArrayList<>();
-        private StaticLevelSpawnData spawnData = new StaticLevelSpawnData(Vec3.ZERO, 0f, Vec3.ZERO);
+        private int maxResetCount = 3;
+        private DynamicLevelSpawnData spawnData = new DynamicLevelSpawnData(Vec3.ZERO, 0f, Vec3.ZERO);
 
         public static Builder define(ResourceLocation puzzleId) {
             Builder builder = new Builder();
@@ -91,18 +90,18 @@ public record PuzzleDefinition(
             return this;
         }
 
-        public Builder withAlternativeConfig(ResourceLocation config) {
-            this.alternativeConfigs.add(config);
+        public Builder maxResetCount(int count) {
+            this.maxResetCount = count;
             return this;
         }
 
-        public Builder spawnData(StaticLevelSpawnData.Builder spawnData) {
+        public Builder spawnData(DynamicLevelSpawnData.Builder spawnData) {
             this.spawnData = spawnData.build();
             return this;
         }
 
         public PuzzleDefinition build() {
-            return new PuzzleDefinition(puzzleId, objectives, rules, resetConditions, Optional.of(alternativeConfigs), this.spawnData);
+            return new PuzzleDefinition(puzzleId, objectives, rules, resetConditions, maxResetCount, this.spawnData);
         }
     }
 }

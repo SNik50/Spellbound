@@ -197,8 +197,8 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayer(player, new ScrapToastPayload(scrap));
     }
 
-    public static void sendArenaDebug(ServerPlayer player, boolean enabled, BoundingBox bounds, BlockPos spawnPos, BlockPos origin) {
-        PacketDistributor.sendToPlayer(player, new ArenaDebugPayload(
+    public static void sendDimensionDebug(ServerPlayer player, boolean enabled, BoundingBox bounds, BlockPos spawnPos, BlockPos origin) {
+        PacketDistributor.sendToPlayer(player, new SpellDimensionDebugPayload(
                 enabled,
                 bounds.minX(), bounds.minY(), bounds.minZ(),
                 bounds.maxX(), bounds.maxY(), bounds.maxZ(),
@@ -206,8 +206,8 @@ public class PayloadHandler {
         ));
     }
 
-    public static void sendArenaDebugDisable(ServerPlayer player) {
-        PacketDistributor.sendToPlayer(player, new ArenaDebugPayload(
+    public static void sendDimensionDebugDisable(ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, new SpellDimensionDebugPayload(
                 false, 0, 0, 0, 0, 0, 0, BlockPos.ZERO, BlockPos.ZERO
         ));
     }
@@ -412,8 +412,8 @@ public class PayloadHandler {
                 ClientPayloadHandler::handGuideBooks
         );
         registrar.playToClient(
-                ArenaDebugPayload.TYPE,
-                ArenaDebugPayload.STREAM_CODEC,
+                SpellDimensionDebugPayload.TYPE,
+                SpellDimensionDebugPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleArenaDebug
         );
 

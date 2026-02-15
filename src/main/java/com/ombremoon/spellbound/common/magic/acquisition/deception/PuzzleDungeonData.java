@@ -6,7 +6,7 @@ import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
-import com.ombremoon.spellbound.common.world.StructureHolderData;
+import com.ombremoon.spellbound.common.world.SpellDimensionData;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.ActionHolder;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerSpellActions;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
@@ -30,10 +30,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -43,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class PuzzleDungeonData extends SavedData implements StructureHolderData {
+public class PuzzleDungeonData extends SavedData implements SpellDimensionData {
     public static final Logger LOGGER = Constants.LOG;
 
     //Global
@@ -60,6 +62,7 @@ public class PuzzleDungeonData extends SavedData implements StructureHolderData 
     private boolean puzzleStarted;
     private boolean puzzleCompleted;
     private int dungeonIndex;
+    private int resetCount;
     @Nullable
     private BoundingBox dungeonBounds;
 
@@ -114,14 +117,17 @@ public class PuzzleDungeonData extends SavedData implements StructureHolderData 
         return isDungeon(level) && data.currentDungeon!= null && data.currentDungeon.hasRule(rule);
     }
 
+    public static boolean hasRule(Level level, Player player, ResourceLocation rule) {
+        if (!level.isClientSide) {
+            PuzzleDungeonData data = PuzzleDungeonData.get((ServerLevel) level);
+            return isDungeon(level) && data.currentDungeon != null && data.currentDungeon.hasRule(rule);
+        } else {
+            return player.getData(SBData.PUZZLE_RULES).contains(rule);
+        }
+    }
+
     public void spawnDungeon(ServerLevel level) {
         ResourceLocation structureLoc = this.configuration.location();
-        var optional = this.currentDungeon.alternativeConfigs();
-        if (optional.isPresent()) {
-            List<ResourceLocation> configs = optional.get();
-            structureLoc = configs.get(level.random.nextInt(configs.size()));
-        }
-
         if (DynamicDimensionFactory.spawnDungeon(level, structureLoc)) {
             this.spawnedDungeon = true;
             this.setDirty();
@@ -192,6 +198,10 @@ public class PuzzleDungeonData extends SavedData implements StructureHolderData 
         return this.objectives.contains(action);
     }
 
+    public boolean willResetDungeon(ActionHolder action) {
+        return this.resetConditions.contains(action);
+    }
+
     public void handleDungeonLogic(ServerLevel level) {
         Player player = level.getPlayerByUUID(this.owner);
         if (player == null)
@@ -228,8 +238,28 @@ public class PuzzleDungeonData extends SavedData implements StructureHolderData 
         return false;
     }
 
-    private void resetDungeon(ServerLevel level) {
+    public void resetDungeon(ServerLevel level) {
+        Player player = level.getPlayerByUUID(this.owner);
+        if (player == null)
+            return;
 
+        if (this.currentDungeon == null || this.dungeonBounds == null)
+            return;
+
+        this.resetCount++;
+        if (this.resetCount >= this.currentDungeon.maxResetCount()) {
+            this.destroyDimension(level);
+        }
+
+        BlockPos center = this.dungeonBounds.getCenter();
+        int xSpawn = this.dungeonBounds.getXSpan();
+        BlockPos offset = center.offset(xSpawn, 0, 0);
+        ResourceLocation structureLoc = this.configuration.location();
+        var entities = level.getEntities(player, AABB.of(this.dungeonBounds));
+        entities.forEach(Entity::discard);
+        DynamicDimensionFactory.spawnDungeon(level, structureLoc, offset);
+        DynamicDimensionFactory.spawnInDungeon(level, player, this.currentDungeon, this);
+        this.setDirty();
     }
 
     private void sendToNextDungeon(ServerLevel level, Player player) {
@@ -332,6 +362,7 @@ public class PuzzleDungeonData extends SavedData implements StructureHolderData 
             tag.putBoolean("PuzzleStarted", this.puzzleStarted);
             tag.putBoolean("PuzzleCompleted", this.puzzleCompleted);
             tag.putInt("DungeonIndex", this.dungeonIndex);
+            tag.putInt("ResetCount", this.resetCount);
         }
 
         return tag;
@@ -379,6 +410,7 @@ public class PuzzleDungeonData extends SavedData implements StructureHolderData 
             this.puzzleStarted = nbt.getBoolean("PuzzleStarted");
             this.puzzleCompleted = nbt.getBoolean("PuzzleCompleted");
             this.dungeonIndex = nbt.getInt("DungeonIndex");
+            this.resetCount = nbt.getInt("ResetCount");
         }
     }
 
