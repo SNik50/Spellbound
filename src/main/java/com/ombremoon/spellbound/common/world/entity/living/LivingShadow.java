@@ -77,11 +77,11 @@ public class LivingShadow extends SBLivingEntity {
                 var skills = SpellUtil.getSkills(owner);
                 if (spell.is(SBSpells.FLICKER)) {
                     if (skills.hasSkill(SBSkills.PHANTOM_LURE)) {
-                        var list = this.level().getEntities(this, this.getBoundingBox().inflate(5.0D), target -> !target.is(owner) && !target.is(this) && !SpellUtil.IS_ALLIED.test(target, owner));
-                        for (Entity target : list) {
-                            if (target instanceof LivingEntity living && !living.hasEffect(SBEffects.TAUNT)) {
+                        var list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox().inflate(5.0D), target -> SpellUtil.CAN_ATTACK_ENTITY.test(owner, target));
+                        for (LivingEntity target : list) {
+                            if (!target.hasEffect(SBEffects.TAUNT)) {
                                 var shadowHandler = SpellUtil.getSpellHandler(this);
-                                shadowHandler.applyTauntEffect(living, 40);
+                                shadowHandler.applyTauntEffect(target, 40);
                             }
                         }
                     }

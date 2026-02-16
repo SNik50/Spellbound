@@ -831,6 +831,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return amount * xpModifier * (1.0F + HURT_XP_MODIFIER * (this.getManaCost() / this.manaCost));
     }
 
+    protected Predicate<LivingEntity> getAttackPredicate() {
+        return livingEntity -> SpellUtil.CAN_ATTACK_ENTITY.test(this.caster, livingEntity);
+    }
+
     /**
      * Increments the effect build up for ruin spells (or other registered damage types)
      * @param targetEntity The hurt entity

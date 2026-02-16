@@ -87,16 +87,11 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
     protected void onSpellTick(SpellContext context) {
         super.onSpellTick(context);
         Level level = context.getLevel();
-        LivingEntity caster = context.getCaster();
         if (!level.isClientSide) {
             ShatteringCrystal crystal = this.getCrystal(context);
             if (!this.isSpawning()) {
                 if (crystal != null && (context.hasSkill(SBSkills.THIN_ICE) || context.hasSkill(SBSkills.CHILL))) {
-                    List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, crystal.getBoundingBox().inflate(4))
-                            .stream()
-                            .filter(livingEntity -> !this.isCaster(livingEntity) || SpellUtil.IS_ALLIED.test(caster, livingEntity))
-                            .toList();
-
+                    List<LivingEntity> entities = level.getEntitiesOfClass(LivingEntity.class, crystal.getBoundingBox().inflate(4), this.getAttackPredicate());
                     if (context.hasSkill(SBSkills.CHILL) && this.tickCount % 20 == 0) {
                         for (LivingEntity entity : entities) {
                             this.hurt(crystal, entity, this.getBaseDamage() / 2);
