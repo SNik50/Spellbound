@@ -24,12 +24,12 @@ public class SBSkills {
     public static final DeferredRegister<Skill> SKILLS = DeferredRegister.create(REGISTRY, Constants.MOD_ID);
 
     //Fireball
-    public static final Holder<Skill> FIREBALL = registerSkill("fireball");
-    public static final Holder<Skill> RAPID_FIRE = registerSkill("rapid_fire", 0, 50, preReqs(FIREBALL));
-    public static final Holder<Skill> STICKY_BOMB = registerSkill("sticky_bomb", 0, 50, preReqs(FIREBALL));
-    public static final Holder<Skill> CHARGED_BLAST = registerSkill("charged_blast", 0, 50, preReqs(FIREBALL));
-    public static final Holder<Skill> VOLATILE_CLUSTER = registerSkill("volatile_cluster", 0, 50, preReqs(FIREBALL));
-    public static final Holder<Skill> HOMING_MISSILE = registerSkill("homing_missile", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> FIREBALL = registerRadialSkill("fireball");
+    public static final Holder<Skill> RAPID_FIRE = registerRadialSkill("rapid_fire", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> STICKY_BOMB = registerRadialSkill("sticky_bomb", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> CHARGED_BLAST = registerRadialSkill("charged_blast", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> VOLATILE_CLUSTER = registerRadialSkill("volatile_cluster", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> HOMING_MISSILE = registerRadialSkill("homing_missile", 0, 50, preReqs(FIREBALL));
     public static final Holder<Skill> EXPLOSIVE_AMPLIFIER = registerSkill("explosive_amplifier", 0, 50, preReqs(FIREBALL));
     public static final Holder<Skill> BURNING_ADHESIVE = registerSkill("burning_adhesive", 0, 50, preReqs(FIREBALL));
     public static final Holder<Skill> MOLTEN_CORE = registerSkill("molten_core", 0, 50, preReqs(FIREBALL));

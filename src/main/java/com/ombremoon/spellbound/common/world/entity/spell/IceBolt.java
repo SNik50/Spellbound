@@ -11,10 +11,10 @@ import net.minecraft.world.level.Level;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animation.*;
 
-public class IceShrapnel extends SpellProjectile<ShatteringCrystalSpell> {
-    private static final EntityDataAccessor<Integer> SIZE = SynchedEntityData.defineId(IceShrapnel.class, EntityDataSerializers.INT);
+public class IceBolt extends SpellProjectile<ShatteringCrystalSpell> {
+    private static final EntityDataAccessor<Integer> SIZE = SynchedEntityData.defineId(IceBolt.class, EntityDataSerializers.INT);
 
-    public IceShrapnel(EntityType<? extends Projectile> entityType, Level level) {
+    public IceBolt(EntityType<? extends Projectile> entityType, Level level) {
         super(entityType, level);
     }
 

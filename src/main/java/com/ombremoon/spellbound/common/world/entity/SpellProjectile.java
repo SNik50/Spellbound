@@ -34,6 +34,8 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
     private static final EntityDataAccessor<String> SPELL_TYPE = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.STRING);
     private static final EntityDataAccessor<Integer> SPELL_ID = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> OWNER_ID = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Boolean> IS_HOMING = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Integer> HOMING_TARGET_ID = SynchedEntityData.defineId(SpellProjectile.class, EntityDataSerializers.INT);
     protected static final String CONTROLLER = "controller";
     protected T spell;
     protected SpellHandler handler;
@@ -71,6 +73,14 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
         }
 
         Vec3 vec3 = this.getDeltaMovement();
+        if (this.isHoming()) {
+            Entity entity = this.getHomingTarget();
+            if (entity instanceof LivingEntity) {
+                Vec3 vec31 = entity.position().subtract(this.position());
+                vec3 = vec31.normalize().scale(0.5F);
+                this.setDeltaMovement(vec3);
+            }
+        }
         HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
         if (hitresult.getType() != HitResult.Type.MISS && !net.neoforged.neoforge.event.EventHooks.onProjectileImpact(this, hitresult))
             this.hitTargetOrDeflectSelf(hitresult);
@@ -110,6 +120,8 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
         builder.define(SPELL_TYPE, "");
         builder.define(SPELL_ID, -1);
         builder.define(OWNER_ID, 0);
+        builder.define(IS_HOMING, false);
+        builder.define(HOMING_TARGET_ID, -1);
     }
 
     @Override
@@ -165,6 +177,22 @@ public abstract class SpellProjectile<T extends AbstractSpell> extends Projectil
 
     public void setOwner(LivingEntity livingEntity) {
         this.entityData.set(OWNER_ID, livingEntity.getId());
+    }
+
+    public boolean isHoming() {
+        return this.entityData.get(IS_HOMING);
+    }
+
+    public void setHoming(boolean homing) {
+        this.entityData.set(IS_HOMING, homing);
+    }
+
+    public Entity getHomingTarget() {
+        return this.level().getEntity(this.entityData.get(HOMING_TARGET_ID));
+    }
+
+    public void setHomingTarget(LivingEntity entity) {
+        this.entityData.set(HOMING_TARGET_ID, entity.getId());
     }
 
     @Override

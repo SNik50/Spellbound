@@ -10,7 +10,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
-import com.ombremoon.spellbound.common.world.entity.spell.IceShrapnel;
+import com.ombremoon.spellbound.common.world.entity.spell.IceBolt;
 import com.ombremoon.spellbound.common.world.entity.spell.ShatteringCrystal;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -132,7 +132,7 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
 
     @Override
     public void onProjectileHitEntity(ISpellEntity<?> spellEntity, SpellContext context, EntityHitResult result) {
-        if (spellEntity instanceof IceShrapnel shrapnel) {
+        if (spellEntity instanceof IceBolt shrapnel) {
             Level level = context.getLevel();
             LivingEntity caster = context.getCaster();
             if (!level.isClientSide) {
@@ -235,23 +235,23 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
                 for (int i = 0; i < shards; i++) {
                     this.shootProjectile(
                             context,
-                            SBEntities.ICE_SHRAPNEL.get(),
+                            SBEntities.ICE_BOLT.get(),
                             crystal.position().add(0, 1.5F, 0),
                             (float) Math.toDegrees(RandomUtil.randomValueBetween(-Mth.PI / 4, Mth.PI / 4)),
                             (float) Math.toDegrees(RandomUtil.randomValueUpTo(Mth.TWO_PI)),
                             1.25F,
                             1.0F,
-                            iceShrapnel -> iceShrapnel.setSize(RandomUtil.randomNumberBetween(0, 2))
+                            iceBolt -> iceBolt.setSize(RandomUtil.randomNumberBetween(0, 2))
                     );
                     this.shootProjectile(
                             context,
-                            SBEntities.ICE_SHRAPNEL.get(),
+                            SBEntities.ICE_BOLT.get(),
                             crystal.position().add(0, 1.5F, 0),
                             0.0F,
                             (float) Math.toDegrees(i * Mth.TWO_PI / shards),
                             1.25F,
                             1.0F,
-                            iceShrapnel -> iceShrapnel.setSize(RandomUtil.randomNumberBetween(0, 2))
+                            iceBolt -> iceBolt.setSize(RandomUtil.randomNumberBetween(0, 2))
                     );
                 }
             }

@@ -107,7 +107,7 @@ public class ClientEvents {
         event.registerEntityRenderer(SBEntities.SHADOW_GATE.get(), ShadowGateRenderer::new);
         event.registerEntityRenderer(SBEntities.SOLAR_RAY.get(), SolarRayRenderer::new);
         event.registerEntityRenderer(SBEntities.SHATTERING_CRYSTAL.get(), ShatteringCrystalRenderer::new);
-        event.registerEntityRenderer(SBEntities.ICE_SHRAPNEL.get(), EmissiveSpellProjectileRenderer::new);
+        event.registerEntityRenderer(SBEntities.ICE_BOLT.get(), EmissiveSpellProjectileRenderer::new);
         event.registerEntityRenderer(SBEntities.ICE_MIST.get(), EmissiveOutlineSpellRenderer::new);
         event.registerEntityRenderer(SBEntities.STORMSTRIKE_BOLT.get(), StormstrikeBoltRenderer::new);
         event.registerEntityRenderer(SBEntities.STORM_RIFT.get(), StormRiftRenderer::new);
