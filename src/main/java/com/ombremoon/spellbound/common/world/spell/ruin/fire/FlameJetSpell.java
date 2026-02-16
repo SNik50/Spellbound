@@ -60,14 +60,18 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                     if (context.isChoice(SBSkills.FLAME_GEYSER)) {
                         double range = SpellUtil.getCastRange(context.getCaster());
                         Entity target = spell.getTargetEntity(context.getCaster(), range);
-                        if (target != null)
+                        if (target != null) {
+                            spell.setGeyserPosition(target.position());
                             return true;
+                        }
 
-                        BlockHitResult hitResult = spell.getTargetBlock(range);
-                        if (hitResult.getDirection() != Direction.UP)
-                            return false;
+                        Vec3 spawnPos = spell.getSpawnVec(range);
+                        if (spawnPos != null) {
+                            spell.setGeyserPosition(spawnPos);
+                            return true;
+                        }
 
-                        return spell.getTargetPosition(range) != null;
+                        return false;
                    } else if (context.isChoice(SBSkills.IRON_MAN)) {
                         return context.hasCatalyst(SBItems.SMOLDERING_SHARD.get());
                     }
@@ -258,13 +262,25 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
         } else {
             if (context.isChoice(SBSkills.FLAME_JET) || context.isChoice(SBSkills.TURBO_CHARGE)) {
                 this.addFX(
-                        EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_jet"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                        EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_jet1"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                                .setOffset(0, 0.75, -2)
+                );
+            } else if (context.isChoice(SBSkills.JET_ENGINE)) {
+                this.addFX(
+                        EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_jet1"), caster.getId(), EntityEffectExecutor.AutoRotate.FORWARD)
+                                .setOffset(0, -0.5, 2)
+                                .setRotation(0, 180, 0)
                 );
             } else if (context.isChoice(SBSkills.FLAME_GEYSER)) {
                 this.addFX(
                         EffectBuilder.Block.of(CommonClass.customLocation("flame_jet"), BlockPos.containing(this.getGeyserPosition()))
                                 .setOffset(0, -2.0, 0)
                                 .setRotation(0, 0, 90)
+                );
+            } else if (context.isChoice(SBSkills.FLAME_INFERNO)) {
+                this.addFX(
+                        EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_inferno"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                                .setOffset(0, 1, 0)
                 );
             }
         }
@@ -417,17 +433,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                     var handler = SpellUtil.getSpellHandler(livingEntity);
                     FlameJetSpell spell = handler.getSpell(SBSpells.FLAME_JET.get());
                     if (spell != null) {
-                        double castRange = SpellUtil.getCastRange(livingEntity);
-                        Entity target = handler.getTargetEntity();
-                        if (target != null) {
-                            Vec3 vec3 = target.getPosition(partialTick);
-                            spell.setGeyserPosition(vec3);
-                            return vec3;
-                        }
-
-                        Vec3 vec3 = spell.getSpawnVec(castRange);
-                        spell.setGeyserPosition(vec3);
-                        return vec3;
+                        return spell.getGeyserPosition();
                     }
 
                     return entity.getPosition(partialTick);

@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.networking.serverbound;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -20,7 +21,7 @@ public class ServerPayloadHandler {
         if (!level.isClientSide) {
             var handler = SpellUtil.getSpellHandler(context.player());
             AbstractSpell spell = handler.getCurrentlyCastSpell();
-            spell.setCharges(payload.charges());
+            spell.loadFromClient(payload.tag());
             spell.castSpell(context.player());
         }
     }

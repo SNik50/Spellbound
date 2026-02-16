@@ -187,6 +187,7 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
     public static class StaticEntity extends EffectBuilder<EntityEffectExecutor> {
         private final int entityId;
         private final EntityEffectExecutor.AutoRotate rotate;
+        private Vec3 effectPos = Vec3.ZERO;
         private Vec3 offset = Vec3.ZERO;
         private Vec3 rotation = Vec3.ZERO;
         private Vec3 scale = new Vec3(1, 1, 1);
@@ -202,6 +203,16 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
 
         public static StaticEntity of(ResourceLocation effect, int entityId, EntityEffectExecutor.AutoRotate rotate) {
             return new StaticEntity(effect, entityId, rotate);
+        }
+
+        public StaticEntity setPos(double x, double y, double z) {
+            this.effectPos = new Vec3(x, y, z);
+            return this;
+        }
+
+        public StaticEntity setPos(Vec3 pos) {
+            this.effectPos = pos;
+            return this;
         }
 
         public StaticEntity setOffset(double x, double y, double z) {
@@ -247,6 +258,7 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
                         var rotation = this.rotation;
                         var scale = this.scale;
                         effect.setOffset(offset.x, offset.y, offset.z);
+                        effect.setPos(this.effectPos.x, this.effectPos.y, this.effectPos.z);
                         effect.setRotation(rotation.x, rotation.y, rotation.z);
                         effect.setScale(scale.x, scale.y, scale.z);
                         effect.setDelay(this.delay);

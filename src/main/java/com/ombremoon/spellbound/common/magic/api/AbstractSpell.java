@@ -485,6 +485,14 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             this.tickCount = nbt.getInt("previous_duration");
     }
 
+    public @UnknownNullability CompoundTag initializeFromClient(SpellContext context, CompoundTag compoundTag) {
+        return compoundTag;
+    }
+
+    public void loadFromClient(CompoundTag nbt) {
+        this.setCharges(nbt.getInt("Charges"));
+    }
+
     /**
      * Spell ticking logic. Should not be overridden. Override {@link AbstractSpell#onSpellTick(SpellContext)} for ticking functionality.
      */
@@ -1503,6 +1511,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             handler.previouslyCastSpell = this;
             handler.lastCastTick = level.getGameTime();
             activateSpell();
+            this.sendDirtySpellData();
             EventFactory.onSpellCast(caster, this, this.context);
 
             this.init = true;

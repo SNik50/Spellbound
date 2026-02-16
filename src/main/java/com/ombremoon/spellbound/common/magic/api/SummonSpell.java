@@ -30,7 +30,6 @@ import java.util.function.*;
 
 public abstract class SummonSpell extends AnimatedSpell {
     private static final SpellDataKey<Set<Integer>> SUMMONS = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.INT_SET.get());
-    private static final SpellDataKey<Optional<Skill>> CHOICE = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.SKILL.get());
     private static final ResourceLocation POST_DAMAGE_EVENT = CommonClass.customLocation("summon_post_damage");
     private static final ResourceLocation CASTER_ATTACK_EVENT = CommonClass.customLocation("summon_caster_attack");
     private boolean summonedEntity;
@@ -72,7 +71,6 @@ public abstract class SummonSpell extends AnimatedSpell {
     protected void defineSpellData(SyncedSpellData.Builder builder) {
         super.defineSpellData(builder);
         builder.define(SUMMONS, new HashSet<>());
-        builder.define(CHOICE, Optional.empty());
     }
 
     protected boolean hasSpecialChoice(SummonSpell spell, SpellContext context) {

@@ -113,7 +113,7 @@ public class SpellCastEvents {
                     }
                 } else if (!handler.isChargingOrChannelling()) {
                     if (handler.castTick >= castTime) {
-                        castSpell(player, spell.getCharges());
+                        castSpell(player, spell);
                         handler.castTick = 0;
                     } else {
                         handler.castTick++;
@@ -157,7 +157,7 @@ public class SpellCastEvents {
         PayloadHandler.setChargeOrChannel(false);
         handler.castTick = 0;
         if (castSpell) {
-            castSpell(player, spell.getCharges());
+            castSpell(player, spell);
             spell.resetCharges();
         } else {
             PayloadHandler.stopChannel(spell.spellType());
@@ -179,11 +179,12 @@ public class SpellCastEvents {
         return animation != null && AnimationHelper.isAnimationPlaying(spellController, animation) && animation.stationary();
     }
 
-    public static void castSpell(Player player, int charges) {
+    public static void castSpell(Player player, AbstractSpell spell) {
         if (player.isSpectator()) return;
 
         CompoundTag tag = new CompoundTag();
-        tag.putInt("Charges", charges);
-        PayloadHandler.castSpell(charges);
+        tag.putInt("Charges", spell.getCharges());
+        spell.initializeFromClient(spell.getCastContext(), tag);
+        PayloadHandler.castSpell(tag);
     }
 }

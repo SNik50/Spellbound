@@ -39,6 +39,10 @@ public class SBSpells {
     public static final DeferredRegister<SpellType<?>> SPELL_TYPES = DeferredRegister.create(REGISTRY, Constants.MOD_ID);
 
     //Ruin
+    public static final Supplier<SpellType<FlameJetSpell>> FIREBALL = registerSpell("fireball", fireRuinBuilder(SpellMastery.NOVICE, FlameJetSpell::new)
+            .skills(SBSkills.FIREBALL, SBSkills.RAPID_FIRE, SBSkills.STICKY_BOMB, SBSkills.CHARGED_BLAST,
+                    SBSkills.VOLATILE_CLUSTER, SBSkills.HOMING_MISSILE, SBSkills.EXPLOSIVE_AMPLIFIER,
+                    SBSkills.BURNING_ADHESIVE, SBSkills.MOLTEN_CORE, SBSkills.CLUSTER_STRIKE, SBSkills.AUTO_TARGETING));
     public static final Supplier<SpellType<FlameJetSpell>> FLAME_JET = registerSpell("flame_jet", fireRuinBuilder(SpellMastery.NOVICE, FlameJetSpell::new)
             .skills(SBSkills.FLAME_JET, SBSkills.JET_ENGINE, SBSkills.FLAME_GEYSER, SBSkills.FLAME_INFERNO,
                     SBSkills.IGNITION_BURST, SBSkills.TURBO_CHARGE, SBSkills.EXPULSION_BLAST,

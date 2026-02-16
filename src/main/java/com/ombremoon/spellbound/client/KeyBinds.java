@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.StringRepresentable;
 import net.neoforged.neoforge.client.settings.KeyConflictContext;
 import org.lwjgl.glfw.GLFW;
 
@@ -26,5 +27,48 @@ public class KeyBinds {
     public static KeyMapping getSpellCastMapping() {
         Minecraft minecraft = Minecraft.getInstance();
         return minecraft.options.keyUse;
+    }
+
+    public static KeyMapping getUpMapping() {
+        Minecraft minecraft = Minecraft.getInstance();
+        return minecraft.options.keyUp;
+    }
+
+    public static KeyMapping getLeftMapping() {
+        Minecraft minecraft = Minecraft.getInstance();
+        return minecraft.options.keyLeft;
+    }
+
+    public static KeyMapping getRightMapping() {
+        Minecraft minecraft = Minecraft.getInstance();
+        return minecraft.options.keyRight;
+    }
+
+    public static KeyMapping getDownMapping() {
+        Minecraft minecraft = Minecraft.getInstance();
+        return minecraft.options.keyDown;
+    }
+
+    public enum MovementKey implements StringRepresentable {
+        UP("up"),
+        DOWN("down"),
+        LEFT("left"),
+        RIGHT("right");
+
+        public static final StringRepresentable.EnumCodec<MovementKey> CODEC = StringRepresentable.fromEnum(MovementKey::values);
+        private final String name;
+
+        MovementKey(String name) {
+            this.name = name;
+        }
+
+        public static MovementKey getFromName(String name) {
+            return CODEC.byName(name);
+        }
+
+        @Override
+        public String getSerializedName() {
+            return this.name;
+        }
     }
 }

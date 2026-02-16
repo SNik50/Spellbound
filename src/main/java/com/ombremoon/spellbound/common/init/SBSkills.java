@@ -23,6 +23,19 @@ public class SBSkills {
     public static final Registry<Skill> REGISTRY = new RegistryBuilder<>(SKILL_REGISTRY_KEY).sync(true).create();
     public static final DeferredRegister<Skill> SKILLS = DeferredRegister.create(REGISTRY, Constants.MOD_ID);
 
+    //Fireball
+    public static final Holder<Skill> FIREBALL = registerSkill("fireball");
+    public static final Holder<Skill> RAPID_FIRE = registerSkill("rapid_fire", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> STICKY_BOMB = registerSkill("sticky_bomb", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> CHARGED_BLAST = registerSkill("charged_blast", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> VOLATILE_CLUSTER = registerSkill("volatile_cluster", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> HOMING_MISSILE = registerSkill("homing_missile", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> EXPLOSIVE_AMPLIFIER = registerSkill("explosive_amplifier", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> BURNING_ADHESIVE = registerSkill("burning_adhesive", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> MOLTEN_CORE = registerSkill("molten_core", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> CLUSTER_STRIKE = registerSkill("cluster_strike", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> AUTO_TARGETING = registerSkill("auto_targeting", 0, 50, preReqs(FIREBALL));
+
     //Flame Jet
     public static final Holder<Skill> FLAME_JET = registerRadialSkill("flame_jet");
     public static final Holder<Skill> FLAME_GEYSER = registerRadialSkill("flame_geyser", -75, 50, preReqs(FLAME_JET));
