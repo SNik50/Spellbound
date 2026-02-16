@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,7 @@ public abstract class Multiblock implements Loggable {
     private final int height;
     private final int depth;
     private final MultiblockIndex activeIndex;
+    private final List<MultiblockIndex> partPositions;
 
     protected Multiblock(MultiblockStructure structure) {
         this.structure = structure;
@@ -55,6 +57,17 @@ public abstract class Multiblock implements Loggable {
         this.height = structure.height;
         this.depth = structure.depth;
         this.activeIndex = structure.activeIndex;
+
+        ArrayList<MultiblockIndex> positions = new ArrayList<>();
+        for (var entry : this.indices.entrySet()) {
+            for (BuildingBlock.Value value : entry.getValue().getValues()) {
+                if (value instanceof BuildingBlock.BlockValue) {
+                    positions.add(entry.getKey());
+                    break;
+                }
+            }
+        }
+        this.partPositions = List.copyOf(positions);
     }
 
     public abstract MultiblockSerializer<?> getSerializer();
@@ -134,19 +147,14 @@ public abstract class Multiblock implements Loggable {
     }
 
     private void clearMultiblock(Level level, BlockPos blockPos, Direction facing) {
-        for (int i = 0; i < this.width; i++) {
-            for (int j = 0; j < this.height; j++) {
-                for (int k = 0; k < this.depth; k++) {
-                    MultiblockIndex currentIndex = new MultiblockIndex(i, j, k);
-                    BlockPos currentPos = currentIndex.toPos(facing, blockPos);
-                    BlockEntity blockEntity = level.getBlockEntity(currentPos);
-                    if (blockEntity instanceof MultiblockPart part && part.getMultiblock() == this && part.isAssigned()) {
-                        BlockState state = blockEntity.getBlockState();
-                        part.assign(null, MultiblockIndex.ORIGIN, facing);
-                        part.onCleared(level, currentPos);
-                        level.sendBlockUpdated(currentPos, state, state, 3);
-                    }
-                }
+        for (MultiblockIndex currentIndex : this.partPositions) {
+            BlockPos currentPos = currentIndex.toPos(facing, blockPos);
+            BlockEntity blockEntity = level.getBlockEntity(currentPos);
+            if (blockEntity instanceof MultiblockPart part && part.getMultiblock() == this && part.isAssigned()) {
+                BlockState state = blockEntity.getBlockState();
+                part.assign(null, MultiblockIndex.ORIGIN, facing);
+                part.onCleared(level, currentPos);
+                level.sendBlockUpdated(currentPos, state, state, 3);
             }
         }
 
@@ -323,15 +331,16 @@ public abstract class Multiblock implements Loggable {
         }
 
         void assignMultiblock(Level level) {
-            this.forEachBlock(level, (blockState, index) -> {
+            for (MultiblockIndex index : multiblock.partPositions) {
                 BlockPos blockPos = getIndexPos(index);
+                BlockState blockState = level.getBlockState(blockPos);
                 BlockEntity blockEntity = level.getBlockEntity(blockPos);
                 if (blockEntity instanceof MultiblockPart part && part.shouldAssign()) {
                     part.assign(multiblock, index, facing);
                     this.multiblock.initializePart(part, level, this);
                     level.sendBlockUpdated(blockPos, blockState, blockState, 3);
                 }
-            });
+            }
         }
 
         public void forEachBlock(LevelAccessor level, BiConsumer<BlockState, MultiblockIndex> consumer) {
