@@ -1,34 +1,15 @@
 package com.ombremoon.spellbound.main;
 
-import com.ombremoon.spellbound.client.AnimationHelper;
-import com.ombremoon.spellbound.client.gui.guide.GuideTooltipRenderer;
-import com.ombremoon.spellbound.client.gui.guide.elements.*;
-import com.ombremoon.spellbound.client.gui.guide.renderers.*;
 import com.ombremoon.spellbound.common.init.*;
-import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
-import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookPage;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
-import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
-import com.ombremoon.spellbound.util.SpellUtil;
-import com.zigythebird.playeranim.animation.PlayerAnimResources;
-import com.zigythebird.playeranim.animation.PlayerAnimationController;
-import com.zigythebird.playeranim.api.PlayerAnimationFactory;
-import com.zigythebird.playeranimcore.animation.Animation;
-import com.zigythebird.playeranimcore.animation.RawAnimation;
-import com.zigythebird.playeranimcore.animation.layered.modifier.AbstractFadeModifier;
-import com.zigythebird.playeranimcore.easing.EasingType;
-import com.zigythebird.playeranimcore.enums.PlayState;
-import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
@@ -91,7 +72,7 @@ public class Spellbound {
         event.register(SBDataTypes.REGISTRY);
         event.register(SBTriggers.REGISTRY);
         event.register(SBMultiblockSerializers.REGISTRY);
-        event.register(SBRitualEffects.REGISTRY);
+        event.register(SBMagicEffects.REGISTRY);
         event.register(SBPageElements.REGISTRY);
         event.register(SBBossFights.REGISTRY);
     }

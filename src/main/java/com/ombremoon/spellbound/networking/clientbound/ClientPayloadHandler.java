@@ -5,7 +5,6 @@ import com.ombremoon.spellbound.client.renderer.SpellDimensionDebugRenderer;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
-import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
@@ -60,24 +59,42 @@ public class ClientPayloadHandler {
         });
     }
 
+    public static void handleUpdateCastMode(final UpdateCastModePayload payload, final IPayloadContext context) {
+        Entity entity = context.player().level().getEntity(payload.entityId());
+        if (entity instanceof LivingEntity livingEntity) {
+            var handler = SpellUtil.getSpellHandler(livingEntity);
+            handler.setCastMode(payload.castMode());
+        }
+    }
+
     public static void handleClientChargeOrChannel(final ChargeOrChannelPayload payload, final IPayloadContext context) {
         var handler = SpellUtil.getSpellHandler(context.player());
         boolean charging = payload.isChargingOrChannelling();
         handler.setChargingOrChannelling(charging);
     }
 
-    public static void handleClientUpdateSpells(UpdateSpellsPayload payload, IPayloadContext context) {
+    public static void handleClientCastSpell(ClientCastSpellPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
             Entity entity = level.getEntity(payload.entityId());
             if (entity instanceof LivingEntity livingEntity) {
                 var handler = SpellUtil.getSpellHandler(livingEntity);
-//                AbstractSpell spell = payload.spellType().createSpell();
-                AbstractSpell spell = handler.getCurrentlyCastSpell();
+                AbstractSpell spell = livingEntity.is(context.player()) ? handler.getCurrentlyCastSpell() : payload.spellType().createSpellWithData(livingEntity);
                 if (spell != null) {
                     CompoundTag nbt = payload.initTag();
                     spell.clientCastSpell(livingEntity, level, livingEntity.getOnPos(), payload.castId(), payload.spellData(), nbt);
                 }
+            }
+        });
+    }
+
+    public static void handleUpdateSpells(UpdateSpellsPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var level = context.player().level();
+            Entity entity = level.getEntity(payload.entityId());
+            if (entity instanceof LivingEntity livingEntity) {
+                var handler = SpellUtil.getSpellHandler(livingEntity);
+                handler.loadSpells(payload.spells());
             }
         });
     }

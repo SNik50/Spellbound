@@ -115,12 +115,28 @@ public class PayloadHandler {
         PacketDistributor.sendToServer(new PlayerMovementPayload(PlayerMovementPayload.Movement.ROTATE, 0, 0, yRot));
     }
 
+    public static void updateCastMode(Player player, boolean castMode) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new UpdateCastModePayload(player.getId(), castMode));
+    }
+
     public static void handleAnimation(Player player, SpellAnimation animation, float animationSpeed, boolean stopAnimation) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new HandleAnimationPayload(player.getUUID().toString(), animation, animationSpeed, stopAnimation));
     }
 
-    public static void updateSpells(LivingEntity entity, SpellType<?> spellType, int castId,CompoundTag initTag, @Nullable CompoundTag spellData) {
-        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new UpdateSpellsPayload(entity.getId(), spellType, castId, initTag, spellData));
+    /*public static void clientCastSpell(LivingEntity entity, SpellType<?> spellType, int castId, CompoundTag initTag, @Nullable CompoundTag spellData) {
+        if (entity instanceof ServerPlayer serverPlayer) {
+            PacketDistributor.sendToPlayer(serverPlayer, new ClientCastSpellPayload(entity.getId(), spellType, castId, initTag, spellData));
+        } else {
+            PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new ClientCastSpellPayload(entity.getId(), spellType, castId, initTag, spellData));
+        }
+    }*/
+
+    public static void clientCastSpell(LivingEntity entity, SpellType<?> spellType, int castId, CompoundTag initTag, @Nullable CompoundTag spellData) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new ClientCastSpellPayload(entity.getId(), spellType, castId, initTag, spellData));
+    }
+
+    public static void updateSpells(LivingEntity entity, CompoundTag spells) {
+        PacketDistributor.sendToPlayersTrackingEntity(entity, new UpdateSpellsPayload(entity.getId(), spells));
     }
 
     //Does this need to go to everyone?
@@ -228,6 +244,11 @@ public class PayloadHandler {
     public static void register(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(Constants.MOD_ID).optional();
         registrar.playToClient(
+                UpdateCastModePayload.TYPE,
+                UpdateCastModePayload.STREAM_CODEC,
+                ClientPayloadHandler::handleUpdateCastMode
+        );
+        registrar.playToClient(
                 HandleAnimationPayload.TYPE,
                 HandleAnimationPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleAnimation
@@ -238,9 +259,14 @@ public class PayloadHandler {
                 ClientPayloadHandler::handleEndSpell
         );
         registrar.playToClient(
+                ClientCastSpellPayload.TYPE,
+                ClientCastSpellPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleClientCastSpell
+        );
+        registrar.playToClient(
                 UpdateSpellsPayload.TYPE,
                 UpdateSpellsPayload.STREAM_CODEC,
-                ClientPayloadHandler::handleClientUpdateSpells
+                ClientPayloadHandler::handleUpdateSpells
         );
         registrar.playToClient(
                 UpdateSpellTicksPayload.TYPE,

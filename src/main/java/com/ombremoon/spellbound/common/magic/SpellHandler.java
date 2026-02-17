@@ -26,6 +26,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -71,6 +72,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private Set<SpellType<?>> spellSet = new ObjectOpenHashSet<>();
     private Set<SpellType<?>> equippedSpellSet = new ObjectOpenHashSet<>();
     private final Multimap<SpellType<?>, AbstractSpell> activeSpells = ArrayListMultimap.create();
+    private boolean spellDirty;
     private SpellType<?> selectedSpell;
     private AbstractSpell currentlyCastingSpell;
     public AbstractSpell previouslyCastSpell;
@@ -170,6 +172,12 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      */
     public void switchMode() {
         this.castMode = !this.castMode;
+        this.spellDirty = true;
+    }
+
+    public void setCastMode(boolean castMode) {
+        this.castMode = castMode;
+        this.spellDirty = true;
     }
 
     /**
@@ -337,6 +345,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      */
     public void activateSpell(AbstractSpell spell) {
         this.activeSpells.put(spell.spellType(), spell);
+        this.spellDirty = true;
     }
 
     /**
@@ -351,6 +360,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      */
     public void endSpells() {
         this.activeSpells.forEach((spellType, spell) -> spell.endSpell());
+        this.spellDirty = true;
     }
 
     /**
@@ -359,6 +369,15 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      */
     public void recastSpell(AbstractSpell spell) {
         this.activeSpells.replaceValues(spell.spellType(), List.of(spell));
+        this.spellDirty = true;
+    }
+
+    public boolean isDirty() {
+        return this.spellDirty;
+    }
+
+    public void setDirty(boolean dirty) {
+        this.spellDirty = dirty;
     }
 
     /**
@@ -380,6 +399,35 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      */
     public Collection<AbstractSpell> getActiveSpells() {
         return this.activeSpells.values();
+    }
+
+    public CompoundTag serializeSpells() {
+        CompoundTag tag = new CompoundTag();
+        for (AbstractSpell spell : this.getActiveSpells()) {
+            CompoundTag spellTag = spell.saveData(new CompoundTag());
+            spellTag.putInt("CastId", spell.castId);
+            spellTag.putInt("TickCount", spell.tickCount);
+            tag.put(spell.spellType().location().toString(), spellTag);
+        }
+        return tag;
+    }
+
+    public void loadSpells(CompoundTag tag) {
+        this.activeSpells.clear();
+        for (String key : tag.getAllKeys()) {
+            SpellType<?> spellType = SBSpells.REGISTRY.get(ResourceLocation.tryParse(key));
+            if (spellType == null)
+                continue;
+
+            CompoundTag spellTag = tag.getCompound(key);
+            int castId = spellTag.getInt("CastId");
+            int tickCount = spellTag.getInt("TickCount");
+            AbstractSpell spell = spellType.createSpellWithData(this.caster);
+            spell.loadData(spellTag);
+            spell.castId = castId;
+            spell.tickCount = tickCount;
+            this.activateSpell(spell);
+        }
     }
 
     /**

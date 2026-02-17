@@ -20,6 +20,7 @@ public class CommonClass {
         SBDataTypes.register(modEventBus);
         SBEffects.register(modEventBus);
         SBEntities.register(modEventBus);
+        SBEntityDataSerializers.register(modEventBus);
         SBFamiliars.register();
         SBFeatures.register(modEventBus);
         SBItems.register(modEventBus);
@@ -28,7 +29,7 @@ public class CommonClass {
         SBMultiblockSerializers.register(modEventBus);
         SBPageElements.register(modEventBus);
         SBParticles.register(modEventBus);
-        SBRitualEffects.register(modEventBus);
+        SBMagicEffects.register(modEventBus);
         SBSensors.register(modEventBus);
         SBSkills.register(modEventBus);
         SBSpells.register(modEventBus);

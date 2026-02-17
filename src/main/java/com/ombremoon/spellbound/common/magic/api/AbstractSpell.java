@@ -539,6 +539,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.onSpellStop(this.context);
         this.init = false;
         this.isInactive = true;
+        this.context.getSpellHandler().setDirty(true);
         this.handleFXRemoval();
         if (!level.isClientSide)
             PayloadHandler.endSpell(this.caster, spellType(), this.castId);
@@ -1089,7 +1090,11 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     protected Vec3 getSpawnVec(double range) {
         BlockPos blockPos = this.getSpawnPos(range);
-        return Vec3.atBottomCenterOf(blockPos);
+        return blockPos != null ? Vec3.atBottomCenterOf(blockPos) : null;
+    }
+
+    protected Vec3 getSpawnVec() {
+        return this.getSpawnVec(SpellUtil.getCastRange(this.caster));
     }
 
     public <T extends Entity> T summonEntity(SpellContext context, EntityType<T> entityType, Vec3 spawnPos) {
@@ -1515,7 +1520,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             if (!(this.castPredicate.test(this.context, this) && RandomUtil.percentChance(getCastChance())) || !SpellUtil.canCastSpell(caster, this)) {
                 onCastReset(this.context);
                 CompoundTag initTag = this.initTag(this.isRecast, true);
-                PayloadHandler.updateSpells(caster, this.spellType, this.castId, initTag, nbt);
+                PayloadHandler.clientCastSpell(caster, this.spellType, this.castId, initTag, nbt);
                 return;
             }
 
@@ -1529,7 +1534,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             }
 
             CompoundTag initTag = this.initTag(this.isRecast, false);
-            PayloadHandler.updateSpells(caster, this.spellType, this.castId, initTag, nbt);
+            PayloadHandler.clientCastSpell(caster, this.spellType, this.castId, initTag, nbt);
             awardXp(this.manaCost * this.xpModifier);
             if (caster instanceof Player player) {
                 player.awardStat(SBStats.SPELLS_CAST.get());
@@ -1624,7 +1629,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         firstSpell.ifPresent(AbstractSpell::endSpell);
     }
 
-    protected CompoundTag initTag(boolean isRecast, boolean forceReset) {
+    public CompoundTag initTag(boolean isRecast, boolean forceReset) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("charges", this.charges);
         nbt.putBoolean("isRecast", isRecast);

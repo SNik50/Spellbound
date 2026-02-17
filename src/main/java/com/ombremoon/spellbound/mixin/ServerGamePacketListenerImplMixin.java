@@ -1,6 +1,10 @@
 package com.ombremoon.spellbound.mixin;
 
+import com.ombremoon.spellbound.client.MovementData;
+import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBTriggers;
+import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.network.protocol.game.ServerboundPlayerInputPacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,5 +28,13 @@ public class ServerGamePacketListenerImplMixin {
     @Inject(method = "handleUseItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/advancements/critereon/AnyBlockInteractionTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/item/ItemStack;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void handleUseItemOn(ServerboundUseItemOnPacket packet, CallbackInfo ci, ServerLevel serverlevel, InteractionHand interactionhand, ItemStack itemstack, BlockHitResult blockhitresult) {
         SBTriggers.INTERACT_WITH_BLOCK.get().trigger(this.player, blockhitresult.getBlockPos(), itemstack.copy());
+    }
+
+    @Inject(method = "handlePlayerInput", at = @At(value = "TAIL"))
+    private void handlePlayerInput(ServerboundPlayerInputPacket packet, CallbackInfo ci) {
+        var handler = SpellUtil.getSpellHandler(this.player);
+        if (handler.inCastMode()) {
+            this.player.setData(SBData.MOVEMENT_DATA.get(), new MovementData(packet.getXxa(), packet.getZza(), packet.isJumping(), packet.isShiftKeyDown()));
+        }
     }
 }

@@ -8,7 +8,7 @@
   "effects": [
     {
       "type": "spellbound:create_spell_tome",
-      "path": "spellbound:shadow_gate",
+      "spell": "spellbound:shadow_gate",
       "tier": 2
     }
   ],

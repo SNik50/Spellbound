@@ -309,6 +309,19 @@ public class SBSkills {
     public static Holder<Skill> HALL_OF_MIRRORS = registerSkill("hall_of_mirrors", -50, 150, preReqs(CONFUSION));
     public static Holder<Skill> LOOK_OVER_HERE = registerConditionalRadialSkill("look_over_here", 50, 200, preReqs(SHADOW_FEINT), (player, holder) -> holder.hasSkill(SBSkills.STEP_INTO_SHADOW));
 
+    //Cursed Rune
+    public static Holder<Skill> CURSED_RUNE = registerSkill("cursed_rune");
+    public static Holder<Skill> MAGE_WRECK = registerSkill("mage_wreck", -100, 50, preReqs(CURSED_RUNE));
+    public static Holder<Skill> DISARMING_CURSE = registerSkill("disarming_curse", -75, 100, preReqs(CURSED_RUNE));
+    public static Holder<Skill> MIRROR_CURSE = registerSkill("mirror_curse", -50, 50, preReqs(CURSED_RUNE));
+    public static Holder<Skill> CURSE_OF_PAIN = registerSkill("curse_of_pain", -25, 100, preReqs(CURSED_RUNE));
+    public static Holder<Skill> CURSE_OF_DROUGHT = registerSkill("curse_of_drought", 0, 50, preReqs(CURSED_RUNE));
+    public static Holder<Skill> VANISHING_CURSE = registerSkill("vanishing_curse", 25, 100, preReqs(CURSED_RUNE));
+    public static Holder<Skill> CURSE_OF_WEAKNESS = registerSkill("curse_of_weakness", 50, 50, preReqs(CURSED_RUNE));
+    public static Holder<Skill> CURSE_OF_SUSCEPTIBILITY = registerSkill("curse_of_susceptibility", 75, 100, preReqs(CURSED_RUNE));
+    public static Holder<Skill> TANGLEFOOT_CURSE = registerSkill("tanglefoot_curse", 100, 50, preReqs(CURSED_RUNE));
+    public static Holder<Skill> HIDDEN_RUNE = registerSkill("hidden_rune", 0, 200, preReqs(MAGE_WRECK, DISARMING_CURSE, MIRROR_CURSE, CURSE_OF_PAIN, CURSE_OF_DROUGHT, VANISHING_CURSE, CURSE_OF_WEAKNESS, CURSE_OF_SUSCEPTIBILITY, TANGLEFOOT_CURSE));
+
     //Shadowbond
     public static Holder<Skill> SHADOWBOND = registerSkill("shadowbond");
     public static Holder<Skill> SHADOW_STEP = registerSkill("shadow_step", -50 , 50 , preReqs(SHADOWBOND));

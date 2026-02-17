@@ -71,6 +71,9 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
         compound.putBoolean("isSpellCast", this.isSpellCast);
         compound.putInt("StartTick", this.getStartTick());
         compound.putInt("EndTick", this.getEndTick());
+        if (this.isSpellCast()) {
+            compound.putString("SpellType", this.getSpellType().location().toString());
+        }
     }
 
     @Override
@@ -78,13 +81,18 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
         this.isSpellCast = compound.getBoolean("isSpellCast");
         this.setStartTick(compound.getInt("StartTick"));
         this.setEndTick(compound.getInt("EndTick"));
+        if (compound.contains("SpellType", 8)) {
+            SpellType<?> spellType = SBSpells.REGISTRY.get(ResourceLocation.tryParse(compound.getString("SpellType")));
+            if (spellType != null)
+                this.setSpellType(spellType);
+        }
     }
 
     @Override
     public void tick() {
         super.tick();
         if (!this.level().isClientSide) {
-            if (this.getSummoner() == null || !this.hasSummoner() || this.isEnding() && this.tickCount >= this.getEndTick() || this.isSpellCast() && this.requiresSpellToPersist() && !this.isEnding() && (this.spell == null || this.spell.isInactive))
+            if (this.isEnding() && this.tickCount >= this.getEndTick() || this.isSpellCast() && this.requiresSpellToPersist() && !this.isEnding() && (this.spell == null || this.spell.isInactive))
                 discard();
 
             if (this.spell != null)
@@ -112,7 +120,7 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
 
     @Override
     public boolean isSpellCast() {
-        return this.isSpellCast;
+        return this.getSpellType() != null;
     }
 
     @Override

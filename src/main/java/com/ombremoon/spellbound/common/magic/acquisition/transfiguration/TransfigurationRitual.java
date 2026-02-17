@@ -5,12 +5,10 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
+import com.ombremoon.spellbound.common.magic.effects.MagicEffect;
 import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
-import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.main.Keys;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -18,7 +16,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -43,7 +40,7 @@ public class TransfigurationRitual {
                                         }
                                     }, DataResult::success)
                                     .forGetter(recipe -> recipe.elementMaterials),
-                            RitualEffect.CODEC.listOf().fieldOf("effects").forGetter(TransfigurationRitual::effects)
+                            MagicEffect.CODEC.listOf().fieldOf("effects").forGetter(TransfigurationRitual::effects)
                     )
                     .apply(p_344998_, TransfigurationRitual::new)
     );
@@ -52,10 +49,10 @@ public class TransfigurationRitual {
     private final RitualDefinition definition;
     private final NonNullList<Value> elementMaterials;
     private final NonNullList<Ingredient> materials = NonNullList.create();
-    private final List<RitualEffect> effects;
+    private final List<MagicEffect> effects;
     private final int startupTime;
 
-    TransfigurationRitual(RitualDefinition definition, NonNullList<Value> elementMaterials, List<RitualEffect> effects) {
+    TransfigurationRitual(RitualDefinition definition, NonNullList<Value> elementMaterials, List<MagicEffect> effects) {
         this.definition = definition;
         this.elementMaterials = elementMaterials;
         this.effects = effects;
@@ -101,7 +98,7 @@ public class TransfigurationRitual {
     }
 
     public boolean hasValidEffects(TransfigurationMultiblock multiblock) {
-        for (RitualEffect effect : this.effects) {
+        for (MagicEffect effect : this.effects) {
             if (!effect.isValid(multiblock))
                 return false;
         }
@@ -117,7 +114,7 @@ public class TransfigurationRitual {
         return this.elementMaterials;
     }
 
-    public List<RitualEffect> effects() {
+    public List<MagicEffect> effects() {
         return this.effects;
     }
 
@@ -136,7 +133,7 @@ public class TransfigurationRitual {
     public static class Builder {
         private final RitualDefinition definition;
         private final NonNullList<Value> materials = NonNullList.create();
-        private final List<RitualEffect> effects = new ObjectArrayList<>();
+        private final List<MagicEffect> effects = new ObjectArrayList<>();
 
         public Builder(RitualDefinition definition) {
             this.definition = definition;
@@ -151,7 +148,7 @@ public class TransfigurationRitual {
             return this;
         }
 
-        public Builder withEffect(RitualEffect effect) {
+        public Builder withEffect(MagicEffect effect) {
             this.effects.add(effect);
             return this;
         }

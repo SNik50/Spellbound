@@ -1,8 +1,8 @@
-package com.ombremoon.spellbound.client.renderer.entity.projectile;
+package com.ombremoon.spellbound.client.renderer.types;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.ombremoon.spellbound.client.model.entity.projectile.VFXProjectileModel;
+import com.ombremoon.spellbound.client.model.types.VFXSpellModel;
 import com.ombremoon.spellbound.common.world.entity.SpellProjectile;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -11,7 +11,7 @@ import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
 public class VFXProjectileRenderer extends GeoEntityRenderer<SpellProjectile<?>> {
     public VFXProjectileRenderer(EntityRendererProvider.Context renderManager) {
-        super(renderManager, new VFXProjectileModel());
+        super(renderManager, new VFXSpellModel<>());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.SpellMastery;
+import com.ombremoon.spellbound.common.world.spell.deception.CursedRuneSpell;
 import com.ombremoon.spellbound.common.world.spell.deception.FlickerSpell;
 import com.ombremoon.spellbound.common.world.spell.deception.PurgeMagicSpell;
 import com.ombremoon.spellbound.common.world.spell.deception.ShadowbondSpell;
@@ -138,6 +139,10 @@ public class SBSpells {
             .skills(SBSkills.FLICKER, SBSkills.DISTANT_FLICKER, SBSkills.SWIFT_SHADOWS, SBSkills.STEP_INTO_SHADOW,
                     SBSkills.SILENT_STEP, SBSkills.CONFUSION, SBSkills.BLINDING_MIRAGE,
                     SBSkills.PHANTOM_LURE, SBSkills.SHADOW_FEINT, SBSkills.LOOK_OVER_HERE, SBSkills.HALL_OF_MIRRORS));
+    public static final Supplier<SpellType<CursedRuneSpell>> CURSED_RUNE = registerSpell("cursed_rune", deceptionBuilder(SpellMastery.NOVICE, CursedRuneSpell::new)
+            .skills(SBSkills.CURSED_RUNE, SBSkills.MAGE_WRECK, SBSkills.DISARMING_CURSE,
+                    SBSkills.MIRROR_CURSE, SBSkills.CURSE_OF_PAIN, SBSkills.CURSE_OF_DROUGHT,
+                    SBSkills.CURSE_OF_WEAKNESS, SBSkills.CURSE_OF_SUSCEPTIBILITY, SBSkills.TANGLEFOOT_CURSE, SBSkills.HIDDEN_RUNE));
     public static final Supplier<SpellType<ShadowbondSpell>> SHADOWBOND = registerSpell("shadowbond", deceptionBuilder(SpellMastery.ADEPT, ShadowbondSpell::new)
             .skills(SBSkills.SHADOWBOND, SBSkills.EVERLASTING_BOND, SBSkills.SHADOW_STEP, SBSkills.SNEAK_ATTACK,
                     SBSkills.SILENT_EXCHANGE, SBSkills.SNARE, SBSkills.DISORIENTED,

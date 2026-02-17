@@ -27,6 +27,7 @@
     "HumanoidModelMixin",
     "LevelRendererMixin",
     "LivingEntityRendererMixin",
+    "LocalPlayerMixin",
     "MinecraftMixin",
     "ParticleEngineMixin",
     "PlayerModelMixin",

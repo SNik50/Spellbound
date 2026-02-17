@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.client.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.ombremoon.spellbound.client.KeyBinds;
+import com.ombremoon.spellbound.client.MovementData;
 import com.ombremoon.spellbound.client.gui.CastModeOverlay;
 import com.ombremoon.spellbound.client.gui.SpellSelectScreen;
 import com.ombremoon.spellbound.client.gui.guide.GuideTooltipRenderer;
@@ -19,16 +20,12 @@ import com.ombremoon.spellbound.client.renderer.entity.familiar.FrogModel;
 import com.ombremoon.spellbound.client.renderer.entity.LivingShadowRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.SpellBrokerRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.FrogRenderer;
-import com.ombremoon.spellbound.client.renderer.entity.projectile.VFXProjectileRenderer;
+import com.ombremoon.spellbound.client.renderer.types.*;
 import com.ombremoon.spellbound.client.renderer.entity.projectile.StormstrikeBoltRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.spell.*;
 import com.ombremoon.spellbound.client.renderer.layer.FrozenLayer;
 import com.ombremoon.spellbound.client.renderer.layer.GenericSpellLayer;
 import com.ombremoon.spellbound.client.renderer.layer.SpellCastRenderLayer;
-import com.ombremoon.spellbound.client.renderer.types.EmissiveOutlineSpellRenderer;
-import com.ombremoon.spellbound.client.renderer.types.EmissiveSpellProjectileRenderer;
-import com.ombremoon.spellbound.client.renderer.types.GenericLivingEntityRenderer;
-import com.ombremoon.spellbound.client.renderer.types.GenericSpellRenderer;
 import com.ombremoon.spellbound.client.shader.SBShaders;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
@@ -115,6 +112,7 @@ public class ClientEvents {
         event.registerEntityRenderer(SBEntities.SHADOW_GATE.get(), ShadowGateRenderer::new);
         event.registerEntityRenderer(SBEntities.MUSHROOM.get(), GenericSpellRenderer::new);
         event.registerEntityRenderer(SBEntities.HEALING_BLOSSOM.get(), HealingBlossomRenderer::new);
+        event.registerEntityRenderer(SBEntities.CURSED_RUNE.get(), VFXSpellRenderer::new);
 //        event.registerEntityRenderer(SBEntities.CYCLONE.get(), CycloneRenderer::new);
         event.registerEntityRenderer(SBEntities.HAIL.get(), HailRenderer::new);
 
@@ -194,8 +192,12 @@ public class ClientEvents {
                         var handler = SpellUtil.getSpellHandler(player);
                         if (handler.inCastMode()) {
                             ResourceLocation id = CommonClass.customLocation("idle");
-                            if (state.isMoving()) {
-                                if (player.zza < 0) {
+                            MovementData movementData = player.getData(SBData.MOVEMENT_DATA.get());
+                            if (isMoving(player)) {
+                                if (!player.getDisplayName().getString().contains("1"))
+                                    Constants.LOG.debug("{}", movementData.zza());
+
+                                if (movementData.zza() < 0) {
                                     id = CommonClass.customLocation("walk_backwards");
                                 } else if (player.isCrouching()) {
                                     id = CommonClass.customLocation("walk_sneak");
@@ -249,6 +251,10 @@ public class ClientEvents {
 
             return 0.0F;
         });
+    }
+
+    private static boolean isMoving(Player player) {
+        return player.xo != player.getX() || player.yo != player.getY() || player.zo != player.getZ();
     }
 
     private static void registerElementRenderers() {

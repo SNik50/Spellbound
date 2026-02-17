@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.mojang.serialization.Codec;
+import com.ombremoon.spellbound.client.MovementData;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
@@ -96,6 +97,12 @@ public class SBData {
     );
     public static final Supplier<AttachmentType<Boolean>> NO_FLY_DUNGEON = ATTACHMENT_TYPES.register(
             "no_fly_dungeon", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build()
+    );
+    public static final Supplier<AttachmentType<MovementData>> MOVEMENT_DATA = ATTACHMENT_TYPES.register(
+            "movement_data", () -> AttachmentType.builder(() -> new MovementData(0, 0, false, false))
+                    .serialize(MovementData.CODEC)
+                    .sync(MovementData.STREAM_CODEC)
+                    .build()
     );
     public static final Supplier<AttachmentType<List<ResourceLocation>>> BOOK_SCRAPS = ATTACHMENT_TYPES.register(
             "book_scraps", () -> AttachmentType.<List<ResourceLocation>>builder(() -> new ArrayList<>())

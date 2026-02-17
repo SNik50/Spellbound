@@ -266,6 +266,11 @@ public class NeoForgeEvents {
         if (entity instanceof LivingEntity livingEntity && livingEntity.hasEffect(SBEffects.MAGI_INVISIBILITY)) {
             PayloadHandler.updateInvisibilityEffect(player, livingEntity.getId(), livingEntity.getEffect(SBEffects.MAGI_INVISIBILITY));
         }
+
+        if (entity instanceof ServerPlayer serverPlayer) {
+            var handler = SpellUtil.getSpellHandler(serverPlayer);
+            PayloadHandler.updateCastMode(serverPlayer, handler.inCastMode());
+        }
     }
 
     @SubscribeEvent

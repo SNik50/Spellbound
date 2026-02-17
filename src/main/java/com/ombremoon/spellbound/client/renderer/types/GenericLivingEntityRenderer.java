@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.client.renderer.types;
 
-import com.ombremoon.spellbound.client.model.LivingModel;
+import com.ombremoon.spellbound.client.model.types.LivingModel;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;

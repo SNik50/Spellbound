@@ -1,4 +1,4 @@
-package com.ombremoon.spellbound.client.model;
+package com.ombremoon.spellbound.client.model.types;
 
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
 import com.ombremoon.spellbound.main.CommonClass;

@@ -3,7 +3,7 @@ package com.ombremoon.spellbound.client.renderer.entity.spell;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.ombremoon.spellbound.client.model.GenericModel;
+import com.ombremoon.spellbound.client.model.types.GenericModel;
 import com.ombremoon.spellbound.common.world.entity.spell.HealingBlossom;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
