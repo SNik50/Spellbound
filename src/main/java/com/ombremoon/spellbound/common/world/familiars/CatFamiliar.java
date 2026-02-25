@@ -108,7 +108,7 @@ public class CatFamiliar extends Familiar<CatEntity> {
     private void deathEvent(FamiliarHandler handler, DeathEvent deathEvent) {
         if (!hasAffinity(handler, SBAffinities.NINE_LIVES)) return;
 
-        deathEvent.getDeathEvent().setCanceled(true);
+        deathEvent.cancelEvent();
         LivingEntity fam = handler.getActiveEntity();
 
         fam.setHealth(fam.getMaxHealth()*0.2f);

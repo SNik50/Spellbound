@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.world.block;
 
 import com.ombremoon.spellbound.client.gui.WorkbenchScreen;
 import com.ombremoon.spellbound.client.gui.resonance_stone.ResonanceStoneScreen;
+import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -36,7 +37,7 @@ public class ResonanceStoneBlock extends Block {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
 
         if (level.isClientSide()) {
-            Minecraft.getInstance().setScreen(new ResonanceStoneScreen(Component.translatable("screen.spellbound.resonance_stone")));
+            RenderUtil.openResonanceStone();
         }
 
         return InteractionResult.CONSUME;
