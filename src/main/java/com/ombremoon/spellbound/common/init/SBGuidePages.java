@@ -91,6 +91,9 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> SUMMON_DESCRIPTION = key("summon_description");
     ResourceKey<GuideBookPage> SUMMON_PORTALS = key("summon_portals");
     ResourceKey<GuideBookPage> SUMMON_PORTAL_ACTIVATION = key("summon_portal_activation");
+    ResourceKey<GuideBookPage> FAMILIARS = key("familiars");
+    ResourceKey<GuideBookPage> SPIRIT_WHISTLE = key("spirit_whistle");
+    ResourceKey<GuideBookPage> BOND = key("bond");
     ResourceKey<GuideBookPage> WILD_MUSHROOM = key("wild_mushroom");
     ResourceKey<GuideBookPage> MUSHROOM_ACQ = key("mushroom_page_acq");
 
@@ -661,8 +664,49 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.summon.valid_portals"), PAGE_TWO_START_X, 35),
                 new TextEntry(translatable("guide.summon.valid_portals1"), PAGE_TWO_START_X, 90)
                 );
-        createSpellPage(context, WILD_MUSHROOM, SUMMON_PORTAL_ACTIVATION, Book.SUMMONS, SBSpells.WILD_MUSHROOM);
-        createSummonAcqPage(context, SUMMON_BOOK, MUSHROOM_ACQ, SUMMON_PORTAL_ACTIVATION, SBEntities.GIANT_MUSHROOM.get(), SBSpells.WILD_MUSHROOM.get());
+        createDescriptionWithRecipeAndImage(context,
+                FAMILIARS,
+                SUMMON_PORTAL_ACTIVATION,
+                Book.SUMMONS,
+                translatable("guide.summon.familiars"),
+                translatable("block.spellbound.resonance_stone"),
+                false,
+                List.of(
+                        new RecipeEntry(loc("resonance_stone"), PAGE_TWO_START_X+65, 110)
+                ),
+                List.of(),
+                new TextEntry(translatable("guide.summon.familiars1"), 35),
+                new TextEntry(translatable("guide.summon.familiars2"), 110),
+                new TextEntry(translatable("guide.summon.resonance"), PAGE_TWO_START_X, 35)
+        );
+        createDescriptionWithRecipeAndImage(context,
+                SPIRIT_WHISTLE,
+                FAMILIARS,
+                Book.SUMMONS,
+                translatable("item.spellbound.spirit_whistle"),
+                translatable("guide.summon.familiar_types"),
+                false,
+                List.of(
+                        new RecipeEntry(loc("spirit_whistle"), 65, 110)
+                ),
+                List.of(),
+                new TextEntry(translatable("guide.summon.whistle"), 35),
+                new TextEntry(translatable("guide.summon.types"), PAGE_TWO_START_X, 35)
+        );
+        createDescription(context,
+                BOND,
+                SPIRIT_WHISTLE,
+                Book.SUMMONS,
+                translatable("guide.summon.bond"),
+                translatable("guide.summon.affinities"),
+                false,
+                new TextEntry(translatable("guide.summon.bond1"), 35),
+                new TextEntry(translatable("guide.summon.bond2"), 100),
+                new TextEntry(translatable("guide.summon.affinities1"), PAGE_TWO_START_X, 35),
+                new TextEntry(translatable("guide.summon.affinities2"), PAGE_TWO_START_X, 100)
+        );
+        createSpellPage(context, WILD_MUSHROOM, BOND, Book.SUMMONS, SBSpells.WILD_MUSHROOM);
+        createSummonAcqPage(context, SUMMON_BOOK, MUSHROOM_ACQ, WILD_MUSHROOM, SBEntities.GIANT_MUSHROOM.get(), SBSpells.WILD_MUSHROOM.get());
 
         //Divine
         createCoverPage(context, DIVINE_BOOK, DIVINE_COVER_PAGE, SpellPath.DIVINE,

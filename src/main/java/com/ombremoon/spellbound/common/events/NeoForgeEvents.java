@@ -467,4 +467,11 @@ public class NeoForgeEvents {
 
         SpellUtil.getSpellHandler(entity).getListener().fireEvent(SpellEventListener.Events.EFFECT_APPLICABLE, new EffectApplicableEvent(entity, event));
     }
+
+    public static void onEffectApplied(MobEffectEvent.Added event) {
+        LivingEntity entity = event.getEntity();
+        if (entity.level().isClientSide) return;
+
+        SpellUtil.getSpellHandler(entity).getListener().fireEvent(SpellEventListener.Events.EFFECT_APPLIED, new EffectAppliedEvent(entity, event));
+    }
 }

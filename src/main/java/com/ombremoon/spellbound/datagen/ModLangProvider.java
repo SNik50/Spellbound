@@ -4,10 +4,12 @@ import com.google.common.collect.ImmutableMap;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.magic.skills.FamiliarAffinity;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -48,6 +50,7 @@ public class ModLangProvider extends LanguageProvider {
         SBEntities.ENTITIES.getEntries().forEach(this::entityLang);
         SBEffects.EFFECTS.getEntries().forEach(this::effectLang);
         SBAttributes.ATTRIBUTES.getEntries().forEach(this::attributeLang);
+        SBAffinities.REGISTRY.values().forEach(this::affinityLang);
 
         pathLang();
         manualEntries();
@@ -77,6 +80,10 @@ public class ModLangProvider extends LanguageProvider {
         add(entry.get().getDescriptionId(), checkReplace(entry));
     }
 
+    protected void affinityLang(FamiliarAffinity affinity) {
+        add(affinity.getName().getString(), checkReplace(affinity.location()));
+    }
+
     protected void blockLang(DeferredHolder<Block, ? extends Block> entry) {
         addBlock(entry, checkReplace(entry));
     }
@@ -92,10 +99,22 @@ public class ModLangProvider extends LanguageProvider {
     protected void manualEntries() {
         skillDescriptions();
         guideContents();
+        affinityDescriptions();
+
+        add("spellbound.familiars.equipped", "Familiar Equipped: %1$s");
+        add("spellbound.familiars.rebirthed", "Familiar Rebirthed: %1$s");
+        add("spellbound.familiars.tooltip.equip", "Equip this familiar.");
+        add("spellbound.familiars.tooltip.rebirths", "Rebirths: %1$s");
+        add("spellbound.familiars.tooltip.rebirths1", "Familiars can be rebirthed at bond level 5.");
+        add("spellbound.familiars.tooltip.rebirths2", "This will reset skills but buffs stats.");
 
         add("spellbound.toast.spell_level_up", "%s has reached Level %s");
         add("spellbound.toast.path_level_up", "%s path has reached Level %s");
         add("spellbound.toast.scrap_unlocked", "New book entry unlocked");
+
+        add("spellbound.familiar_type.utility", "Utility");
+        add("spellbound.familiar_type.hybrid", "Hybrid");
+        add("spellbound.familiar_type.combat", "Combat");
 
         add("chat.spelltome.awardxp", "Spell already known. +10 spells XP.");
         add("chat.spelltome.nospell", "This spells tome is blank.");
@@ -118,6 +137,22 @@ public class ModLangProvider extends LanguageProvider {
         
         add("itemGroup.spellbound", "Spellbound🪄");
         add("spellbound.transfiguration_armor.buff", "+12.5% Transfiguration Spell Duration");
+    }
+
+    protected void affinityDescriptions() {
+        add("spellbound.affinity.description.spectral_hops", "Increases summoners jump height.");
+        add("spellbound.affinity.description.submerged", "Increases familiar damage and regeneration after being submerged in water.");
+        add("spellbound.affinity.description.magma_digestion", "Magma cubes have a chance to drop frog lights.");
+        add("spellbound.affinity.description.elongated_tongue", "Summoner gains increased block/entity reach.");
+        add("spellbound.affinity.description.murky_habitat", "Summoner gains +10% spell potency in swamps.");
+        add("spellbound.affinity.description.slimey_expulsion", "Summoners attacks slow their target.");
+
+        add("spellbound.affinity.description.sharpened_claws", "Familiars attacks inflict blood loss.");
+        add("spellbound.affinity.description.natural_predator", "Familiar gains +1 damage and +10% health.");
+        add("spellbound.affinity.description.blood_thirsty", "Foes inflicted with blood loss take +10% damage from familiar.");
+        add("spellbound.affinity.description.feline_pounce", "Familiars first attack will be a pounce with increased attack range.");
+        add("spellbound.affinity.description.blood_magic", "Blood loss in proximity of familiar grants summoner +10% spell potency.");
+        add("spellbound.affinity.description.nine_lives", "When the familiar dies it revives with 20% max health. (5 minute cooldown)");
     }
 
     protected void guideContents() {
@@ -356,6 +391,22 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.summon.portal_activation2", "I believe that if I can create just a single summoning stone adjusted to a specific dimension, I could open a gateway by placing it in the middle of my portal and activating it.");
         add("guide.summon.valid_portals", "Well, after a series of trial and error, I have found that these focused summoning stones must be very specific.");
         add("guide.summon.valid_portals1", "When I am able to find a way to create a new focused stone I will be sure to note it down in this book, along with any information regarding the spells I can draw out from the dimension.");
+
+        add("guide.summon.familiars", "Familiars");
+        add("guide.summon.familiars1", "While travelling through the different dimensions I have been hearing voices, whispers even. It's almost as if the magic is attempting to communicate with me directly.");
+        add("guide.summon.familiars2", "I think these sounds are coming from pure arcane energy that I have imbued with life force through my summoning.");
+        add("guide.summon.resonance", "I have created a Resonance Stone that has enabled me to make contact with these creatures that have been calling out.");;
+
+        add("guide.summon.whistle", "After communing with the creatures I have fabricated a whistle allowing me to summon one of the beings as a familiar to fight by my side.");
+        add("guide.summon.familiar_types", "Familiar Types");
+        add("guide.summon.types", "In my studies I have found each familiar seems to be very good when applied in the correct situations.\n\nFrom here on, I shall refer to these familiars as being based on §lCombat§r, §lUtility§r or a §lHybrid§r, depending on where their strengths lie.");
+
+        add("guide.summon.bond", "Bond");
+        add("guide.summon.bond1", "These familiars aren't just brainless drones like my other summons, they are conscious with thoughts.");
+        add("guide.summon.bond2", "After exploring more with my familiars, there has been a bond developed between us and as this has grown we have both grown in strength.");
+        add("guide.summon.affinities", "Affinities");
+        add("guide.summon.affinities1", "As my familiar has reached milestones in its bond with me its began displaying abilities, even sharing those abilities with me at times.");
+        add("guide.summon.affinities2", "Upon them reaching their maximum strength I have even figured out a way to trigger a rebirth with the resonance stone, resetting them to how they were when I found them, but stronger.");
 
         add("summon.acquisition.description", "Use the keystone below to access the boss's dimension.");
         add("summon.acquisition.boss_rewards", "Boss Rewards");
@@ -692,12 +743,16 @@ public class ModLangProvider extends LanguageProvider {
         add(skill.value().getDescriptionId(), description);
     }
 
-    protected String checkReplace(DeferredHolder<?, ?> holder) {
-        return Arrays.stream(holder.getId().getPath().split("_"))
+    protected String checkReplace(ResourceLocation location) {
+        return Arrays.stream(location.getPath().split("_"))
                 .map(this::checkReplace)
                 .filter(s -> !s.isBlank())
                 .collect(Collectors.joining(" "))
                 .trim();
+    }
+
+    protected String checkReplace(DeferredHolder<?, ?> holder) {
+        return checkReplace(holder.getId());
     }
 
     protected String checkReplace(String string) {

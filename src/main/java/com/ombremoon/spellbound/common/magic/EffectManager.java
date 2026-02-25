@@ -221,7 +221,8 @@ public class EffectManager implements INBTSerializable<CompoundTag>, Loggable {
         FIRE(SpellPath.FIRE, SBEffects.COMBUST, SBAttributes.FIRE_SPELL_RESIST, SBDamageTypes.RUIN_FIRE, 20),
         FROST(SpellPath.FROST, SBEffects.FROZEN, SBAttributes.FROST_SPELL_RESIST, SBDamageTypes.RUIN_FROST, 60),
         SHOCK(SpellPath.SHOCK, SBEffects.DISCHARGE, SBAttributes.SHOCK_SPELL_RESIST, SBDamageTypes.RUIN_SHOCK, 100),
-        DISEASE(SpellPath.DARK_DIVINE, SBEffects.DISEASE, SBAttributes.DISEASE_RESIST, SBDamageTypes.DISEASE, 100);
+        DISEASE(SpellPath.DARK_DIVINE, SBEffects.DISEASE, SBAttributes.DISEASE_RESIST, SBDamageTypes.DISEASE, 100),
+        BLOOD(SpellPath.BLOOD, SBEffects.BLOOD_LOSS, SBAttributes.BLOOD_LOSS_RESIST, SBDamageTypes.BLOOD_LOSS, 100);
 
         @Nullable
         private final SpellPath path;

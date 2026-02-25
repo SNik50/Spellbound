@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": {
+      "item": "minecraft:deepslate_bricks"
+    },
+    "M": {
+      "item": "spellbound:magic_essence"
+    }
+  },
+  "pattern": [
+    "DMD",
+    "DMD",
+    "D D"
+  ],
+  "result": {
+    "count": 1,
+    "id": "spellbound:resonance_stone"
+  }
+}

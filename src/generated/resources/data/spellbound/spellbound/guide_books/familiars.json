@@ -1,0 +1,86 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.summon.familiars"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -13490312,
+      "path": "summons",
+      "pathTexture": "spellbound:textures/gui/paths/summons.png"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 247,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "block.spellbound.resonance_stone"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -13490312,
+      "path": "summons",
+      "pathTexture": "spellbound:textures/gui/paths/summons.png",
+      "position": {
+        "xOffset": 172
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.summon.familiars1"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 110
+      },
+      "translation": {
+        "translate": "guide.summon.familiars2"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.summon.resonance"
+      }
+    },
+    {
+      "type": "spellbound:recipe",
+      "gridName": "necronomicon",
+      "position": {
+        "xOffset": 237,
+        "yOffset": 110
+      },
+      "recipe": "spellbound:resonance_stone"
+    }
+  ],
+  "id": "spellbound:the_necronomicon",
+  "insertAfter": "spellbound:summon_portal_activation"
+}

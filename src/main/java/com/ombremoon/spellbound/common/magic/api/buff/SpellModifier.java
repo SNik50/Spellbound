@@ -68,7 +68,8 @@ public record SpellModifier(ResourceLocation id, ModifierType modifierType, BiPr
     public static final SpellModifier TRANSFIG_SET = registerModifier("transfig_set_bonus", ModifierType.POTENCY, (spellType, target) -> spellType.getPath() == SpellPath.TRANSFIGURATION, 1.2F);
   
     //Familiar
-    public static final SpellModifier MURKY_HABITAT = registerModifier("murky_habitat", ModifierType.POTENCY, (spellType, target) -> true, 1.1F);
+    public static final SpellModifier MURKY_HABITAT = registerModifier("murky_habitat", ModifierType.POTENCY, (spellType, target) -> true, 0.1F);
+    public static final SpellModifier BLOOD_MAGIC = registerModifier("blood_magic", ModifierType.POTENCY, ((spellType, livingEntity) -> true), 0.1f);
 
     private static SpellModifier registerModifier(String name, ModifierType type, BiPredicate<SpellType<?>, LivingEntity> spellPredicate, float modifier) {
         SpellModifier spellModifier = new SpellModifier(CommonClass.customLocation(name), type, spellPredicate, modifier);

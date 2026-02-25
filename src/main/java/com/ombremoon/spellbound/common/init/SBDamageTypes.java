@@ -12,6 +12,7 @@ public interface SBDamageTypes {
     ResourceKey<DamageType> RUIN_FROST = register("ruin_frost");
     ResourceKey<DamageType> RUIN_SHOCK = register("ruin_shock");
     ResourceKey<DamageType> DISEASE = register("disease");
+    ResourceKey<DamageType> BLOOD_LOSS = register("blood_loss");
 
     private static ResourceKey<DamageType> register(String name) {
         return ResourceKey.create(Registries.DAMAGE_TYPE, CommonClass.customLocation(name));
@@ -23,5 +24,6 @@ public interface SBDamageTypes {
         context.register(RUIN_FROST, new DamageType("ruin_frost", 0.1F));
         context.register(RUIN_SHOCK, new DamageType("ruin_shock", 0.1F));
         context.register(DISEASE, new DamageType("disease", 0.1F));
+        context.register(BLOOD_LOSS, new DamageType("blood_loss", 0.1F));
     }
 }

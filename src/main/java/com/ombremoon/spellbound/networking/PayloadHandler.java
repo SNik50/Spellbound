@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.networking;
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
+import com.ombremoon.spellbound.common.magic.familiars.FamiliarHolder;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockHolder;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -45,6 +46,14 @@ public class PayloadHandler {
 
     public static void sendGuideBooks(ServerPlayer player) {
         PacketDistributor.sendToPlayer(player, GuideBookManager.getClientboundPayload());
+    }
+
+    public static void equipFamiliar(FamiliarHolder<?, ?> familiar) {
+        PacketDistributor.sendToServer(new EquipFamiliarPayload(familiar.getIdentifier()));
+    }
+
+    public static void rebirthFamiliar(FamiliarHolder<?,?> familiarHolder) {
+        PacketDistributor.sendToServer(new RebirthFamiliarPayload(familiarHolder.getIdentifier()));
     }
 
     public static void syncFamiliarHandler(ServerPlayer player) {
@@ -402,6 +411,16 @@ public class PayloadHandler {
                 SyncFamiliarPayload.TYPE,
                 SyncFamiliarPayload.STREAM_CODEC,
                 SyncFamiliarPayload::handle
+        );
+        registrar.playToServer(
+                EquipFamiliarPayload.TYPE,
+                EquipFamiliarPayload.STREAM_CODEC,
+                EquipFamiliarPayload::handle
+        );
+        registrar.playToServer(
+                RebirthFamiliarPayload.TYPE,
+                RebirthFamiliarPayload.STREAM_CODEC,
+                RebirthFamiliarPayload::handle
         );
     }
 }

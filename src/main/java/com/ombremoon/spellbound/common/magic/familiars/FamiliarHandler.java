@@ -18,6 +18,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -25,12 +26,17 @@ import java.util.*;
 
 public class FamiliarHandler implements INBTSerializable<CompoundTag> {
     private static final float LEVEL_ONE_XP = 100;
-    private static Map<SpellMastery, Set<FamiliarHolder<?, ?>>> MASTERY_SORTED_FAMILIARS = new HashMap<>();
+    private static Map<SpellMastery, List<FamiliarHolder<?, ?>>> MASTERY_SORTED_FAMILIARS = new HashMap<>();
+
+    public static List<FamiliarHolder<?, ?>> getMasterySortedFamiliars(SpellMastery mastery) {
+        return MASTERY_SORTED_FAMILIARS.getOrDefault(mastery, new ArrayList<>());
+    }
 
     private boolean isInitialised;
     private SpellHandler spellHandler;
     private Level level;
     private LivingEntity owner;
+    private Set<FamiliarHolder<?, ?>> ownedFamiliars = new HashSet<>();
     private Map<FamiliarHolder<?, ?>, Integer> familiarRebirths = new HashMap<>();
     private Map<FamiliarHolder<?, ?>, Float> familiarBond = new HashMap<>();
     private FamiliarHolder<?, ?> selectedFamiliar = null;
@@ -57,7 +63,7 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
      * @param reqMastery Required mastery to unlock
      */
     public static void registerFamiliarMastery(FamiliarHolder<?, ?> familiar, SpellMastery reqMastery) {
-        Set<FamiliarHolder<?, ?>> familiars = MASTERY_SORTED_FAMILIARS.getOrDefault(reqMastery, new HashSet<>());
+        List<FamiliarHolder<?, ?>> familiars = MASTERY_SORTED_FAMILIARS.getOrDefault(reqMastery, new ArrayList<>());
         familiars.add(familiar);
         MASTERY_SORTED_FAMILIARS.put(reqMastery, familiars);
     }
@@ -70,7 +76,10 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
         this.level = owner.level();
         this.spellHandler = spellHandler;
         this.owner = owner;
-        unlockFamiliars(SpellUtil.getSkills(owner).getMaster(SpellPath.SUMMONS));
+
+        for (int i = 0; i <= spellHandler.getSkillHolder().getMaster(SpellPath.SUMMONS).ordinal(); i++) {
+            unlockFamiliars(SpellMastery.values()[i]);
+        }
 
         this.isInitialised = true;
     }
@@ -128,12 +137,14 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
         if (summonedEntity instanceof SBFamiliarEntity familairEntity) {
             familairEntity.markFamiliar();
             familairEntity.setIdle(true);
+            familairEntity.setFamiliar(this.summonedFamiliar);
             summonedEntity.setPos(owner.position()
                     .subtract(familairEntity.getVehicleAttachmentPoint(owner))
                     .add(0, owner.getBbHeight(), 0));
         }
         else summonedEntity.setPos(pos.getCenter().add(0, 1, 0));
 
+        summonedFamiliar.setOwner(this.owner);
         summonedFamiliar.refreshAttributes(this);
         if (summonedEntity.getMaxHealth() * familiarHpPercent <= 2) {
             this.summonedEntity = null;
@@ -146,10 +157,10 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
 
         SpellUtil.setOwner(summonedEntity, this.owner);
         summonedFamiliar.onSpawn(this, summonedEntity instanceof SBFamiliarEntity ? owner.blockPosition() : pos);
+        level.addFreshEntity(summonedEntity);
         if (this.owner instanceof ServerPlayer serverPlayer)
             PayloadHandler.syncFamiliarHandler(serverPlayer);
 
-        level.addFreshEntity(summonedEntity);
     }
 
     public void loadFamiliar(int id) {
@@ -158,6 +169,9 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
 
         this.summonedEntity = fam;
         this.summonedFamiliar = this.selectedFamiliar.getBuilder().create(getLevelForFamiliar(selectedFamiliar), getRebirths(selectedFamiliar));
+
+        if (fam instanceof SBFamiliarEntity familairEntity)
+            familairEntity.setFamiliar(this.summonedFamiliar);
     }
 
     /**
@@ -236,13 +250,7 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
      * @param mastery The mastery to unlock
      */
     public void unlockFamiliars(SpellMastery mastery) {
-        for (int i = 0; i <= mastery.ordinal(); i++) {
-            for (FamiliarHolder<?, ?> familiar : MASTERY_SORTED_FAMILIARS.get(mastery)) {
-                if (this.familiarBond.get(familiar) != null) continue;
-                this.familiarBond.put(familiar, 0F);
-                this.familiarRebirths.put(familiar, 0);
-            }
-        }
+        this.ownedFamiliars.addAll(MASTERY_SORTED_FAMILIARS.get(mastery));
     }
 
     /**
@@ -250,7 +258,7 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
      * @return set of all unlocked familiar holders
      */
     public Set<FamiliarHolder<?, ?>> getUnlockedFamiliars() {
-        return familiarBond.keySet();
+        return ownedFamiliars;
     }
 
     /**
@@ -261,7 +269,7 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
     public boolean rebirthFamiliar(FamiliarHolder<?, ?> familiar) {
         if (getLevelForFamiliar(familiar) < familiar.getMaxLevel()) return false;
 
-        int rebirths = familiarRebirths.get(familiar) + 1;
+        int rebirths = familiarRebirths.getOrDefault(familiar, 0) + 1;
         familiarRebirths.put(familiar, rebirths);
         familiarBond.put(familiar, 0F);
         if (this.summonedFamiliar != null) {
@@ -277,7 +285,7 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
      * @return number of rebirths
      */
     public int getRebirths(FamiliarHolder<?, ?> familiarHolder) {
-        return this.familiarRebirths.get(familiarHolder);
+        return this.familiarRebirths.getOrDefault(familiarHolder, 0);
     }
 
     /**
@@ -286,7 +294,18 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
      * @return bond of familiar
      */
     public int getLevelForFamiliar(FamiliarHolder<?, ?> familiar) {
-        return (int) Math.floor(Math.sqrt(this.familiarBond.get(familiar) / LEVEL_ONE_XP));
+        return (int) Math.floor(Math.sqrt(this.familiarBond.getOrDefault(familiar, 0f) / LEVEL_ONE_XP));
+    }
+
+    public float progressToNextLevel(FamiliarHolder<?, ?> familiar) {
+        int level = getLevelForFamiliar(familiar);
+        if (level == familiar.getMaxLevel()) return 0.08f;
+
+        float currentLevelXP = LEVEL_ONE_XP * (level * level);
+        float nextLevelXP = LEVEL_ONE_XP * ((level+1) * (level+1));
+        float xpBetween = nextLevelXP - currentLevelXP;
+
+        return (this.familiarBond.getOrDefault(familiar, 0f) - currentLevelXP) / xpBetween;
     }
 
     /**
@@ -298,65 +317,8 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
         return LEVEL_ONE_XP * (familiar.getMaxLevel() * familiar.getMaxLevel());
     }
 
-    @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
-        CompoundTag tag = new CompoundTag();
-
-        ListTag rebirths = new ListTag();
-        ListTag bond = new ListTag();
-
-        for (var entry : familiarRebirths.entrySet()) {
-            CompoundTag entryTag = new CompoundTag();
-            entryTag.putString("familiar", entry.getKey().getIdentifier().toString());
-            entryTag.putInt("rebirths", entry.getValue());
-            rebirths.add(entryTag);
-        }
-
-        for (var entry : familiarBond.entrySet()) {
-            CompoundTag entryTag = new CompoundTag();
-            entryTag.putString("familiar", entry.getKey().getIdentifier().toString());
-            entryTag.putFloat("bond", entry.getValue());
-            bond.add(entryTag);
-        }
-
-        tag.put("rebirths", rebirths);
-        tag.put("bond", bond);
-        if (summonedEntity != null)
-            tag.putInt("entity", summonedEntity.getId());
-        if (this.selectedFamiliar != null)
-            tag.putString("selected", selectedFamiliar.getIdentifier().toString());
-
-        return tag;
-    }
-
-    @Override
-    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag compoundTag) {
-        ListTag rebirthTag = compoundTag.getList("rebirths", 10);
-        ListTag bondTag = compoundTag.getList("bond", 10);
-
-        for (int i = 0; i < rebirthTag.size(); i++) {
-            CompoundTag tag = rebirthTag.getCompound(i);
-            this.familiarRebirths.put(
-                    SBFamiliars.REGISTRY.get(ResourceLocation.parse(tag.getString("familiar"))),
-                    tag.getInt("rebirths"));
-        }
-
-        for (int i = 0; i < bondTag.size(); i++) {
-            CompoundTag tag = bondTag.getCompound(i);
-            this.familiarBond.put(
-                    SBFamiliars.REGISTRY.get(ResourceLocation.parse(tag.getString("familiar"))),
-                    tag.getFloat("bond"));
-        }
-
-        String familiarId = compoundTag.getString("selected");
-        this.selectedFamiliar = familiarId.isEmpty() ? null : SBFamiliars.REGISTRY.get(ResourceLocation.parse(familiarId));
-
-        int entityId = compoundTag.getInt("entity");
-        if (entityId != 0) loadFamiliar(entityId);
-    }
-
     public void awardBond(FamiliarHolder<?, ?> familiar, float xp) {
-        float currentBond = this.familiarBond.get(familiar);
+        float currentBond = this.familiarBond.getOrDefault(familiar, 0f);
         float maxXp = getMaxXPForFamiliar(familiar);
 
         float newBond = currentBond + xp;
@@ -375,5 +337,78 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
         } else
             this.familiarBond.put(familiar, newBond);
 
+    }
+
+    @Override
+    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.Provider provider) {
+        CompoundTag tag = new CompoundTag();
+
+        ListTag familiars = new ListTag();
+        ListTag rebirths = new ListTag();
+        ListTag bond = new ListTag();
+
+        for (var entry : familiarRebirths.entrySet()) {
+            CompoundTag entryTag = new CompoundTag();
+            entryTag.putString("familiar", entry.getKey().getIdentifier().toString());
+            entryTag.putInt("rebirths", entry.getValue());
+            rebirths.add(entryTag);
+        }
+
+        for (var entry : familiarBond.entrySet()) {
+            CompoundTag entryTag = new CompoundTag();
+            entryTag.putString("familiar", entry.getKey().getIdentifier().toString());
+            entryTag.putFloat("bond", entry.getValue());
+            bond.add(entryTag);
+        }
+
+        for (var familiar : ownedFamiliars) {
+            var entryTag = new CompoundTag();
+            entryTag.putString("familiar", familiar.getIdentifier().toString());
+            familiars.add(entryTag);
+        }
+
+        tag.put("familiars", familiars);
+        tag.put("rebirths", rebirths);
+        tag.put("bond", bond);
+        if (summonedEntity != null)
+            tag.putInt("entity", summonedEntity.getId());
+        if (this.selectedFamiliar != null)
+            tag.putString("selected", selectedFamiliar.getIdentifier().toString());
+
+        return tag;
+    }
+
+    @Override
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag compoundTag) {
+        ListTag rebirthTag = compoundTag.getList("rebirths", 10);
+        ListTag bondTag = compoundTag.getList("bond", 10);
+        ListTag familiars = compoundTag.getList("familiars", 10);
+
+        for (int i = 0; i < rebirthTag.size(); i++) {
+            CompoundTag tag = rebirthTag.getCompound(i);
+            System.out.println(SBFamiliars.REGISTRY.get(ResourceLocation.parse(tag.getString("familiar"))).getIdentifier());
+            this.familiarRebirths.put(
+                    SBFamiliars.REGISTRY.get(ResourceLocation.parse(tag.getString("familiar"))),
+                    tag.getInt("rebirths"));
+        }
+
+        for (int i = 0; i < bondTag.size(); i++) {
+            CompoundTag tag = bondTag.getCompound(i);
+            this.familiarBond.put(
+                    SBFamiliars.REGISTRY.get(ResourceLocation.parse(tag.getString("familiar"))),
+                    tag.getFloat("bond"));
+        }
+
+        for (int i =0; i < familiars.size(); i++) {
+            this.ownedFamiliars.add(
+                    SBFamiliars.REGISTRY.get(ResourceLocation.parse(familiars.getCompound(i).getString("familiar")))
+            );
+        }
+
+        String familiarId = compoundTag.getString("selected");
+        this.selectedFamiliar = familiarId.isEmpty() ? null : SBFamiliars.REGISTRY.get(ResourceLocation.parse(familiarId));
+
+        int entityId = compoundTag.getInt("entity");
+        if (entityId != 0) loadFamiliar(entityId);
     }
 }

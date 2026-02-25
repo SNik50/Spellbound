@@ -31,39 +31,39 @@ public class CatModel extends OcelotModel<CatEntity> {
 //        }
 
         super.prepareMobModel(entity, limbSwing, limbSwingAmount, partialTick);
-//        if (entity.isSitting()) {
-//            this.body.xRot = ((float)Math.PI / 4F);
-//            ModelPart var10000 = this.body;
-//            var10000.y += -4.0F;
-//            var10000 = this.body;
-//            var10000.z += 5.0F;
-//            var10000 = this.head;
-//            var10000.y += -3.3F;
-//            ++this.head.z;
-//            var10000 = this.tail1;
-//            var10000.y += 8.0F;
-//            var10000 = this.tail1;
-//            var10000.z += -2.0F;
-//            var10000 = this.tail2;
-//            var10000.y += 2.0F;
-//            var10000 = this.tail2;
-//            var10000.z += -0.8F;
-//            this.tail1.xRot = 1.7278761F;
-//            this.tail2.xRot = 2.670354F;
-//            this.leftFrontLeg.xRot = -0.15707964F;
-//            this.leftFrontLeg.y = 16.1F;
-//            this.leftFrontLeg.z = -7.0F;
-//            this.rightFrontLeg.xRot = -0.15707964F;
-//            this.rightFrontLeg.y = 16.1F;
-//            this.rightFrontLeg.z = -7.0F;
-//            this.leftHindLeg.xRot = (-(float)Math.PI / 2F);
-//            this.leftHindLeg.y = 21.0F;
-//            this.leftHindLeg.z = 1.0F;
-//            this.rightHindLeg.xRot = (-(float)Math.PI / 2F);
-//            this.rightHindLeg.y = 21.0F;
-//            this.rightHindLeg.z = 1.0F;
-//            this.state = 3;
-//        }
+        if (entity.isIdle()) {
+            this.body.xRot = ((float)Math.PI / 4F);
+            ModelPart var10000 = this.body;
+            var10000.y += -4.0F;
+            var10000 = this.body;
+            var10000.z += 5.0F;
+            var10000 = this.head;
+            var10000.y += -3.3F;
+            ++this.head.z;
+            var10000 = this.tail1;
+            var10000.y += 8.0F;
+            var10000 = this.tail1;
+            var10000.z += -2.0F;
+            var10000 = this.tail2;
+            var10000.y += 2.0F;
+            var10000 = this.tail2;
+            var10000.z += -0.8F;
+            this.tail1.xRot = 1.7278761F;
+            this.tail2.xRot = 2.670354F;
+            this.leftFrontLeg.xRot = -0.15707964F;
+            this.leftFrontLeg.y = 16.1F;
+            this.leftFrontLeg.z = -7.0F;
+            this.rightFrontLeg.xRot = -0.15707964F;
+            this.rightFrontLeg.y = 16.1F;
+            this.rightFrontLeg.z = -7.0F;
+            this.leftHindLeg.xRot = (-(float)Math.PI / 2F);
+            this.leftHindLeg.y = 21.0F;
+            this.leftHindLeg.z = 1.0F;
+            this.rightHindLeg.xRot = (-(float)Math.PI / 2F);
+            this.rightHindLeg.y = 21.0F;
+            this.rightHindLeg.z = 1.0F;
+            this.state = 3;
+        }
 
     }
 

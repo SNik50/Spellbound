@@ -1,0 +1,77 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "item.spellbound.spirit_whistle"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -13490312,
+      "path": "summons",
+      "pathTexture": "spellbound:textures/gui/paths/summons.png"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 247,
+        "yOffset": 8
+      },
+      "translation": {
+        "translate": "guide.summon.familiar_types"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -13490312,
+      "path": "summons",
+      "pathTexture": "spellbound:textures/gui/paths/summons.png",
+      "position": {
+        "xOffset": 172
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.summon.whistle"
+      }
+    },
+    {
+      "type": "spellbound:text",
+      "position": {
+        "xOffset": 172,
+        "yOffset": 35
+      },
+      "translation": {
+        "translate": "guide.summon.types"
+      }
+    },
+    {
+      "type": "spellbound:recipe",
+      "gridName": "necronomicon",
+      "position": {
+        "xOffset": 65,
+        "yOffset": 110
+      },
+      "recipe": "spellbound:spirit_whistle"
+    }
+  ],
+  "id": "spellbound:the_necronomicon",
+  "insertAfter": "spellbound:familiars"
+}

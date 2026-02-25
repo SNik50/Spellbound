@@ -23,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -31,6 +32,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+
+import java.util.List;
 
 public class FrogFamiliar extends Familiar<FrogEntity> {
     private static final ResourceLocation SWAMP_BUFF = CommonClass.customLocation("murky_habitat_buff");
@@ -43,26 +46,18 @@ public class FrogFamiliar extends Familiar<FrogEntity> {
     );
 
     private boolean hasSwampBuff = false;
-    private boolean isSubmerged = false;
 
     public FrogFamiliar(int bond, int rebirths) {
         super(bond, rebirths);
     }
 
     @Override
-    public Multimap<Holder<Attribute>, AttributeModifier> modifyOwnerAttributes(FamiliarHandler handler, int rebirths, int bond) {
-        return ImmutableListMultimap.of(
-                Attributes.JUMP_STRENGTH, affinityModifier("jump", handler, SBAffinities.SPECTRAL_HOPS, 0.15D, AttributeModifier.Operation.ADD_VALUE),
-                Attributes.SAFE_FALL_DISTANCE, affinityModifier("safe_fall", handler, SBAffinities.SPECTRAL_HOPS, 1D, AttributeModifier.Operation.ADD_VALUE),
-                Attributes.BLOCK_INTERACTION_RANGE, affinityModifier("block_reach", handler, SBAffinities.ELONGATED_TONGUE, 3D, AttributeModifier.Operation.ADD_VALUE),
-                Attributes.ENTITY_INTERACTION_RANGE, affinityModifier("entity_reach", handler, SBAffinities.ELONGATED_TONGUE, 3D, AttributeModifier.Operation.ADD_VALUE)
-        );
-    }
-
-    @Override
-    public Multimap<Holder<Attribute>, AttributeModifier> modifyFamiliarAttributes(FamiliarHandler handler, int rebirths, int bond) {
-        return ImmutableListMultimap.of(
-                Attributes.ATTACK_DAMAGE, new AttributeModifier(SUBMERGED_ATK, isSubmerged ? 1D * rebirths : 0, AttributeModifier.Operation.ADD_VALUE)
+    public List<FamiliarAffinity> modifyOwnerAttributes(LivingEntity owner, FamiliarHandler handler, int rebirths, int bond) {
+        return List.of(
+                addAttributeModifier(owner, SBAffinities.SPECTRAL_HOPS, Attributes.JUMP_STRENGTH, 0.15f, AttributeModifier.Operation.ADD_VALUE),
+                addAttributeModifier(owner, SBAffinities.SPECTRAL_HOPS, Attributes.SAFE_FALL_DISTANCE, 1f, AttributeModifier.Operation.ADD_VALUE),
+                addAttributeModifier(owner, SBAffinities.ELONGATED_TONGUE, Attributes.BLOCK_INTERACTION_RANGE, 2F, AttributeModifier.Operation.ADD_VALUE),
+                addAttributeModifier(owner, SBAffinities.ELONGATED_TONGUE, Attributes.ENTITY_INTERACTION_RANGE, 2F, AttributeModifier.Operation.ADD_VALUE)
         );
     }
 
@@ -79,9 +74,13 @@ public class FrogFamiliar extends Familiar<FrogEntity> {
 
         if (hasAffinity(handler, SBAffinities.SUBMERGED)) {
             if (handler.getLevel().getFluidState(spawnPos).is(FluidTags.WATER)) {
-                this.isSubmerged = true;
+                addAttributeModifier(handler.getActiveEntity(),
+                        SBAffinities.SUBMERGED,
+                        Attributes.ATTACK_DAMAGE,
+                        1F * handler.getRebirths(handler.getSelectedFamiliar()),
+                        AttributeModifier.Operation.ADD_VALUE);
+
                 handler.getActiveEntity().addEffect(new MobEffectInstance(MobEffects.REGENERATION, SBAffinities.SUBMERGED.getCooldown(), 0, true, false));
-                refreshAttributes(handler);
                 useAffinity(handler, SBAffinities.SUBMERGED);
             }
         }
@@ -107,9 +106,10 @@ public class FrogFamiliar extends Familiar<FrogEntity> {
     public void onAffinityOffCooldown(FamiliarHandler handler, FamiliarAffinity affinity) {
         super.onAffinityOffCooldown(handler, affinity);
 
-        if (affinity.equals(SBAffinities.SUBMERGED)) {
-            this.isSubmerged = false;
-            refreshAttributes(handler);
+        if (affinity.equals(SBAffinities.SUBMERGED) && !handler.getLevel().getFluidState(handler.getActiveEntity().blockPosition()).is(FluidTags.WATER)) {
+            removeSkillBuff(handler.getActiveEntity(), SBAffinities.SUBMERGED);
+        } else if (affinity.equals(SBAffinities.SUBMERGED)) {
+            useAffinity(handler, SBAffinities.SUBMERGED);
         }
     }
 
@@ -132,7 +132,7 @@ public class FrogFamiliar extends Familiar<FrogEntity> {
     public void onRebirth(FamiliarHandler handler, int rebirths) {
         super.onRebirth(handler, rebirths);
         removeEventListener(handler, SBAffinities.MAGMA_DIGESTION.location());
-        removeEventListener(handler, SBAffinities.SLIMEY_EXPULSION.location());
+        removeOwnerEventListener(handler, SBAffinities.SLIMEY_EXPULSION.location());
         removeSwampPotency(handler);
     }
 
@@ -140,7 +140,7 @@ public class FrogFamiliar extends Familiar<FrogEntity> {
     public void onRemove(FamiliarHandler handler, BlockPos removePos) {
         super.onRemove(handler, removePos);
         removeEventListener(handler, SBAffinities.MAGMA_DIGESTION.location());
-        removeEventListener(handler, SBAffinities.SLIMEY_EXPULSION.location());
+        removeOwnerEventListener(handler, SBAffinities.SLIMEY_EXPULSION.location());
         removeSwampPotency(handler);
     }
 
@@ -195,7 +195,7 @@ public class FrogFamiliar extends Familiar<FrogEntity> {
     }
 
     private void addSlimeyExpulsionEvent(FamiliarHandler handler) {
-        addEventListener(handler,
+        addOwnerEventListener(handler,
                 SpellEventListener.Events.POST_DAMAGE,
                 SBAffinities.SLIMEY_EXPULSION.location(),
                 this::slimeyExpulsion);

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "M": {
+      "item": "spellbound:magic_essence"
+    },
+    "S": {
+      "item": "minecraft:string"
+    },
+    "W": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "pattern": [
+    "WS",
+    "M "
+  ],
+  "result": {
+    "count": 1,
+    "id": "spellbound:spirit_whistle"
+  }
+}

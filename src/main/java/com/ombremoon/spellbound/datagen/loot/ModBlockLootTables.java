@@ -31,6 +31,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
     @Override
     protected void generate() {
         this.multiBlockDropSelf(SBBlocks.MAGI_WORKBENCH.get());
+        this.dropSelf(SBBlocks.RESONANCE_STONE.get());
         this.dropSelf(SBBlocks.ARCANTHUS.get());
         this.dropSelf(SBBlocks.FROZEN_CRYSTAL_BLOCK.get());
         this.dropSelf(SBBlocks.BUDDING_FROZEN_CRYSTAL.get());

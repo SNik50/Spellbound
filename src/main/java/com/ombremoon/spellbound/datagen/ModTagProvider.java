@@ -109,7 +109,8 @@ public class ModTagProvider {
                     .add(SBDamageTypes.SB_GENERIC)
                     .add(SBDamageTypes.RUIN_FIRE)
                     .add(SBDamageTypes.RUIN_FROST)
-                    .add(SBDamageTypes.RUIN_SHOCK);
+                    .add(SBDamageTypes.RUIN_SHOCK)
+                    .add(SBDamageTypes.BLOOD_LOSS);
 
             this.tag(SBTags.DamageTypes.SPELL_DAMAGE)
                     .addTags(Tags.DamageTypes.IS_MAGIC);
