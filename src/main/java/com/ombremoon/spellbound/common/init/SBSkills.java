@@ -23,6 +23,19 @@ public class SBSkills {
     public static final Registry<Skill> REGISTRY = new RegistryBuilder<>(SKILL_REGISTRY_KEY).sync(true).create();
     public static final DeferredRegister<Skill> SKILLS = DeferredRegister.create(REGISTRY, Constants.MOD_ID);
 
+    //Fireball
+    public static final Holder<Skill> FIREBALL = registerRadialSkill("fireball");
+    public static final Holder<Skill> RAPID_FIRE = registerRadialSkill("rapid_fire", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> STICKY_BOMB = registerRadialSkill("sticky_bomb", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> CHARGED_BLAST = registerRadialSkill("charged_blast", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> VOLATILE_CLUSTER = registerRadialSkill("volatile_cluster", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> HOMING_MISSILE = registerRadialSkill("homing_missile", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> EXPLOSIVE_AMPLIFIER = registerSkill("explosive_amplifier", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> BURNING_ADHESIVE = registerSkill("burning_adhesive", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> MOLTEN_CORE = registerSkill("molten_core", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> CLUSTER_STRIKE = registerSkill("cluster_strike", 0, 50, preReqs(FIREBALL));
+    public static final Holder<Skill> AUTO_TARGETING = registerSkill("auto_targeting", 0, 50, preReqs(FIREBALL));
+
     //Flame Jet
     public static final Holder<Skill> FLAME_JET = registerRadialSkill("flame_jet");
     public static final Holder<Skill> FLAME_GEYSER = registerRadialSkill("flame_geyser", -75, 50, preReqs(FLAME_JET));
@@ -140,6 +153,7 @@ public class SBSkills {
     public static final Holder<Skill> STAMPEDE = registerSkill("stampede", 25, 200, preReqs(ENDURANCE));
     public static final Holder<Skill> MARATHON = registerSkill("marathon", 0, 250, preReqs(MOMENTUM, STAMPEDE));
 
+    //Dolphin's Fin
     public static final Holder<Skill> DOLPHINS_FIN = registerRadialSkill("dolphins_fin");
     public static final Holder<Skill> MERMAIDS_TAIL = registerSkill("mermaids_tail", 0, 50, preReqs(DOLPHINS_FIN));
     public static final Holder<Skill> POD_LEADER = registerSkill("pod_leader", -75, 50, preReqs(DOLPHINS_FIN));
@@ -151,6 +165,19 @@ public class SBSkills {
     public static final Holder<Skill> HAMMERHEAD = registerSkill("hammerhead", -50, 200, preReqs(AQUATIC_DASH));
     public static final Holder<Skill> KELP_VEIL = registerSkill("kelp_veil", 50, 200, preReqs(AQUATIC_DASH));
     public static final Holder<Skill> OCEAN_DWELLER = registerSkill("ocean_dweller", 0, 250, preReqs(SHARK_ATTACK, HAMMERHEAD, KELP_VEIL));
+
+    //Cobbled Hide
+    public static final Holder<Skill> COBBLED_HIDE = registerSkill("cobbled_hide");
+    public static final Holder<Skill> IRON_HIDE = registerSkill("iron_hide", 0, 50, preReqs(COBBLED_HIDE));
+    public static final Holder<Skill> DIAMOND_HIDE = registerSkill("diamond_hide", 0, 50, preReqs(COBBLED_HIDE));
+    public static final Holder<Skill> DRAGON_HIDE = registerSkill("dragon_hide", 0, 50, preReqs(COBBLED_HIDE));
+    public static final Holder<Skill> BEDROCK_BASTION = registerSkill("bedrock_bastion", 0, 50, preReqs(COBBLED_HIDE));
+    public static final Holder<Skill> SHATTER_SKIN = registerSkill("shatter_skin", 0, 50, preReqs(COBBLED_HIDE));
+    public static final Holder<Skill> STONE_WALL = registerSkill("stone_wall", 0, 50, preReqs(COBBLED_HIDE));
+    public static final Holder<Skill> GRANITE_GRIP = registerSkill("granite_grip", 0, 50, preReqs(COBBLED_HIDE));
+    public static final Holder<Skill> MASONRY_WARD = registerSkill("masonry_ward", 0, 50, preReqs(COBBLED_HIDE));
+    public static final Holder<Skill> BOULDERBACK = registerSkill("boulderback", 0, 50, preReqs(COBBLED_HIDE));
+    public static final Holder<Skill> INFUSED_STONE = registerSkill("infused_stone", 0, 50, preReqs(COBBLED_HIDE));
 
     //Shadow Gate
     public static final Holder<Skill> SHADOW_GATE = registerRadialSkill("shadow_gate");
@@ -178,20 +205,6 @@ public class SBSkills {
     public static final Holder<Skill> SUBLIME_BEACON = registerSkill("sublime_beacon", 100, 200, preReqs(CRYSTALLINE_ARMOR));
     public static final Holder<Skill> SOUL_RECHARGE = registerSkill("soul_recharge", 75, 250, preReqs(ELDRITCH_INTERVENTION, SUBLIME_BEACON));
 
-    //Cobbled hide
-    public static final Holder<Skill> COBBLED_HIDE = registerSkill("cobbled_hide");
-    public static final Holder<Skill> IRON_HIDE = registerSkill("iron_hide", 0, 50, preReqs(COBBLED_HIDE));
-    public static final Holder<Skill> DIAMOND_HIDE = registerSkill("diamond_hide", 0, 50, preReqs(COBBLED_HIDE));
-    public static final Holder<Skill> DRAGON_HIDE = registerSkill("dragon_hide", 0, 50, preReqs(COBBLED_HIDE));
-    public static final Holder<Skill> THORNY_HIDE = registerSkill("thorny_hide", 0, 50, preReqs(COBBLED_HIDE));
-    public static final Holder<Skill> REPULSIVE_SKIN = registerSkill("repulsive_skin", 0, 50, preReqs(COBBLED_HIDE));
-    public static final Holder<Skill> REFLECTIVE_FLESH = registerSkill("reflective_flesh", 0, 50, preReqs(COBBLED_HIDE));
-    public static final Holder<Skill> BLAST_RESISTANT = registerSkill("blast_resistant", 0, 50, preReqs(COBBLED_HIDE));
-    public static final Holder<Skill> SPONGY_FLESH = registerSkill("spongy_flesh", 0, 50, preReqs(COBBLED_HIDE));
-    public static final Holder<Skill> INFECTIOUS = registerSkill("infectious", 0, 50, preReqs(COBBLED_HIDE));
-    public static final Holder<Skill> REINFORCED = registerSkill("reinforced", 0, 50, preReqs(COBBLED_HIDE));
-    public static final Holder<Skill> VIRAL = registerSkill("viral", 0, 50, preReqs(COBBLED_HIDE));
-
     //Summon Undead
     public static final Holder<Skill> SUMMON_UNDEAD = registerRadialSkill("summon_undead");
     public static final Holder<Skill> SUMMON_ZOMBIFIED_PIGLIN = registerRadialSkill("summon_zombie_piglin", -100, 50, preReqs(SUMMON_UNDEAD));
@@ -204,6 +217,19 @@ public class SBSkills {
     public static final Holder<Skill> SILENT_NIGHT = registerSkill("silent_night", 50, 100, preReqs(SUMMON_PHANTOM));
     public static final Holder<Skill> SUNKEN_BREATH = registerSkill("sunken_breath", 100, 100, preReqs(SUMMON_DROWNED));
     public static final Holder<Skill> CORPSE_EXPLOSION = registerSkill("corpse_explosion", 0, 150, preReqs(ROTTEN_SOLDIERS, CRIMSON_PACT, HALL_OF_THE_DEAD, SILENT_NIGHT, SUNKEN_BREATH));
+
+    //Summon Villager
+    public static final Holder<Skill> SUMMON_VILLAGER = registerRadialSkill("summon_villager");
+    public static final Holder<Skill> FARMER_VILLAGER = registerRadialSkill("farmer_villager", -100, 50, preReqs(SUMMON_VILLAGER));
+    public static final Holder<Skill> LIBRARIAN_VILLAGER = registerRadialSkill("librarian_villager", -50, 50, preReqs(SUMMON_VILLAGER));
+    public static final Holder<Skill> TOOLSMITH_VILLAGER = registerRadialSkill("toolsmith_villager", 0, 50, preReqs(SUMMON_VILLAGER));
+    public static final Holder<Skill> CARTOGRAPHER_VILLAGER = registerRadialSkill("cartographer_villager", 50, 50, preReqs(SUMMON_VILLAGER));
+    public static final Holder<Skill> CLERIC_VILLAGER = registerRadialSkill("cleric_villager", 100, 50, preReqs(SUMMON_VILLAGER));
+    public static final Holder<Skill> EXTENDED_SERVICE = registerSkill("extended_service", -25, 100, preReqs(FARMER_VILLAGER, LIBRARIAN_VILLAGER, TOOLSMITH_VILLAGER, CARTOGRAPHER_VILLAGER, CLERIC_VILLAGER));
+    public static final Holder<Skill> WHOLESALE = registerSkill("wholesale", 25, 100, preReqs(FARMER_VILLAGER, LIBRARIAN_VILLAGER, TOOLSMITH_VILLAGER, CARTOGRAPHER_VILLAGER, CLERIC_VILLAGER));
+    public static final Holder<Skill> BOUNTIFUL = registerSkill("bountiful", 0, 150, preReqs(EXTENDED_SERVICE, WHOLESALE));
+    public static final Holder<Skill> LOYAL_PROTECTOR = registerSkill("loyal_protector", 0, 200, preReqs(BOUNTIFUL));
+    public static final Holder<Skill> SHOW_ME_THE_ROPES = registerSkill("show_me_the_ropes", 0, 250, preReqs(LOYAL_PROTECTOR));
 
     //Wild Mushroom
     public static final Holder<Skill> WILD_MUSHROOM = registerSkill("wild_mushroom");
@@ -218,9 +244,7 @@ public class SBSkills {
     public static final Holder<Skill> LIVING_FUNGUS = registerSkill("living_fungus", 0, 200, preReqs(FUNGAL_HARVEST));
     public static final Holder<Skill> PROLIFERATION = registerSkill("proliferation", 0, 250, preReqs(LIVING_FUNGUS));
 
-
     //Healing Touch
-    //TODO: Tree
     public static final Holder<Skill> HEALING_TOUCH = registerSkill("healing_touch");
     public static final Holder<Skill> BLASPHEMY = registerSkill("blasphemy", -50, 50, preReqs(HEALING_TOUCH));
     public static final Holder<Skill> CONVALESCENCE = registerSkill("convalescence", -50, 100, preReqs(BLASPHEMY));
@@ -233,6 +257,7 @@ public class SBSkills {
     public static final Holder<Skill> OVERGROWTH = registerSkill("overgrowth", 0, 200, preReqs(TRANQUILITY_OF_WATER, CLEANSING_TOUCH));
     public static final Holder<Skill> OAK_BLESSING = registerSkill("oak_blessing", 50, 200, preReqs(TRANQUILITY_OF_WATER, CLEANSING_TOUCH));
 
+    //Blessing
     public static final Holder<Skill> BLESSING = registerSkill("blessing");
     public static final Holder<Skill> FORTIFIED_HEARTS = registerSkill("fortified_hearts", 0, 50, preReqs(BLESSING));
     public static final Holder<Skill> ARCANE_RESTORATION = registerSkill("arcane_restoration", 0, 100, preReqs(BLESSING));
@@ -244,6 +269,19 @@ public class SBSkills {
     public static final Holder<Skill> OVERFLOWING_AID = registerSkill("overflowing_aid", 0, 400, preReqs(BLESSING));
     public static final Holder<Skill> CONSECRATED_PRESENCE = registerSkill("consecrated_presence", 0, 450, preReqs(BLESSING));
     public static final Holder<Skill> UPLIFTING_CHORUS = registerSkill("uplifting_chorus", 0, 500, preReqs(BLESSING));
+
+    //Siphon
+    public static final Holder<Skill> SIPHON = registerRadialSkill("siphon");
+    public static final Holder<Skill> GRIM_REACH = registerSkill("grim_reach", 0, 50, preReqs(SIPHON));
+    public static final Holder<Skill> WITHERING = registerSkill("withering", 50, 50, preReqs(SIPHON));
+    public static final Holder<Skill> UNRELENTING = registerSkill("unrelenting", -50, 50, preReqs(SIPHON));
+    public static final Holder<Skill> IRON_MAIDEN = registerSkill("iron_maiden", 0, 100, preReqs(GRIM_REACH, WITHERING, UNRELENTING));
+    public static final Holder<Skill> SOUL_TAP = registerRadialSkill("soul_tap", 37, 150, preReqs(IRON_MAIDEN));
+    public static final Holder<Skill> PARASITIC_LINK = registerSkill("parasitic_link", 0, 200, preReqs(SOUL_TAP));
+    public static final Holder<Skill> ARCANE_FEEDBACK = registerSkill("arcane_feedback", 75, 200, preReqs(SOUL_TAP));
+    public static final Holder<Skill> GLUTTONY = registerSkill("gluttony", -37, 150, preReqs(IRON_MAIDEN));
+    public static final Holder<Skill> OVERHEAL = registerSkill("overheal", -75, 200, preReqs(GLUTTONY));
+    public static final Holder<Skill> HARVEST = registerRadialSkill("harvest", 0, 250, preReqs(PARASITIC_LINK, ARCANE_FEEDBACK, OVERHEAL));
 
     //Healing Blossom
     public static final Holder<Skill> HEALING_BLOSSOM = registerSkill("healing_blossom");
@@ -261,15 +299,28 @@ public class SBSkills {
     //Flicker
     public static Holder<Skill> FLICKER = registerRadialSkill("flicker");
     public static Holder<Skill> DISTANT_FLICKER = registerSkill("distant_flicker", 0, 50, preReqs(FLICKER));
-    public static Holder<Skill> SWIFT_SHADOWS = registerSkill("swift_shadows", 0, 50, preReqs(FLICKER));
-    public static Holder<Skill> STEP_INTO_SHADOW = registerSkill("step_into_shadow", 0, 50, preReqs(FLICKER));
-    public static Holder<Skill> SILENT_STEP = registerSkill("silent_step", 0, 50, preReqs(FLICKER));
-    public static Holder<Skill> CONFUSION = registerSkill("confusion", 0, 50, preReqs(FLICKER));
-    public static Holder<Skill> BLINDING_MIRAGE = registerSkill("blinding_mirage", 0, 50, preReqs(FLICKER));
-    public static Holder<Skill> PHANTOM_LURE = registerSkill("phantom_lure", 0, 50, preReqs(FLICKER));
-    public static Holder<Skill> SHADOW_FEINT = registerSkill("shadow_feint", 0, 50, preReqs(FLICKER));
-    public static Holder<Skill> LOOK_OVER_HERE = registerRadialSkill("look_over_here", 0, 50, preReqs(FLICKER));
-    public static Holder<Skill> HALL_OF_MIRRORS = registerSkill("hall_of_mirrors", 0, 50, preReqs(FLICKER));
+    public static Holder<Skill> STEP_INTO_SHADOW = registerSkill("step_into_shadow", -75, 50, preReqs(FLICKER));
+    public static Holder<Skill> SILENT_STEP = registerSkill("silent_step", 75, 50, preReqs(FLICKER));
+    public static Holder<Skill> SWIFT_SHADOWS = registerSkill("swift_shadows", -50, 100, preReqs(DISTANT_FLICKER, STEP_INTO_SHADOW, SILENT_STEP));
+    public static Holder<Skill> CONFUSION = registerSkill("confusion", 50, 100, preReqs(DISTANT_FLICKER, STEP_INTO_SHADOW, SILENT_STEP));
+    public static Holder<Skill> SHADOW_FEINT = registerSkill("shadow_feint", 50, 150, preReqs(CONFUSION));
+    public static Holder<Skill> BLINDING_MIRAGE = registerSkill("blinding_mirage", 100, 150, preReqs(CONFUSION));
+    public static Holder<Skill> PHANTOM_LURE = registerSkill("phantom_lure", 0, 150, preReqs(CONFUSION));
+    public static Holder<Skill> HALL_OF_MIRRORS = registerSkill("hall_of_mirrors", -50, 150, preReqs(CONFUSION));
+    public static Holder<Skill> LOOK_OVER_HERE = registerConditionalRadialSkill("look_over_here", 50, 200, preReqs(SHADOW_FEINT), (player, holder) -> holder.hasSkill(SBSkills.STEP_INTO_SHADOW));
+
+    //Cursed Rune
+    public static Holder<Skill> CURSED_RUNE = registerSkill("cursed_rune");
+    public static Holder<Skill> MAGE_WRECK = registerSkill("mage_wreck", -100, 50, preReqs(CURSED_RUNE));
+    public static Holder<Skill> DISARMING_CURSE = registerSkill("disarming_curse", -75, 100, preReqs(CURSED_RUNE));
+    public static Holder<Skill> MIRROR_CURSE = registerSkill("mirror_curse", -50, 50, preReqs(CURSED_RUNE));
+    public static Holder<Skill> CURSE_OF_PAIN = registerSkill("curse_of_pain", -25, 100, preReqs(CURSED_RUNE));
+    public static Holder<Skill> CURSE_OF_DROUGHT = registerSkill("curse_of_drought", 0, 50, preReqs(CURSED_RUNE));
+    public static Holder<Skill> VANISHING_CURSE = registerSkill("vanishing_curse", 25, 100, preReqs(CURSED_RUNE));
+    public static Holder<Skill> CURSE_OF_WEAKNESS = registerSkill("curse_of_weakness", 50, 50, preReqs(CURSED_RUNE));
+    public static Holder<Skill> CURSE_OF_SUSCEPTIBILITY = registerSkill("curse_of_susceptibility", 75, 100, preReqs(CURSED_RUNE));
+    public static Holder<Skill> TANGLEFOOT_CURSE = registerSkill("tanglefoot_curse", 100, 50, preReqs(CURSED_RUNE));
+    public static Holder<Skill> HIDDEN_RUNE = registerSkill("hidden_rune", 0, 200, preReqs(MAGE_WRECK, DISARMING_CURSE, MIRROR_CURSE, CURSE_OF_PAIN, CURSE_OF_DROUGHT, VANISHING_CURSE, CURSE_OF_WEAKNESS, CURSE_OF_SUSCEPTIBILITY, TANGLEFOOT_CURSE));
 
     //Shadowbond
     public static Holder<Skill> SHADOWBOND = registerSkill("shadowbond");
@@ -342,6 +393,20 @@ public class SBSkills {
             @Override
             public boolean canUnlockSkill(Player player, SkillHolder holder) {
                 return skillCondition.test(player, holder);
+            }
+        });
+    }
+
+    private static Holder<Skill> registerConditionalRadialSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs, BiPredicate<Player, SkillHolder> skillCondition) {
+        return SKILLS.register(name, () -> new Skill(xPos, yPos, prereqs) {
+            @Override
+            public boolean canUnlockSkill(Player player, SkillHolder holder) {
+                return skillCondition.test(player, holder);
+            }
+
+            @Override
+            public boolean isRadial() {
+                return true;
             }
         });
     }

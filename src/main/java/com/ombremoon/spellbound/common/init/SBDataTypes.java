@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.init;
 
+import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataType;
@@ -18,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -36,6 +38,7 @@ public class SBDataTypes {
     public static final Supplier<SpellDataType<BlockPos>> BLOCK_POS = registerDataType("block_pos", BlockPos.STREAM_CODEC);
     public static final Supplier<SpellDataType<Vector3f>> VECTOR3 = registerDataType("vec3", ByteBufCodecs.VECTOR3F);
     public static final Supplier<SpellDataType<Set<Integer>>> INT_SET = registerDataType("int_set", ByteBufCodecs.INT.apply(ByteBufCodecs.collection(HashSet::new)));
+    public static final Supplier<SpellDataType<Optional<Skill>>> SKILL = registerDataType("skill", ByteBufCodecs.optional(ByteBufCodecs.registry(SBSkills.SKILL_REGISTRY_KEY)));
 
     private static <T> Supplier<SpellDataType<T>> registerDataType(String name, StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec) {
         return DATA_TYPES.register(name, () -> SpellDataType.forValueType(streamCodec));

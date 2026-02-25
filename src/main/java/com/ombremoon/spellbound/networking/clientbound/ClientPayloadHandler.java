@@ -1,12 +1,13 @@
 package com.ombremoon.spellbound.networking.clientbound;
 
 import com.ombremoon.spellbound.client.AnimationHelper;
-import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
-import com.ombremoon.spellbound.client.renderer.ArenaDebugRenderer;
+import com.ombremoon.spellbound.client.renderer.SpellDimensionDebugRenderer;
 import com.ombremoon.spellbound.common.init.SBData;
+import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
 import com.ombremoon.spellbound.common.world.weather.HailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
@@ -18,6 +19,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -57,22 +59,42 @@ public class ClientPayloadHandler {
         });
     }
 
+    public static void handleUpdateCastMode(final UpdateCastModePayload payload, final IPayloadContext context) {
+        Entity entity = context.player().level().getEntity(payload.entityId());
+        if (entity instanceof LivingEntity livingEntity) {
+            var handler = SpellUtil.getSpellHandler(livingEntity);
+            handler.setCastMode(payload.castMode());
+        }
+    }
+
     public static void handleClientChargeOrChannel(final ChargeOrChannelPayload payload, final IPayloadContext context) {
         var handler = SpellUtil.getSpellHandler(context.player());
         boolean charging = payload.isChargingOrChannelling();
         handler.setChargingOrChannelling(charging);
     }
 
-    public static void handleClientUpdateSpells(UpdateSpellsPayload payload, IPayloadContext context) {
+    public static void handleClientCastSpell(ClientCastSpellPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
             Entity entity = level.getEntity(payload.entityId());
             if (entity instanceof LivingEntity livingEntity) {
-                AbstractSpell spell = payload.spellType().createSpell();
+                var handler = SpellUtil.getSpellHandler(livingEntity);
+                AbstractSpell spell = livingEntity.is(context.player()) ? handler.getCurrentlyCastSpell() : payload.spellType().createSpellWithData(livingEntity);
                 if (spell != null) {
                     CompoundTag nbt = payload.initTag();
                     spell.clientCastSpell(livingEntity, level, livingEntity.getOnPos(), payload.castId(), payload.spellData(), nbt);
                 }
+            }
+        });
+    }
+
+    public static void handleUpdateSpells(UpdateSpellsPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var level = context.player().level();
+            Entity entity = level.getEntity(payload.entityId());
+            if (entity instanceof LivingEntity livingEntity) {
+                var handler = SpellUtil.getSpellHandler(livingEntity);
+                handler.loadSpells(payload.spells());
             }
         });
     }
@@ -179,7 +201,15 @@ public class ClientPayloadHandler {
         });
     }
 
-    public static void handleUpdateGlowEffect(UpdateGlowEffectPayload payload, IPayloadContext context) {
+    public static void handleUpdateAbilities(UpdateAbilitiesPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            Player player = context.player();
+            player.getAbilities().mayfly = false;
+            player.setData(SBData.NO_FLY_DUNGEON, true);
+        });
+    }
+
+    public static void handleUpdateGlowEffect(UpdateGlowPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             var level = context.player().level();
             var handler = SpellUtil.getSpellHandler(context.player());
@@ -189,6 +219,22 @@ public class ClientPayloadHandler {
                     handler.removeGlowEffect(livingEntity);
                 } else {
                     handler.addGlowEffect(livingEntity);
+                }
+            }
+        });
+    }
+
+    public static void handleUpdateInvisibility(UpdateInvisibilityPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            Level level = context.player().level();
+            Entity entity = level.getEntity(payload.entityId());
+            if (entity instanceof LivingEntity livingEntity) {
+                var optional = payload.effect();
+                if (optional.isPresent()) {
+                    MobEffectInstance effect = optional.get();
+                    livingEntity.forceAddEffect(effect, effect instanceof SBEffectInstance instance ? instance.getCauseEntity() : null);
+                } else {
+                    livingEntity.removeEffectNoUpdate(SBEffects.MAGI_INVISIBILITY);
                 }
             }
         });
@@ -247,16 +293,16 @@ public class ClientPayloadHandler {
         });
     }
 
-    public static void handleArenaDebug(ArenaDebugPayload payload, IPayloadContext context) {
+    public static void handleArenaDebug(SpellDimensionDebugPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
-            ArenaDebugRenderer.setEnabled(payload.enabled());
+            SpellDimensionDebugRenderer.setEnabled(payload.enabled());
             if (payload.enabled()) {
                 AABB bounds = new AABB(payload.minX(), payload.minY(), payload.minZ(), payload.maxX(), payload.maxY(), payload.maxZ());
-                ArenaDebugRenderer.setArenaBounds(bounds);
-                ArenaDebugRenderer.setSpawnPos(payload.spawnPos());
-                ArenaDebugRenderer.setOriginPos(payload.originPos());
+                SpellDimensionDebugRenderer.setStructureBounds(bounds);
+                SpellDimensionDebugRenderer.setSpawnPos(payload.spawnPos());
+                SpellDimensionDebugRenderer.setOriginPos(payload.originPos());
             } else {
-                ArenaDebugRenderer.clear();
+                SpellDimensionDebugRenderer.clear();
             }
         });
     }

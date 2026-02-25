@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.client.model.entity.spell;
 
-import com.ombremoon.spellbound.client.model.LivingModel;
+import com.ombremoon.spellbound.client.model.types.LivingModel;
 import com.ombremoon.spellbound.common.world.entity.living.SpellBroker;
 import net.minecraft.util.Mth;
 import software.bernie.geckolib.animation.AnimationState;

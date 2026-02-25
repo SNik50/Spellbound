@@ -485,6 +485,14 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             this.tickCount = nbt.getInt("previous_duration");
     }
 
+    public @UnknownNullability CompoundTag initializeFromClient(SpellContext context, CompoundTag compoundTag) {
+        return compoundTag;
+    }
+
+    public void loadFromClient(CompoundTag nbt) {
+        this.setCharges(nbt.getInt("Charges"));
+    }
+
     /**
      * Spell ticking logic. Should not be overridden. Override {@link AbstractSpell#onSpellTick(SpellContext)} for ticking functionality.
      */
@@ -531,6 +539,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.onSpellStop(this.context);
         this.init = false;
         this.isInactive = true;
+        this.context.getSpellHandler().setDirty(true);
         this.handleFXRemoval();
         if (!level.isClientSide)
             PayloadHandler.endSpell(this.caster, spellType(), this.castId);
@@ -823,6 +832,18 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return amount * xpModifier * (1.0F + HURT_XP_MODIFIER * (this.getManaCost() / this.manaCost));
     }
 
+    protected Predicate<LivingEntity> getAttackPredicate() {
+        return livingEntity -> SpellUtil.CAN_ATTACK_ENTITY.test(this.caster, livingEntity);
+    }
+
+    protected List<LivingEntity> getAttackableEntities(double range) {
+        return this.getAttackableEntities(this.caster, range);
+    }
+
+    protected List<LivingEntity> getAttackableEntities(Entity source, double range) {
+        return this.level.getEntitiesOfClass(LivingEntity.class, source.getBoundingBox().inflate(range), this.getAttackPredicate());
+    }
+
     /**
      * Increments the effect build up for ruin spells (or other registered damage types)
      * @param targetEntity The hurt entity
@@ -1006,6 +1027,18 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return potency(null, initialAmount);
     }
 
+    public float invertedPotency(LivingEntity livingEntity, LivingEntity target, float initialAmount) {
+        return initialAmount * (1.0F - getModifier(ModifierType.POTENCY, livingEntity, target));
+    }
+
+    public float invertedPotency(LivingEntity target, float initialAmount) {
+        return invertedPotency(this.caster, target, initialAmount);
+    }
+
+    public float invertedPotency(float initialAmount) {
+        return invertedPotency(null, initialAmount);
+    }
+
     /**
      * Returns the modifier amount for the caster of the spells specifically.
      * @param modifierType The type of modifier
@@ -1057,7 +1090,11 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     protected Vec3 getSpawnVec(double range) {
         BlockPos blockPos = this.getSpawnPos(range);
-        return Vec3.atBottomCenterOf(blockPos);
+        return blockPos != null ? Vec3.atBottomCenterOf(blockPos) : null;
+    }
+
+    protected Vec3 getSpawnVec() {
+        return this.getSpawnVec(SpellUtil.getCastRange(this.caster));
     }
 
     public <T extends Entity> T summonEntity(SpellContext context, EntityType<T> entityType, Vec3 spawnPos) {
@@ -1144,6 +1181,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return blockPos;
     }
 
+    protected BlockPos getSpawnPos() {
+        return this.getSpawnPos(SpellUtil.getCastRange(this.caster));
+    }
+
     protected boolean hasValidSpawnPos() {
         float range = SpellUtil.getCastRange(this.caster);
         return hasValidSpawnPos(range);
@@ -1192,7 +1233,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @return Whether the damage source has the {@link SBTags.DamageTypes Physical Damage} tag
      */
     public static boolean isPhysicalDamage(@NotNull DamageSource damageSource) {
-        return damageSource.is(SBTags.DamageTypes.PHYSICAL_DAMAGE);
+        return !isSpellDamage(damageSource);
     }
 
     public boolean checkForCounterMagic(LivingEntity targetEntity) {
@@ -1407,7 +1448,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     public void awardXp(float amount) {
-        this.context.getSkills().awardSpellXp(spellType(), amount);
+        this.context.getSkills().awardSpellXp(spellType(), getModifier(ModifierType.SPELL_XP) * amount);
     }
 
     /**
@@ -1479,7 +1520,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             if (!(this.castPredicate.test(this.context, this) && RandomUtil.percentChance(getCastChance())) || !SpellUtil.canCastSpell(caster, this)) {
                 onCastReset(this.context);
                 CompoundTag initTag = this.initTag(this.isRecast, true);
-                PayloadHandler.updateSpells(caster, this.spellType, this.castId, initTag, nbt);
+                PayloadHandler.clientCastSpell(caster, this.spellType, this.castId, initTag, nbt);
                 return;
             }
 
@@ -1493,7 +1534,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             }
 
             CompoundTag initTag = this.initTag(this.isRecast, false);
-            PayloadHandler.updateSpells(caster, this.spellType, this.castId, initTag, nbt);
+            PayloadHandler.clientCastSpell(caster, this.spellType, this.castId, initTag, nbt);
             awardXp(this.manaCost * this.xpModifier);
             if (caster instanceof Player player) {
                 player.awardStat(SBStats.SPELLS_CAST.get());
@@ -1503,6 +1544,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             handler.previouslyCastSpell = this;
             handler.lastCastTick = level.getGameTime();
             activateSpell();
+            this.sendDirtySpellData();
             EventFactory.onSpellCast(caster, this, this.context);
 
             this.init = true;
@@ -1587,7 +1629,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         firstSpell.ifPresent(AbstractSpell::endSpell);
     }
 
-    protected CompoundTag initTag(boolean isRecast, boolean forceReset) {
+    public CompoundTag initTag(boolean isRecast, boolean forceReset) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("charges", this.charges);
         nbt.putBoolean("isRecast", isRecast);

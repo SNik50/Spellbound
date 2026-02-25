@@ -25,6 +25,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
             if (block instanceof SummonStoneBlock summonStone && block != SBBlocks.SUMMON_STONE.get())
                 markedSummonStoneModel(summonStone);
         }
+        blockWithItem(SBBlocks.MIRAGE_BLOCK);
+        blockWithItem(SBBlocks.WOVEN_SHADE);
     }
 
     private void blockItem(Supplier<Block> blockSupplier) {

@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -20,8 +21,9 @@ import java.util.function.Predicate;
 /**
  * The main class most spells will extend from. Primary utility is to handle spells casting animations.
  */
+@SuppressWarnings("unchecked")
 public abstract class AnimatedSpell extends AbstractSpell {
-    private final Function<SpellContext, SpellAnimation> castAnimation;
+    private final BiFunction<SpellContext, AnimatedSpell, SpellAnimation> castAnimation;
 
     public static <T extends AnimatedSpell> Builder<T> createSimpleSpellBuilder(Class<T> spellClass) {
         return new Builder<>();
@@ -29,14 +31,14 @@ public abstract class AnimatedSpell extends AbstractSpell {
 
     public AnimatedSpell(SpellType<?> spellType, Builder<?> builder) {
         super(spellType, EventFactory.getAnimatedBuilder(spellType, builder));
-        this.castAnimation = builder.castAnimation;
+        this.castAnimation = (BiFunction<SpellContext, AnimatedSpell, SpellAnimation>) builder.castAnimation;
     }
 
     @Override
     public void onCastStart(SpellContext context) {
         super.onCastStart(context);
         LivingEntity caster = context.getCaster();
-        SpellAnimation animation = this.castAnimation.apply(context);
+        SpellAnimation animation = this.castAnimation.apply(context, this);
         if (animation != null && caster instanceof Player player) {
             this.playAnimation(player, animation);
         }
@@ -74,7 +76,7 @@ public abstract class AnimatedSpell extends AbstractSpell {
     }
 
     public static class Builder<T extends AnimatedSpell> extends AbstractSpell.Builder<T> {
-        protected Function<SpellContext, SpellAnimation> castAnimation = context -> new SpellAnimation(CommonClass.customLocation("simple_cast"), SpellAnimation.Type.CAST, true);
+        protected BiFunction<SpellContext, T, SpellAnimation> castAnimation = (context, spell) -> new SpellAnimation(CommonClass.customLocation("simple_cast"), SpellAnimation.Type.CAST, true);
 
         public Builder<T> manaCost(int manaCost) {
             this.manaCost = manaCost;
@@ -100,25 +102,25 @@ public abstract class AnimatedSpell extends AbstractSpell {
             return this;
         }
 
-        public Builder<T> castAnimation(Function<SpellContext, SpellAnimation> castAnimationName) {
+        public Builder<T> castAnimation(BiFunction<SpellContext, T, SpellAnimation> castAnimationName) {
             this.castAnimation = castAnimationName;
             return this;
         }
 
         public Builder<T> instantCast() {
-            this.castAnimation = context -> new SpellAnimation("instant_cast", SpellAnimation.Type.CAST, true);
+            this.castAnimation = (context, spell) -> new SpellAnimation("instant_cast", SpellAnimation.Type.CAST, true);
             this.castTime = 5;
             return this;
         }
 
         public Builder<T> summonCast() {
-            this.castAnimation = context -> new SpellAnimation("summon", SpellAnimation.Type.CAST, true);
+            this.castAnimation = (context, spell) -> new SpellAnimation("summon", SpellAnimation.Type.CAST, true);
             this.castTime = 30;
             return this;
         }
 
         public Builder<T> selfBuffCast() {
-            this.castAnimation = context -> new SpellAnimation("self_buff", SpellAnimation.Type.CAST, true);
+            this.castAnimation = (context, spell) -> new SpellAnimation("self_buff", SpellAnimation.Type.CAST, true);
             return this;
         }
 
@@ -147,6 +149,7 @@ public abstract class AnimatedSpell extends AbstractSpell {
             this.resetDuration = resetDuration;
             return this;
         }
+
         public Builder<T> skipEndOnRecast(Predicate<SpellContext> skipIf) {
             this.skipEndOnRecast = skipIf;
             return this;

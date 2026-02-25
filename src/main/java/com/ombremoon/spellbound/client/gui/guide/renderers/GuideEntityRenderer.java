@@ -31,6 +31,7 @@ public class GuideEntityRenderer implements IPageElementRenderer<GuideEntityElem
             }
 
             entity = entityType.create(Minecraft.getInstance().level);
+            entity.tickCount = 200;
             saveData(element, "entity", entity);
             saveData(element, "entityIndex", entityIndex);
         }

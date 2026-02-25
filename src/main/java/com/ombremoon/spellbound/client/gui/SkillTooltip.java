@@ -570,6 +570,40 @@ public abstract class SkillTooltip<T> {
         }
     };
 
+    public static SkillTooltip<Unit> INVISIBILITY_NO_STACK = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Unit arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.invisibility_no_stack").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC)));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
+
+    public static SkillTooltip<Unit> INVISIBILITY_OVERRIDE = new SkillTooltip<>() {
+        @Override
+        public SkillTooltipProvider tooltip(Unit arg, Supplier<DataComponentType<Unit>> component) {
+            return new SkillTooltipProvider() {
+                @Override
+                public void addToTooltip(Item.TooltipContext context, Consumer<Component> tooltipAdder, TooltipFlag tooltipFlag) {
+                    tooltipAdder.accept(CommonComponents.space().append(Component.translatable("spellbound.skill_tooltip.invisibility_override").withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC)));
+                }
+
+                @Override
+                public DataComponentType<?> component() {
+                    return component.get();
+                }
+            };
+        }
+    };
+
     protected static Component formatDuration(int duration) {
         return Component.literal(formatTickDuration(duration));
     }

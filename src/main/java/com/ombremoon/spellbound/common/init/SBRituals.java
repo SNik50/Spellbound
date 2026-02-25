@@ -2,10 +2,9 @@ package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
-import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.effects.CreateItem;
-import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.effects.CreateSpellTome;
+import com.ombremoon.spellbound.common.magic.effects.CreateItem;
+import com.ombremoon.spellbound.common.magic.effects.CreateSpellTome;
 import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;

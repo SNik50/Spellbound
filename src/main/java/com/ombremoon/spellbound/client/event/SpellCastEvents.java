@@ -18,6 +18,7 @@ import com.zigythebird.playeranim.animation.PlayerAnimationController;
 import com.zigythebird.playeranim.api.PlayerAnimationAccess;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
@@ -112,7 +113,7 @@ public class SpellCastEvents {
                     }
                 } else if (!handler.isChargingOrChannelling()) {
                     if (handler.castTick >= castTime) {
-                        castSpell(player, spell.getCharges());
+                        castSpell(player, spell);
                         handler.castTick = 0;
                     } else {
                         handler.castTick++;
@@ -156,7 +157,7 @@ public class SpellCastEvents {
         PayloadHandler.setChargeOrChannel(false);
         handler.castTick = 0;
         if (castSpell) {
-            castSpell(player, spell.getCharges());
+            castSpell(player, spell);
             spell.resetCharges();
         } else {
             PayloadHandler.stopChannel(spell.spellType());
@@ -173,13 +174,17 @@ public class SpellCastEvents {
     }
 
     private static boolean isPlayingCastingAnimation(AbstractClientPlayer player, SpellHandler handler) {
-        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, AnimationHelper.SPELL_CAST_ANIMATION);
-        SpellAnimation animation = handler.getAnimationForLayer(AnimationHelper.SPELL_CAST_ANIMATION);
+        PlayerAnimationController spellController = (PlayerAnimationController) PlayerAnimationAccess.getPlayerAnimationLayer(player, SpellAnimation.SPELL_CAST_ANIMATION);
+        SpellAnimation animation = handler.getAnimationForLayer(SpellAnimation.SPELL_CAST_ANIMATION);
         return animation != null && AnimationHelper.isAnimationPlaying(spellController, animation) && animation.stationary();
     }
 
-    public static void castSpell(Player player, int charges) {
+    public static void castSpell(Player player, AbstractSpell spell) {
         if (player.isSpectator()) return;
-        PayloadHandler.castSpell(charges);
+
+        CompoundTag tag = new CompoundTag();
+        tag.putInt("Charges", spell.getCharges());
+        spell.initializeFromClient(spell.getCastContext(), tag);
+        PayloadHandler.castSpell(tag);
     }
 }

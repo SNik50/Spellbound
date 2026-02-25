@@ -1,12 +1,15 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.SpellMastery;
+import com.ombremoon.spellbound.common.world.spell.deception.CursedRuneSpell;
 import com.ombremoon.spellbound.common.world.spell.deception.FlickerSpell;
 import com.ombremoon.spellbound.common.world.spell.deception.PurgeMagicSpell;
 import com.ombremoon.spellbound.common.world.spell.deception.ShadowbondSpell;
 import com.ombremoon.spellbound.common.world.spell.divine.BlessingSpell;
 import com.ombremoon.spellbound.common.world.spell.divine.HealingBlossomSpell;
 import com.ombremoon.spellbound.common.world.spell.divine.HealingTouchSpell;
+import com.ombremoon.spellbound.common.world.spell.divine.SiphonSpell;
+import com.ombremoon.spellbound.common.world.spell.ruin.fire.FireballSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.ice.ShatteringCrystalSpell;
@@ -14,11 +17,9 @@ import com.ombremoon.spellbound.common.world.spell.ruin.shock.ElectricChargeSpel
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormRiftSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormstrikeSpell;
 import com.ombremoon.spellbound.common.world.spell.summon.SummonUndeadSpell;
+import com.ombremoon.spellbound.common.world.spell.summon.SummonVillagerSpell;
 import com.ombremoon.spellbound.common.world.spell.summon.WildMushroomSpell;
-import com.ombremoon.spellbound.common.world.spell.transfiguration.DolphinsFinSpell;
-import com.ombremoon.spellbound.common.world.spell.transfiguration.MysticArmorSpell;
-import com.ombremoon.spellbound.common.world.spell.transfiguration.ShadowGateSpell;
-import com.ombremoon.spellbound.common.world.spell.transfiguration.StrideSpell;
+import com.ombremoon.spellbound.common.world.spell.transfiguration.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
@@ -38,6 +39,10 @@ public class SBSpells {
     public static final DeferredRegister<SpellType<?>> SPELL_TYPES = DeferredRegister.create(REGISTRY, Constants.MOD_ID);
 
     //Ruin
+    public static final Supplier<SpellType<FireballSpell>> FIREBALL = registerSpell("fireball", fireRuinBuilder(SpellMastery.NOVICE, FireballSpell::new)
+            .skills(SBSkills.FIREBALL, SBSkills.RAPID_FIRE, SBSkills.STICKY_BOMB, SBSkills.CHARGED_BLAST,
+                    SBSkills.VOLATILE_CLUSTER, SBSkills.HOMING_MISSILE, SBSkills.EXPLOSIVE_AMPLIFIER,
+                    SBSkills.BURNING_ADHESIVE, SBSkills.MOLTEN_CORE, SBSkills.CLUSTER_STRIKE, SBSkills.AUTO_TARGETING));
     public static final Supplier<SpellType<FlameJetSpell>> FLAME_JET = registerSpell("flame_jet", fireRuinBuilder(SpellMastery.NOVICE, FlameJetSpell::new)
             .skills(SBSkills.FLAME_JET, SBSkills.JET_ENGINE, SBSkills.FLAME_GEYSER, SBSkills.FLAME_INFERNO,
                     SBSkills.IGNITION_BURST, SBSkills.TURBO_CHARGE, SBSkills.EXPULSION_BLAST,
@@ -80,6 +85,10 @@ public class SBSpells {
             .skills(SBSkills.DOLPHINS_FIN, SBSkills.MERMAIDS_TAIL, SBSkills.AQUATIC_DASH,
                     SBSkills.SHARK_ATTACK, SBSkills.ECHOLOCATION, SBSkills.POD_LEADER, SBSkills.SLIPSTREAM,
                     SBSkills.SONAR_BLAST, SBSkills.KELP_VEIL, SBSkills.HAMMERHEAD, SBSkills.OCEAN_DWELLER));
+    public static final Supplier<SpellType<CobbledHideSpell>> COBBLED_HIDE = registerSpell("cobbled_hide", trasnfigurationBuilder(SpellMastery.NOVICE, CobbledHideSpell::new)
+            .skills(SBSkills.COBBLED_HIDE, SBSkills.IRON_HIDE, SBSkills.DIAMOND_HIDE, SBSkills.DRAGON_HIDE,
+                    SBSkills.BEDROCK_BASTION, SBSkills.SHATTER_SKIN, SBSkills.STONE_WALL, SBSkills.GRANITE_GRIP,
+                    SBSkills.MASONRY_WARD, SBSkills.BOULDERBACK, SBSkills.INFUSED_STONE));
     public static final Supplier<SpellType<ShadowGateSpell>> SHADOW_GATE = registerSpell("shadow_gate", trasnfigurationBuilder(SpellMastery.ADEPT, ShadowGateSpell::new)
             .skills(SBSkills.SHADOW_GATE, SBSkills.REACH, SBSkills.BLINK, SBSkills.SHADOW_ESCAPE,
                     SBSkills.OPEN_INVITATION, SBSkills.QUICK_RECHARGE, SBSkills.UNWANTED_GUESTS, SBSkills.BAIT_AND_SWITCH,
@@ -94,6 +103,10 @@ public class SBSpells {
             .skills(SBSkills.SUMMON_UNDEAD, SBSkills.SUMMON_ZOMBIFIED_PIGLIN, SBSkills.SUMMON_SKELETON, SBSkills.SUMMON_PHANTOM,
                     SBSkills.SUMMON_DROWNED, SBSkills.ROTTEN_SOLDIERS, SBSkills.CRIMSON_PACT,
                     SBSkills.CORPSE_EXPLOSION, SBSkills.HALL_OF_THE_DEAD, SBSkills.SILENT_NIGHT, SBSkills.SUNKEN_BREATH));
+    public static final Supplier<SpellType<SummonVillagerSpell>> SUMMON_VILLAGER = registerSpell("summon_villager", summonBuilder(SpellMastery.NOVICE, SummonVillagerSpell::new)
+            .skills(SBSkills.SUMMON_VILLAGER, SBSkills.FARMER_VILLAGER, SBSkills.TOOLSMITH_VILLAGER,
+                    SBSkills.LIBRARIAN_VILLAGER, SBSkills.CARTOGRAPHER_VILLAGER, SBSkills.CLERIC_VILLAGER,
+                    SBSkills.EXTENDED_SERVICE, SBSkills.WHOLESALE, SBSkills.BOUNTIFUL, SBSkills.LOYAL_PROTECTOR, SBSkills.SHOW_ME_THE_ROPES));
     public static final Supplier<SpellType<WildMushroomSpell>> WILD_MUSHROOM = registerSpell("wild_mushroom", summonBuilder(SpellMastery.ADEPT, WildMushroomSpell::new)
             .skills(SBSkills.WILD_MUSHROOM, SBSkills.VILE_INFLUENCE, SBSkills.HASTENED_GROWTH, SBSkills.ENVENOM,
                     SBSkills.PARASITIC_FUNGUS, SBSkills.NATURES_DOMINANCE, SBSkills.POISON_ESSENCE,
@@ -112,6 +125,10 @@ public class SBSpells {
             .skills(SBSkills.BLESSING, SBSkills.FORTIFIED_HEARTS, SBSkills.ARCANE_RESTORATION, SBSkills.SATIATING_BLESSING,
                     SBSkills.AIR_BUBBLE, SBSkills.PURIFYING_WARD, SBSkills.EXTENDED_GRACE, SBSkills.SHARED_BOON,
                     SBSkills.OVERFLOWING_AID, SBSkills.CONSECRATED_PRESENCE, SBSkills.UPLIFTING_CHORUS));
+    public static final Supplier<SpellType<SiphonSpell>> SIPHON = registerSpell("siphon", divineBuilder(SpellMastery.NOVICE, SiphonSpell::new)
+            .skills(SBSkills.SIPHON, SBSkills.GRIM_REACH, SBSkills.GLUTTONY, SBSkills.WITHERING,
+                    SBSkills.SOUL_TAP, SBSkills.PARASITIC_LINK, SBSkills.UNRELENTING, SBSkills.OVERHEAL,
+                    SBSkills.IRON_MAIDEN, SBSkills.ARCANE_FEEDBACK, SBSkills.HARVEST));
     public static final Supplier<SpellType<HealingBlossomSpell>> HEALING_BLOSSOM = registerSpell("healing_blossom", divineBuilder(SpellMastery.EXPERT, HealingBlossomSpell::new)
             .skills(SBSkills.HEALING_BLOSSOM, SBSkills.THORNY_VINES, SBSkills.BLOOM, SBSkills.ETERNAL_SPRING,
                     SBSkills.FLOWER_FIELD, SBSkills.FLOURISHING_GROWTH, SBSkills.HEALING_WINDS, SBSkills.BURST_OF_LIFE,
@@ -122,6 +139,10 @@ public class SBSpells {
             .skills(SBSkills.FLICKER, SBSkills.DISTANT_FLICKER, SBSkills.SWIFT_SHADOWS, SBSkills.STEP_INTO_SHADOW,
                     SBSkills.SILENT_STEP, SBSkills.CONFUSION, SBSkills.BLINDING_MIRAGE,
                     SBSkills.PHANTOM_LURE, SBSkills.SHADOW_FEINT, SBSkills.LOOK_OVER_HERE, SBSkills.HALL_OF_MIRRORS));
+    public static final Supplier<SpellType<CursedRuneSpell>> CURSED_RUNE = registerSpell("cursed_rune", deceptionBuilder(SpellMastery.NOVICE, CursedRuneSpell::new)
+            .skills(SBSkills.CURSED_RUNE, SBSkills.MAGE_WRECK, SBSkills.DISARMING_CURSE,
+                    SBSkills.MIRROR_CURSE, SBSkills.CURSE_OF_PAIN, SBSkills.CURSE_OF_DROUGHT,
+                    SBSkills.CURSE_OF_WEAKNESS, SBSkills.CURSE_OF_SUSCEPTIBILITY, SBSkills.TANGLEFOOT_CURSE, SBSkills.HIDDEN_RUNE));
     public static final Supplier<SpellType<ShadowbondSpell>> SHADOWBOND = registerSpell("shadowbond", deceptionBuilder(SpellMastery.ADEPT, ShadowbondSpell::new)
             .skills(SBSkills.SHADOWBOND, SBSkills.EVERLASTING_BOND, SBSkills.SHADOW_STEP, SBSkills.SNEAK_ATTACK,
                     SBSkills.SILENT_EXCHANGE, SBSkills.SNARE, SBSkills.DISORIENTED,

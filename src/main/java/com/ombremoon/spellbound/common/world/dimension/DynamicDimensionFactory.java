@@ -1,7 +1,11 @@
 package com.ombremoon.spellbound.common.world.dimension;
 
+import com.ombremoon.spellbound.common.init.SBData;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
+import com.ombremoon.spellbound.common.world.SpellDimensionData;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.BossFight;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.BlockPos;
@@ -14,6 +18,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -32,6 +37,7 @@ import org.slf4j.Logger;
  */
 public class DynamicDimensionFactory {
     private static final Logger LOGGER = Constants.LOG;
+    public static final BlockPos ORIGIN = new BlockPos(0, 64, 0);
 
     public static ServerLevel getOrCreateDimension(MinecraftServer server, ResourceKey<Level> levelKey) {
         return DimensionCreator.get().getOrCreateLevel(server, levelKey, () -> createLevel(server));
@@ -44,7 +50,7 @@ public class DynamicDimensionFactory {
     }
 
     public static void spawnInArena(ServerLevel level, Entity entity, BossFight bossFight) {
-        BlockPos blockPos = BossFight.ORIGIN;
+        BlockPos blockPos = ORIGIN;
         level.getChunkAt(blockPos);
 
         Vec3 spawnOffset = bossFight.getPlayerSpawnOffset();
@@ -56,14 +62,41 @@ public class DynamicDimensionFactory {
         sendToDimension(entity, level, targetVec);
     }
 
-    public static boolean spawnArena(ServerLevel level, ResourceLocation spell) {
-        BlockPos origin = BossFight.ORIGIN;
-        level.getChunkAt(origin);
-        return spawnArena(level, origin, spell);
+    public static void spawnInDungeon(ServerLevel level, Player player, PuzzleDefinition puzzle, SpellDimensionData structure) {
+        BlockPos center = structure.getStructureCenter();
+        if (center != null) {
+            level.getChunkAt(center);
+            Vec3 spawnOffset = puzzle.spawnData().playerOffset();
+            BlockPos offsetPos = center.offset((int) spawnOffset.x, (int) spawnOffset.y, (int) spawnOffset.z);
+            Vec3 targetVec = Vec3.atBottomCenterOf(offsetPos);
+            player.setData(SBData.PUZZLE_RULES, puzzle.rules());
+            sendToDimension(player, level, targetVec);
+        }
     }
 
-    private static boolean spawnArena(ServerLevel level, BlockPos origin, ResourceLocation spell) {
-        Structure structure = getArena(level, spell).value();
+    public static boolean spawnArena(ServerLevel level, ResourceLocation structureLoc) {
+        return spawnSpellStructure(level, structureLoc, ArenaSavedData.get(level));
+    }
+
+    public static boolean spawnDungeon(ServerLevel level, ResourceLocation structureLoc) {
+        return spawnSpellStructure(level, structureLoc, PuzzleDungeonData.get(level));
+    }
+
+    public static boolean spawnDungeon(ServerLevel level, ResourceLocation structureLoc, BlockPos dungeonOffset) {
+        return spawnSpellStructure(level, structureLoc, PuzzleDungeonData.get(level), dungeonOffset);
+    }
+
+    public static boolean spawnSpellStructure(ServerLevel level, ResourceLocation structureLoc, SpellDimensionData dimension) {
+        return spawnSpellStructure(level, ORIGIN, structureLoc, dimension);
+    }
+
+    public static boolean spawnSpellStructure(ServerLevel level, ResourceLocation structureLoc, SpellDimensionData dimension, BlockPos origin) {
+        level.getChunkAt(origin);
+        return spawnSpellStructure(level, origin, structureLoc, dimension);
+    }
+
+    private static boolean spawnSpellStructure(ServerLevel level, BlockPos origin, ResourceLocation structureLoc, SpellDimensionData dimension) {
+        Structure structure = getSpellStructure(level, structureLoc).value();
         ChunkGenerator generator = level.getChunkSource().getGenerator();
         StructureStart start = structure.generate(
                 level.registryAccess(),
@@ -79,17 +112,16 @@ public class DynamicDimensionFactory {
         );
         if (start.isValid()) {
             BoundingBox boundingBox = start.getBoundingBox();
-            LOGGER.debug("[Arena Spawn] Structure valid | BoundingBox: min({}, {}, {}) max({}, {}, {})",
+            LOGGER.debug("[Spell Structure Spawn] Structure valid | BoundingBox: min({}, {}, {}) max({}, {}, {})",
                     boundingBox.minX(), boundingBox.minY(), boundingBox.minZ(),
                     boundingBox.maxX(), boundingBox.maxY(), boundingBox.maxZ());
 
-            ArenaSavedData arenaData = ArenaSavedData.get(level);
-            arenaData.setArenaBounds(boundingBox);
+            dimension.setStructureBounds(boundingBox);
 
             ChunkPos chunkPos = new ChunkPos(SectionPos.blockToSectionCoord(boundingBox.minX()), SectionPos.blockToSectionCoord(boundingBox.minZ()));
             ChunkPos chunkPos1 = new ChunkPos(SectionPos.blockToSectionCoord(boundingBox.maxX()), SectionPos.blockToSectionCoord(boundingBox.maxZ()));
 
-            LOGGER.debug("[Arena Spawn] Placing in chunks from {} to {}", chunkPos, chunkPos1);
+            LOGGER.debug("[Spell Structure Spawn] Placing in chunks from {} to {}", chunkPos, chunkPos1);
 
             ChunkPos.rangeClosed(chunkPos, chunkPos1)
                     .forEach(pos -> start.placeInChunk(
@@ -108,16 +140,16 @@ public class DynamicDimensionFactory {
                             pos
                     ));
 
-            LOGGER.debug("[Arena Spawn] Arena generation complete");
+            LOGGER.debug("[Spell Structure Spawn] Spell structure generation complete");
             return true;
         }
 
-        LOGGER.warn("[Arena Spawn] Structure generation FAILED - StructureStart invalid | Spell: {}", spell);
+        LOGGER.warn("[Spell Structure Spawn] Structure generation FAILED - StructureStart invalid | Structure Location: {}", structureLoc);
         return false;
     }
 
-    private static Holder.Reference<Structure> getArena(ServerLevel level, ResourceLocation spell) {
-        ResourceKey<Structure> resourceKey = ResourceKey.create(Registries.STRUCTURE, spell);
+    private static Holder.Reference<Structure> getSpellStructure(ServerLevel level, ResourceLocation structure) {
+        ResourceKey<Structure> resourceKey = ResourceKey.create(Registries.STRUCTURE, structure);
         var registry = level.registryAccess().registryOrThrow(Registries.STRUCTURE);
         return registry.getHolder(resourceKey).orElseGet(() -> registry.getHolderOrThrow(ResourceKey.create(Registries.STRUCTURE, CommonClass.customLocation("broker_tower"))));
     }

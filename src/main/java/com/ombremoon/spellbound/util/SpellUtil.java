@@ -3,6 +3,8 @@ package com.ombremoon.spellbound.util;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.DungeonRules;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
@@ -19,13 +21,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.OwnableEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.tslat.smartbrainlib.util.BrainUtils;
@@ -38,9 +38,13 @@ import java.util.function.BiPredicate;
 public class SpellUtil {
     public static final BiPredicate<Entity, LivingEntity> IS_ALLIED = (target, attacker) -> target != null
             && (attacker.isAlliedTo(target)
-            || attacker instanceof OwnableEntity ownable && ownable.getOwner() == target
+            || target instanceof OwnableEntity ownableTarget && ownableTarget.getOwner() == attacker
+            || attacker instanceof OwnableEntity ownableAttacker && ownableAttacker.getOwner() == target
             || isSummonOf(target, attacker));
-    public static final BiPredicate<LivingEntity, LivingEntity> CAN_ATTACK_ENTITY = (attacker, target) -> !IS_ALLIED.test(target, attacker) && !target.is(attacker) && !target.hasEffect(SBEffects.COUNTER_MAGIC) && !(target instanceof OwnableEntity ownable && ownable.getOwner() == (attacker));
+    public static final BiPredicate<LivingEntity, LivingEntity> CAN_ATTACK_ENTITY = (attacker, target) -> !IS_ALLIED.test(target, attacker)
+            && !target.is(attacker)
+            && !target.hasEffect(SBEffects.COUNTER_MAGIC)
+            && EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(target);
 
     public static SpellDamageSource spellDamageSource(Level level, ResourceKey<DamageType> damageType, AbstractSpell spell, Entity ownerEntity, Entity attackEntity) {
         return new SpellDamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(damageType), spell, attackEntity, ownerEntity);
@@ -90,9 +94,13 @@ public class SpellUtil {
 
     public static boolean canCastSpell(LivingEntity livingEntity, AbstractSpell spell) {
         var handler = getSpellHandler(livingEntity);
+        Level level = livingEntity.level();
         if (!handler.inCastMode()) return false;
         if (livingEntity instanceof Player player && player.getAbilities().instabuild) return true;
         if (EffectManager.isSilenced(livingEntity)) return false;
+
+        if (!level.isClientSide && PuzzleDungeonData.hasRule((ServerLevel) level, DungeonRules.NO_SPELL_CASTING))
+            return false;
 
         return handler.consumeMana(spell.getManaCost(livingEntity), false);
     }

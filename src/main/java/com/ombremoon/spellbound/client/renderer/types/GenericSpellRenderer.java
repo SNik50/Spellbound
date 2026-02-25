@@ -2,7 +2,7 @@ package com.ombremoon.spellbound.client.renderer.types;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import com.ombremoon.spellbound.client.model.GenericModel;
+import com.ombremoon.spellbound.client.model.types.GenericModel;
 import com.ombremoon.spellbound.common.world.entity.SpellEntity;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;

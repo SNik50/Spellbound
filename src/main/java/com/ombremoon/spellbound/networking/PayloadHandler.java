@@ -23,8 +23,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -39,6 +39,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @EventBusSubscriber(modid = Constants.MOD_ID)
@@ -83,8 +84,8 @@ public class PayloadHandler {
         PacketDistributor.sendToServer(new EquipSpellPayload(spellType, equip));
     }
 
-    public static void castSpell(int charges) {
-        PacketDistributor.sendToServer(new CastSpellPayload(charges));
+    public static void castSpell(CompoundTag tag) {
+        PacketDistributor.sendToServer(new CastSpellPayload(tag));
     }
 
     public static void setCastingSpell(SpellType<?> spellType, SpellContext context) {
@@ -123,12 +124,28 @@ public class PayloadHandler {
         PacketDistributor.sendToServer(new PlayerMovementPayload(PlayerMovementPayload.Movement.ROTATE, 0, 0, yRot));
     }
 
+    public static void updateCastMode(Player player, boolean castMode) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new UpdateCastModePayload(player.getId(), castMode));
+    }
+
     public static void handleAnimation(Player player, SpellAnimation animation, float animationSpeed, boolean stopAnimation) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new HandleAnimationPayload(player.getUUID().toString(), animation, animationSpeed, stopAnimation));
     }
 
-    public static void updateSpells(LivingEntity entity, SpellType<?> spellType, int castId,CompoundTag initTag, @Nullable CompoundTag spellData) {
-        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new UpdateSpellsPayload(entity.getId(), spellType, castId, initTag, spellData));
+    /*public static void clientCastSpell(LivingEntity entity, SpellType<?> spellType, int castId, CompoundTag initTag, @Nullable CompoundTag spellData) {
+        if (entity instanceof ServerPlayer serverPlayer) {
+            PacketDistributor.sendToPlayer(serverPlayer, new ClientCastSpellPayload(entity.getId(), spellType, castId, initTag, spellData));
+        } else {
+            PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new ClientCastSpellPayload(entity.getId(), spellType, castId, initTag, spellData));
+        }
+    }*/
+
+    public static void clientCastSpell(LivingEntity entity, SpellType<?> spellType, int castId, CompoundTag initTag, @Nullable CompoundTag spellData) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new ClientCastSpellPayload(entity.getId(), spellType, castId, initTag, spellData));
+    }
+
+    public static void updateSpells(LivingEntity entity, CompoundTag spells) {
+        PacketDistributor.sendToPlayersTrackingEntity(entity, new UpdateSpellsPayload(entity.getId(), spells));
     }
 
     //Does this need to go to everyone?
@@ -181,8 +198,16 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new CreateParticlesPayload(particle, x, y, z, xSpeed, ySpeed, zSpeed));
     }
 
+    public static void updateAbilities(ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, new UpdateAbilitiesPayload());
+    }
+
     public static void updateGlowEffect(Player player, int entityId, boolean remove) {
-        PacketDistributor.sendToPlayer((ServerPlayer) player, new UpdateGlowEffectPayload(entityId, remove));
+        PacketDistributor.sendToPlayer((ServerPlayer) player, new UpdateGlowPayload(entityId, remove));
+    }
+
+    public static void updateInvisibilityEffect(Player player, int entityId, @Nullable MobEffectInstance effect) {
+        PacketDistributor.sendToPlayer((ServerPlayer) player, new UpdateInvisibilityPayload(entityId, Optional.ofNullable(effect)));
     }
 
     public static void updateDimensions(MinecraftServer server, Set<ResourceKey<Level>> keys, boolean add) {
@@ -197,8 +222,8 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayer(player, new ScrapToastPayload(scrap));
     }
 
-    public static void sendArenaDebug(ServerPlayer player, boolean enabled, BoundingBox bounds, BlockPos spawnPos, BlockPos origin) {
-        PacketDistributor.sendToPlayer(player, new ArenaDebugPayload(
+    public static void sendDimensionDebug(ServerPlayer player, boolean enabled, BoundingBox bounds, BlockPos spawnPos, BlockPos origin) {
+        PacketDistributor.sendToPlayer(player, new SpellDimensionDebugPayload(
                 enabled,
                 bounds.minX(), bounds.minY(), bounds.minZ(),
                 bounds.maxX(), bounds.maxY(), bounds.maxZ(),
@@ -206,8 +231,8 @@ public class PayloadHandler {
         ));
     }
 
-    public static void sendArenaDebugDisable(ServerPlayer player) {
-        PacketDistributor.sendToPlayer(player, new ArenaDebugPayload(
+    public static void sendDimensionDebugDisable(ServerPlayer player) {
+        PacketDistributor.sendToPlayer(player, new SpellDimensionDebugPayload(
                 false, 0, 0, 0, 0, 0, 0, BlockPos.ZERO, BlockPos.ZERO
         ));
     }
@@ -228,6 +253,11 @@ public class PayloadHandler {
     public static void register(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(Constants.MOD_ID).optional();
         registrar.playToClient(
+                UpdateCastModePayload.TYPE,
+                UpdateCastModePayload.STREAM_CODEC,
+                ClientPayloadHandler::handleUpdateCastMode
+        );
+        registrar.playToClient(
                 HandleAnimationPayload.TYPE,
                 HandleAnimationPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleAnimation
@@ -238,9 +268,14 @@ public class PayloadHandler {
                 ClientPayloadHandler::handleEndSpell
         );
         registrar.playToClient(
+                ClientCastSpellPayload.TYPE,
+                ClientCastSpellPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleClientCastSpell
+        );
+        registrar.playToClient(
                 UpdateSpellsPayload.TYPE,
                 UpdateSpellsPayload.STREAM_CODEC,
-                ClientPayloadHandler::handleClientUpdateSpells
+                ClientPayloadHandler::handleUpdateSpells
         );
         registrar.playToClient(
                 UpdateSpellTicksPayload.TYPE,
@@ -293,9 +328,19 @@ public class PayloadHandler {
                 ClientPayloadHandler::handleCreateParticles
         );
         registrar.playToClient(
-                UpdateGlowEffectPayload.TYPE,
-                UpdateGlowEffectPayload.STREAM_CODEC,
+                UpdateAbilitiesPayload.TYPE,
+                UpdateAbilitiesPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleUpdateAbilities
+        );
+        registrar.playToClient(
+                UpdateGlowPayload.TYPE,
+                UpdateGlowPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleUpdateGlowEffect
+        );
+        registrar.playToClient(
+                UpdateInvisibilityPayload.TYPE,
+                UpdateInvisibilityPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleUpdateInvisibility
         );
         registrar.playToClient(
                 ChangeHailLevelPayload.TYPE,
@@ -402,8 +447,8 @@ public class PayloadHandler {
                 ClientPayloadHandler::handGuideBooks
         );
         registrar.playToClient(
-                ArenaDebugPayload.TYPE,
-                ArenaDebugPayload.STREAM_CODEC,
+                SpellDimensionDebugPayload.TYPE,
+                SpellDimensionDebugPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleArenaDebug
         );
 

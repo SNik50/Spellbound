@@ -27,6 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 .duration(2400)
                 .isSpecialChoice()
                 .additionalCondition((context, summonUndeadSpell) -> summonUndeadSpell.skipEndOnRecast(context) && context.getLevel().getDifficulty() != Difficulty.PEACEFUL)
-                .castAnimation(context -> new SpellAnimation(shouldExplodeCorpse(context) ? "instant_cast" : "summon", SpellAnimation.Type.CAST, true))
+                .castAnimation((context, spell) -> new SpellAnimation(shouldExplodeCorpse(context) || spell.hasSpecialChoice(spell, context) ? "instant_cast" : "summon", SpellAnimation.Type.CAST, true))
                 .skipEndOnRecast(context -> {
                     LivingEntity caster = context.getCaster();
                     var handler = context.getSpellHandler();
@@ -95,15 +96,16 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
 
     @Override
     public int getCastTime(SpellContext context) {
-        return shouldExplodeCorpse(context) ? 1 : this.maxCharges(context) * 20;
+        return shouldExplodeCorpse(context) || this.hasSpecialChoice(this, context) ? 1 : this.maxCharges(context) * 20;
     }
 
     @Override
     public void onCastStart(SpellContext context) {
-        super.onCastStart(context);
         if (shouldExplodeCorpse(context)) {
             this.setExploding(true);
         }
+
+        super.onCastStart(context);
     }
 
     @Override
@@ -193,7 +195,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
     }
 
     @Override
-    public void onMobRemoved(LivingEntity entity, SpellContext context, Entity.RemovalReason reason) {
+    public void onMobRemoved(LivingEntity entity, SpellContext context, @Nullable DamageSource source, Entity.RemovalReason reason) {
         if (reason == Entity.RemovalReason.KILLED) {
             //Spawn pile of bones
         }
@@ -215,8 +217,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
 
     @Override
     public boolean canCharge(SpellContext context) {
-        log(!shouldExplodeCorpse(context));
-        return /*!this.hasSpecialChoice(this, context) &&*/ /*!shouldExplodeCorpse(context)*/true;
+        return true;
     }
 
     public void setExploding(boolean exploding) {

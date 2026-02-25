@@ -35,7 +35,7 @@ public class SkillSelectScreen extends Screen {
     private final List<Skill> radialSkills;
     private final SkillHolder skills;
     private final RadialMenu radialMenu;
-    private SkillRadialMenuItem[] skillItems = new SkillRadialMenuItem[5];
+    private SkillRadialMenuItem[] skillItems = new SkillRadialMenuItem[11];
     private final List<RadialMenuItem> items;
     private float x;
     private float y;

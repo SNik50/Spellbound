@@ -2,12 +2,16 @@ package com.ombremoon.spellbound.client.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.ombremoon.spellbound.client.KeyBinds;
+import com.ombremoon.spellbound.client.MovementData;
 import com.ombremoon.spellbound.client.gui.CastModeOverlay;
 import com.ombremoon.spellbound.client.gui.SpellSelectScreen;
+import com.ombremoon.spellbound.client.gui.guide.GuideTooltipRenderer;
+import com.ombremoon.spellbound.client.gui.guide.elements.*;
+import com.ombremoon.spellbound.client.gui.guide.renderers.*;
 import com.ombremoon.spellbound.client.particle.CircleAroundPositionParticle;
 import com.ombremoon.spellbound.client.particle.GenericParticle;
 import com.ombremoon.spellbound.client.particle.SparkParticle;
-import com.ombremoon.spellbound.client.renderer.ArenaDebugRenderer;
+import com.ombremoon.spellbound.client.renderer.SpellDimensionDebugRenderer;
 import com.ombremoon.spellbound.client.renderer.blockentity.*;
 import com.ombremoon.spellbound.client.renderer.entity.*;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.CatModel;
@@ -16,17 +20,15 @@ import com.ombremoon.spellbound.client.renderer.entity.familiar.FrogModel;
 import com.ombremoon.spellbound.client.renderer.entity.LivingShadowRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.SpellBrokerRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.FrogRenderer;
-import com.ombremoon.spellbound.client.renderer.entity.projectile.MushroomProjectileRenderer;
+import com.ombremoon.spellbound.client.renderer.types.*;
 import com.ombremoon.spellbound.client.renderer.entity.projectile.StormstrikeBoltRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.spell.*;
 import com.ombremoon.spellbound.client.renderer.layer.FrozenLayer;
 import com.ombremoon.spellbound.client.renderer.layer.GenericSpellLayer;
 import com.ombremoon.spellbound.client.renderer.layer.SpellCastRenderLayer;
-import com.ombremoon.spellbound.client.renderer.types.EmissiveOutlineSpellRenderer;
-import com.ombremoon.spellbound.client.renderer.types.EmissiveSpellProjectileRenderer;
-import com.ombremoon.spellbound.client.renderer.types.GenericLivingEntityRenderer;
-import com.ombremoon.spellbound.client.renderer.types.GenericSpellRenderer;
 import com.ombremoon.spellbound.client.shader.SBShaders;
+import com.ombremoon.spellbound.common.magic.SpellPath;
+import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.block.entity.RuneBlockEntity;
@@ -41,6 +43,12 @@ import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
+import com.zigythebird.playeranim.animation.PlayerAnimResources;
+import com.zigythebird.playeranim.animation.PlayerAnimationController;
+import com.zigythebird.playeranim.api.PlayerAnimationFactory;
+import com.zigythebird.playeranimcore.animation.Animation;
+import com.zigythebird.playeranimcore.animation.RawAnimation;
+import com.zigythebird.playeranimcore.enums.PlayState;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -52,7 +60,9 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -61,6 +71,7 @@ import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.*;
 import org.joml.Matrix4f;
 import software.bernie.geckolib.util.Color;
@@ -89,19 +100,21 @@ public class ClientEvents {
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(SBEntities.TEST_DUMMY.get(), GenericLivingEntityRenderer::new);
 
-        event.registerEntityRenderer(SBEntities.MUSHROOM.get(), GenericSpellRenderer::new);
-        event.registerEntityRenderer(SBEntities.SHADOW_GATE.get(), ShadowGateRenderer::new);
+        event.registerEntityRenderer(SBEntities.FIREBALL.get(), VFXProjectileRenderer::new);
         event.registerEntityRenderer(SBEntities.SOLAR_RAY.get(), SolarRayRenderer::new);
+        event.registerEntityRenderer(SBEntities.ICE_BOLT.get(), EmissiveSpellProjectileRenderer::new);
         event.registerEntityRenderer(SBEntities.SHATTERING_CRYSTAL.get(), ShatteringCrystalRenderer::new);
-        event.registerEntityRenderer(SBEntities.ICE_SHRAPNEL.get(), EmissiveSpellProjectileRenderer::new);
         event.registerEntityRenderer(SBEntities.ICE_MIST.get(), EmissiveOutlineSpellRenderer::new);
         event.registerEntityRenderer(SBEntities.STORMSTRIKE_BOLT.get(), StormstrikeBoltRenderer::new);
         event.registerEntityRenderer(SBEntities.STORM_RIFT.get(), StormRiftRenderer::new);
         event.registerEntityRenderer(SBEntities.STORM_CLOUD.get(), StormCloudRenderer::new);
         event.registerEntityRenderer(SBEntities.STORM_BOLT.get(), StormBoltRenderer::new);
+        event.registerEntityRenderer(SBEntities.SHADOW_GATE.get(), ShadowGateRenderer::new);
+        event.registerEntityRenderer(SBEntities.MUSHROOM.get(), GenericSpellRenderer::new);
+        event.registerEntityRenderer(SBEntities.HEALING_BLOSSOM.get(), HealingBlossomRenderer::new);
+        event.registerEntityRenderer(SBEntities.CURSED_RUNE.get(), VFXSpellRenderer::new);
 //        event.registerEntityRenderer(SBEntities.CYCLONE.get(), CycloneRenderer::new);
         event.registerEntityRenderer(SBEntities.HAIL.get(), HailRenderer::new);
-        event.registerEntityRenderer(SBEntities.HEALING_BLOSSOM.get(), HealingBlossomRenderer::new);
 
         event.registerEntityRenderer(SBEntities.SPELL_BROKER.get(), SpellBrokerRenderer::new);
         event.registerEntityRenderer(SBEntities.VALKYR.get(), GenericLivingEntityRenderer::new);
@@ -110,7 +123,7 @@ public class ClientEvents {
         event.registerEntityRenderer(SBEntities.LIVING_SHADOW.get(), LivingShadowRenderer::new);
         event.registerEntityRenderer(SBEntities.DUNGEON_SHADOW.get(), GenericLivingEntityRenderer::new);
 
-        event.registerEntityRenderer(SBEntities.MUSHROOM_PROJECTILE.get(), MushroomProjectileRenderer::new);
+        event.registerEntityRenderer(SBEntities.MUSHROOM_PROJECTILE.get(), VFXProjectileRenderer::new);
 
         event.registerEntityRenderer(SBEntities.FROG.get(), FrogRenderer::new);
         event.registerEntityRenderer(SBEntities.CAT.get(), CatRenderer::new);
@@ -168,6 +181,99 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
+    public static void onClientSetup(FMLClientSetupEvent event) {
+        registerElementRenderers();
+
+        event.enqueueWork(() -> {
+            PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
+                    SpellAnimation.MOVEMENT_ANIMATION,
+                    1,
+                    player -> new PlayerAnimationController(player, (controller, state, setter) -> {
+                        var handler = SpellUtil.getSpellHandler(player);
+                        if (handler.inCastMode()) {
+                            ResourceLocation id = CommonClass.customLocation("idle");
+                            MovementData movementData = player.getData(SBData.MOVEMENT_DATA.get());
+                            if (isMoving(player)) {
+                                if (!player.getDisplayName().getString().contains("1"))
+                                    Constants.LOG.debug("{}", movementData.zza());
+
+                                if (movementData.zza() < 0) {
+                                    id = CommonClass.customLocation("walk_backwards");
+                                } else if (player.isCrouching()) {
+                                    id = CommonClass.customLocation("walk_sneak");
+                                } else if (player.isSprinting()) {
+                                    id = CommonClass.customLocation("run");
+                                } else {
+                                    id = CommonClass.customLocation("walk");
+                                }
+                            } else {
+                                if (player.isCrouching()) {
+                                    id = CommonClass.customLocation("sneak");
+                                }
+                            }
+
+                            Animation animation = PlayerAnimResources.getAnimation(id);
+                            return setter.setAnimation(RawAnimation.begin().thenPlay(animation));
+                        }
+
+                        return PlayState.STOP;
+                    })
+            );
+
+            PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
+                    SpellAnimation.SPELL_CAST_ANIMATION,
+                    1000,
+                    player -> new PlayerAnimationController(player, (controller, state, setter) -> PlayState.STOP)
+            );
+        });
+
+        for (SpellPath spellPath : SpellPath.values()) {
+            if (!spellPath.isSubPath()) {
+                ItemProperties.register(SBItems.SPELL_TOME.get(), CommonClass.customLocation(spellPath.getSerializedName()), (stack, level, entity, seed) -> {
+                    SpellType<?> spellType = stack.get(SBData.SPELL_TOME);
+                    if (spellType != null) {
+                        SpellPath spellPath1 = spellType.getPath();
+                        return spellPath == spellPath1 ? 1.0F : 0.0F;
+                    }
+
+                    return 0.0F;
+                });
+            }
+        }
+
+        ItemProperties.register(SBItems.RITUAL_TALISMAN.get(), CommonClass.customLocation("rings"), (stack, level, entity, seed) -> {
+            if (stack.is(SBItems.RITUAL_TALISMAN.get())) {
+                Integer rings = stack.get(SBData.TALISMAN_RINGS.get());
+                if (rings != null) {
+                    return rings == 3 ? 1.0F : rings == 2 ? 0.5F : 0.0F;
+                }
+            }
+
+            return 0.0F;
+        });
+    }
+
+    private static boolean isMoving(Player player) {
+        return player.xo != player.getX() || player.yo != player.getY() || player.zo != player.getZ();
+    }
+
+    private static void registerElementRenderers() {
+        ElementRenderDispatcher.register(GuideEntityElement.class, new GuideEntityRenderer());
+        ElementRenderDispatcher.register(GuideImageElement.class, new GuideImageRenderer());
+        ElementRenderDispatcher.register(GuideStaticItemElement.class, new GuideStaticItemRenderer());
+        ElementRenderDispatcher.register(GuideItemListElement.class, new GuideItemListRenderer());
+        ElementRenderDispatcher.register(GuideRecipeElement.class, new GuideRecipeRenderer());
+        ElementRenderDispatcher.register(GuideSpellInfoElement.class, new GuideSpellInfoRenderer());
+        ElementRenderDispatcher.register(GuideTextElement.class, new GuideTextRenderer());
+        ElementRenderDispatcher.register(GuideTextListElement.class, new GuideTextListRenderer());
+        ElementRenderDispatcher.register(GuideItemElement.class, new GuideItemRenderer());
+        ElementRenderDispatcher.register(GuideTooltipElement.class, new GuideTooltipRenderer());
+        ElementRenderDispatcher.register(GuideSpellBorderElement.class, new GuideSpellBorderRenderer());
+        ElementRenderDispatcher.register(TransfigurationRitualElement.class, new GuideRitualRenderer());
+        ElementRenderDispatcher.register(GuideEquipmentElement.class, new GuideEquipmentRenderer());
+    }
+
+    @SubscribeEvent
     public static void onKeyInput(InputEvent.Key event) {
         Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
@@ -186,6 +292,8 @@ public class ClientEvents {
             boolean cycleSpellDown = KeyBinds.CYCLE_SPELL_BINDING.consumeClick();
             boolean cycleChoiceDown = KeyBinds.CYCLE_CHOICE_BINDING.consumeClick();
             SpellType<?> selectedSpell = handler.getSelectedSpell();
+            if (selectedSpell == null) return;
+
             if (handler.inCastMode()) {
                 if (handler.isChargingOrChannelling())
                     return;
@@ -292,7 +400,7 @@ public class ClientEvents {
         }
 
         if (stage == RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) {
-            ArenaDebugRenderer.render(poseStack, camera, minecraft.renderBuffers().bufferSource());
+            SpellDimensionDebugRenderer.render(poseStack, camera, minecraft.renderBuffers().bufferSource());
         }
 
     }

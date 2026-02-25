@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.mojang.serialization.Codec;
+import com.ombremoon.spellbound.client.MovementData;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
@@ -12,9 +13,7 @@ import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.tree.UpgradeTree;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import net.minecraft.world.phys.Vec3;
@@ -72,6 +71,8 @@ public class SBData {
             "movement_tick", () -> AttachmentType.builder(() -> 0).build());
     public static final Supplier<AttachmentType<Vec3>> MOVEMENT_SOURCE = ATTACHMENT_TYPES.register(
             "movement_source", () -> AttachmentType.builder(() -> Vec3.ZERO).build());
+    public static final Supplier<AttachmentType<Vec3>> STICKY_BOMB_LOCATION = ATTACHMENT_TYPES.register(
+            "sticky_bomb_location", () -> AttachmentType.builder(() -> Vec3.ZERO).serialize(Vec3.CODEC).sync(ByteBufCodecs.fromCodec(Vec3.CODEC)).build());
     public static final Supplier<AttachmentType<Integer>> HEAT_TICK = ATTACHMENT_TYPES.register(
             "heat_tick", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Boolean>> FORCE_WARP = ATTACHMENT_TYPES.register(
@@ -86,19 +87,27 @@ public class SBData {
             "interact_heal_target", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Integer>> EFFECT_HEAL_TARGET = ATTACHMENT_TYPES.register(
             "effect_heal_target", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
+    public static final Supplier<AttachmentType<Boolean>> INVISIBILITY_DIRTY = ATTACHMENT_TYPES.register(
+            "invisibility_dirty", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
+    public static final Supplier<AttachmentType<List<ResourceLocation>>> PUZZLE_RULES = ATTACHMENT_TYPES.register(
+            "puzzle_rules", () -> AttachmentType.<List<ResourceLocation>>builder(() -> new ArrayList<>())
+                    .serialize(ResourceLocation.CODEC.listOf())
+                    .sync(ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()))
+                    .build()
+    );
+    public static final Supplier<AttachmentType<Boolean>> NO_FLY_DUNGEON = ATTACHMENT_TYPES.register(
+            "no_fly_dungeon", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build()
+    );
+    public static final Supplier<AttachmentType<MovementData>> MOVEMENT_DATA = ATTACHMENT_TYPES.register(
+            "movement_data", () -> AttachmentType.builder(() -> new MovementData(0, 0, false, false))
+                    .serialize(MovementData.CODEC)
+                    .sync(MovementData.STREAM_CODEC)
+                    .build()
+    );
     public static final Supplier<AttachmentType<List<ResourceLocation>>> BOOK_SCRAPS = ATTACHMENT_TYPES.register(
             "book_scraps", () -> AttachmentType.<List<ResourceLocation>>builder(() -> new ArrayList<>())
                     .serialize(ResourceLocation.CODEC.listOf())
-                    .sync(StreamCodec.<RegistryFriendlyByteBuf, List<ResourceLocation>>of((buf, list) -> {
-                        buf.writeInt(list.size());
-                        for (ResourceLocation res : list) buf.writeUtf(res.toString());
-                    }, (buf) -> {
-                        List<ResourceLocation> list = new ArrayList<>();
-                        int length = buf.readInt();
-                        for (int i = 0; i < length; i++) list.add(ResourceLocation.parse(buf.readUtf()));
-
-                        return list;
-                    }))
+                    .sync(ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()))
                     .copyOnDeath()
                     .build()
     );
@@ -112,8 +121,10 @@ public class SBData {
             builder -> builder.persistent(Codec.INT.listOf()).networkSynchronized(ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list())));
     public static final Supplier<DataComponentType<Integer>> TALISMAN_RINGS = COMPONENT_TYPES.registerComponentType("talisman_rings",
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
-    public static final Supplier<DataComponentType<Boolean>> BOSS_PICKUP = COMPONENT_TYPES.registerComponentType("boss_pickup",
+    public static final Supplier<DataComponentType<Boolean>> SPECIAL_PICKUP = COMPONENT_TYPES.registerComponentType("special_pickup",
             builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+    public static final Supplier<DataComponentType<SpellType<?>>> DUNGEON_SPELL = COMPONENT_TYPES.registerComponentType("dungeon_spell",
+            builder -> builder.persistent(SBSpells.REGISTRY.byNameCodec()).networkSynchronized(ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)));
 
     //Spell Components
     public static final Supplier<DataComponentType<Unit>> POD_LEADER = COMPONENT_TYPES.registerComponentType("pod_leader", builder -> builder.persistent(Unit.CODEC));

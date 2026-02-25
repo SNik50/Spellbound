@@ -96,14 +96,14 @@ public class ShadowbondSpell extends AnimatedSpell {
         }
 
         if (!this.canReverse) {
-            MobEffectInstance mobEffectInstance = new SBEffectInstance(caster, SBEffects.MAGI_INVISIBILITY, -1, context.hasSkill(SBSkills.OBSERVANT), 0, false, false);
+            SBEffectInstance effectInstance = new SBEffectInstance(caster, SBEffects.MAGI_INVISIBILITY, -1, context.hasSkill(SBSkills.OBSERVANT), 0, false, false);
             addSkillBuff(
                     caster,
                     SBSkills.SHADOWBOND,
                     SHADOWBOND_INVIS,
                     BuffCategory.BENEFICIAL,
                     SkillBuff.MOB_EFFECT,
-                    mobEffectInstance);
+                    effectInstance);
 
             int size = this.targetList.size();
             for (int i = 0; i < size + 1; i++) {
@@ -115,7 +115,7 @@ public class ShadowbondSpell extends AnimatedSpell {
                             SHADOWBOND_TARGET_INVIS,
                             BuffCategory.HARMFUL,
                             SkillBuff.MOB_EFFECT,
-                            mobEffectInstance);
+                            effectInstance);
 
                     this.spawnTeleportParticles(entity, 40);
                 }
@@ -229,7 +229,6 @@ public class ShadowbondSpell extends AnimatedSpell {
             handleSwapEffect(context, caster, level);
 
         level.playSound(null, caster.xo, caster.yo, caster.zo, SoundEvents.ENDERMAN_TELEPORT, caster.getSoundSource(), 1.0F, 1.0F);
-        caster.playSound(SoundEvents.ENDERMAN_TELEPORT, 1.0F, 1.0F);
     }
 
     private void handleSwapEffect(SpellContext context, LivingEntity caster, Level level) {

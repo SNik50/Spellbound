@@ -1,5 +1,7 @@
 package com.ombremoon.spellbound.common.world.effect;
 
+import com.ombremoon.spellbound.common.init.SBData;
+import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
@@ -64,6 +66,10 @@ public class SBEffectInstance extends MobEffectInstance {
         if (!livingEntity.level().isClientSide) {
             if (this.causeEntity instanceof Player player && !this.causeEntity.is(livingEntity) && this.willGlow) {
                 PayloadHandler.updateGlowEffect(player, livingEntity.getId(), false);
+            }
+
+            if (this.getEffect() == SBEffects.MAGI_INVISIBILITY) {
+                livingEntity.setData(SBData.INVISIBILITY_DIRTY, true);
             }
         }
     }

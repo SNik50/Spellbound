@@ -5,13 +5,17 @@
   "compatibilityLevel": "JAVA_21",
   "refmap": "spellbound.refmap.json",
   "mixins": [
+    "BlockItemMixin",
     "ConnectionAccessor",
     "DuckRangedAttribute",
     "HealOrHarmMobEffectMixin",
     "HurtByTargetGoalMixin",
     "LivingEntityMixin",
     "MobMixin",
+    "PlayerMixin",
     "ServerboundSetStructureBlockPacketMixin",
+    "ServerEntityMixin",
+    "ServerGamePacketListenerImplMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "StructureBlockEntityMixin",
@@ -20,11 +24,14 @@
   "client": [
     "EffectRenderingInventoryScreenMixin",
     "GameRendererMixin",
+    "HumanoidModelMixin",
     "LevelRendererMixin",
     "LivingEntityRendererMixin",
+    "LocalPlayerMixin",
     "MinecraftMixin",
     "ParticleEngineMixin",
     "PlayerModelMixin",
+    "PlayerRendererMixin",
     "StructureBlockRendererMixin"
   ],
   "injectors": {

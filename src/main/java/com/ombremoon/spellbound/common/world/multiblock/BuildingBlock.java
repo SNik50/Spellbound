@@ -66,19 +66,8 @@ public final class BuildingBlock implements Predicate<BlockState> {
         } else if (this.isEmpty()) {
             return block.isAir();
         } else {
-            var potentialValues = Arrays.stream(this.getValues()).filter(value -> value.getBlocks().contains(block.getBlock())).toList();
-            if (potentialValues.isEmpty()) {
-                return false;
-            } else {
-                for (Value value : potentialValues) {
-                    if (value.getProperties().isEmpty()) {
-                        return true;
-                    } else {
-                        if (value.getProperties().get().matches(block)) {
-                            return true;
-                        }
-                    }
-                }
+            for (Value value : this.values) {
+                if (value.matches(block)) return true;
             }
         }
 
@@ -191,6 +180,12 @@ public final class BuildingBlock implements Predicate<BlockState> {
         }
 
         @Override
+        public boolean matches(BlockState state) {
+            if (!state.is(this.block)) return false;
+            return this.state.isEmpty() || this.state.get().matches(state);
+        }
+
+        @Override
         public Set<Block> getBlocks() {
             return Collections.singleton(this.block);
         }
@@ -225,6 +220,15 @@ public final class BuildingBlock implements Predicate<BlockState> {
         @Override
         public boolean equals(Object obj) {
             return obj instanceof TagValue tagValue && tagValue.tag.location().equals(this.tag.location());
+        }
+
+        @Override
+        public boolean matches(BlockState blockState) {
+            boolean tagMatch = (this.tag == SBTags.Blocks.RITUAL_COMPATIBLE)
+                    ? !blockState.is(this.tag)
+                    : blockState.is(this.tag);
+            if (!tagMatch) return false;
+            return this.state.isEmpty() || this.state.get().matches(blockState);
         }
 
         @Override
@@ -272,6 +276,8 @@ public final class BuildingBlock implements Predicate<BlockState> {
                     }
                 }
         );
+
+        boolean matches(BlockState state);
 
         Set<Block> getBlocks();
 

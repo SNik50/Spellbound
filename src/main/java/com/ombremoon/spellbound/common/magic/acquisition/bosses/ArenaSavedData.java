@@ -4,8 +4,8 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.serialization.Dynamic;
 import com.ombremoon.spellbound.common.init.SBBlocks;
-import com.ombremoon.spellbound.common.world.block.entity.SummonBlockEntity;
-import com.ombremoon.spellbound.common.world.dimension.DimensionCreator;
+import com.ombremoon.spellbound.common.world.SpellDimensionData;
+import com.ombremoon.spellbound.common.world.block.entity.SummonPortalBlockEntity;
 import com.ombremoon.spellbound.common.world.dimension.DynamicDimensionFactory;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
@@ -33,7 +33,7 @@ import org.slf4j.Logger;
 import java.util.Map;
 import java.util.UUID;
 
-public class ArenaSavedData extends SavedData {
+public class ArenaSavedData extends SavedData implements SpellDimensionData {
     public static final Logger LOGGER = Constants.LOG;
 
     //Global
@@ -41,7 +41,7 @@ public class ArenaSavedData extends SavedData {
     private int arenaId;
     private final Multimap<UUID, Integer> closedArenas = ArrayListMultimap.create();
 
-    //For arena levels
+    //Arena levels
     private final PortalCache portalCache = new PortalCache();
     private boolean spawnedArena;
     private boolean fightStarted;
@@ -51,7 +51,7 @@ public class ArenaSavedData extends SavedData {
     private BoundingBox arenaBounds;
 
     public static ArenaSavedData get(ServerLevel level) {
-        return level.getDataStorage().computeIfAbsent(new Factory<>(ArenaSavedData::create, ArenaSavedData::load), "_dynamic_dimension");
+        return level.getDataStorage().computeIfAbsent(new Factory<>(ArenaSavedData::create, ArenaSavedData::load), "_static_arena");
     }
 
     private ArenaSavedData() {}
@@ -122,7 +122,7 @@ public class ArenaSavedData extends SavedData {
                 BlockPos blockPos = basePos.offset(i, 0, j);
                 if (portalLevel.getBlockState(blockPos).is(SBBlocks.SUMMON_PORTAL.get())) {
                     BlockEntity blockEntity = portalLevel.getBlockEntity(blockPos);
-                    if (blockEntity instanceof SummonBlockEntity summonBlockEntity) {
+                    if (blockEntity instanceof SummonPortalBlockEntity summonBlockEntity) {
                         summonBlockEntity.setArenaReady(true);
                     }
                 }
@@ -170,29 +170,12 @@ public class ArenaSavedData extends SavedData {
         this.setDirty();
     }
 
-    public void destroyPortal(ServerLevel level) {
-        DimensionCreator.get().markDimensionForUnregistration(level.getServer(), level.dimension());
+    @Override
+    public void destroyDimension(ServerLevel level) {
+        SpellDimensionData.super.destroyDimension(level);
         ServerLevel portalLevel = level.getServer().getLevel(this.portalCache.getPortalLevel());
         if (portalLevel != null)
             this.portalCache.destroyPortal(portalLevel);
-    }
-
-    public PortalCache getPortalCache() {
-        return this.portalCache;
-    }
-
-    public BossFightInstance<?, ?> getCurrentBossFight() {
-        return this.currentBossFight;
-    }
-
-    @Nullable
-    public BoundingBox getArenaBounds() {
-        return this.arenaBounds;
-    }
-
-    public void setArenaBounds(@Nullable BoundingBox bounds) {
-        this.arenaBounds = bounds;
-        this.setDirty();
     }
 
     public void cacheClosedArena(UUID owner, int id) {
@@ -218,6 +201,25 @@ public class ArenaSavedData extends SavedData {
                 this.setDirty();
             }
         }
+    }
+
+    public PortalCache getPortalCache() {
+        return this.portalCache;
+    }
+
+    public BossFightInstance<?, ?> getCurrentBossFight() {
+        return this.currentBossFight;
+    }
+
+    @Override
+    public @Nullable BoundingBox getStructureBounds() {
+        return this.arenaBounds;
+    }
+
+    @Override
+    public void setStructureBounds(@Nullable BoundingBox bounds) {
+        this.arenaBounds = bounds;
+        this.setDirty();
     }
 
     @Override

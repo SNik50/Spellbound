@@ -33,17 +33,19 @@ public class SBEntities {
     public static final Supplier<EntityType<CatEntity>> CAT = registerMob("cat", CatEntity::new, MobCategory.MISC, 1f, 1f, 8, CatEntity::createAttributes, false);
 
     //Spells
-    public static final Supplier<EntityType<WildMushroom>> MUSHROOM = registerEntity("wild_mushroom", WildMushroom::new, 0.9f, 0.9f);
-    public static final Supplier<EntityType<HealingBlossom>> HEALING_BLOSSOM = registerEntity("healing_blossom", HealingBlossom::new, 0.9f, 0.9f);
-    public static final Supplier<EntityType<ShadowGate>> SHADOW_GATE = registerEntity("shadow_gate", ShadowGate::new, 1.2F, 2.5F);
+    public static final Supplier<EntityType<Fireball>> FIREBALL = registerEntity("fireball", Fireball::new, 0.5F, 0.5F);
     public static final Supplier<EntityType<SolarRay>> SOLAR_RAY = registerEntity("solar_ray", SolarRay::new, 0.5F, 1.7F);
     public static final Supplier<EntityType<ShatteringCrystal>> SHATTERING_CRYSTAL = registerEntity("shattering_crystal", ShatteringCrystal::new, 1.2F, 2.5F);
-    public static final Supplier<EntityType<IceShrapnel>> ICE_SHRAPNEL = registerEntity("ice_shrapnel", IceShrapnel::new, 0.5F, 0.5F);
+    public static final Supplier<EntityType<IceBolt>> ICE_BOLT = registerEntity("ice_bolt", IceBolt::new, 0.5F, 0.5F);
     public static final Supplier<EntityType<IceMist>> ICE_MIST = registerEntity("ice_mist", IceMist::new, 3.0F, 1.5F);
     public static final Supplier<EntityType<StormstrikeBolt>> STORMSTRIKE_BOLT = registerEntity("stormstrike_bolt", StormstrikeBolt::new, 0.5F, 0.5F);
     public static final Supplier<EntityType<StormRift>> STORM_RIFT = registerEntity("storm_rift", StormRift::new, 1.9F, 2.9F);
     public static final Supplier<EntityType<StormCloud>> STORM_CLOUD = registerEntity("storm_cloud", StormCloud::new, 7.9F, 2.9F);
     public static final Supplier<EntityType<StormBolt>> STORM_BOLT = registerEntity("storm_bolt", StormBolt::new, 0.5F, 0.5F);
+    public static final Supplier<EntityType<ShadowGate>> SHADOW_GATE = registerEntity("shadow_gate", ShadowGate::new, 1.2F, 2.5F);
+    public static final Supplier<EntityType<WildMushroom>> MUSHROOM = registerEntity("wild_mushroom", WildMushroom::new, 0.9F, 0.9F);
+    public static final Supplier<EntityType<HealingBlossom>> HEALING_BLOSSOM = registerEntity("healing_blossom", HealingBlossom::new, 0.9F, 0.9F);
+    public static final Supplier<EntityType<CursedRune>> CURSED_RUNE = registerEntity("cursed_rune", CursedRune::new, 1.9F, 0.2F);
 //    public static final Supplier<EntityType<Cyclone>> CYCLONE = registerEntity("cyclone", Cyclone::new, 3.0F, 3.0F);
     public static final Supplier<EntityType<Hail>> HAIL = registerEntity("hail", Hail::new, 3.0F, 3.0F);
 
