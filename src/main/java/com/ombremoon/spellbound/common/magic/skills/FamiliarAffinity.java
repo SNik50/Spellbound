@@ -6,6 +6,7 @@ import com.ombremoon.spellbound.common.init.SBAffinities;
 import com.ombremoon.spellbound.main.CommonClass;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -31,6 +32,14 @@ public class FamiliarAffinity implements SkillProvider {
 
     public int getRequiredBond() {
         return requiredBond;
+    }
+
+    public Component getName() {
+        return Component.translatable(identifier.getNamespace() + ".affinity." + identifier.getPath());
+    }
+
+    public Component getDescription() {
+        return Component.translatable(identifier.getNamespace() + ".affinity.description." + identifier.getPath());
     }
 
     @Override

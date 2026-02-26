@@ -126,7 +126,7 @@ public class CursedRuneSpell extends AnimatedSpell implements RadialSpell {
                     BuffCategory.HARMFUL,
                     1
             );
-            if (context.isChoice(SBSkills.MAGE_WRECK)) {
+            if (this.isChoice(SBSkills.MAGE_WRECK)) {
                 effect = EffectHolder.simple(
                         new SetResource(EntityResource.MANA, potency(-5), EntityResource.Operation.ADD),
                         Optional.empty(),
@@ -134,7 +134,7 @@ public class CursedRuneSpell extends AnimatedSpell implements RadialSpell {
                         BuffCategory.HARMFUL,
                         200
                 );
-            } else if (context.isChoice(SBSkills.DISARMING_CURSE)) {
+            } else if (this.isChoice(SBSkills.DISARMING_CURSE)) {
                 effect = EffectHolder.simple(
                         new DisarmEffect(),
                         Optional.empty(),
@@ -142,7 +142,7 @@ public class CursedRuneSpell extends AnimatedSpell implements RadialSpell {
                         BuffCategory.HARMFUL,
                         1
                 );
-            } else if (context.isChoice(SBSkills.MIRROR_CURSE)) {
+            } else if (this.isChoice(SBSkills.MIRROR_CURSE)) {
                 effect = EffectHolder.simple(
                         new SummonDoppelganger(),
                         Optional.empty(),
@@ -150,7 +150,7 @@ public class CursedRuneSpell extends AnimatedSpell implements RadialSpell {
                         BuffCategory.HARMFUL,
                         1
                 );
-            } else if (context.isChoice(SBSkills.CURSE_OF_PAIN)) {
+            } else if (this.isChoice(SBSkills.CURSE_OF_PAIN)) {
                 effect = EffectHolder.withComponents(
                         new ModifyDamage(potency(0.25F), EntityResource.Operation.ADD_MULTIPLIED_TOTAL),
                         Optional.of(
@@ -166,7 +166,7 @@ public class CursedRuneSpell extends AnimatedSpell implements RadialSpell {
                         BuffCategory.HARMFUL,
                         200
                 );
-            } else if (context.isChoice(SBSkills.CURSE_OF_SILENCE)) {
+            } else if (this.isChoice(SBSkills.CURSE_OF_SILENCE)) {
                 effect = EffectHolder.simple(
                         new ApplyMobEffect(HolderSet.direct(SBEffects.SILENCED), 3, 3, 0, 0),
                         Optional.empty(),
@@ -174,7 +174,7 @@ public class CursedRuneSpell extends AnimatedSpell implements RadialSpell {
                         BuffCategory.HARMFUL,
                         1
                 );
-            } else if (context.isChoice(SBSkills.VANISHING_CURSE)) {
+            } else if (this.isChoice(SBSkills.VANISHING_CURSE)) {
                 effect = EffectHolder.simple(
                         new TeleportEntity(new RangeProvider(10.0F, 20.0F, 1.0F, 5.0F), false),
                         Optional.empty(),
@@ -182,7 +182,7 @@ public class CursedRuneSpell extends AnimatedSpell implements RadialSpell {
                         BuffCategory.HARMFUL,
                         1
                 );
-            } else if (context.isChoice(SBSkills.CURSE_OF_WEAKNESS)) {
+            } else if (this.isChoice(SBSkills.CURSE_OF_WEAKNESS)) {
                 effect = EffectHolder.withComponents(
                         new ModifyDamage(potency(-0.1F), EntityResource.Operation.ADD_MULTIPLIED_TOTAL),
                         Optional.of(
@@ -198,7 +198,7 @@ public class CursedRuneSpell extends AnimatedSpell implements RadialSpell {
                         BuffCategory.HARMFUL,
                         200
                 );
-            } else if (context.isChoice(SBSkills.CURSE_OF_SUSCEPTIBILITY)) {
+            } else if (this.isChoice(SBSkills.CURSE_OF_SUSCEPTIBILITY)) {
                 effect = EffectHolder.withComponents(
                         new ModifyDamage(potency(0.1F), EntityResource.Operation.ADD_MULTIPLIED_TOTAL),
                         Optional.of(
@@ -214,7 +214,7 @@ public class CursedRuneSpell extends AnimatedSpell implements RadialSpell {
                         BuffCategory.HARMFUL,
                         200
                 );
-            } else if (context.isChoice(SBSkills.TANGLEFOOT_CURSE)) {
+            } else if (this.isChoice(SBSkills.TANGLEFOOT_CURSE)) {
                 effect = EffectHolder.simple(
                         new ApplyMobEffect(HolderSet.direct(SBEffects.ROOTED), 3, 3, 0, 0),
                         Optional.empty(),

@@ -2,7 +2,6 @@ package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.familiars.Familiar;
-import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.common.magic.skills.FamiliarAffinity;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHolder;
 import com.ombremoon.spellbound.common.world.entity.living.familiars.CatEntity;
@@ -21,18 +20,30 @@ import java.util.function.Supplier;
 public class SBFamiliars {
     public static final Map<ResourceLocation, FamiliarHolder<?, ?>> REGISTRY = new HashMap<>();
 
-    public static final FamiliarHolder<FrogEntity, FrogFamiliar> FROG = createFamiliar(
+    public static final FamiliarHolder<FrogEntity, FrogFamiliar> FROG = createHybridFamiliar(
             "frog", SBEntities.FROG, SpellMastery.NOVICE, FrogFamiliar::new,
             SBAffinities.SPECTRAL_HOPS, SBAffinities.SUBMERGED, SBAffinities.MAGMA_DIGESTION,
             SBAffinities.ELONGATED_TONGUE, SBAffinities.MURKY_HABITAT, SBAffinities.SLIMEY_EXPULSION);
-    public static final FamiliarHolder<CatEntity, CatFamiliar> CAT = createFamiliar(
+    public static final FamiliarHolder<CatEntity, CatFamiliar> CAT = createCombatFamiliar(
             "cat", SBEntities.CAT, SpellMastery.NOVICE, CatFamiliar::new,
             SBAffinities.SHARPENED_CLAWS, SBAffinities.NATURAL_PREDATOR, SBAffinities.BLOOD_THIRSTY,
             SBAffinities.FELINE_POUNCE, SBAffinities.BLOOD_MAGIC, SBAffinities.NINE_LIVES
     );
 
-    private static <E extends LivingEntity, F extends Familiar<E>> FamiliarHolder<E, F> createFamiliar(String name, Supplier<EntityType<E>> entity, SpellMastery reqMastery, FamiliarHolder.FamiliarBuilder<F> constructor, FamiliarAffinity... affinities) {
-        var holder = new FamiliarHolder<>(CommonClass.customLocation(name), entity, reqMastery, constructor, 5, affinities);
+    private static <E extends LivingEntity, F extends Familiar<E>> FamiliarHolder<E, F> createUtilFamiliar(String name, Supplier<EntityType<E>> entity, SpellMastery reqMastery, FamiliarHolder.FamiliarBuilder<F> constructor, FamiliarAffinity... affinities) {
+        var holder = new FamiliarHolder<>(CommonClass.customLocation(name), entity, reqMastery, FamiliarHolder.Type.UTIL, constructor, affinities);
+        REGISTRY.put(CommonClass.customLocation(name), holder);
+        return holder;
+    }
+
+    private static <E extends LivingEntity, F extends Familiar<E>> FamiliarHolder<E, F> createCombatFamiliar(String name, Supplier<EntityType<E>> entity, SpellMastery reqMastery, FamiliarHolder.FamiliarBuilder<F> constructor, FamiliarAffinity... affinities) {
+        var holder = new FamiliarHolder<>(CommonClass.customLocation(name), entity, reqMastery, FamiliarHolder.Type.COMBAT, constructor, affinities);
+        REGISTRY.put(CommonClass.customLocation(name), holder);
+        return holder;
+    }
+
+    private static <E extends LivingEntity, F extends Familiar<E>> FamiliarHolder<E, F> createHybridFamiliar(String name, Supplier<EntityType<E>> entity, SpellMastery reqMastery, FamiliarHolder.FamiliarBuilder<F> constructor, FamiliarAffinity... affinities) {
+        var holder = new FamiliarHolder<>(CommonClass.customLocation(name), entity, reqMastery, FamiliarHolder.Type.HYBRID, constructor, affinities);
         REGISTRY.put(CommonClass.customLocation(name), holder);
         return holder;
     }

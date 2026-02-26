@@ -141,6 +141,7 @@ public class SpellEventListener {
         public static Events<DealtDamageEvent.Post> DEALT_DAMAGE_POST = new Events<>(false);
         public static Events<DealtDamageEvent.Pre> DEALT_DAMAGE_PRE = new Events<>(false);
         public static Events<EffectApplicableEvent> EFFECT_APPLICABLE = new Events<>(false);
+        public static Events<EffectAppliedEvent> EFFECT_APPLIED = new Events<>(false);
         public static Events<LivingBlockEvent> BLOCK = new Events<>(false);
         public static Events<DeathEvent> DEATH = new Events<>(false);
         public static Events<DeathEvent> ENTITY_KILL = new Events<>(false);

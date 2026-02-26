@@ -55,7 +55,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 .baseDamage(3)
                 .castTime(5)
                 .castCondition((context, spell) -> {
-                    if (context.isChoice(SBSkills.FLAME_GEYSER)) {
+                    if (spell.isChoice(SBSkills.FLAME_GEYSER)) {
                         double range = spell.getCastRange();
                         Entity target = spell.getTargetEntity(context.getCaster(), range);
                         if (target != null) {
@@ -70,7 +70,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                         }
 
                         return false;
-                   } else if (context.isChoice(SBSkills.IRON_MAN)) {
+                   } else if (spell.isChoice(SBSkills.IRON_MAN)) {
                         return context.hasCatalyst(SBItems.SMOLDERING_SHARD.get());
                     }
 
@@ -230,7 +230,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
         LivingEntity caster = context.getCaster();
         var handler = SpellUtil.getSpellHandler(caster);
         if (!context.getLevel().isClientSide) {
-            if (context.isChoice(SBSkills.IRON_MAN)) {
+            if (this.isChoice(SBSkills.IRON_MAN)) {
                 handler.setChargingOrChannelling(true);
                 var boxOwner = (ISentinel) caster;
                 boxOwner.triggerSentinelBox(REAR_JET_BOX);
@@ -251,35 +251,35 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 }
             }
 
-            if (context.isChoice(SBSkills.FLAME_JET) || context.isChoice(SBSkills.TURBO_CHARGE)) {
+            if (this.isChoice(SBSkills.FLAME_JET) || this.isChoice(SBSkills.TURBO_CHARGE)) {
                 int index = Math.min(charges, 6);
                 SentinelBox rayBox = FLAME_JET_BOXES.get(index);
                 boxOwner.triggerSentinelBox(rayBox);
 
-                if (context.isChoice(SBSkills.TURBO_CHARGE) && context.hasSkill(SBSkills.IGNITION_BURST) && this.getCharges() == 3) {
+                if (this.isChoice(SBSkills.TURBO_CHARGE) && context.hasSkill(SBSkills.IGNITION_BURST) && this.getCharges() == 3) {
                     boxOwner.triggerSentinelBox(IGNITION_BURST_BOXES.get(index));
                 }
-            } else if (context.isChoice(SBSkills.JET_ENGINE)) {
+            } else if (this.isChoice(SBSkills.JET_ENGINE)) {
                 boxOwner.triggerSentinelBox(REAR_JET_BOX);
-            } else if (context.isChoice(SBSkills.FLAME_INFERNO)) {
+            } else if (this.isChoice(SBSkills.FLAME_INFERNO)) {
                 boxOwner.triggerSentinelBox(createFlameInferno(Math.min(charges, 3)));
-            } else if (context.isChoice(SBSkills.FLAME_GEYSER)) {
+            } else if (this.isChoice(SBSkills.FLAME_GEYSER)) {
                 SentinelBox geyserBox = FLAME_GEYSER_BOXES.get(Math.min(charges, 3));
                 boxOwner.triggerSentinelBox(geyserBox);
             }
         } else {
-            if (context.isChoice(SBSkills.FLAME_JET) || context.isChoice(SBSkills.TURBO_CHARGE)) {
+            if (this.isChoice(SBSkills.FLAME_JET) || this.isChoice(SBSkills.TURBO_CHARGE)) {
                 this.addFX(
                         EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_jet1"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
                                 .setOffset(0, 0.75, -2)
                 );
-            } else if (context.isChoice(SBSkills.JET_ENGINE)) {
+            } else if (this.isChoice(SBSkills.JET_ENGINE)) {
                 this.addFX(
                         EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_jet1"), caster.getId(), EntityEffectExecutor.AutoRotate.FORWARD)
                                 .setOffset(0, -0.5, 2)
                                 .setRotation(0, 180, 0)
                 );
-            } else if (context.isChoice(SBSkills.FLAME_GEYSER)) {
+            } else if (this.isChoice(SBSkills.FLAME_GEYSER)) {
                 float size = 0.5F + Math.min(this.getTurbulenceCharges(), 3) * 0.5F;
                 this.addFX(
                         EffectBuilder.Block.of(CommonClass.customLocation("flame_jet"), BlockPos.containing(this.getGeyserPosition()))
@@ -287,7 +287,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                                 .setRotation(0, 0, 90)
                                 .setScale(1, size, size)
                 );
-            } else if (context.isChoice(SBSkills.FLAME_INFERNO)) {
+            } else if (this.isChoice(SBSkills.FLAME_INFERNO)) {
                 float size = 1.5F + Math.min(this.getTurbulenceCharges(), 3) * 0.5F;
                 this.addFX(
                         EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_inferno"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
@@ -304,7 +304,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
         if (!level.isClientSide) {
-            if (context.isChoice(SBSkills.IRON_MAN)) {
+            if (this.isChoice(SBSkills.IRON_MAN)) {
                 Vec3 lookVec = caster.getLookAngle();
                 double strength = 0.75;
                 Vec3 motion = new Vec3(lookVec.x * strength, lookVec.y * strength, lookVec.z * strength);
@@ -313,7 +313,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 if (this.tickCount % 20 == 0) {
                     this.consumeMana(caster, 5);
                 }
-            } else if (this.tickCount == 5 && context.isChoice(SBSkills.JET_ENGINE)) {
+            } else if (this.tickCount == 5 && this.isChoice(SBSkills.JET_ENGINE)) {
                 Vec3 lookVec = caster.getLookAngle();
                 caster.setDiscardFriction(true);
                 double strength = 2.0F + (Math.min(this.getTurbulenceCharges() + this.getCharges(), 6) * 0.25F);
@@ -322,7 +322,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 caster.hurtMarked = true;
             }
         } else {
-            if (context.isChoice(SBSkills.IRON_MAN) && this.tickCount % 5 == 0) {
+            if (this.isChoice(SBSkills.IRON_MAN) && this.tickCount % 5 == 0) {
                 this.addFX(
                         EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_jet1"), caster.getId(), EntityEffectExecutor.AutoRotate.FORWARD)
                                 .setOffset(0, -0.5, 2)
@@ -337,13 +337,13 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
         LivingEntity caster = context.getCaster();
         var handler = context.getSpellHandler();
         handler.setChargingOrChannelling(false);
-        if (context.isChoice(SBSkills.JET_ENGINE))
+        if (this.isChoice(SBSkills.JET_ENGINE))
             caster.setDiscardFriction(false);
     }
 
     @Override
     protected int getDuration(SpellContext context) {
-        return context.isChoice(SBSkills.IRON_MAN) ? 100 : super.getDuration(context);
+        return this.isChoice(SBSkills.IRON_MAN) ? 100 : super.getDuration(context);
     }
 
     @Override
@@ -358,7 +358,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
 
     @Override
     public boolean canCharge(SpellContext context) {
-        return context.isChoice(SBSkills.TURBO_CHARGE);
+        return context.isChoice(SBSkills.TURBO_CHARGE.value());
     }
 
     private int getTurbulenceCharges() {
@@ -372,7 +372,7 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
 
     @Override
     public boolean shouldRender(SpellContext context) {
-        return context.isChoice(SBSkills.IRON_MAN);
+        return this.isChoice(SBSkills.IRON_MAN);
     }
 
     @Override

@@ -136,15 +136,15 @@ public class SummonVillagerSpell extends SummonSpell implements RadialSpell, Cha
             this.summonEntity(context, EntityType.VILLAGER, villager -> {
                 VillagerData data = villager.getVillagerData();
                 VillagerProfession profession = VillagerProfession.NONE;
-                if (context.isChoice(SBSkills.FARMER_VILLAGER)) {
+                if (this.isChoice(SBSkills.FARMER_VILLAGER)) {
                     profession = VillagerProfession.FARMER;
-                } else if (context.isChoice(SBSkills.LIBRARIAN_VILLAGER)) {
+                } else if (this.isChoice(SBSkills.LIBRARIAN_VILLAGER)) {
                     profession = VillagerProfession.LIBRARIAN;
-                } else if (context.isChoice(SBSkills.TOOLSMITH_VILLAGER)) {
+                } else if (this.isChoice(SBSkills.TOOLSMITH_VILLAGER)) {
                     profession = VillagerProfession.TOOLSMITH;
-                } else if (context.isChoice(SBSkills.CARTOGRAPHER_VILLAGER)) {
+                } else if (this.isChoice(SBSkills.CARTOGRAPHER_VILLAGER)) {
                     profession = VillagerProfession.CARTOGRAPHER;
-                } else if (context.isChoice(SBSkills.CLERIC_VILLAGER)) {
+                } else if (this.isChoice(SBSkills.CLERIC_VILLAGER)) {
                     profession = VillagerProfession.CLERIC;
                 }
                 this.spellData.set(VILLAGER_ID, villager.getId());

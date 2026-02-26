@@ -232,7 +232,6 @@ public class SolarRaySpell extends ChanneledSpell {
         if (context.hasSkill(SBSkills.OVERHEAT) && this.tickCount == 100)
             ((ISentinel)caster).triggerSentinelBox(OVERHEAT);
 
-        log(context.getLevel().getEntity(this.spellData.get(SOLAR_RAY_ID)));
         boolean overPower = context.hasSkill(SBSkills.OVERPOWER);
         if (caster instanceof Player player) {
             if (overPower) {

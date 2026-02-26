@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.ombremoon.spellbound.client.gui.BasicGuideScreen;
 import com.ombremoon.spellbound.client.gui.GuideBookScreen;
 import com.ombremoon.spellbound.client.gui.WorkbenchScreen;
+import com.ombremoon.spellbound.client.gui.resonance_stone.ResonanceStoneScreen;
 import com.ombremoon.spellbound.client.gui.toasts.LevelUpToast;
 import com.ombremoon.spellbound.client.gui.toasts.PageScrapUnlockedToast;
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
@@ -81,6 +82,10 @@ public class RenderUtil {
 
     public static void openBook(ResourceLocation id, ResourceLocation bookTexture) {
         Minecraft.getInstance().setScreen(new GuideBookScreen(Component.translatable("screen.spellbound.guide_book"), id, bookTexture));
+    }
+
+    public static void openResonanceStone() {
+        Minecraft.getInstance().setScreen(new ResonanceStoneScreen(Component.translatable("screen.spellbound.resonance_stone")));
     }
 
     public static void sendScrapToast(ResourceLocation scrap){

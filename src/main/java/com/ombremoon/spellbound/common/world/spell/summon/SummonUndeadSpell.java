@@ -55,22 +55,20 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                     if (context.hasSkill(SBSkills.CORPSE_EXPLOSION) && context.getTarget() instanceof LivingEntity livingEntity) {
                         AbstractSpell spell = SpellUtil.getActiveSpell(livingEntity);
                         AbstractSpell spell1 = handler.getCurrentlyCastSpell();
-                        if (spell instanceof SummonUndeadSpell && spell1 instanceof SummonUndeadSpell summonUndeadSpell && spell.isSpellType(SBSpells.SUMMON_UNDEAD) && spell.isCaster(caster) && summonUndeadSpell.canExplode()) {
-                            spell.heal(caster, livingEntity.getHealth() * 0.1F);
+                        if (spell != null && spell.isSpellType(SBSpells.SUMMON_UNDEAD) && spell.isCaster(caster) && spell1 instanceof SummonUndeadSpell summonUndeadSpell && summonUndeadSpell.canExplode()) {
+                            spell.heal(caster, livingEntity.getHealth() * spell.potency(0.1F));
                             livingEntity.kill();
 
                             List<LivingEntity> list = spell1.getAttackableEntities(livingEntity, 2);
                             for (LivingEntity entity : list) {
-                                if (!spell.isCaster(entity)) {
-                                    spell.hurt(entity, 2.0F);
-                                }
+                                spell.hurt(entity, 2.0F);
                             }
 
-                            return false;
+                            return true;
                         }
                     }
 
-                    return true;
+                    return false;
                 });
     }
 
@@ -115,11 +113,6 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
         this.addSkillDetails(SBSkills.CRIMSON_PACT,
                 SkillTooltip.ATTRIBUTE.tooltip(new ModifierData(Attributes.ATTACK_DAMAGE, new AttributeModifier(SUNKEN_BREATH, potency(0.15F), AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)))
         );
-        this.addSkillDetails(SBSkills.CORPSE_EXPLOSION,
-                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage(2F))),
-                SkillTooltip.RADIUS.tooltip(2F),
-                SkillTooltip.HEAL_FROM_TARGET.tooltip(10F)
-        );
         this.addSkillDetails(SBSkills.HALL_OF_THE_DEAD,
                 SkillTooltip.PROC_DURATION.tooltip(100)
         );
@@ -127,8 +120,13 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 SkillTooltip.MOB_EFFECT.tooltip(SBEffects.SILENCED),
                 SkillTooltip.EFFECT_DURATION.tooltip(60)
         );
-        this.addSkillDetails(SBSkills.SILENT_NIGHT,
+        this.addSkillDetails(SBSkills.SUNKEN_BREATH,
                 SkillTooltip.MOB_EFFECT.tooltip(MobEffects.WATER_BREATHING)
+        );
+        this.addSkillDetails(SBSkills.CORPSE_EXPLOSION,
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage(2F))),
+                SkillTooltip.RADIUS.tooltip(2F),
+                SkillTooltip.HEAL_FROM_TARGET.tooltip(potency(10F))
         );
     }
 
@@ -159,13 +157,13 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
         int charges = this.getCharges() + 1;
         if (!context.getLevel().isClientSide) {
             EntityType<?> undead = EntityType.ZOMBIE;
-            if (context.isChoice(SBSkills.SUMMON_ZOMBIFIED_PIGLIN)) {
+            if (this.isChoice(SBSkills.SUMMON_ZOMBIFIED_PIGLIN)) {
                 undead = EntityType.ZOMBIFIED_PIGLIN;
-            } else if (context.isChoice(SBSkills.SUMMON_SKELETON)) {
+            } else if (this.isChoice(SBSkills.SUMMON_SKELETON)) {
                 undead = EntityType.SKELETON;
-            } else if (context.isChoice(SBSkills.SUMMON_PHANTOM)) {
+            } else if (this.isChoice(SBSkills.SUMMON_PHANTOM)) {
                 undead = EntityType.PHANTOM;
-            } else if (context.isChoice(SBSkills.SUMMON_DROWNED)) {
+            } else if (this.isChoice(SBSkills.SUMMON_DROWNED)) {
                 undead = EntityType.DROWNED;
             }
 
@@ -178,7 +176,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
             }
         }
 
-        if (context.isChoice(SBSkills.SUMMON_DROWNED) && context.hasSkill(SBSkills.SUNKEN_BREATH)) {
+        if (this.isChoice(SBSkills.SUMMON_DROWNED) && context.hasSkill(SBSkills.SUNKEN_BREATH)) {
             this.addSkillBuff(
                     caster,
                     SBSkills.SUNKEN_BREATH,

@@ -132,6 +132,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     private SpellContext context;
     private SpellContext castContext;
     private boolean isRecast;
+    protected Skill choice;
     private int charges;
     public int tickCount = 0;
     public boolean isInactive = false;
@@ -573,12 +574,16 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      */
     protected abstract void onSpellStop(SpellContext context);
 
-    //TODO: CHECK
     /**
      * Called at the start of casting.
      * @param context The casting specific spells context
      */
     public void onCastStart(SpellContext context) {
+        var skills = context.getSkills();
+        if (this instanceof RadialSpell radialSpell) {
+            radialSpell.setChoice(skills.getChoice(this.spellType()));
+        }
+
         if (!context.getLevel().isClientSide) {
             this.spellData.set(CAST_POS, context.getBlockPos());
         }
@@ -619,6 +624,14 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      */
     @Override
     public void onSpellDataUpdated(SpellDataKey<?> dataKey) {
+    }
+
+    public boolean isChoice(Skill skill) {
+        return skill.equals(this.choice);
+    }
+
+    public boolean isChoice(Holder<Skill> skill) {
+        return this.isChoice(skill.value());
     }
 
     public void incrementCharges() {
@@ -1698,6 +1711,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      */
     private void activateSpell() {
         var handler = this.context.getSpellHandler();
+        var skills = this.context.getSkills();
         if (this.fullRecast && this.isRecast) {
             handler.recastSpell(this);
         } else {

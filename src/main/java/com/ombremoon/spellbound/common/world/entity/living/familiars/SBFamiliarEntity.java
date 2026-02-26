@@ -1,7 +1,9 @@
 package com.ombremoon.spellbound.common.world.entity.living.familiars;
 
 import com.ombremoon.spellbound.common.init.SBDamageTypes;
+import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.familiars.Familiar;
+import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -10,6 +12,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,6 +34,7 @@ import java.util.List;
 
 public abstract class SBFamiliarEntity extends SBLivingEntity {
     private static final EntityDataAccessor<Byte> FAMILIAR_DATA = SynchedEntityData.defineId(SBFamiliarEntity.class, EntityDataSerializers.BYTE);
+    private Familiar<?> familiar;
 
     protected SBFamiliarEntity(EntityType<? extends PathfinderMob> entityType, Level level) {
         super(entityType, level);
@@ -47,6 +51,14 @@ public abstract class SBFamiliarEntity extends SBLivingEntity {
             this.entityData.set(FAMILIAR_DATA, (byte) (this.entityData.get(FAMILIAR_DATA) | i));
         else
             this.entityData.set(FAMILIAR_DATA, (byte) (this.entityData.get(FAMILIAR_DATA) & ~i));
+    }
+
+    public void setFamiliar(Familiar<?> familiar) {
+        this.familiar = familiar;
+    }
+
+    public Familiar<?> getFamiliar() {
+        return familiar;
     }
 
     /**
@@ -190,10 +202,22 @@ public abstract class SBFamiliarEntity extends SBLivingEntity {
         );
     }
 
+    public float modifyDamage(Entity target, float attackDamage, Familiar<?> familiar, FamiliarHandler familiarHandler) {
+        return attackDamage;
+    }
+
+    public DamageSource getDamageSource(DamageSources sources) {
+        return sources.source(SBDamageTypes.SB_GENERIC);
+    }
+
     @Override
     public boolean doHurtTarget(Entity entity) {
-        float f = (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE);
-        DamageSource damagesource = this.damageSources().source(SBDamageTypes.SB_GENERIC);
+        float f = modifyDamage(
+                entity,
+                (float) this.getAttributeValue(Attributes.ATTACK_DAMAGE),
+                getFamiliar(),
+                getSummoner() instanceof LivingEntity summoner ? SpellUtil.getFamiliarHandler(summoner) : null);
+        DamageSource damagesource = getDamageSource(this.damageSources());
         if (level() instanceof ServerLevel serverlevel) {
             f = EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), entity, damagesource, f);
         }
@@ -203,6 +227,13 @@ public abstract class SBFamiliarEntity extends SBLivingEntity {
             if (getSummoner() instanceof LivingEntity summoner) {
                 var handler = SpellUtil.getFamiliarHandler(summoner);
                 handler.awardBond(handler.getSelectedFamiliar(), calculateHurtXP(f));
+            }
+            if (entity instanceof LivingEntity livingEntity) {
+                var effectManager = SpellUtil.getSpellEffects(livingEntity);
+                EffectManager.Effect effect = effectManager.getEffectFromDamageType(damagesource.typeHolder().getKey());
+
+                if (effect != null)
+                    effectManager.incrementBuildEffects(effect, f);
             }
             float f1 = this.getKnockback(entity, damagesource);
             if (f1 > 0.0F && entity instanceof LivingEntity) {

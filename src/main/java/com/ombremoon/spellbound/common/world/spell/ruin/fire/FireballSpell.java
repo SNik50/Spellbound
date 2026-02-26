@@ -37,7 +37,7 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
                 .baseDamage(3)
                 .castCondition((context, fireballSpell) -> {
                     fireballSpell.choice = context.getChoice();
-                    if (context.isChoice(SBSkills.HOMING_MISSILE)) {
+                    if (fireballSpell.isChoice(SBSkills.HOMING_MISSILE)) {
                         return context.hasSkill(SBSkills.AUTO_TARGETING) || context.getTarget() instanceof LivingEntity;
                     }
 
@@ -115,11 +115,11 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
         LivingEntity caster = context.getCaster();
         if (!level.isClientSide) {
             this.fireballRange = getFireballRange(context);
-            int count = context.isChoice(SBSkills.VOLATILE_CLUSTER) ? this.getCharges() : 1;
+            int count = this.isChoice(SBSkills.VOLATILE_CLUSTER) ? this.getCharges() : 1;
             for (int i = 0; i < count; i++) {
                 float yAngle = getFireballAngle(caster, i, count);
                 this.shootProjectile(context, SBEntities.FIREBALL.get(), caster.getXRot(), yAngle, 1.5F, 1.0F, projectile -> {
-                    if (context.isChoice(SBSkills.HOMING_MISSILE)) {
+                    if (this.isChoice(SBSkills.HOMING_MISSILE)) {
                         if (context.getTarget() instanceof LivingEntity target) {
                             projectile.setHomingTarget(target);
                         } else if (context.hasSkill(SBSkills.AUTO_TARGETING)) {
@@ -136,13 +136,13 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
                         }
                     }
 
-                    if (context.isChoice(SBSkills.STICKY_BOMB)) {
+                    if (this.isChoice(SBSkills.STICKY_BOMB)) {
                         projectile.setSticky(true);
                     }
 
-                    if (context.isChoice(SBSkills.CHARGED_BLAST)) {
+                    if (this.isChoice(SBSkills.CHARGED_BLAST)) {
                         projectile.setSize(this.getCharges());
-                    } else  if (context.isChoice(SBSkills.RAPID_FIRE)) {
+                    } else  if (this.isChoice(SBSkills.RAPID_FIRE)) {
                         projectile.setSize(0.75F);
                     }
                 });
@@ -230,9 +230,9 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
 
     private float getFireballRange(SpellContext context) {
         float range = 2.0F;
-        if (context.isChoice(SBSkills.RAPID_FIRE) || context.isChoice(SBSkills.VOLATILE_CLUSTER)) {
+        if (this.isChoice(SBSkills.RAPID_FIRE) || this.isChoice(SBSkills.VOLATILE_CLUSTER)) {
             range = 1.0F;
-        } else if (context.isChoice(SBSkills.CHARGED_BLAST)) {
+        } else if (this.isChoice(SBSkills.CHARGED_BLAST)) {
             range += this.getCharges();
         }
 
@@ -245,18 +245,18 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
 
     @Override
     public int maxCharges(SpellContext context) {
-        return context.isChoice(SBSkills.CHARGED_BLAST) ? 3 : context.hasSkill(SBSkills.CLUSTER_STRIKE) ? 5 : 3;
+        return this.isChoice(SBSkills.CHARGED_BLAST) ? 3 : context.hasSkill(SBSkills.CLUSTER_STRIKE) ? 5 : 3;
     }
 
     @Override
     protected int getDuration(SpellContext context) {
-        return context.isChoice(SBSkills.RAPID_FIRE) ? 6 : super.getDuration(context);
+        return this.isChoice(SBSkills.RAPID_FIRE) ? 6 : super.getDuration(context);
     }
 
     @Override
     public int getCastTime(SpellContext context) {
         if (this.canCharge(context)) {
-            return context.isChoice(SBSkills.CHARGED_BLAST) ? 60 : context.hasSkill(SBSkills.CLUSTER_STRIKE) ? 50 : 30;
+            return this.isChoice(SBSkills.CHARGED_BLAST) ? 60 : context.hasSkill(SBSkills.CLUSTER_STRIKE) ? 50 : 30;
         }
 
         return super.getCastTime(context);
@@ -264,7 +264,7 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
 
     @Override
     public boolean canCharge(SpellContext context) {
-        return context.isChoice(SBSkills.CHARGED_BLAST) || context.isChoice(SBSkills.VOLATILE_CLUSTER);
+        return this.isChoice(SBSkills.CHARGED_BLAST) || this.isChoice(SBSkills.VOLATILE_CLUSTER);
     }
 
     @Override

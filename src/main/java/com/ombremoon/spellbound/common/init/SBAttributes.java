@@ -26,6 +26,7 @@ public class SBAttributes {
     public static Holder<Attribute> FROST_SPELL_RESIST = registerResistance("frost_spell_resistance");
     public static Holder<Attribute> SHOCK_SPELL_RESIST = registerResistance("shock_spell_resistance");
     public static Holder<Attribute> DISEASE_RESIST = registerResistance("disease_resistance");
+    public static Holder<Attribute> BLOOD_LOSS_RESIST = registerResistance("blood_loss_resistance");
 
     public static Holder<Attribute> registerResistance(String name) {
         return register(name, 0.0, -1.0, 1.0);

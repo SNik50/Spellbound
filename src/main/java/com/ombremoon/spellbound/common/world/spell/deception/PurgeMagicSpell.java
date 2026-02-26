@@ -43,7 +43,7 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
                 .duration(10)
                 .manaCost(27)
                 .castCondition((context, purgeMagicSpell) -> {
-                    if (context.isChoice(SBSkills.PURGE_MAGIC))
+                    if (purgeMagicSpell.isChoice(SBSkills.PURGE_MAGIC))
                         return context.hasSkill(SBSkills.RADIO_WAVES) || context.getTarget() instanceof LivingEntity;
                     return true;
                 })
@@ -100,7 +100,7 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
         if (!level.isClientSide) {
-            if (context.isChoice(SBSkills.COUNTER_MAGIC)) {
+            if (this.isChoice(SBSkills.COUNTER_MAGIC)) {
                 caster.addEffect(new MobEffectInstance(SBEffects.COUNTER_MAGIC, 200, 0, false, false));
                 if (context.hasSkill(SBSkills.CLEANSE)) {
                     this.cleanseCaster();
@@ -213,6 +213,6 @@ public class PurgeMagicSpell extends AnimatedSpell implements RadialSpell {
 
     @Override
     protected int getDuration(SpellContext context) {
-        return context.isChoice(SBSkills.COUNTER_MAGIC) ? 1 : super.getDuration(context);
+        return this.isChoice(SBSkills.COUNTER_MAGIC) ? 1 : super.getDuration(context);
     }
 }

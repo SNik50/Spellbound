@@ -2,14 +2,17 @@ package com.ombremoon.spellbound.common.magic.familiars;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.ombremoon.spellbound.common.init.SBAffinities;
 import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
+import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.SpellEvent;
 import com.ombremoon.spellbound.common.magic.skills.FamiliarAffinity;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -23,8 +26,11 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.function.Consumer;
 
@@ -35,14 +41,18 @@ public abstract class Familiar<T extends LivingEntity> {
     public static final float HURT_XP_MODIFIER = 0.5F;
 
     private LivingEntity owner;
-    private Multimap<Holder<Attribute>, AttributeModifier> familiarModifiers;
-    private Multimap<Holder<Attribute>, AttributeModifier> ownerModifiers;
+    private List<FamiliarAffinity> OWNER_ATTRIBUTE_MODIFIERS = new ArrayList<>();
+    private List<FamiliarAffinity> FAMILIAR_ATTRIBUTE_MODIFIERS = new ArrayList<>();
     protected int rebirths;
     protected int bond;
 
     public Familiar(int bond, int rebirths) {
         this.bond = bond;
         this.rebirths = rebirths;
+    }
+
+    public void setOwner(LivingEntity owner) {
+        this.owner = owner;
     }
 
     /**
@@ -60,8 +70,8 @@ public abstract class Familiar<T extends LivingEntity> {
      * @param bond the current bond
      * @return Attribute modifiers to apply
      */
-    public Multimap<Holder<Attribute>, AttributeModifier> modifyFamiliarAttributes(FamiliarHandler handler, int rebirths, int bond) {
-        return ArrayListMultimap.create();
+    public List<FamiliarAffinity> modifyFamiliarAttributes(LivingEntity familiar, FamiliarHandler handler, int rebirths, int bond) {
+        return new ArrayList<>();
     }
 
     /**
@@ -71,8 +81,20 @@ public abstract class Familiar<T extends LivingEntity> {
      * @param bond the current familiar bond
      * @return Attribute modifiers to apply
      */
-    public Multimap<Holder<Attribute>, AttributeModifier> modifyOwnerAttributes(FamiliarHandler handler, int rebirths, int bond) {
-        return ArrayListMultimap.create();
+    public List<FamiliarAffinity> modifyOwnerAttributes(LivingEntity owner, FamiliarHandler handler, int rebirths, int bond) {
+        return new ArrayList<>();
+    }
+
+    public FamiliarAffinity addAttributeModifier(LivingEntity target, FamiliarAffinity affinity, Holder<Attribute> attribute, float amount, AttributeModifier.Operation operation) {
+        ResourceLocation id = affinity.location().withSuffix(attribute.getKey().location().getPath());
+        addSkillBuff(target,
+                affinity,
+                id,
+                BuffCategory.BENEFICIAL,
+                SkillBuff.ATTRIBUTE_MODIFIER,
+                new ModifierData(attribute, new AttributeModifier(id, amount, operation)));
+
+        return affinity;
     }
 
     /**
@@ -81,7 +103,6 @@ public abstract class Familiar<T extends LivingEntity> {
      * @param spawnPos The position the entity was spawned
      */
     public void onSpawn(FamiliarHandler handler, BlockPos spawnPos) {
-        this.owner = handler.getOwner();
     }
 
     /**
@@ -90,7 +111,9 @@ public abstract class Familiar<T extends LivingEntity> {
      * @param removePos The position the entity was when removed
      */
     public void onRemove(FamiliarHandler handler, BlockPos removePos) {
-        handler.getOwner().getAttributes().removeAttributeModifiers(ownerModifiers);
+        for (FamiliarAffinity affinity : this.OWNER_ATTRIBUTE_MODIFIERS) {
+            removeSkillBuff(getOwner(), affinity);
+        }
     }
 
     /**
@@ -147,25 +170,15 @@ public abstract class Familiar<T extends LivingEntity> {
      * @param handler The familiar handler
      */
     public final void refreshAttributes(FamiliarHandler handler) {
-        if (this.familiarModifiers == null || this.familiarModifiers.isEmpty()) {
-            this.familiarModifiers = modifyFamiliarAttributes(handler, getRebirths(), getBond());
-            handler.getActiveEntity().getAttributes().addTransientAttributeModifiers(this.familiarModifiers);
-        } else {
-            handler.getActiveEntity().getAttributes().removeAttributeModifiers(familiarModifiers);
-            this.familiarModifiers = modifyFamiliarAttributes(handler, getRebirths(), getBond());
-            handler.getActiveEntity().getAttributes().addTransientAttributeModifiers(this.familiarModifiers);
+        for (FamiliarAffinity affinity : this.OWNER_ATTRIBUTE_MODIFIERS) {
+            removeSkillBuff(getOwner(), affinity);
         }
+        modifyOwnerAttributes(getOwner(), handler, handler.getRebirths(handler.getSelectedFamiliar()), handler.getLevelForFamiliar(handler.getSelectedFamiliar()));
 
-
-        if (this.ownerModifiers == null || this.ownerModifiers.isEmpty()) {
-            this.ownerModifiers = modifyOwnerAttributes(handler, getRebirths(), getBond());
-            handler.getOwner().getAttributes().addTransientAttributeModifiers(this.ownerModifiers);
-        } else {
-            handler.getOwner().getAttributes().removeAttributeModifiers(ownerModifiers);
-            this.ownerModifiers = modifyOwnerAttributes(handler, getRebirths(), getBond());
-            handler.getOwner().getAttributes().addTransientAttributeModifiers(this.ownerModifiers);
+        for (FamiliarAffinity affinity : this.FAMILIAR_ATTRIBUTE_MODIFIERS) {
+            removeSkillBuff(handler.getActiveEntity(), affinity);
         }
-
+        modifyFamiliarAttributes(handler.getActiveEntity(), handler, handler.getRebirths(handler.getSelectedFamiliar()), handler.getLevelForFamiliar(handler.getSelectedFamiliar()));
     }
 
     /**
@@ -219,14 +232,14 @@ public abstract class Familiar<T extends LivingEntity> {
     }
 
     /**
-     * Adds a spell event listener, These should be removed when the familiar is discarded inside {@link #onRemove(FamiliarHandler, BlockPos)}
+     * Adds a spell event listener to the summoner, These should be removed when the familiar is discarded inside {@link #onRemove(FamiliarHandler, BlockPos)}
      * @param handler The familiar handler
      * @param spellEvent The event to add a listener for
      * @param identifier Idenfitier for the spell event
      * @param consumer the event callback
      * @param <T> The spell event
      */
-    public <T extends SpellEvent> void addEventListener(FamiliarHandler handler, SpellEventListener.IEvent<T> spellEvent, ResourceLocation identifier, Consumer<T> consumer) {
+    public <T extends SpellEvent> void addOwnerEventListener(FamiliarHandler handler, SpellEventListener.IEvent<T> spellEvent, ResourceLocation identifier, Consumer<T> consumer) {
         handler.getSpellHandler().getListener().addListener(
                 spellEvent,
                 identifier,
@@ -235,12 +248,55 @@ public abstract class Familiar<T extends LivingEntity> {
     }
 
     /**
+     * Adds a spell event listener to the familiar, These should be removed when the familiar is discarded inside {@link #onRemove(FamiliarHandler, BlockPos)}
+     * @param handler The familiar handler
+     * @param spellEvent The event to add a listener for
+     * @param identifier Idenfitier for the spell event
+     * @param consumer the event callback
+     * @param <T> The spell event
+     */
+    public <T extends SpellEvent> void addFamiliarEventListener(FamiliarHandler handler, SpellEventListener.IEvent<T> spellEvent, ResourceLocation identifier, Consumer<T> consumer) {
+        SpellUtil.getSpellHandler(handler.getActiveEntity()).getListener().addListener(
+                spellEvent,
+                identifier,
+                consumer
+        );
+    }
+
+    /**
+     * Adds a spell event listener to summoner and familiar, These should be removed when the familiar is discarded inside {@link #onRemove(FamiliarHandler, BlockPos)}
+     * @param handler The familiar handler
+     * @param spellEvent The event to add a listener for
+     * @param identifier Idenfitier for the spell event
+     * @param consumer the event callback
+     * @param <T> The spell event
+     */
+    public <T extends SpellEvent> void addEventListener(FamiliarHandler handler, SpellEventListener.IEvent<T> spellEvent, ResourceLocation identifier, Consumer<T> consumer) {
+        addOwnerEventListener(handler, spellEvent, identifier, consumer);
+        addFamiliarEventListener(handler, spellEvent, identifier, consumer);
+    }
+
+    /**
      * Removes a spell event listener
      * @param handler The familiar handler
      * @param identifier Identifier of the listener to remove
      */
-    public void removeEventListener(FamiliarHandler handler, ResourceLocation identifier) {
+    public void removeOwnerEventListener(FamiliarHandler handler, ResourceLocation identifier) {
         handler.getSpellHandler().getListener().removeListener(identifier);
+    }
+
+    /**
+     * Removes a spell event listener
+     * @param handler The familiar handler
+     * @param identifier Identifier of the listener to remove
+     */
+    public void removeFamiliarEventListener(FamiliarHandler handler, ResourceLocation identifier) {
+        SpellUtil.getSpellHandler(handler.getActiveEntity()).getListener().removeListener(identifier);
+    }
+
+    public void removeEventListener(FamiliarHandler handler, ResourceLocation identifier) {
+        removeOwnerEventListener(handler, identifier);
+        removeFamiliarEventListener(handler, identifier);
     }
 
     /**
@@ -362,5 +418,6 @@ public abstract class Familiar<T extends LivingEntity> {
     protected float potency(LivingEntity livingEntity, float initialAmount) {
         return initialAmount;
     }
+
 
 }

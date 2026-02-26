@@ -72,8 +72,8 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
                 .duration(600)
                 .manaCost(20)
                 .castCondition((context, dolphinsFinSpell) -> {
-                    if (context.isChoice(SBSkills.AQUATIC_DASH) || context.isChoice(SBSkills.ECHOLOCATION) || context.isChoice(SBSkills.SONAR_BLAST)) {
-                        if (context.isChoice(SBSkills.SONAR_BLAST) && !(context.getTarget() instanceof LivingEntity))
+                    if (dolphinsFinSpell.isChoice(SBSkills.AQUATIC_DASH) || dolphinsFinSpell.isChoice(SBSkills.ECHOLOCATION) || dolphinsFinSpell.isChoice(SBSkills.SONAR_BLAST)) {
+                        if (dolphinsFinSpell.isChoice(SBSkills.SONAR_BLAST) && !(context.getTarget() instanceof LivingEntity))
                             return false;
 
                         return context.getCaster().isInWater();
@@ -201,7 +201,7 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
         if (!level.isClientSide && caster.isInWater()) {
-            if (context.isChoice(SBSkills.AQUATIC_DASH)) {
+            if (this.isChoice(SBSkills.AQUATIC_DASH)) {
                 Vec3 lookVec = caster.getLookAngle();
                 double strength = 3.0F;
                 Vec3 motion = new Vec3(lookVec.x * strength, lookVec.y * strength, lookVec.z * strength);
@@ -211,7 +211,7 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
                 this.setRemainingTicks(this.getDuration() - this.prevDuration);
             }
 
-            if (context.isChoice(SBSkills.ECHOLOCATION)) {
+            if (this.isChoice(SBSkills.ECHOLOCATION)) {
                 var list = level.getEntitiesOfClass(LivingEntity.class, this.getInflatedBB(caster, potency(25)));
                 for (LivingEntity entity : list) {
                     if (!isCaster(entity)) {
@@ -230,7 +230,7 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
                 this.addCooldown(SBSkills.ECHOLOCATION, 100);
             }
 
-            if (context.isChoice(SBSkills.SONAR_BLAST)) {
+            if (this.isChoice(SBSkills.SONAR_BLAST)) {
                 Entity entity = context.getTarget();
                 if (entity instanceof LivingEntity target && target.isAlive() && target.isInWater()) {
                     this.performSonarBlast((ServerLevel) level, caster, target);
@@ -270,7 +270,7 @@ public class DolphinsFinSpell extends AnimatedSpell implements RadialSpell {
             if (caster.isInWater()) {
                 if (this.usedDash) {
                     this.dashTicks++;
-                    if (context.isChoice(SBSkills.AQUATIC_DASH) && context.hasSkill(SBSkills.SHARK_ATTACK) && this.dashTicks < 20) {
+                    if (this.isChoice(SBSkills.AQUATIC_DASH) && context.hasSkill(SBSkills.SHARK_ATTACK) && this.dashTicks < 20) {
                         var entities = level.getEntitiesOfClass(LivingEntity.class, this.getInflatedBB(caster, 0.5F));
                         for (LivingEntity entity : entities) {
                             if (!this.isCaster(entity) && this.hurt(entity, 2.0F)) {

@@ -58,7 +58,7 @@ public class FlickerSpell extends AnimatedSpell implements RadialSpell {
                         range /= 2;
 
                     Vec3 vec3;
-                    if (flickerSpell.isDirectional() && !context.isChoice(SBSkills.LOOK_OVER_HERE)) {
+                    if (flickerSpell.isDirectional() && !flickerSpell.isChoice(SBSkills.LOOK_OVER_HERE)) {
                         vec3 = flickerSpell.findDirectionalTeleport(context.getLevel(), context.getCaster());
                     } else {
                         vec3 = flickerSpell.findTeleportLocation(context.getLevel(), context.getCaster(), (float) range);
@@ -123,7 +123,7 @@ public class FlickerSpell extends AnimatedSpell implements RadialSpell {
             if (context.hasSkill(SBSkills.HALL_OF_MIRRORS) && context.isRecast())
                 return;
 
-            if (context.isChoice(SBSkills.LOOK_OVER_HERE)) {
+            if (this.isChoice(SBSkills.LOOK_OVER_HERE)) {
                 this.summonEntity(context, SBEntities.LIVING_SHADOW.get(), caster.position(), livingShadow -> {
                     this.setLivingShadow(livingShadow.getId());
                     livingShadow.setSetTarget(true);

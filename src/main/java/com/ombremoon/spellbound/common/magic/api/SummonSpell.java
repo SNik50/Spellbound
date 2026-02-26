@@ -36,8 +36,6 @@ import java.util.function.*;
 public abstract class SummonSpell extends AnimatedSpell {
     private static final SpellDataKey<Set<Integer>> SUMMONS = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.INT_SET.get());
     private static final SpellDataKey<BlockPos> SUMMON_POS = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.BLOCK_POS.get());
-    private static final ResourceLocation POST_DAMAGE_EVENT = CommonClass.customLocation("summon_post_damage");
-    private static final ResourceLocation CASTER_ATTACK_EVENT = CommonClass.customLocation("summon_caster_attack");
     private boolean summonedEntity;
     private boolean isSpecialChoice;
     private Skill choice;
@@ -51,7 +49,7 @@ public abstract class SummonSpell extends AnimatedSpell {
                         int summonCount = spell.getSummonSize(context);
                         int maxSummons = spell.getMaxSummons(context);
                         var list = handler.getActiveSpells(spell.spellType(), abstractSpell -> abstractSpell instanceof SummonSpell summonSpell && context.isChoice(summonSpell.choice));
-                        if (!list.isEmpty() && spell.skipEndOnRecast(context)) {
+                        if (!list.isEmpty() && !spell.skipEndOnRecast(context)) {
                             list.forEach(AbstractSpell::endSpell);
                             return false;
                         } else if (summonCount + spell.getCharges() >= maxSummons) {
@@ -87,7 +85,7 @@ public abstract class SummonSpell extends AnimatedSpell {
 
     protected boolean hasSpecialChoice(SummonSpell spell, SpellContext context) {
         var handler = context.getSpellHandler();
-        var list = handler.getActiveSpells(spell.spellType(), abstractSpell -> abstractSpell instanceof SummonSpell summonSpell && context.isChoice(summonSpell.choice));
+        var list = handler.getActiveSpells(spell.spellType(), abstractSpell -> abstractSpell instanceof SummonSpell summonSpell && spell.isChoice(summonSpell.choice));
         return !list.isEmpty();
     }
 

@@ -19,9 +19,4 @@ public class FrogRenderer<T extends FrogEntity> extends MobRenderer<T, FrogModel
     public ResourceLocation getTextureLocation(FrogEntity frogEntity) {
         return CommonClass.customLocation("textures/entity/familiar/frog/frog.png");
     }
-
-    @Override
-    protected @Nullable RenderType getRenderType(T livingEntity, boolean bodyVisible, boolean translucent, boolean glowing) {
-        return RenderType.itemEntityTranslucentCull(getTextureLocation(livingEntity));
-    }
 }

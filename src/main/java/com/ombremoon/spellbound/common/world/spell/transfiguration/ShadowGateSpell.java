@@ -112,7 +112,7 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
             boolean hasReach = context.hasSkill(SBSkills.REACH);
             this.summonEntity(context, SBEntities.SHADOW_GATE.get(), hasReach ? 100 : 50, shadowGate -> {
                 int maxPortals = context.hasSkill(SBSkills.DUAL_DESTINATION) ? 3 : 2;
-                if (context.isChoice(SBSkills.GRAVITY_SHIFT))
+                if (this.isChoice(SBSkills.GRAVITY_SHIFT))
                     shadowGate.shift();
 
                 this.portalMap.createOrShiftPortal(shadowGate, maxPortals, 20);

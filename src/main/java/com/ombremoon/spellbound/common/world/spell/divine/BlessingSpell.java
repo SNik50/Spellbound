@@ -129,9 +129,9 @@ public class BlessingSpell extends AnimatedSpell {
                 }
             }
 
-            if (context.isChoice(SBSkills.BLESSING)) {
+            if (this.isChoice(SBSkills.BLESSING)) {
                 resource = EntityResource.HEALTH;
-            } else if (context.isChoice(SBSkills.COURAGE)) {
+            } else if (this.isChoice(SBSkills.COURAGE)) {
                 for (LivingEntity entity : this.targets) {
                     this.addSkillBuff(
                             entity,
@@ -146,15 +146,15 @@ public class BlessingSpell extends AnimatedSpell {
 
                 this.endSpell();
                 return;
-            } else if (context.isChoice(SBSkills.ARCANE_RESTORATION)) {
+            } else if (this.isChoice(SBSkills.ARCANE_RESTORATION)) {
                 resource = EntityResource.MANA;
                 amount = 5.0F;
-            } else if (context.isChoice(SBSkills.SATIATING_BLESSING)) {
+            } else if (this.isChoice(SBSkills.SATIATING_BLESSING)) {
                 resource = EntityResource.HUNGER;
-            } else if (context.isChoice(SBSkills.AIR_BUBBLE)) {
+            } else if (this.isChoice(SBSkills.AIR_BUBBLE)) {
                 resource = EntityResource.AIR;
                 amount = 20.0F;
-            } else if (context.isChoice(SBSkills.PURIFYING_WARD)) {
+            } else if (this.isChoice(SBSkills.PURIFYING_WARD)) {
                 for (LivingEntity entity : this.targets) {
                     this.cleanse(entity, 1, MobEffectCategory.HARMFUL);
                 }

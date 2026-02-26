@@ -322,7 +322,7 @@ public class CobbledHideSpell extends AnimatedSpell {
 
     @Override
     public float getManaCost(SpellContext context) {
-        return context.isChoice(SBSkills.SHATTER_SKIN) && context.isRecast() ? super.getManaCost(context) * 0.5F : super.getManaCost(context);
+        return this.isChoice(SBSkills.SHATTER_SKIN) && context.isRecast() ? super.getManaCost(context) * 0.5F : super.getManaCost(context);
     }
 
     public static SkillTooltip<Float> ARMOR_TO_DAMAGE = new SkillTooltip<>() {

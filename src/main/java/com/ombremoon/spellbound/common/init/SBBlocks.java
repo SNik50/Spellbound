@@ -24,6 +24,12 @@ import java.util.function.Supplier;
 public class SBBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Constants.MOD_ID);
 
+    public static final Supplier<Block> RESONANCE_STONE = registerBlock(
+            "resonance_stone", () -> new ResonanceStoneBlock(
+                    blockProperties()
+            )
+    );
+
     public static final Supplier<Block> MAGI_WORKBENCH = registerBlock(
             "magis_workbench", () -> new UnnamedWorkbenchBlock(
                     blockProperties()

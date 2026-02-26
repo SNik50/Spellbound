@@ -44,7 +44,7 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
 
     private static Builder<SiphonSpell> createSiphonBuilder() {
         return createChannelledSpellBuilder(SiphonSpell.class)
-                .castCondition((context, spell) -> (context.isChoice(SBSkills.HARVEST) && context.hasCatalyst(SBItems.HOLY_SHARD.get())) || context.getTarget() instanceof LivingEntity)
+                .castCondition((context, spell) -> (spell.isChoice(SBSkills.HARVEST) && context.hasCatalyst(SBItems.HOLY_SHARD.get())) || context.getTarget() instanceof LivingEntity)
                 .castAnimation((context, spell) -> new SpellAnimation("solar_ray_cast", SpellAnimation.Type.CAST, true))
                 .channelAnimation(context -> new SpellAnimation("solar_ray_channel", SpellAnimation.Type.CHANNEL, true))
                 .stopChannelAnimation(new SpellAnimation("solar_ray_end", SpellAnimation.Type.CAST, true))
@@ -114,7 +114,7 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
         Level level = context.getLevel();
         LivingEntity caster = context.getCaster();
         if (!level.isClientSide) {
-            this.target = context.getTarget() instanceof LivingEntity livingEntity && !context.isChoice(SBSkills.HARVEST)? livingEntity : null;
+            this.target = context.getTarget() instanceof LivingEntity livingEntity && !this.isChoice(SBSkills.HARVEST)? livingEntity : null;
             if (context.hasSkill(SBSkills.PARASITIC_LINK) && this.target != null) {
                 var targetHandler = SpellUtil.getSpellHandler(this.target);
                 this.targetSpell = targetHandler.previouslyCastSpell;
@@ -193,7 +193,7 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
         Level level = context.getLevel();
         if (!level.isClientSide && this.tickCount % 20 == 0) {
             var targets = new HashSet<LivingEntity>();
-            if (context.isChoice(SBSkills.HARVEST) && context.hasCatalyst(SBItems.CORRUPTED_SHARD.get())) {
+            if (this.isChoice(SBSkills.HARVEST) && context.hasCatalyst(SBItems.CORRUPTED_SHARD.get())) {
                 targets.addAll(this.getAttackableEntities(5));
             } else {
                 Entity target = context.getTarget();
@@ -203,7 +203,7 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
                     }
 
                     this.target = livingEntity;
-                    if (context.isChoice(SBSkills.SOUL_TAP) && context.hasSkill(SBSkills.PARASITIC_LINK)) {
+                    if (this.isChoice(SBSkills.SOUL_TAP) && context.hasSkill(SBSkills.PARASITIC_LINK)) {
                         this.addEventBuff(
                                 this.target,
                                 SBSkills.SIPHON,
@@ -240,7 +240,7 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
             }
 
             for (LivingEntity entity : targets) {
-                if (context.isChoice(SBSkills.SOUL_TAP)) {
+                if (this.isChoice(SBSkills.SOUL_TAP)) {
                     if (!this.consumeMana(entity, potency(1)) && context.hasSkill(SBSkills.ARCANE_FEEDBACK)) {
                         this.hurt(entity, 1);
                         this.addSkillBuff(

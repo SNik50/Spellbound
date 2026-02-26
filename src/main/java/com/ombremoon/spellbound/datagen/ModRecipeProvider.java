@@ -142,6 +142,22 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("SOS")
                 .unlockedBy("has_mushroom", has(Tags.Items.MUSHROOMS))
                 .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, SBBlocks.RESONANCE_STONE.get())
+                .define('D', Blocks.DEEPSLATE_BRICKS)
+                .define('M', SBItems.MAGIC_ESSENCE.get())
+                .pattern("DMD")
+                .pattern("DMD")
+                .pattern("D D")
+                .unlockedBy("has_deepslate", has(Tags.Items.COBBLESTONES_DEEPSLATE))
+                .save(output);
+        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, SBItems.SPIRIT_WHISTLE.get())
+                .define('W', ItemTags.PLANKS)
+                .define('S', Items.STRING)
+                .define('M', SBItems.MAGIC_ESSENCE.get())
+                .pattern("WS")
+                .pattern("M ")
+                .unlockedBy("has_magic_essence", has(SBItems.MAGIC_ESSENCE.get()))
+                .save(output);
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, SBBlocks.SUMMON_STONE.get())
                 .requires(SBBlocks.CRACKED_SUMMON_STONE.get())
                 .requires(SBItems.MAGIC_ESSENCE.get())
