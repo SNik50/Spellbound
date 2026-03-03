@@ -11,15 +11,15 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.shadow_gate"
+        "translate": "spells.spellbound.fireball"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -14396391,
-      "mastery": "adept",
-      "path": "transfiguration",
-      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
+      "colour": -10678496,
+      "mastery": "novice",
+      "path": "ruin",
+      "pathTexture": "spellbound:textures/gui/paths/ruin.png"
     },
     {
       "type": "spellbound:image",
@@ -27,7 +27,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/shadow_gate.png",
+      "image": "spellbound:textures/gui/books/images/spells/fireball.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -40,7 +40,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.shadow_gate"
+        "translate": "skill.description.spellbound.fireball"
       }
     },
     {
@@ -50,7 +50,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.TRANSFIGURATION.shadow_gate.lore"
+        "translate": "guide.RUIN.fireball.lore"
       }
     },
     {
@@ -60,7 +60,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.TRANSFIGURATION.shadow_gate.boss_lore"
+        "translate": "guide.RUIN.fireball.boss_lore"
       }
     },
     {
@@ -68,13 +68,13 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:shadow_gate",
+      "path": "spellbound:fireball",
       "position": {
         "xOffset": 172,
         "yOffset": 195
       }
     }
   ],
-  "id": "spellbound:architects_lexicon",
-  "insertAfter": "spellbound:stride_ritual"
+  "id": "spellbound:grimoire_of_annihilation",
+  "insertAfter": "spellbound:ruin_armor_staff"
 }

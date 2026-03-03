@@ -28,7 +28,6 @@ public class Fireball extends VFXSpellProjectile<FireballSpell> {
 
     @Override
     protected EffectBuilder<? extends FXEffectExecutor> getEffect() {
-//        float size = (this.getSize() * 0.5F) + 0.5F;
         return EffectBuilder.FireballBuilder.of(this.getId());
     }
 

@@ -11,15 +11,24 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.wild_mushroom"
+        "translate": "spells.spellbound.blessing"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -13490312,
-      "mastery": "adept",
-      "path": "summons",
-      "pathTexture": "spellbound:textures/gui/paths/summons.png"
+      "bottomText": {
+        "extra": [
+          {
+            "color": "dark_green",
+            "text": "0"
+          }
+        ],
+        "translate": "divine_action.judgement_required"
+      },
+      "colour": -3510773,
+      "mastery": "novice",
+      "path": "divine",
+      "pathTexture": "spellbound:textures/gui/paths/divine.png"
     },
     {
       "type": "spellbound:image",
@@ -27,7 +36,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/wild_mushroom.png",
+      "image": "spellbound:textures/gui/books/images/spells/blessing.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -40,7 +49,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.wild_mushroom"
+        "translate": "skill.description.spellbound.blessing"
       }
     },
     {
@@ -50,7 +59,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.SUMMONS.wild_mushroom.lore"
+        "translate": "guide.DIVINE.blessing.lore"
       }
     },
     {
@@ -60,7 +69,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.SUMMONS.wild_mushroom.boss_lore"
+        "translate": "guide.DIVINE.blessing.boss_lore"
       }
     },
     {
@@ -68,13 +77,13 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:wild_mushroom",
+      "path": "spellbound:blessing",
       "position": {
         "xOffset": 172,
         "yOffset": 195
       }
     }
   ],
-  "id": "spellbound:the_necronomicon",
-  "insertAfter": "spellbound:summon_villager"
+  "id": "spellbound:sanctified_codex",
+  "insertAfter": "spellbound:healing_touch_actions"
 }

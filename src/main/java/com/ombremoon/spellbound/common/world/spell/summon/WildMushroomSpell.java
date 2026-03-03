@@ -71,7 +71,8 @@ public class WildMushroomSpell extends SummonSpell {
                 SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.MAGIC, this.getModifiedDamage())),
                 SkillTooltip.RADIUS.tooltip(3F),
                 SkillTooltip.PROC_DURATION.tooltip(60),
-                SkillTooltip.DURATION.tooltip(240)
+                SkillTooltip.DURATION.tooltip(240),
+                SkillTooltip.CAST_SCALES.tooltip()
         );
         this.addSkillDetails(SBSkills.VILE_INFLUENCE,
                 SkillTooltip.MODIFY_RADIUS.tooltip(50F)

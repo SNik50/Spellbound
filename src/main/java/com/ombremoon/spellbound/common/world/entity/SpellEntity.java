@@ -97,8 +97,6 @@ public abstract class SpellEntity<T extends AbstractSpell> extends Entity implem
 
             if (this.spell != null)
                 this.spell.onEntityTick(this, this.spell.getContext());
-        } else {
-            this.handleFXRemoval();
         }
     }
 

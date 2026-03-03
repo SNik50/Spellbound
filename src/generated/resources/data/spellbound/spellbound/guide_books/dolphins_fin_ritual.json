@@ -11,7 +11,7 @@
         "yOffset": 4
       },
       "translation": {
-        "translate": "ritual.spellbound.create_shadow_gate"
+        "translate": "ritual.spellbound.create_dolphins_fin"
       }
     },
     {
@@ -29,7 +29,7 @@
         "yOffset": 35
       },
       "translation": {
-        "translate": "ritual.spellbound.create_shadow_gate.description"
+        "translate": "ritual.spellbound.create_dolphins_fin.description"
       }
     },
     {
@@ -54,7 +54,7 @@
       "list": [
         {
           "component": {
-            "translate": "spellbound.ritual.tier_two"
+            "translate": "spellbound.ritual.tier_one"
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
@@ -64,7 +64,7 @@
           "component": {
             "translate": "spellbound.ritual.activation_time",
             "with": [
-              "10"
+              "5"
             ]
           },
           "extraOffset": 0,
@@ -102,9 +102,9 @@
     {
       "type": "spellbound:ritual",
       "leftPage": false,
-      "ritual": "spellbound:create_shadow_gate"
+      "ritual": "spellbound:create_dolphins_fin"
     }
   ],
   "id": "spellbound:architects_lexicon",
-  "insertAfter": "spellbound:shadow_gate"
+  "insertAfter": "spellbound:dolphins_fin"
 }

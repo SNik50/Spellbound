@@ -11,13 +11,13 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.stormstrike"
+        "translate": "spells.spellbound.solar_ray"
       }
     },
     {
       "type": "spellbound:spell_border",
       "colour": -10678496,
-      "mastery": "novice",
+      "mastery": "expert",
       "path": "ruin",
       "pathTexture": "spellbound:textures/gui/paths/ruin.png"
     },
@@ -27,7 +27,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/stormstrike.png",
+      "image": "spellbound:textures/gui/books/images/spells/solar_ray.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -40,7 +40,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.stormstrike"
+        "translate": "skill.description.spellbound.solar_ray"
       }
     },
     {
@@ -50,7 +50,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.RUIN.stormstrike.lore"
+        "translate": "guide.RUIN.solar_ray.lore"
       }
     },
     {
@@ -60,7 +60,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.RUIN.stormstrike.boss_lore"
+        "translate": "guide.RUIN.solar_ray.boss_lore"
       }
     },
     {
@@ -68,7 +68,7 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:stormstrike",
+      "path": "spellbound:solar_ray",
       "position": {
         "xOffset": 172,
         "yOffset": 195
@@ -76,5 +76,5 @@
     }
   ],
   "id": "spellbound:grimoire_of_annihilation",
-  "insertAfter": "spellbound:ruin_portals"
+  "insertAfter": "spellbound:shattering_crystal"
 }

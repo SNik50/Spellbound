@@ -11,7 +11,7 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.solar_ray"
+        "translate": "spells.spellbound.shattering_crystal"
       }
     },
     {
@@ -27,7 +27,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/solar_ray.png",
+      "image": "spellbound:textures/gui/books/images/spells/shattering_crystal.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -40,7 +40,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.solar_ray"
+        "translate": "skill.description.spellbound.shattering_crystal"
       }
     },
     {
@@ -50,7 +50,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.RUIN.solar_ray.lore"
+        "translate": "guide.RUIN.shattering_crystal.lore"
       }
     },
     {
@@ -60,7 +60,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.RUIN.solar_ray.boss_lore"
+        "translate": "guide.RUIN.shattering_crystal.boss_lore"
       }
     },
     {
@@ -68,7 +68,7 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:solar_ray",
+      "path": "spellbound:shattering_crystal",
       "position": {
         "xOffset": 172,
         "yOffset": 195
@@ -76,5 +76,5 @@
     }
   ],
   "id": "spellbound:grimoire_of_annihilation",
-  "insertAfter": "spellbound:shattering_crystal_page"
+  "insertAfter": "spellbound:electric_charge"
 }

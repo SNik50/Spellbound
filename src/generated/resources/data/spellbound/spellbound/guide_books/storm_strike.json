@@ -11,13 +11,13 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.shattering_crystal"
+        "translate": "spells.spellbound.stormstrike"
       }
     },
     {
       "type": "spellbound:spell_border",
       "colour": -10678496,
-      "mastery": "expert",
+      "mastery": "novice",
       "path": "ruin",
       "pathTexture": "spellbound:textures/gui/paths/ruin.png"
     },
@@ -27,7 +27,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/shattering_crystal.png",
+      "image": "spellbound:textures/gui/books/images/spells/stormstrike.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -40,7 +40,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.shattering_crystal"
+        "translate": "skill.description.spellbound.stormstrike"
       }
     },
     {
@@ -50,7 +50,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.RUIN.shattering_crystal.lore"
+        "translate": "guide.RUIN.stormstrike.lore"
       }
     },
     {
@@ -60,7 +60,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.RUIN.shattering_crystal.boss_lore"
+        "translate": "guide.RUIN.stormstrike.boss_lore"
       }
     },
     {
@@ -68,7 +68,7 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:shattering_crystal",
+      "path": "spellbound:stormstrike",
       "position": {
         "xOffset": 172,
         "yOffset": 195
@@ -76,5 +76,5 @@
     }
   ],
   "id": "spellbound:grimoire_of_annihilation",
-  "insertAfter": "spellbound:electric_charge_page"
+  "insertAfter": "spellbound:flame_jet"
 }

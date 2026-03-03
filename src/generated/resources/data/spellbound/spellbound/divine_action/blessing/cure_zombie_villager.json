@@ -12,7 +12,7 @@
   "rewards": {
     "experience": 10,
     "spells": [
-      "spellbound:solar_ray"
+      "spellbound:blessing"
     ]
   }
 }

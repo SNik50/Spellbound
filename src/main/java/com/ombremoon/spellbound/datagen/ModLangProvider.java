@@ -274,6 +274,14 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.ruin.pyromancer_robes", "Exploring the nether, I spotted these robes hot to the touch. With this kind of heat, I imagine Fire spells won't get through very well.");
         add("guide.ruin.cryomancer_robes", "Finally, some Frost robes to protect me from the cold! They were spread between igloos and abandoned shipwrecks.");
 
+        addSpellContents(SpellPath.RUIN, SBSpells.FIREBALL.get(),
+                "Every Magi should have this classic spell in their arsenal. But to truly unlock its potential, I need to understand how to control the flow of energy.",
+                "This is outstanding! I can now focus my energy to create a ball of fire that will burn through anything in its path and then some.");
+
+        addSpellContents(SpellPath.RUIN, SBSpells.FLAME_JET.get(),
+                "As a magic user, I'm pretty vulnerable at close range. I need a better way to handle enemies that get too close, that way I can protect myself on all fronts.",
+                "If I concentrate all of my energy to a point in front of me, I can release it as a burst of flame. I just know there are plenty of applications for this!");
+
         addSpellContents(SpellPath.RUIN, SBSpells.SOLAR_RAY.get(),
                 "I have purchased this spell tome from a Spell Broker as I have been unable to decipher its origin but I believe its siphoning energy from the sun.",
                 "I was mistaken... This spell isn't channelling energy from the sun, but a Sun God! That's definitely a being I never want to run into again.");
@@ -334,6 +342,12 @@ public class ModLangProvider extends LanguageProvider {
         addTransfigSpellContents(SBSpells.STRIDE.get(),
                 "I have been trying to gather ingredients for all of my alchemy rituals, but it's taking me too long to find everything. I need a faster way...",
                 "Well, I solved my problem with Transfiguration. You won't believe it, but by mixing the right ingredients, I can supercharge my body. Allowing my legs to work even faster!");
+        addTransfigSpellContents(SBSpells.DOLPHINS_FIN.get(),
+                "While I have plenty of means for land travel, I'm still lacking a way to quickly travel bodies of water without the aid of Dolphins...wait a second...",
+                "The solution was staring me right in the face. Instead of utilizing Dolphin's, I can become the Dolphin myself! The vast oceans are now mine to explore!");
+        addTransfigSpellContents(SBSpells.COBBLED_HIDE.get(),
+                "Wearing a bunch of armor slows me down and it seems to also have a negative impact on my spell casting. Maybe I can manipulate my body to be more efficient.",
+                "The things you can do with alchemy are out of this world! I learned to harden my own skin with magic, offering me the protection of armor without the drawbacks.");
         addTransfigSpellContents(SBSpells.SHADOW_GATE.get(),
                 "As my studies have advanced, I am finding myself needing to explore more biomes. I've found that teleportation could be quite useful.",
                 "I think I got it! After experimenting with ender pearls, I found I can use them to rip open gateways temporarily. I have created a spell to keep these open for longer.");
@@ -411,6 +425,16 @@ public class ModLangProvider extends LanguageProvider {
 
         add("summon.acquisition.description", "Use the keystone below to access the boss's dimension.");
         add("summon.acquisition.boss_rewards", "Boss Rewards");
+        add("summon.acquisition.summon_undead.lore", "One zombie may be weak, but a horde of them can be devastating...");
+        addSpellContents(SpellPath.SUMMONS, SBSpells.SUMMON_UNDEAD.get(),
+                "I can't begin to imagine the amount of souls that are just lying around, waiting for their power to be harnessed.",
+                "I took to a dimension scattered with graves and was immediately swarmed by hordes of undead monsters. I've never been more terrified in my life."
+        );
+        add("summon.acquisition.summon_villager.lore", "If I can't find the village, I'll just have to bring the village to me...");
+        addSpellContents(SpellPath.SUMMONS, SBSpells.SUMMON_VILLAGER.get(),
+                "I'm not alone in this world. I've come across villages in my travels, but they are too far and wide to guarantee I can find them.",
+                "I've seen few Iron Golems in my day, but what on Earth did I just witness? I barely got out of there, but the knowledge I gained will be invaluable."
+        );
         add("summon.acquisition.wild_mushroom.lore", "Come to think of it, it's rare to see a single mushroom on its own...");
         addSpellContents(SpellPath.SUMMONS, SBSpells.WILD_MUSHROOM.get(),
                 "Fungi are some of the most resilient living organisms. If I can find a mushroom infested realm, just think of the power it could be hiding.",
@@ -456,6 +480,12 @@ public class ModLangProvider extends LanguageProvider {
         add("healing_touch.heal_mob_to_full.lore", "I'm still rather new to this whole healing magic thing, it might be best to start off small. I wonder if I can catch any animals to practice on?");
         add("healing_touch.use_blessed_bandages.lore", "This world is harsh... ferocious wildlife and undead monsters are running rampant. It will be a serious problem without a way to heal my wounds in a pinch");
         add("healing_touch.bless_shrine.lore", "This shrine I found in the temple seems to resonate with my every action—good or bad. I think as long as I take good care of it, I can become even stronger!");
+        add("blessing.cure_zombie_villager.name", "Plague Doctor");
+        add("divine_action.blessing.cure_zombie_villager", "Cure a Zombie Viilager");
+        add("blessing.cure_zombie_villager.lore", "I was heartbroken when I saw a Villager succumb to the infection. I'll do my best to find a way to cure them.");
+        add("siphon.kill_villager.name", "Murderer");
+        add("divine_action.siphon.kill_villager", "Kill 5 Villagers");
+        add("siphon.kill_villager.lore", "The voices, they are telling me things. These Villagers are just as dangerous as any undead. I must defend myself.");
         add("healing_blossom.decorate_shrine.name", "Gardener");
         add("divine_action.healing_blossom.decorate_shrine", "Decorate a shrine with 18 unique flowers");
         add("healing_blossom.purify_wither_rose.name", "Life From Death");
@@ -469,6 +499,14 @@ public class ModLangProvider extends LanguageProvider {
         addSpellContents(SpellPath.DIVINE, SBSpells.HEALING_TOUCH.get(),
                 "The power of the Divines is one in which harm to living creatures is seen as a sin. Does that mean I can use this power for the opposite?",
                 "It works perfectly. After sustaining an attack, self inflicted or otherwise, I can channel the Divine energy to heal myself.");
+
+        addSpellContents(SpellPath.DIVINE, SBSpells.BLESSING.get(),
+                "When travelling with a group or companion, there's been too many times I've been unable to tend their wounds. I must remedy this immediately.",
+                "I think I covered all my bases. From now painful injuries, starvation, disease, and more, I'll be able to help anyone in need.");
+
+        addSpellContents(SpellPath.DIVINE, SBSpells.SIPHON.get(),
+                "Sin is just another tool used by the Divines. That must mean that too is a power that I can harness myself.",
+                "Not only was I right, but this dark power has proven to be quite useful. I can use it to drain the life force of my enemies.");
 
         addSpellContents(SpellPath.DIVINE, SBSpells.HEALING_BLOSSOM.get(),
                 "The Divines didn't just make sentient creatures, but also plants. I wonder if my borrowed power can be used for flora.",
@@ -484,11 +522,15 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.deception.acquisition1", "How am I to learn this damn path when I can't even begin to find these books. I could ask around, but what if they lie? I must be cautious...");
         add("guide.deception.acquisition2", "FINE! I caved in and bought some spells from a Spell Broker. But you can bet I'm going to try these on someone else first!");
 
+        addSpellContents(SpellPath.DECEPTION, SBSpells.FLICKER.get(),
+                "I don't always have a means to attack or defend myself. Sometimes I just need a way to dodge and get out of the way!",
+                "This short range teleport spell is a bit tricky to get the hang of, especially when going backwards, but it's a good start. ");
+        addSpellContents(SpellPath.DECEPTION, SBSpells.CURSED_RUNE.get(),
+                "If words are power, that must mean I can use that power to my advantage. I'll write down some notes to see which words have the most impact.",
+                "I didn't realize just how many words of power there are. I jotted down a few keywords to try out, but there's got to be a litany of others out there.");
         addSpellContents(SpellPath.DECEPTION, SBSpells.SHADOWBOND.get(),
                 "Someone has requested my help turning them invisible so they can sneak into a jungle temple's vault. If only I could reverse our roles...",
                 "Well that has done the trick! As soon as they passed the traps, I swapped places with them. Let's just hope they don't track me down.");
-
-
         addSpellContents(SpellPath.DECEPTION, SBSpells.PURGE_MAGIC.get(),
                 "I've learned to excel in sneaking, but when I'm caught, I'm finding my self too vulnerable. I need to find a way to turn the tides, and quick.",
                 "This is good progress. This won't hurt anyone, but this should be a super effective a way to dispel my enemies spells in a pinch.");
@@ -714,7 +756,7 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.HAMMERHEAD, "Underwater mining speed reduction is negated.");
         addSkillTooltip(SBSkills.OCEAN_DWELLER, "Gain the ability to breathe underwater.");
 
-        addSkillTooltip(SBSkills.COBBLED_HIDE, "Increases the caster's armor");
+        addSkillTooltip(SBSkills.COBBLED_HIDE, "Increases the caster's armor.");
         addSkillTooltip(SBSkills.IRON_HIDE, "Additionally increases the caster's armor and gain projectile damage reduction.");
         addSkillTooltip(SBSkills.DIAMOND_HIDE, "Additionally increases the caster's armor and gain spell damage reduction.");
         addSkillTooltip(SBSkills.DRAGON_HIDE, "Additionally increases the caster's armor and gain fire resistance.");
@@ -750,17 +792,29 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.SUBLIME_BEACON, "Periodically restores health scaling with the caster's armor.");
         addSkillTooltip(SBSkills.SOUL_RECHARGE, "Restores the caster to full health if below a certain HP threshold, consuming a flux shard in the caster's inventory.");
 
-        addSkillTooltip(SBSkills.SUMMON_UNDEAD, "Plants a wild mushroom at the target location, periodically expelling magic spores, dealing damage to nearby enemies.");
-        addSkillTooltip(SBSkills.SUMMON_SKELETON, "Increases the spore radius.");
-        addSkillTooltip(SBSkills.SUMMON_DROWNED, "Decreases the explosion interval.");
-        addSkillTooltip(SBSkills.SUMMON_ZOMBIFIED_PIGLIN, "Spores now poison enemies.");
-        addSkillTooltip(SBSkills.SUMMON_PHANTOM, "Enemies hit by a mushroom explosion are taunted.");
-        addSkillTooltip(SBSkills.ROTTEN_SOLDIERS, "Each active mushroom increases the spell's damage.");
-        addSkillTooltip(SBSkills.HALL_OF_THE_DEAD, "When 3 mushrooms are active, gain increased mana regeneration.");
-        addSkillTooltip(SBSkills.SUNKEN_BREATH, "If a target dies to a mushroom, the spell temporarily gains potency.");
-        addSkillTooltip(SBSkills.CRIMSON_PACT, "If a target dies to a mushroom, the casting cost of the spell is temporarily decreased.");
-        addSkillTooltip(SBSkills.SILENT_NIGHT, "Recast on a mushroom to spawn a Mini Mushroom minion.");
-        addSkillTooltip(SBSkills.CORPSE_EXPLOSION, "Mini Mushroom minions can be bonemealed to spawn a Giant Mushroom.");
+        addSkillTooltip(SBSkills.SUMMON_UNDEAD, "Summons a Zombie to fight for the caster.");
+        addSkillTooltip(SBSkills.SUMMON_SKELETON, "Summons a Skeleton.");
+        addSkillTooltip(SBSkills.SUMMON_DROWNED, "Summons a Drowned.");
+        addSkillTooltip(SBSkills.SUMMON_ZOMBIFIED_PIGLIN, "Summons a Zombified Piglin.");
+        addSkillTooltip(SBSkills.SUMMON_PHANTOM, "Summons a Phantom.");
+        addSkillTooltip(SBSkills.ROTTEN_SOLDIERS, "Zombies inflict disease build up.");
+        addSkillTooltip(SBSkills.HALL_OF_THE_DEAD, "Upon death, Skeletons fall into a pile of bones. If not hit with Fire Damage, they come back to life.");
+        addSkillTooltip(SBSkills.SUNKEN_BREATH, "Drowned grant caster water breathing.");
+        addSkillTooltip(SBSkills.CRIMSON_PACT, "Zombified Piglin deal bonus damage to any target that recently damaged the caster and negate Fire Damage.");
+        addSkillTooltip(SBSkills.SILENT_NIGHT, "Phantom hits silence targets.");
+        addSkillTooltip(SBSkills.CORPSE_EXPLOSION, "Recast on an undead summon to explode it, dealing magic damage to nearby enemies and healing the caster.");
+
+        addSkillTooltip(SBSkills.SUMMON_VILLAGER, "Summons a Villager without a profession, scaling with charge.");
+        addSkillTooltip(SBSkills.FARMER_VILLAGER, "Summons a Farmer Villager.");
+        addSkillTooltip(SBSkills.LIBRARIAN_VILLAGER, "Summons a Librarian Villager.");
+        addSkillTooltip(SBSkills.TOOLSMITH_VILLAGER, "Summons a Toolsmith Villager.");
+        addSkillTooltip(SBSkills.CARTOGRAPHER_VILLAGER, "Summons a Cartographer Villager.");
+        addSkillTooltip(SBSkills.CLERIC_VILLAGER, "Summons a Cleric Villager.");
+        addSkillTooltip(SBSkills.EXTENDED_SERVICE, "Increases the Villager duration.");
+        addSkillTooltip(SBSkills.WHOLESALE, "Reduces summoned Villager trade costs.");
+        addSkillTooltip(SBSkills.BOUNTIFUL, "Villagers killed by enemies have a chance to drop a random trade.");
+        addSkillTooltip(SBSkills.LOYAL_PROTECTOR, "Spawn an Iron Golem alongside the Villager.");
+        addSkillTooltip(SBSkills.SHOW_ME_THE_ROPES, "Each Villager grants the caster a unique passive.");
 
         addSkillTooltip(SBSkills.WILD_MUSHROOM, "Plants a wild mushroom at the target location, periodically expelling magic spores, dealing damage to nearby enemies.");
         addSkillTooltip(SBSkills.VILE_INFLUENCE, "Increases the spore radius.");

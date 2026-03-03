@@ -11,15 +11,15 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.electric_charge"
+        "translate": "spells.spellbound.summon_villager"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -10678496,
+      "colour": -13490312,
       "mastery": "novice",
-      "path": "ruin",
-      "pathTexture": "spellbound:textures/gui/paths/ruin.png"
+      "path": "summons",
+      "pathTexture": "spellbound:textures/gui/paths/summons.png"
     },
     {
       "type": "spellbound:image",
@@ -27,7 +27,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/electric_charge.png",
+      "image": "spellbound:textures/gui/books/images/spells/summon_villager.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -40,7 +40,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.electric_charge"
+        "translate": "skill.description.spellbound.summon_villager"
       }
     },
     {
@@ -50,7 +50,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.RUIN.electric_charge.lore"
+        "translate": "guide.SUMMONS.summon_villager.lore"
       }
     },
     {
@@ -60,7 +60,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.RUIN.electric_charge.boss_lore"
+        "translate": "guide.SUMMONS.summon_villager.boss_lore"
       }
     },
     {
@@ -68,13 +68,13 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:electric_charge",
+      "path": "spellbound:summon_villager",
       "position": {
         "xOffset": 172,
         "yOffset": 195
       }
     }
   ],
-  "id": "spellbound:grimoire_of_annihilation",
-  "insertAfter": "spellbound:storm_strike_page"
+  "id": "spellbound:the_necronomicon",
+  "insertAfter": "spellbound:summon_undead"
 }

@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.world.entity.spell;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXEffectExecutor;
 import com.ombremoon.spellbound.client.particle.EffectBuilder;
 import com.ombremoon.spellbound.common.init.SBEntityDataSerializers;
@@ -8,6 +9,8 @@ import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
 import com.ombremoon.spellbound.common.magic.effects.MagicEffect;
 import com.ombremoon.spellbound.common.world.entity.VFXSpellEntity;
 import com.ombremoon.spellbound.common.world.spell.deception.CursedRuneSpell;
+import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -37,12 +40,13 @@ public class CursedRune extends VFXSpellEntity<CursedRuneSpell> {
 
     @Override
     protected EffectBuilder<? extends FXEffectExecutor> getEffect() {
-        return null;
+        return EffectBuilder.StaticEntity.of(CommonClass.customLocation("cursed_rune_place"), this.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                .setOffset(0, 0.1, 0);
     }
 
     @Override
     protected ResourceLocation getEffectLocation() {
-        return null;
+        return CommonClass.customLocation("cursed_rune");
     }
 
     @Override
@@ -70,14 +74,31 @@ public class CursedRune extends VFXSpellEntity<CursedRuneSpell> {
             var list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox(), this.canActivateRune());
             if (!list.isEmpty()) {
                 for (LivingEntity entity : list) {
-                    if (true/*!this.isOwner(entity)*/) {
+                    if (!this.isOwner(entity)) {
                         EffectManager effectManager = SpellUtil.getSpellEffects(entity);
                         this.effects.forEach(effect -> effectManager.addMagicEffect(effect, this.getSummoner()));
                     }
                 }
 
-                //Play Rune Effect
                 this.setEndTick(10);
+            }
+        }
+
+        if (this.level().isClientSide) {
+            if (this.tickCount == 20) {
+                var builder = EffectBuilder.StaticEntity.of(CommonClass.customLocation("cursed_rune"), this.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                        .setOffset(0, 0.1, 0);
+                if (this.isHidden()) {
+                    RenderUtil.displayClientEffect(this, this.getSummoner(), builder);
+                } else {
+                    this.addFX(builder);
+                }
+            }
+
+            if (this.tickCount == this.getEndTick() - 8) {
+                this.removeFX(this.getEffectLocation(), true);
+                this.addFX(EffectBuilder.StaticEntity.of(CommonClass.customLocation("cursed_rune_discharge"), this.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                        .setOffset(0, 0.1, 0));
             }
         }
     }
@@ -85,12 +106,6 @@ public class CursedRune extends VFXSpellEntity<CursedRuneSpell> {
     private Predicate<LivingEntity> canActivateRune() {
         return livingEntity -> {
             Entity summoner = this.getSummoner();
-            if (true)
-                return true;
-
-            if (!EntitySelector.NO_CREATIVE_OR_SPECTATOR.test(livingEntity))
-                return false;
-
             return !(summoner instanceof LivingEntity living) || SpellUtil.CAN_ATTACK_ENTITY.test(living, livingEntity);
         };
     }

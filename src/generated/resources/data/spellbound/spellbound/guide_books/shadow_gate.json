@@ -11,15 +11,15 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.wild_mushroom"
+        "translate": "spells.spellbound.shadow_gate"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -13490312,
+      "colour": -14396391,
       "mastery": "adept",
-      "path": "summons",
-      "pathTexture": "spellbound:textures/gui/paths/summons.png"
+      "path": "transfiguration",
+      "pathTexture": "spellbound:textures/gui/paths/transfiguration.png"
     },
     {
       "type": "spellbound:image",
@@ -27,7 +27,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/wild_mushroom.png",
+      "image": "spellbound:textures/gui/books/images/spells/shadow_gate.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -40,7 +40,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.wild_mushroom"
+        "translate": "skill.description.spellbound.shadow_gate"
       }
     },
     {
@@ -50,7 +50,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.SUMMONS.wild_mushroom.lore"
+        "translate": "guide.TRANSFIGURATION.shadow_gate.lore"
       }
     },
     {
@@ -60,7 +60,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.SUMMONS.wild_mushroom.boss_lore"
+        "translate": "guide.TRANSFIGURATION.shadow_gate.boss_lore"
       }
     },
     {
@@ -68,13 +68,13 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:wild_mushroom",
+      "path": "spellbound:shadow_gate",
       "position": {
         "xOffset": 172,
         "yOffset": 195
       }
     }
   ],
-  "id": "spellbound:the_necronomicon",
-  "insertAfter": "spellbound:summon_villager"
+  "id": "spellbound:architects_lexicon",
+  "insertAfter": "spellbound:cobbled_hide_ritual"
 }

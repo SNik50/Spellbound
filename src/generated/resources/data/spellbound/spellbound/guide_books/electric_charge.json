@@ -11,15 +11,15 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.purge_magic"
+        "translate": "spells.spellbound.electric_charge"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -13357984,
-      "mastery": "adept",
-      "path": "deception",
-      "pathTexture": "spellbound:textures/gui/paths/deception.png"
+      "colour": -10678496,
+      "mastery": "novice",
+      "path": "ruin",
+      "pathTexture": "spellbound:textures/gui/paths/ruin.png"
     },
     {
       "type": "spellbound:image",
@@ -27,7 +27,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/purge_magic.png",
+      "image": "spellbound:textures/gui/books/images/spells/electric_charge.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -40,7 +40,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.purge_magic"
+        "translate": "skill.description.spellbound.electric_charge"
       }
     },
     {
@@ -50,7 +50,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.DECEPTION.purge_magic.lore"
+        "translate": "guide.RUIN.electric_charge.lore"
       }
     },
     {
@@ -60,7 +60,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.DECEPTION.purge_magic.boss_lore"
+        "translate": "guide.RUIN.electric_charge.boss_lore"
       }
     },
     {
@@ -68,13 +68,13 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:purge_magic",
+      "path": "spellbound:electric_charge",
       "position": {
         "xOffset": 172,
         "yOffset": 195
       }
     }
   ],
-  "id": "spellbound:swindlers_guide",
-  "insertAfter": "spellbound:shadowbond_page"
+  "id": "spellbound:grimoire_of_annihilation",
+  "insertAfter": "spellbound:storm_strike"
 }

@@ -39,8 +39,8 @@ public class GuideSpellInfoRenderer implements IPageElementRenderer<GuideSpellIn
         boolean shouldShow = extras.alwaysShow() || player.isCreative() || SpellUtil.getSpellHandler(player).getSpellList().contains(spellType);
 
         AbstractSpell spell = spellType.createSpellWithData(player);
-        float baseDamage = spell.getModifiedDamage();
-        int castTime = spell.getCastTime();
+        float baseDamage = spell.getBaseDamage();
+        int castTime = 0;
         int duration = spell.getDuration();
         float manaCost = spell.getManaCost();
         float manaPerTick = 0;

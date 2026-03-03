@@ -11,15 +11,15 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.wild_mushroom"
+        "translate": "spells.spellbound.flame_jet"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -13490312,
-      "mastery": "adept",
-      "path": "summons",
-      "pathTexture": "spellbound:textures/gui/paths/summons.png"
+      "colour": -10678496,
+      "mastery": "novice",
+      "path": "ruin",
+      "pathTexture": "spellbound:textures/gui/paths/ruin.png"
     },
     {
       "type": "spellbound:image",
@@ -27,7 +27,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/wild_mushroom.png",
+      "image": "spellbound:textures/gui/books/images/spells/flame_jet.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -40,7 +40,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.wild_mushroom"
+        "translate": "skill.description.spellbound.flame_jet"
       }
     },
     {
@@ -50,7 +50,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.SUMMONS.wild_mushroom.lore"
+        "translate": "guide.RUIN.flame_jet.lore"
       }
     },
     {
@@ -60,7 +60,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.SUMMONS.wild_mushroom.boss_lore"
+        "translate": "guide.RUIN.flame_jet.boss_lore"
       }
     },
     {
@@ -68,13 +68,13 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:wild_mushroom",
+      "path": "spellbound:flame_jet",
       "position": {
         "xOffset": 172,
         "yOffset": 195
       }
     }
   ],
-  "id": "spellbound:the_necronomicon",
-  "insertAfter": "spellbound:summon_villager"
+  "id": "spellbound:grimoire_of_annihilation",
+  "insertAfter": "spellbound:fireball"
 }

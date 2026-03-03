@@ -1,0 +1,49 @@
+{
+  "definition": {
+    "duration": 1,
+    "mastery_requirement": "novice",
+    "path_xp": 10,
+    "tier": 1
+  },
+  "effects": [
+    {
+      "category": "neutral",
+      "effect": {
+        "type": "spellbound:create_spell_tome",
+        "path": "spellbound:dolphins_fin",
+        "tier": 1
+      },
+      "effect_duration": 1,
+      "tick_provider": {
+        "type": "spellbound:at_tick",
+        "tick": 0
+      }
+    }
+  ],
+  "ingredients": [
+    {
+      "count": 1,
+      "ingredient": {
+        "item": "minecraft:water_bucket"
+      }
+    },
+    {
+      "count": 1,
+      "ingredient": {
+        "item": "minecraft:tropical_fish"
+      }
+    },
+    {
+      "count": 1,
+      "ingredient": {
+        "item": "spellbound:magic_essence"
+      }
+    },
+    {
+      "count": 1,
+      "ingredient": {
+        "item": "minecraft:lapis_lazuli"
+      }
+    }
+  ]
+}
