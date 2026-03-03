@@ -19,6 +19,7 @@ import com.zigythebird.playeranim.api.PlayerAnimationAccess;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
@@ -104,6 +105,7 @@ public class SpellCastEvents {
                     int ticksPerCharge = Math.max(1, castTime / maxCharges);
                     if (handler.castTick % ticksPerCharge == 0 && spell.getCharges() < maxCharges) {
                         spell.incrementCharges();
+                        player.displayClientMessage(Component.literal("Charges: " + spell.getCharges() + "/" + maxCharges), true);
                     }
 
                     if (spell.getCharges() >= maxCharges) {

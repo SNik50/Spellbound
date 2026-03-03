@@ -2,19 +2,19 @@
   "variants": {
     "facing=north": {
       "model": "spellbound:block/resonance_stone",
-      "y": 90
+      "y": 0
     },
     "facing=east": {
       "model": "spellbound:block/resonance_stone",
-      "y": 180
+      "y": 90
     },
     "facing=south": {
       "model": "spellbound:block/resonance_stone",
-      "y": 270
+      "y": 180
     },
     "facing=west": {
       "model": "spellbound:block/resonance_stone",
-      "y": 0
+      "y": 270
     }
   }
 }

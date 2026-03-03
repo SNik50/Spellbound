@@ -1,20 +1,15 @@
 package com.ombremoon.spellbound.client.gui.resonance_stone;
 
-import com.ombremoon.spellbound.client.gui.WorkbenchScreen;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
-import com.ombremoon.spellbound.common.magic.familiars.FamiliarHolder;
 import com.ombremoon.spellbound.main.CommonClass;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
-import org.lwjgl.system.MathUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class FamiliarList {
     public static final ResourceLocation SCROLLER = CommonClass.customLocation("textures/gui/resonance_stone/scroller.png");
@@ -45,7 +40,7 @@ public class FamiliarList {
 
     public void setDisplayedFamiliars(SpellMastery mastery) {
         this.scrollIndex = 0;
-        boolean locked = this.screen.getFamiliarHandler().getSpellHandler().getSkillHolder().getMaster(SpellPath.SUMMONS).ordinal() < mastery.ordinal();
+        boolean locked = this.screen.getFamiliarHandler().getSpellHandler().getSkillHolder().getMastery(SpellPath.SUMMONS).ordinal() < mastery.ordinal();
         this.widgets = new ArrayList<>();
         for (var familiar : FamiliarHandler.getMasterySortedFamiliars(mastery)) {
             this.widgets.add(new FamiliarWidget(this, familiar, locked));

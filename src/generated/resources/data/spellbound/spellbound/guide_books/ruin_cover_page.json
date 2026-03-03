@@ -113,7 +113,7 @@
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:storm_strike_page"
+          "target_page": "spellbound:storm_strike"
         },
         {
           "component": {
@@ -121,7 +121,7 @@
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:electric_charge_page"
+          "target_page": "spellbound:electric_charge"
         },
         {
           "component": {
@@ -129,7 +129,7 @@
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:shattering_crystal_page"
+          "target_page": "spellbound:shattering_crystal"
         },
         {
           "component": {
@@ -137,7 +137,7 @@
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:solar_ray_page"
+          "target_page": "spellbound:solar_ray"
         },
         {
           "component": {
@@ -145,7 +145,7 @@
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:storm_rift_page"
+          "target_page": "spellbound:storm_rift"
         }
       ],
       "position": {

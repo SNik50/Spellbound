@@ -2,17 +2,25 @@ package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
-import com.ombremoon.spellbound.common.magic.effects.CreateItem;
-import com.ombremoon.spellbound.common.magic.effects.CreateSpellTome;
+import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
+import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
+import com.ombremoon.spellbound.common.magic.effects.TickProvider;
+import com.ombremoon.spellbound.common.magic.effects.types.CreateItem;
+import com.ombremoon.spellbound.common.magic.effects.types.CreateSpellTome;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Keys;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
+import java.util.Optional;
+
 public interface SBRituals {
     ResourceKey<TransfigurationRitual> CREATE_STRIDE = key("create_stride");
+    ResourceKey<TransfigurationRitual> CREATE_DOLPHINS_FIN = key("create_dolphins_fin");
+    ResourceKey<TransfigurationRitual> CREATE_COBBLED_HIDE = key("create_cobbled_hide");
     ResourceKey<TransfigurationRitual> CREATE_SHADOW_GATE = key("create_shadow_gate");
     ResourceKey<TransfigurationRitual> CREATE_MYSTIC_ARMOR = key("create_mystic_armor");
     ResourceKey<TransfigurationRitual> CREATE_TRANSFIG_HELM = key("create_transfig_helmet");
@@ -31,7 +39,53 @@ public interface SBRituals {
                         .requires(Ingredient.of(Items.SUGAR))
                         .requires(Ingredient.of(Items.FEATHER))
                         .requires(Ingredient.of(Items.LAPIS_LAZULI))
-                        .withEffect(new CreateSpellTome(SBSpells.STRIDE.get(), 1))
+                        .withEffect(
+                                EffectHolder.simple(
+                                        new CreateSpellTome(SBSpells.STRIDE.get(), 1),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        )
+
+        );
+        register(
+                context,
+                CREATE_DOLPHINS_FIN,
+                TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
+                        .requires(Ingredient.of(Items.WATER_BUCKET))
+                        .requires(Ingredient.of(Items.TROPICAL_FISH))
+                        .requires(Ingredient.of(SBItems.MAGIC_ESSENCE.get()))
+                        .requires(Ingredient.of(Items.LAPIS_LAZULI))
+                        .withEffect(
+                                EffectHolder.simple(
+                                        new CreateSpellTome(SBSpells.DOLPHINS_FIN.get(), 1),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        )
+
+        );
+        register(
+                context,
+                CREATE_COBBLED_HIDE,
+                TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
+                        .requires(Ingredient.of(Items.STONE))
+                        .requires(Ingredient.of(Items.LEATHER_CHESTPLATE))
+                        .requires(Ingredient.of(Items.IRON_INGOT))
+                        .requires(Ingredient.of(SBItems.MAGIC_ESSENCE.get()))
+                        .withEffect(
+                                EffectHolder.simple(
+                                        new CreateSpellTome(SBSpells.COBBLED_HIDE.get(), 1),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        )
 
         );
         register(
@@ -44,7 +98,15 @@ public interface SBRituals {
                         .requires(Ingredient.of(Items.INK_SAC), 2)
                         .requires(Ingredient.of(Items.BLACKSTONE), 2)
                         .requires(Ingredient.of(SBItems.MAGIC_ESSENCE.get()), 2)
-                        .withEffect(new CreateSpellTome(SBSpells.SHADOW_GATE.get(), 2))
+                        .withEffect(
+                                EffectHolder.simple(
+                                        new CreateSpellTome(SBSpells.SHADOW_GATE.get(), 2),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        )
 
         );
         register(
@@ -57,7 +119,15 @@ public interface SBRituals {
                         .requires(Ingredient.of(Items.SHIELD), 2)
                         .requires(Ingredient.of(Items.AMETHYST_SHARD), 2)
                         .requires(Ingredient.of(SBItems.MAGIC_ESSENCE.get()), 4)
-                        .withEffect(new CreateSpellTome(SBSpells.MYSTIC_ARMOR.get(), 2))
+                        .withEffect(
+                                EffectHolder.simple(
+                                        new CreateSpellTome(SBSpells.MYSTIC_ARMOR.get(), 2),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        )
 
         );
 
@@ -66,7 +136,16 @@ public interface SBRituals {
                 TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
                         .requires(Ingredient.of(Items.DIAMOND))
                         .requires(Ingredient.of(SBItems.MAGIC_ESSENCE.get()), 3)
-                        .withEffect(new CreateItem(SBItems.MANA_TEAR.get())));
+                        .withEffect(
+                                EffectHolder.simple(
+                                        new CreateItem(SBItems.MANA_TEAR.get()),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        )
+        );
 
         register(context,
                 CREATE_TRANSFIG_HELM,
@@ -75,7 +154,16 @@ public interface SBRituals {
                         .requires(Ingredient.of(Items.FLOWERING_AZALEA_LEAVES))
                         .requires(Ingredient.of(Items.EMERALD))
                         .requires(Ingredient.of(SBItems.MAGIC_ESSENCE.get()))
-                        .withEffect(new CreateItem(SBItems.CREATIONIST_HELMET.get())));
+                        .withEffect(
+                                EffectHolder.simple(
+                                        new CreateItem(SBItems.CREATIONIST_HELMET.get()),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        )
+        );
         register(context,
                 CREATE_TRANSFIG_CHEST,
                 TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
@@ -83,7 +171,15 @@ public interface SBRituals {
                         .requires(Ingredient.of(Items.FLOWERING_AZALEA_LEAVES))
                         .requires(Ingredient.of(Items.EMERALD))
                         .requires(Ingredient.of(SBItems.MAGIC_ESSENCE.get()))
-                        .withEffect(new CreateItem(SBItems.CREATIONIST_CHESTPLATE.get())));
+                        .withEffect(
+                                EffectHolder.simple(
+                                        new CreateItem(SBItems.CREATIONIST_CHESTPLATE.get()),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        ));
         register(context,
                 CREATE_TRANSFIG_LEGS,
                 TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
@@ -91,7 +187,15 @@ public interface SBRituals {
                         .requires(Ingredient.of(Items.FLOWERING_AZALEA_LEAVES))
                         .requires(Ingredient.of(Items.EMERALD))
                         .requires(Ingredient.of(SBItems.MAGIC_ESSENCE.get()))
-                        .withEffect(new CreateItem(SBItems.CREATIONIST_LEGGINGS.get())));
+                        .withEffect(
+                                EffectHolder.simple(
+                                        new CreateItem(SBItems.CREATIONIST_LEGGINGS.get()),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        ));
         register(context,
                 CREATE_TRANSFIG_BOOTS,
                 TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
@@ -99,7 +203,15 @@ public interface SBRituals {
                         .requires(Ingredient.of(Items.FLOWERING_AZALEA_LEAVES))
                         .requires(Ingredient.of(Items.EMERALD))
                         .requires(Ingredient.of(SBItems.MAGIC_ESSENCE.get()))
-                        .withEffect(new CreateItem(SBItems.CREATIONIST_BOOTS.get())));
+                        .withEffect(
+                                EffectHolder.simple(
+                                        new CreateItem(SBItems.CREATIONIST_BOOTS.get()),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        ));
         register(context,
                 CREATE_TRANSFIG_STAVE,
                 TransfigurationRitual.ritual(1, 10, SpellMastery.NOVICE)
@@ -107,7 +219,16 @@ public interface SBRituals {
                         .requires(Ingredient.of(Items.FLOWERING_AZALEA_LEAVES))
                         .requires(Ingredient.of(Items.EMERALD))
                         .requires(Ingredient.of(SBItems.MAGIC_ESSENCE.get()))
-                        .withEffect(new CreateItem(SBItems.CREATIONIST_STAFF.get())));
+                        .withEffect(
+                                EffectHolder.simple(
+                                        new CreateItem(SBItems.CREATIONIST_STAFF.get()),
+                                        Optional.empty(),
+                                        new TickProvider.AtTick(0),
+                                        BuffCategory.NEUTRAL,
+                                        1
+                                )
+                        )
+        );
     }
 
     private static void register(BootstrapContext<TransfigurationRitual> context, ResourceKey<TransfigurationRitual> key, TransfigurationRitual.Builder builder) {

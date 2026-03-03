@@ -3,7 +3,6 @@ package com.ombremoon.spellbound.common.magic.skills;
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.events.custom.PathLevelUpEvent;
 import com.ombremoon.spellbound.common.events.custom.SpellLevelUpEvent;
-import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
@@ -11,7 +10,6 @@ import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.main.ConfigHandler;
-import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.Object2FloatOpenHashMap;
@@ -62,15 +60,15 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
         spellXp.put(spellType, 0F);
     }
 
-    public SpellMastery getMaster(SpellPath path) {
-        SpellMastery[] masteryValues = SpellMastery.values();
+    public SpellMastery getMastery(SpellPath path) {
         int level = getPathLevel(path);
-        int masteryOrdinal = 0;
-        for (int i = 0; i < masteryValues.length; i++) {
-            if (level >= masteryValues[i].getLevelRequirement()) masteryOrdinal = i;
+        SpellMastery currentMastery = SpellMastery.NOVICE;
+        for (SpellMastery mastery : SpellMastery.values()) {
+            if (level >= mastery.getLevelRequirement())
+                currentMastery = mastery;
         }
 
-        return masteryValues[masteryOrdinal];
+        return currentMastery;
     }
 
     public int getPathLevel(SpellPath path) {

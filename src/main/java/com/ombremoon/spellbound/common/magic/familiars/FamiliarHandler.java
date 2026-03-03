@@ -18,7 +18,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.INBTSerializable;
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
@@ -77,7 +76,8 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
         this.spellHandler = spellHandler;
         this.owner = owner;
 
-        for (int i = 0; i <= spellHandler.getSkillHolder().getMaster(SpellPath.SUMMONS).ordinal(); i++) {
+        var skills = spellHandler.getSkillHolder();
+        for (int i = 0; i <= skills.getMastery(SpellPath.SUMMONS).ordinal(); i++) {
             unlockFamiliars(SpellMastery.values()[i]);
         }
 
@@ -386,7 +386,6 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
 
         for (int i = 0; i < rebirthTag.size(); i++) {
             CompoundTag tag = rebirthTag.getCompound(i);
-            System.out.println(SBFamiliars.REGISTRY.get(ResourceLocation.parse(tag.getString("familiar"))).getIdentifier());
             this.familiarRebirths.put(
                     SBFamiliars.REGISTRY.get(ResourceLocation.parse(tag.getString("familiar"))),
                     tag.getInt("rebirths"));

@@ -71,7 +71,7 @@ public interface SBDivineActions {
     ResourceKey<SpellAction> PURIFY_WITHER_ROSE = key("healing_blossom/purify_wither_rose");
     ResourceKey<SpellAction> GROW_AMBROSIA_BUSH = key("healing_blossom/grow_ambrosia_bush");
     ResourceKey<SpellAction> CURE_ZOMBIE_VILLAGER = key("blessing/cure_zombie_villager");
-    ResourceKey<SpellAction> KILL_VILLAGER = key("unidentified/kill_villager");
+    ResourceKey<SpellAction> KILL_VILLAGER = key("siphon/kill_villager");
 
     static void bootstrap(BootstrapContext<SpellAction> context) {
         register(context,
@@ -83,14 +83,14 @@ public interface SBDivineActions {
                 CURE_ZOMBIE_VILLAGER,
                 SpellAction.Builder.action()
                         .addCriterion("cured_zombie", CuredZombieVillagerTrigger.TriggerInstance.curedZombieVillager())
-                        .rewards(ActionRewards.Builder.spell(SBSpells.SOLAR_RAY/*BLESSING*/.get()).addExperience(10)));
+                        .rewards(ActionRewards.Builder.spell(SBSpells.BLESSING.get()).addExperience(10)));
         register(context,
                 KILL_VILLAGER,
                 SpellAction.Builder.action()
                         .addCriterion("kill_villager", PlayerKillEntityTrigger.Instance.playerKilledVillager(
                                 EntityPredicate.Builder.entity(),
                                 MinMaxBounds.Ints.exactly(5)))
-                        .rewards(ActionRewards.Builder.spell(SBSpells.STORM_RIFT/*SIPHON*/.get()).addExperience(20)));
+                        .rewards(ActionRewards.Builder.spell(SBSpells.SIPHON.get()).addExperience(20)));
         register(context,
                 DECORATE_SHRINE,
                 SpellAction.Builder.action()

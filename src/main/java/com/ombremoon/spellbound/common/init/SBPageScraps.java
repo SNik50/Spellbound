@@ -20,6 +20,10 @@ public class SBPageScraps {
     public static final ResourceLocation BLESS_SHRINE_LORE = scrap("bless_shrine", SpellboundToasts.DIVINE);
     public static final ResourceLocation DECORATE_SHRINE = scrap("decorate_shrine", SpellboundToasts.DIVINE);
     public static final ResourceLocation DECORATE_SHRINE_LORE = scrap("decorate_shrine_lore", SpellboundToasts.DIVINE);
+    public static final ResourceLocation CURE_VILLAGER = scrap("cure_villager", SpellboundToasts.DIVINE);
+    public static final ResourceLocation CURE_VILLAGER_LORE = scrap("cure_villager_lore", SpellboundToasts.DIVINE);
+    public static final ResourceLocation KILL_VILLAGER = scrap("kill_villager", SpellboundToasts.DIVINE);
+    public static final ResourceLocation KILL_VILLAGER_LORE = scrap("kill_villager_lore", SpellboundToasts.DIVINE);
     public static final ResourceLocation GROW_AMBROSIA_BUSH = scrap("grow_ambrosia_bush", SpellboundToasts.DIVINE);
     public static final ResourceLocation GROW_AMBROSIA_BUSH_LORE = scrap("grow_ambrosia_bush_lore", SpellboundToasts.DIVINE);
     public static final ResourceLocation PURIFY_WITHER_ROSE = scrap("purify_wither_rose", SpellboundToasts.DIVINE);
