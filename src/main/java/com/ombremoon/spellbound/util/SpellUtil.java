@@ -71,7 +71,9 @@ public class SpellUtil {
     }
 
     public static FamiliarHandler getFamiliarHandler(LivingEntity livingEntity) {
-        return livingEntity.getData(SBData.FAMILIAR_HANDLER);
+        var handler = livingEntity.getData(SBData.FAMILIAR_HANDLER);
+        if (!handler.isInitialised()) handler.init(livingEntity, getSpellHandler(livingEntity));
+        return handler;
     }
 
     public static EffectManager getSpellEffects(LivingEntity livingEntity) {
