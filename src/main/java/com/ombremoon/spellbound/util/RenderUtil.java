@@ -10,6 +10,8 @@ import com.ombremoon.spellbound.client.gui.resonance_stone.ResonanceStoneScreen;
 import com.ombremoon.spellbound.client.gui.toasts.LevelUpToast;
 import com.ombremoon.spellbound.client.gui.toasts.PageScrapUnlockedToast;
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
+import com.ombremoon.spellbound.client.particle.EffectBuilder;
+import com.ombremoon.spellbound.client.particle.FXEmitter;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import net.minecraft.CrashReport;
@@ -213,5 +215,11 @@ public class RenderUtil {
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         poseStack.popPose();
+    }
+
+    public static void displayClientEffect(FXEmitter emitter, Entity entity, EffectBuilder<?> builder) {
+        if (Minecraft.getInstance().player == entity) {
+            emitter.addFX(builder);
+        }
     }
 }

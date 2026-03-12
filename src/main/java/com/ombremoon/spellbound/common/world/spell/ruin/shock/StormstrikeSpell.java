@@ -8,6 +8,8 @@ import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,8 +32,9 @@ public class StormstrikeSpell extends AnimatedSpell {
     @Override
     public void registerSkillTooltips() {
         this.addSkillDetails(SBSkills.STORMSTRIKE,
-                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, 2)),
-                SkillTooltip.DURATION.tooltip(60)
+                SkillTooltip.DAMAGE.tooltip(new SkillTooltip.SpellDamage(DamageTranslation.SHOCK, this.getModifiedDamage())),
+                SkillTooltip.DURATION.tooltip(60),
+                SkillTooltip.PROC_DURATION.tooltip(20)
         );
         this.addSkillDetails(SBSkills.STATIC_SHOCK, SkillTooltip.RADIUS.tooltip(3F));
         this.addSkillDetails(SBSkills.ELECTRIFY,
@@ -41,7 +44,7 @@ public class StormstrikeSpell extends AnimatedSpell {
         this.addSkillDetails(SBSkills.SHOCK_FACTOR, SkillTooltip.MANA_TO_DAMAGE.tooltip(1F));
         this.addSkillDetails(SBSkills.PURGE, SkillTooltip.MANA_TO_DAMAGE.tooltip(10F));
         this.addSkillDetails(SBSkills.REFRACTION,
-                SkillTooltip.MANA.tooltip(5),
+                SkillTooltip.MANA.tooltip(potency(5)),
                 SkillTooltip.POTENCY_SCALING.tooltip()
         );
         this.addSkillDetails(SBSkills.PULSATION,
@@ -51,7 +54,7 @@ public class StormstrikeSpell extends AnimatedSpell {
         );
         this.addSkillDetails(SBSkills.STORM_SHARD, SkillTooltip.COOLDOWN.tooltip(24000));
         this.addSkillDetails(SBSkills.CHARGED_ATMOSPHERE,
-                SkillTooltip.MANA_COST.tooltip(-25F),
+                SkillTooltip.MODIFY_MANA_COST.tooltip(-25F),
                 SkillTooltip.EFFECT_DURATION.tooltip(160)
         );
         this.addSkillDetails(SBSkills.DISARM,
@@ -68,6 +71,7 @@ public class StormstrikeSpell extends AnimatedSpell {
     protected void onSpellStart(SpellContext context) {
         Level level = context.getLevel();
         if (!level.isClientSide) {
+            playCastSound(level, context);
             this.shootProjectile(context, SBEntities.STORMSTRIKE_BOLT.get(), 2.5F, 1.0F);
         }
     }
@@ -75,6 +79,15 @@ public class StormstrikeSpell extends AnimatedSpell {
     @Override
     protected void onSpellStop(SpellContext context) {
 
+    }
+
+    public void playCastSound(Level level, SpellContext context){
+        float volume = 0.2F + level.random.nextFloat() * 0.2F;
+        float pitch = 0.7F + level.random.nextFloat() * 0.3F;
+        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.STORMSTRIKE_USE.get(),
+                SoundSource.PLAYERS, volume, pitch);
+        level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.INTERFERENCE_ZAP.get(),
+                SoundSource.PLAYERS, volume*0.6F, pitch);
     }
 
     @Override

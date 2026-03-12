@@ -1,0 +1,114 @@
+{
+  "elements": [
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "bold": true,
+        "centered": true
+      },
+      "position": {
+        "xOffset": 72,
+        "yOffset": 4
+      },
+      "translation": {
+        "extra": [
+          {
+            "translate": "spells.spellbound.siphon"
+          }
+        ],
+        "translate": "guide.divine.divine_actions"
+      }
+    },
+    {
+      "type": "spellbound:spell_border",
+      "colour": -3510773,
+      "path": "divine",
+      "pathTexture": "spellbound:textures/gui/paths/divine.png"
+    },
+    {
+      "type": "spellbound:text",
+      "extras": {
+        "maxLineLength": 100,
+        "pageScrap": "spellbound:kill_villager"
+      },
+      "position": {
+        "yOffset": 40
+      },
+      "translation": {
+        "translate": "divine_action.siphon.kill_villager"
+      }
+    },
+    {
+      "type": "spellbound:tooltip",
+      "height": 40,
+      "position": {
+        "yOffset": 40
+      },
+      "tooltips": [
+        {
+          "bold": true,
+          "color": "yellow",
+          "translate": "siphon.kill_villager.name",
+          "underlined": true
+        },
+        "",
+        {
+          "extra": [
+            {
+              "color": "dark_green",
+              "text": "+5"
+            }
+          ],
+          "translate": "divine_action.judgement"
+        },
+        {
+          "translate": "divine_action.cooldown",
+          "with": [
+            "24000"
+          ]
+        }
+      ],
+      "width": 155
+    },
+    {
+      "type": "spellbound:item",
+      "extras": {
+        "disableBackground": true,
+        "scale": 2.0
+      },
+      "item": [
+        {
+          "item": "minecraft:iron_axe"
+        }
+      ],
+      "position": {
+        "xOffset": 74,
+        "yOffset": 7
+      }
+    },
+    {
+      "type": "spellbound:text_list",
+      "extras": {
+        "bullet_point": "",
+        "maxRows": 3,
+        "rowGap": 55
+      },
+      "list": [
+        {
+          "component": {
+            "translate": "siphon.kill_villager.lore"
+          },
+          "extraOffset": 0,
+          "scrap": "spellbound:kill_villager_lore",
+          "target_page": "spellbound:default"
+        }
+      ],
+      "position": {
+        "xOffset": 172,
+        "yOffset": 5
+      }
+    }
+  ],
+  "id": "spellbound:sanctified_codex",
+  "insertAfter": "spellbound:siphon"
+}

@@ -9,6 +9,8 @@ import com.ombremoon.spellbound.common.world.entity.SmartSpellEntity;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.world.entity.ai.goal.FollowSummonerGoal;
+import com.ombremoon.spellbound.common.world.entity.ai.goal.HurtSummonerGoal;
+import com.ombremoon.spellbound.common.world.entity.ai.goal.SummonerAttackGoal;
 import com.ombremoon.spellbound.common.world.spell.summon.SummonUndeadSpell;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -34,8 +36,6 @@ import java.util.function.*;
 public abstract class SummonSpell extends AnimatedSpell {
     private static final SpellDataKey<Set<Integer>> SUMMONS = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.INT_SET.get());
     private static final SpellDataKey<BlockPos> SUMMON_POS = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.BLOCK_POS.get());
-    private static final ResourceLocation POST_DAMAGE_EVENT = CommonClass.customLocation("summon_post_damage");
-    private static final ResourceLocation CASTER_ATTACK_EVENT = CommonClass.customLocation("summon_caster_attack");
     private boolean summonedEntity;
     private boolean isSpecialChoice;
     private Skill choice;
@@ -49,7 +49,7 @@ public abstract class SummonSpell extends AnimatedSpell {
                         int summonCount = spell.getSummonSize(context);
                         int maxSummons = spell.getMaxSummons(context);
                         var list = handler.getActiveSpells(spell.spellType(), abstractSpell -> abstractSpell instanceof SummonSpell summonSpell && context.isChoice(summonSpell.choice));
-                        if (!list.isEmpty() && spell.skipEndOnRecast(context)) {
+                        if (!list.isEmpty() && !spell.skipEndOnRecast(context)) {
                             list.forEach(AbstractSpell::endSpell);
                             return false;
                         } else if (summonCount + spell.getCharges() >= maxSummons) {
@@ -85,7 +85,7 @@ public abstract class SummonSpell extends AnimatedSpell {
 
     protected boolean hasSpecialChoice(SummonSpell spell, SpellContext context) {
         var handler = context.getSpellHandler();
-        var list = handler.getActiveSpells(spell.spellType(), abstractSpell -> abstractSpell instanceof SummonSpell summonSpell && context.isChoice(summonSpell.choice));
+        var list = handler.getActiveSpells(spell.spellType(), abstractSpell -> abstractSpell instanceof SummonSpell summonSpell && spell.isChoice(summonSpell.choice));
         return !list.isEmpty();
     }
 
@@ -100,30 +100,6 @@ public abstract class SummonSpell extends AnimatedSpell {
 
     @Override
     protected void onSpellStart(SpellContext context) {
-        var handler = context.getSpellHandler();
-        Level level = context.getLevel();
-        if (!level.isClientSide) {
-            handler.getListener().addListener(SpellEventListener.Events.POST_DAMAGE, POST_DAMAGE_EVENT, post -> {
-                Entity entity = post.getSource().getEntity();
-                var summons = this.getSummons();
-                for (int id : summons) {
-                    Entity summon = level.getEntity(id);
-                    if (summon instanceof LivingEntity livingEntity && entity instanceof LivingEntity attacker) {
-                        SpellUtil.setTarget(livingEntity, attacker);
-                    }
-                }
-            });
-            handler.getListener().addListener(SpellEventListener.Events.ATTACK, CASTER_ATTACK_EVENT, attack -> {
-                Entity entity = attack.getTarget();
-                var summons = this.getSummons();
-                for (int id : summons) {
-                    Entity summon = level.getEntity(id);
-                    if (summon instanceof LivingEntity livingEntity && entity instanceof LivingEntity target && !target.is(livingEntity)) {
-                        SpellUtil.setTarget(livingEntity, target);
-                    }
-                }
-            });
-        }
     }
 
     @Override
@@ -137,6 +113,8 @@ public abstract class SummonSpell extends AnimatedSpell {
     protected void onMobSummoned(LivingEntity entity, SpellContext context) {
         if (entity instanceof PathfinderMob mob) {
             mob.goalSelector.addGoal(1, new FollowSummonerGoal(mob, 1.0, 10.0F, 2.0F));
+            mob.targetSelector.addGoal(1, new HurtSummonerGoal(mob));
+            mob.targetSelector.addGoal(1, new SummonerAttackGoal(mob));
         }
     }
 
@@ -183,9 +161,6 @@ public abstract class SummonSpell extends AnimatedSpell {
                     entity.discard();
                 }
             }
-
-            handler.getListener().removeListener(POST_DAMAGE_EVENT);
-            handler.getListener().removeListener(CASTER_ATTACK_EVENT);
         }
     }
 

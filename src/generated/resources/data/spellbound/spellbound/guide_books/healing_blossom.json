@@ -85,5 +85,5 @@
     }
   ],
   "id": "spellbound:sanctified_codex",
-  "insertAfter": "spellbound:healing_touch_actions"
+  "insertAfter": "spellbound:siphon_actions"
 }

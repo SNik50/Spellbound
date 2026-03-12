@@ -81,7 +81,7 @@
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:shadowbond_page"
+          "target_page": "spellbound:shadowbond"
         },
         {
           "component": {
@@ -89,7 +89,7 @@
           },
           "extraOffset": 0,
           "scrap": "spellbound:default",
-          "target_page": "spellbound:purge_magic_page"
+          "target_page": "spellbound:purge_magic"
         }
       ],
       "position": {

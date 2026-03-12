@@ -27,6 +27,7 @@ public class SBBlocks {
     public static final Supplier<Block> RESONANCE_STONE = registerBlock(
             "resonance_stone", () -> new ResonanceStoneBlock(
                     blockProperties()
+                            .noOcclusion()
             )
     );
 

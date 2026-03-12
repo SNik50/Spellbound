@@ -58,11 +58,13 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> RUIN_BUILD_UP = key("ruin_build_up");
     ResourceKey<GuideBookPage> RUIN_PORTALS = key("ruin_portals");
     ResourceKey<GuideBookPage> RUIN_ARMOR_STAFF = key("ruin_armor_staff");
-    ResourceKey<GuideBookPage> STORM_STRIKE = key("storm_strike_page");
-    ResourceKey<GuideBookPage> ELECTRIC_CHARGE = key("electric_charge_page");
-    ResourceKey<GuideBookPage> SHATTERING_CRYSTAL = key("shattering_crystal_page");
-    ResourceKey<GuideBookPage> SOLAR_RAY = key("solar_ray_page");
-    ResourceKey<GuideBookPage> STORM_RIFT = key("storm_rift_page");
+    ResourceKey<GuideBookPage> FIREBALL = key("fireball");
+    ResourceKey<GuideBookPage> FLAME_JET = key("flame_jet");
+    ResourceKey<GuideBookPage> STORM_STRIKE = key("storm_strike");
+    ResourceKey<GuideBookPage> ELECTRIC_CHARGE = key("electric_charge");
+    ResourceKey<GuideBookPage> SHATTERING_CRYSTAL = key("shattering_crystal");
+    ResourceKey<GuideBookPage> SOLAR_RAY = key("solar_ray");
+    ResourceKey<GuideBookPage> STORM_RIFT = key("storm_rift");
 
     //Transfig Book
     ResourceKey<GuideBookPage> TRANSFIG_COVER_PAGE = key("transfig_cover_page");
@@ -78,8 +80,12 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> TRANSFIG_STAFF_RITUAL = key("transfig_staff_ritual");
 //    ResourceKey<GuideBookPage> FLUX_SHARD = key("flux_shard"); //Flux Shard
     ResourceKey<GuideBookPage> STRIDE = key("stride");
+    ResourceKey<GuideBookPage> DOLPHINS_FIN = key("dolphins_fin");
+    ResourceKey<GuideBookPage> DOLPHINS_FIN_RITUAL = key("dolphins_fin_ritual");
+    ResourceKey<GuideBookPage> COBBLED_HIDE = key("cobbled_hide");
+    ResourceKey<GuideBookPage> COBBLED_HIDE_RITUAL = key("cobbled_hide_ritual");
     ResourceKey<GuideBookPage> STRIDE_RITUAL = key("stride_ritual");
-    ResourceKey<GuideBookPage> SHADOW_GATE = key("shadow_gate_");
+    ResourceKey<GuideBookPage> SHADOW_GATE = key("shadow_gate");
     ResourceKey<GuideBookPage> SHADOW_GATE_RITUAL = key("shadow_gate_page_ritual");
     ResourceKey<GuideBookPage> MYSTIC_ARMOR = key("mystic_armor");
     ResourceKey<GuideBookPage> MYSTIC_ARMOR_RITUAL = key("mystic_armor_ritual");
@@ -93,6 +99,8 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> FAMILIARS = key("familiars");
     ResourceKey<GuideBookPage> SPIRIT_WHISTLE = key("spirit_whistle");
     ResourceKey<GuideBookPage> BOND = key("bond");
+    ResourceKey<GuideBookPage> SUMMON_UNDEAD = key("summon_undead");
+    ResourceKey<GuideBookPage> SUMMON_VILLAGER = key("summon_villager");
     ResourceKey<GuideBookPage> WILD_MUSHROOM = key("wild_mushroom");
     ResourceKey<GuideBookPage> MUSHROOM_ACQ = key("mushroom_page_acq");
 
@@ -108,14 +116,20 @@ public interface SBGuidePages {
 //    ResourceKey<GuideBookPage> DIViNE_SHARDS = key("divine_description"); //Holy & Corrupted Shards
     ResourceKey<GuideBookPage> HEALING_TOUCH = key("healing_touch");
     ResourceKey<GuideBookPage> HEALING_TOUCH_ACTIONS = key("healing_touch_actions");
+    ResourceKey<GuideBookPage> BLESSING = key("blessing");
+    ResourceKey<GuideBookPage> BLESSING_ACTIONS = key("blessing_actions");
+    ResourceKey<GuideBookPage> SIPHON = key("siphon");
+    ResourceKey<GuideBookPage> SIPHON_ACTIONS = key("siphon_actions");
     ResourceKey<GuideBookPage> HEALING_BLOSSOM = key("healing_blossom");
     ResourceKey<GuideBookPage> HEALING_BLOSSOM_ACTIONS = key("healing_blossom_actions");
 
     //Deception Book
     ResourceKey<GuideBookPage> DECEPTION_COVER_PAGE = key("deception_cover_page");
     ResourceKey<GuideBookPage> DECEPTION_DESCRIPTION = key("deception_description");
-    ResourceKey<GuideBookPage> SHADOWBOND = key("shadowbond_page");
-    ResourceKey<GuideBookPage> PURGE_MAGIC = key("purge_magic_page");
+    ResourceKey<GuideBookPage> FLICKER = key("flicker");
+    ResourceKey<GuideBookPage> CURSED_RUNE = key("cursed_rune");
+    ResourceKey<GuideBookPage> SHADOWBOND = key("shadowbond");
+    ResourceKey<GuideBookPage> PURGE_MAGIC = key("purge_magic");
 
     //Basic
     ResourceKey<GuideBookPage> SPELLBOUND_COVER_PAGE = key("basic_cover_page");
@@ -132,26 +146,6 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> SKILLS = key("skills"); //Skills
 
     static void bootstrap(BootstrapContext<GuideBookPage> context) {
-        Ingredient talisman1 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(SBData.TALISMAN_RINGS.get(), 1).build(), SBItems.RITUAL_TALISMAN.get());
-        Ingredient talisman2 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(SBData.TALISMAN_RINGS.get(), 2).build(), SBItems.RITUAL_TALISMAN.get());
-        Ingredient talisman3 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(SBData.TALISMAN_RINGS.get(), 3).build(), SBItems.RITUAL_TALISMAN.get());
-        Ingredient chalk1 = Ingredient.of(SBItems.CHALK.get());
-        Ingredient chalk2 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.LIGHT_GRAY.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-        Ingredient chalk3 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.GRAY.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-        Ingredient chalk4 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.BLACK.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-        Ingredient chalk5 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.BROWN.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-        Ingredient chalk6 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.RED.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-        Ingredient chalk7 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.ORANGE.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-        Ingredient chalk8 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.YELLOW.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-        Ingredient chalk9 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.LIME.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-        Ingredient chalk10 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.GREEN.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-        Ingredient chalk11 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.CYAN.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-        Ingredient chalk12 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.LIGHT_BLUE.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-        Ingredient chalk13 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.BLUE.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-        Ingredient chalk14 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.PURPLE.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-        Ingredient chalk15 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.MAGENTA.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-        Ingredient chalk16 = DataComponentIngredient.of(false, DataComponentPredicate.builder().expect(DataComponents.DYED_COLOR, new DyedItemColor(DyeColor.PINK.getTextureDiffuseColor(), false)).build(), SBItems.CHALK.get());
-
         //Basic
         register(
                 context,
@@ -482,7 +476,9 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.ruin.pyromancer_robes"), PAGE_TWO_START_X-5, 80, 120),
                 new TextEntry(translatable("guide.ruin.cryomancer_robes"), PAGE_TWO_START_X + 40, 140, 120));
 
-        createSpellPage(context, STORM_STRIKE, RUIN_PORTALS, Book.RUIN, SBSpells.STORMSTRIKE);
+        createSpellPage(context, FIREBALL, RUIN_ARMOR_STAFF, Book.RUIN, SBSpells.FIREBALL);
+        createSpellPage(context, FLAME_JET, FIREBALL, Book.RUIN, SBSpells.FLAME_JET);
+        createSpellPage(context, STORM_STRIKE, FLAME_JET, Book.RUIN, SBSpells.STORMSTRIKE);
         createSpellPage(context, ELECTRIC_CHARGE, STORM_STRIKE, Book.RUIN, SBSpells.ELECTRIC_CHARGE);
         createSpellPage(context, SHATTERING_CRYSTAL, ELECTRIC_CHARGE, Book.RUIN, SBSpells.SHATTERING_CRYSTAL);
         createSpellPage(context, SOLAR_RAY, SHATTERING_CRYSTAL, Book.RUIN, SBSpells.SOLAR_RAY);
@@ -610,7 +606,11 @@ public interface SBGuidePages {
         createRitualPage(context, TRANSFIG_STAFF_RITUAL, TRANSFIG_BOOTS_RITUAL, SBRituals.CREATE_TRANSFIG_STAVE, 5, 0, RitualTier.ONE);
         createSpellPage(context, STRIDE, TRANSFIG_STAFF_RITUAL, Book.TRANSFIG, SBSpells.STRIDE);
         createRitualPage(context, STRIDE_RITUAL, STRIDE, SBRituals.CREATE_STRIDE, 5, 0, RitualTier.ONE);
-        createSpellPage(context, SHADOW_GATE, STRIDE_RITUAL, Book.TRANSFIG, SBSpells.SHADOW_GATE);
+        createSpellPage(context, DOLPHINS_FIN, STRIDE_RITUAL, Book.TRANSFIG, SBSpells.DOLPHINS_FIN);
+        createRitualPage(context, DOLPHINS_FIN_RITUAL, DOLPHINS_FIN, SBRituals.CREATE_DOLPHINS_FIN, 5, 0, RitualTier.ONE);
+        createSpellPage(context, COBBLED_HIDE, DOLPHINS_FIN_RITUAL, Book.TRANSFIG, SBSpells.COBBLED_HIDE);
+        createRitualPage(context, COBBLED_HIDE_RITUAL, COBBLED_HIDE, SBRituals.CREATE_COBBLED_HIDE, 5, 0, RitualTier.ONE);
+        createSpellPage(context, SHADOW_GATE, COBBLED_HIDE_RITUAL, Book.TRANSFIG, SBSpells.SHADOW_GATE);
         createRitualPage(context, SHADOW_GATE_RITUAL, SHADOW_GATE, SBRituals.CREATE_SHADOW_GATE, 10, 0, RitualTier.TWO);
         createSpellPage(context, MYSTIC_ARMOR, SHADOW_GATE_RITUAL, Book.TRANSFIG, SBSpells.MYSTIC_ARMOR);
         createRitualPage(context, MYSTIC_ARMOR_RITUAL, MYSTIC_ARMOR, SBRituals.CREATE_MYSTIC_ARMOR, 10, 0, RitualTier.TWO);
@@ -704,7 +704,9 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.summon.affinities1"), PAGE_TWO_START_X, 35),
                 new TextEntry(translatable("guide.summon.affinities2"), PAGE_TWO_START_X, 100)
         );
-        createSpellPage(context, WILD_MUSHROOM, BOND, Book.SUMMONS, SBSpells.WILD_MUSHROOM);
+        createSpellPage(context, SUMMON_UNDEAD, BOND, Book.SUMMONS, SBSpells.SUMMON_UNDEAD);
+        createSpellPage(context, SUMMON_VILLAGER, SUMMON_UNDEAD, Book.SUMMONS, SBSpells.SUMMON_VILLAGER);
+        createSpellPage(context, WILD_MUSHROOM, SUMMON_VILLAGER, Book.SUMMONS, SBSpells.WILD_MUSHROOM);
         createSummonAcqPage(context, SUMMON_BOOK, MUSHROOM_ACQ, WILD_MUSHROOM, SBEntities.GIANT_MUSHROOM.get(), SBSpells.WILD_MUSHROOM.get());
 
         //Divine
@@ -785,7 +787,25 @@ public interface SBGuidePages {
                 new ItemActionEntry(SBDivineActions.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES_LORE, 5, 24000, 0, Ingredient.of(Items.GOLDEN_APPLE)),
                 new ItemActionEntry(SBDivineActions.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE_LORE, 5, 24000, 10, Ingredient.of(SBItems.RITUAL_TALISMAN.get()))
         );
-        createDivineSpellPage(context, HEALING_BLOSSOM, HEALING_TOUCH_ACTIONS, DIVINE_BOOK, SBSpells.HEALING_BLOSSOM, 50);
+        createDivineSpellPage(context, BLESSING, HEALING_TOUCH_ACTIONS, DIVINE_BOOK, SBSpells.BLESSING, 0);
+        createDivineActionPage(
+                context,
+                BLESSING_ACTIONS,
+                BLESSING,
+                SBSpells.BLESSING,
+                false,
+                new ItemActionEntry(SBDivineActions.CURE_ZOMBIE_VILLAGER, SBPageScraps.CURE_VILLAGER, SBPageScraps.CURE_VILLAGER_LORE, 5, 24000, 0, Ingredient.of(Items.ZOMBIE_VILLAGER_SPAWN_EGG))
+        );
+        createDivineSpellPage(context, SIPHON, BLESSING_ACTIONS, DIVINE_BOOK, SBSpells.SIPHON, 0);
+        createDivineActionPage(
+                context,
+                SIPHON_ACTIONS,
+                SIPHON,
+                SBSpells.SIPHON,
+                false,
+                new ItemActionEntry(SBDivineActions.KILL_VILLAGER, SBPageScraps.KILL_VILLAGER, SBPageScraps.KILL_VILLAGER_LORE, 5, 24000, 0, Ingredient.of(Items.IRON_AXE))
+        );
+        createDivineSpellPage(context, HEALING_BLOSSOM, SIPHON_ACTIONS, DIVINE_BOOK, SBSpells.HEALING_BLOSSOM, 50);
         createDivineActionPage(
                 context,
                 HEALING_BLOSSOM_ACTIONS,
@@ -813,7 +833,9 @@ public interface SBGuidePages {
                 new TextEntry(translatable("guide.deception.description2"), 120),
                 new TextEntry(translatable("guide.deception.acquisition1"), PAGE_TWO_START_X, 35),
                 new TextEntry(translatable("guide.deception.acquisition2"), PAGE_TWO_START_X, 90));
-        createSpellPage(context, SHADOWBOND, DECEPTION_DESCRIPTION, Book.DECEPTION, SBSpells.SHADOWBOND);
+        createSpellPage(context, FLICKER, DECEPTION_DESCRIPTION, Book.DECEPTION, SBSpells.FLICKER);
+        createSpellPage(context, CURSED_RUNE, FLICKER, Book.DECEPTION, SBSpells.CURSED_RUNE);
+        createSpellPage(context, SHADOWBOND, CURSED_RUNE, Book.DECEPTION, SBSpells.SHADOWBOND);
         createSpellPage(context, PURGE_MAGIC, SHADOWBOND, Book.DECEPTION, SBSpells.PURGE_MAGIC);
     }
 

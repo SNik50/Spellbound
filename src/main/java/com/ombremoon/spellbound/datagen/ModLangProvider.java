@@ -122,6 +122,7 @@ public class ModLangProvider extends LanguageProvider {
         add("tooltip.spellbound.holdshift", "Hold shift for more information.");
 
         add("spellbound.sb_generic", "Magic Damage");
+        add("spellbound.physical_damage", "Physical Damage");
         add("spellbound.ruin_fire", "Fire Damage");
         add("spellbound.ruin_frost", "Frost Damage");
         add("spellbound.ruin_shock", "Shock Damage");
@@ -129,11 +130,11 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.path.level", "Lvl");
 
         add("command.spellbound.spellunknown", "You don't know the spells %1$s.");
-        add("command.spellbound.spellforgot", "%1$s has been forgotten successfully.");
-        add("command.spellbound.alreadyknown", "%1$s is already known.");
-        add("command.spellbound.singleskilllearnt", "%1$s has been unlocked.");
-        add("command.spellbound.learntskills", "All skills unlocked for %1$s");
-        add("command.spellbound.spelllearnt", "%1%s has been learnt.");
+        add("command.spellbound.spellforgot", "%s has been forgotten successfully.");
+        add("command.spellbound.alreadyknown", "%s is already known.");
+        add("command.spellbound.singleskilllearnt", "%s has been unlocked.");
+        add("command.spellbound.learntskills", "All skills unlocked for %s");
+        add("command.spellbound.spelllearnt", "%s has been learnt.");
         
         add("itemGroup.spellbound", "Spellbound🪄");
         add("spellbound.transfiguration_armor.buff", "+12.5% Transfiguration Spell Duration");
@@ -273,6 +274,14 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.ruin.pyromancer_robes", "Exploring the nether, I spotted these robes hot to the touch. With this kind of heat, I imagine Fire spells won't get through very well.");
         add("guide.ruin.cryomancer_robes", "Finally, some Frost robes to protect me from the cold! They were spread between igloos and abandoned shipwrecks.");
 
+        addSpellContents(SpellPath.RUIN, SBSpells.FIREBALL.get(),
+                "Every Magi should have this classic spell in their arsenal. But to truly unlock its potential, I need to understand how to control the flow of energy.",
+                "This is outstanding! I can now focus my energy to create a ball of fire that will burn through anything in its path and then some.");
+
+        addSpellContents(SpellPath.RUIN, SBSpells.FLAME_JET.get(),
+                "As a magic user, I'm pretty vulnerable at close range. I need a better way to handle enemies that get too close, that way I can protect myself on all fronts.",
+                "If I concentrate all of my energy to a point in front of me, I can release it as a burst of flame. I just know there are plenty of applications for this!");
+
         addSpellContents(SpellPath.RUIN, SBSpells.SOLAR_RAY.get(),
                 "I have purchased this spell tome from a Spell Broker as I have been unable to decipher its origin but I believe its siphoning energy from the sun.",
                 "I was mistaken... This spell isn't channelling energy from the sun, but a Sun God! That's definitely a being I never want to run into again.");
@@ -333,6 +342,12 @@ public class ModLangProvider extends LanguageProvider {
         addTransfigSpellContents(SBSpells.STRIDE.get(),
                 "I have been trying to gather ingredients for all of my alchemy rituals, but it's taking me too long to find everything. I need a faster way...",
                 "Well, I solved my problem with Transfiguration. You won't believe it, but by mixing the right ingredients, I can supercharge my body. Allowing my legs to work even faster!");
+        addTransfigSpellContents(SBSpells.DOLPHINS_FIN.get(),
+                "While I have plenty of means for land travel, I'm still lacking a way to quickly travel bodies of water without the aid of Dolphins...wait a second...",
+                "The solution was staring me right in the face. Instead of utilizing Dolphin's, I can become the Dolphin myself! The vast oceans are now mine to explore!");
+        addTransfigSpellContents(SBSpells.COBBLED_HIDE.get(),
+                "Wearing a bunch of armor slows me down and it seems to also have a negative impact on my spell casting. Maybe I can manipulate my body to be more efficient.",
+                "The things you can do with alchemy are out of this world! I learned to harden my own skin with magic, offering me the protection of armor without the drawbacks.");
         addTransfigSpellContents(SBSpells.SHADOW_GATE.get(),
                 "As my studies have advanced, I am finding myself needing to explore more biomes. I've found that teleportation could be quite useful.",
                 "I think I got it! After experimenting with ender pearls, I found I can use them to rip open gateways temporarily. I have created a spell to keep these open for longer.");
@@ -410,6 +425,16 @@ public class ModLangProvider extends LanguageProvider {
 
         add("summon.acquisition.description", "Use the keystone below to access the boss's dimension.");
         add("summon.acquisition.boss_rewards", "Boss Rewards");
+        add("summon.acquisition.summon_undead.lore", "One zombie may be weak, but a horde of them can be devastating...");
+        addSpellContents(SpellPath.SUMMONS, SBSpells.SUMMON_UNDEAD.get(),
+                "I can't begin to imagine the amount of souls that are just lying around, waiting for their power to be harnessed.",
+                "I took to a dimension scattered with graves and was immediately swarmed by hordes of undead monsters. I've never been more terrified in my life."
+        );
+        add("summon.acquisition.summon_villager.lore", "If I can't find the village, I'll just have to bring the village to me...");
+        addSpellContents(SpellPath.SUMMONS, SBSpells.SUMMON_VILLAGER.get(),
+                "I'm not alone in this world. I've come across villages in my travels, but they are too far and wide to guarantee I can find them.",
+                "I've seen few Iron Golems in my day, but what on Earth did I just witness? I barely got out of there, but the knowledge I gained will be invaluable."
+        );
         add("summon.acquisition.wild_mushroom.lore", "Come to think of it, it's rare to see a single mushroom on its own...");
         addSpellContents(SpellPath.SUMMONS, SBSpells.WILD_MUSHROOM.get(),
                 "Fungi are some of the most resilient living organisms. If I can find a mushroom infested realm, just think of the power it could be hiding.",
@@ -455,6 +480,12 @@ public class ModLangProvider extends LanguageProvider {
         add("healing_touch.heal_mob_to_full.lore", "I'm still rather new to this whole healing magic thing, it might be best to start off small. I wonder if I can catch any animals to practice on?");
         add("healing_touch.use_blessed_bandages.lore", "This world is harsh... ferocious wildlife and undead monsters are running rampant. It will be a serious problem without a way to heal my wounds in a pinch");
         add("healing_touch.bless_shrine.lore", "This shrine I found in the temple seems to resonate with my every action—good or bad. I think as long as I take good care of it, I can become even stronger!");
+        add("blessing.cure_zombie_villager.name", "Plague Doctor");
+        add("divine_action.blessing.cure_zombie_villager", "Cure a Zombie Viilager");
+        add("blessing.cure_zombie_villager.lore", "I was heartbroken when I saw a Villager succumb to the infection. I'll do my best to find a way to cure them.");
+        add("siphon.kill_villager.name", "Murderer");
+        add("divine_action.siphon.kill_villager", "Kill 5 Villagers");
+        add("siphon.kill_villager.lore", "The voices, they are telling me things. These Villagers are just as dangerous as any undead. I must defend myself.");
         add("healing_blossom.decorate_shrine.name", "Gardener");
         add("divine_action.healing_blossom.decorate_shrine", "Decorate a shrine with 18 unique flowers");
         add("healing_blossom.purify_wither_rose.name", "Life From Death");
@@ -468,6 +499,14 @@ public class ModLangProvider extends LanguageProvider {
         addSpellContents(SpellPath.DIVINE, SBSpells.HEALING_TOUCH.get(),
                 "The power of the Divines is one in which harm to living creatures is seen as a sin. Does that mean I can use this power for the opposite?",
                 "It works perfectly. After sustaining an attack, self inflicted or otherwise, I can channel the Divine energy to heal myself.");
+
+        addSpellContents(SpellPath.DIVINE, SBSpells.BLESSING.get(),
+                "When travelling with a group or companion, there's been too many times I've been unable to tend their wounds. I must remedy this immediately.",
+                "I think I covered all my bases. From now painful injuries, starvation, disease, and more, I'll be able to help anyone in need.");
+
+        addSpellContents(SpellPath.DIVINE, SBSpells.SIPHON.get(),
+                "Sin is just another tool used by the Divines. That must mean that too is a power that I can harness myself.",
+                "Not only was I right, but this dark power has proven to be quite useful. I can use it to drain the life force of my enemies.");
 
         addSpellContents(SpellPath.DIVINE, SBSpells.HEALING_BLOSSOM.get(),
                 "The Divines didn't just make sentient creatures, but also plants. I wonder if my borrowed power can be used for flora.",
@@ -483,11 +522,15 @@ public class ModLangProvider extends LanguageProvider {
         add("guide.deception.acquisition1", "How am I to learn this damn path when I can't even begin to find these books. I could ask around, but what if they lie? I must be cautious...");
         add("guide.deception.acquisition2", "FINE! I caved in and bought some spells from a Spell Broker. But you can bet I'm going to try these on someone else first!");
 
+        addSpellContents(SpellPath.DECEPTION, SBSpells.FLICKER.get(),
+                "I don't always have a means to attack or defend myself. Sometimes I just need a way to dodge and get out of the way!",
+                "This short range teleport spell is a bit tricky to get the hang of, especially when going backwards, but it's a good start. ");
+        addSpellContents(SpellPath.DECEPTION, SBSpells.CURSED_RUNE.get(),
+                "If words are power, that must mean I can use that power to my advantage. I'll write down some notes to see which words have the most impact.",
+                "I didn't realize just how many words of power there are. I jotted down a few keywords to try out, but there's got to be a litany of others out there.");
         addSpellContents(SpellPath.DECEPTION, SBSpells.SHADOWBOND.get(),
                 "Someone has requested my help turning them invisible so they can sneak into a jungle temple's vault. If only I could reverse our roles...",
                 "Well that has done the trick! As soon as they passed the traps, I swapped places with them. Let's just hope they don't track me down.");
-
-
         addSpellContents(SpellPath.DECEPTION, SBSpells.PURGE_MAGIC.get(),
                 "I've learned to excel in sneaking, but when I'm caught, I'm finding my self too vulnerable. I need to find a way to turn the tides, and quick.",
                 "This is good progress. This won't hurt anyone, but this should be a super effective a way to dispel my enemies spells in a pinch.");
@@ -500,35 +543,105 @@ public class ModLangProvider extends LanguageProvider {
         add("spellbound.skill_tooltip.duration", "%s Duration");
         add("spellbound.skill_tooltip.radius", "%s Block Radius");
         add("spellbound.skill_tooltip.range", "%s Range");
-        add("spellbound.skill_tooltip.mana_cost", "%s%% Mana Cost");
+        add("spellbound.skill_tooltip.mana_cost", "%s Mana Cost");
         add("spellbound.skill_tooltip.mana_tick_cost", "%s Mana/s");
         add("spellbound.skill_tooltip.mana", "%s Mana");
+        add("spellbound.skill_tooltip.mana_damage", "%s Mana Damage");
+        add("spellbound.skill_tooltip.heal", "%s Health");
+        add("spellbound.skill_tooltip.max_health_heal", "Restore %s%% Health");
+        add("spellbound.skill_tooltip.heal_from_target", "%s%% Health from Target");
+        add("spellbound.skill_tooltip.hunger", "%s Hunger");
+        add("spellbound.skill_tooltip.lifesteal", "%s%% Lifesteal");
+        add("spellbound.skill_tooltip.manasteal", "%s%% Manasteal");
+        add("spellbound.skill_tooltip.mana_absorb", "%s Mana Absorb");
+        add("spellbound.skill_tooltip.mana_drain", "%s Mana Drain");
         add("spellbound.skill_tooltip.potency", "%s%% Potency");
         add("spellbound.skill_tooltip.cooldown", "%s Cooldown");
         add("spellbound.skill_tooltip.effect_duration", "%s Effect Duration");
         add("spellbound.skill_tooltip.proc_chance", "%s%% Proc Chance");
         add("spellbound.skill_tooltip.proc_duration", "%s Proc Duration");
+        add("spellbound.skill_tooltip.proc_range", "%s Proc Range");
         add("spellbound.skill_tooltip.charge_duration", "%s Charge Duration");
         add("spellbound.skill_tooltip.max_charges", "%s Charges");
         add("spellbound.skill_tooltip.modify_damage", "%s%% %s");
         add("spellbound.skill_tooltip.modify_duration", "%s%% Duration");
-        add("spellbound.skill_tooltip.mana_to_damage", "%s%% Mana to Damage");
-        add("spellbound.skill_tooltip.damage_per_charge", "%s%% %s per Charge");
+        add("spellbound.skill_tooltip.modify_mana_cost", "%s%% Mana Cost");
+        add("spellbound.skill_tooltip.modify_radius", "%s%% Radius");
+        add("spellbound.skill_tooltip.modify_range", "%s%% Range");
+        add("spellbound.skill_tooltip.modify_spell_xp", "%s%% Spell XP");
+        add("spellbound.skill_tooltip.health_to_damage", "%s%% Health to Damage");
+        add("spellbound.skill_tooltip.mana_to_health", "%s%% Mana to Health");
+        add("spellbound.skill_tooltip.health_to_mana", "%s%% Health to Mana");
+        add("spellbound.skill_tooltip.percent_damage_per_charge", "%s%% %s per Charge");
+        add("spellbound.skill_tooltip.flat_damage_per_charge", "%s %s per Charge");
         add("spellbound.skill_tooltip.range_per_charge", "%s%% Range per Charge");
+        add("spellbound.skill_tooltip.flat_range_per_charge", "%s Range per Charge");
         add("spellbound.skill_tooltip.radius_per_charge", "%s%% Radius per Charge");
+        add("spellbound.skill_tooltip.flat_radius_per_charge", "%s Radius per Charge");
         add("spellbound.skill_tooltip.knockback_per_charge", "%s%% Knockback per Charge");
+        add("spellbound.skill_tooltip.health_per_charge", "%s Health per Charge");
+        add("spellbound.skill_tooltip.attribute_per_charge", "%s per Charge");
+        add("spellbound.skill_tooltip.max_charge_damage", "%s%% %s at Max Charge");
+        add("spellbound.skill_tooltip.random_damage", "%s-%s %s");
+        add("spellbound.skill_tooltip.random_mana", "%s-%s Mana");
+        add("spellbound.skill_tooltip.max_health_damage", "%s%% Max Health Damage");
+        add("spellbound.skill_tooltip.damage_reflection", "%s%% Damage Reflection");
         add("spellbound.skill_tooltip.ally_range", "%s Ally Buff Range");
+        add("spellbound.skill_tooltip.fire_build_up", "%s Fire Build Up");
+        add("spellbound.skill_tooltip.frost_build_up", "%s Frost Build Up");
+        add("spellbound.skill_tooltip.shock_build_up", "%s Shock Build Up");
+        add("spellbound.skill_tooltip.disease_build_up", "%s Disease Build Up");
+        add("spellbound.skill_tooltip.target_damage", "%s%% Target Damage");
+        add("spellbound.skill_tooltip.target_physical_damage", "%s%% Target Physical Damage");
+        add("spellbound.skill_tooltip.target_spell_damage", "%s%% Target Spell Damage");
+        add("spellbound.skill_tooltip.target_spell_potency", "%s%% Target Spell Potency");
+        add("spellbound.skill_tooltip.target_cast_chance", "%s%% Target Cast Chance");
         add("spellbound.skill_tooltip.target_fire_resist", "%s%% Fire Resist on Target");
         add("spellbound.skill_tooltip.target_ice_resist", "%s%% Ice Resist on Target");
         add("spellbound.skill_tooltip.target_shock_resist", "%s%% Shock Resist on Target");
+        add("spellbound.skill_tooltip.target_disease_resist", "%s%% Disease Resist on Target");
         add("spellbound.skill_tooltip.knockback", "%s Knockback Strength");
         add("spellbound.skill_tooltip.explosion_radius", "%s Explosion Radius");
+        add("spellbound.skill_tooltip.projectile_count", "%s Projectile Count");
+        add("spellbound.skill_tooltip.random_projectile_count", "+%s-%s Projectile Count");
+        add("spellbound.skill_tooltip.projectile_count_per_charge", "%s Projectile Count per Charge");
+        add("spellbound.skill_tooltip.damage_redux", "%s%% Damage Reduction");
+        add("spellbound.skill_tooltip.physical_damage_redux", "%s%% Physical Damage Reduction");
+        add("spellbound.skill_tooltip.spell_damage_redux", "%s%% Spell Damage Reduction");
+        add("spellbound.skill_tooltip.projectile_damage_redux", "%s%% Projectile Damage Reduction");
+        add("spellbound.skill_tooltip.hp_threshold", "%s%% HP Threshold");
+        add("spellbound.skill_tooltip.mob_effect", "Applies ");
+        add("spellbound.skill_tooltip.spell", "Casts ");
         add("spellbound.skill_tooltip.potency_scaling", "Scales with Potency");
         add("spellbound.skill_tooltip.choice", "Choice Upgrade");
-        add("spellbound.skill_tooltip.choice_condition", "If ");
-        add("spellbound.skill_tooltip.dolphins_fin", "%s%% Water Slowdown");
+        add("spellbound.skill_tooltip.requires", "Requires ");
+        add("spellbound.skill_tooltip.cast_scales", "Max Cast Scales with Level");
+        add("spellbound.skill_tooltip.condition", "If ");
+        add("spellbound.skill_tooltip.channeled", "Channeled Cast");
+        add("spellbound.skill_tooltip.charged", "Charged Cast");
         add("spellbound.skill_tooltip.invisibility_no_stack", "Invisibility Does Not Stack");
         add("spellbound.skill_tooltip.invisibility_override", "Overrides Invisibility");
+        add("spellbound.skill_tooltip.dolphins_fin", "%s%% Water Slowdown");
+        add("spellbound.skill_tooltip.burning_adhesive", "%s Damage to Armor");
+        add("spellbound.skill_tooltip.molten_core", "%s%% Damage per Pierce");
+        add("spellbound.skill_tooltip.shatter_skin", "%s%% Armor to Damage");
+        add("spellbound.skill_tooltip.mystic_armor", "%s%% Reduction per Path Level");
+        add("spellbound.skill_tooltip.sublime_beacon", "%s%% Armor to Health");
+        add("spellbound.skill_tooltip.farmer_villager", "Increase Crop Yields");
+        add("spellbound.skill_tooltip.air_bubble", "%s Air Supply");
+        add("spellbound.skill_tooltip.extended_grace", "%s%% Resource Regen");
+
+        addSkillTooltip(SBSkills.FIREBALL, "Launches a ball of fire that explodes on impact");
+        addSkillTooltip(SBSkills.RAPID_FIRE, "Fire a rapid stream of 3 smaller Fireballs.");
+        addSkillTooltip(SBSkills.STICKY_BOMB, "Fireballs stick to surfaces or enemies, detonating after a short duration.");
+        addSkillTooltip(SBSkills.CHARGED_BLAST, "Fireball can be Charged, increasing its size, explosion radius, and damage per charge.");
+        addSkillTooltip(SBSkills.VOLATILE_CLUSTER, "Fireball can be Charged, increasing the number of Fireballs shot per charge.");
+        addSkillTooltip(SBSkills.HOMING_MISSILE, "Fireball follows the caster's target.");
+        addSkillTooltip(SBSkills.EXPLOSIVE_AMPLIFIER, "Increases the explosion radius of all Fireball variants.");
+        addSkillTooltip(SBSkills.BURNING_ADHESIVE, "Enemies struck by Sticky Bomb take additional damage to their armor.");
+        addSkillTooltip(SBSkills.MOLTEN_CORE, "Fully Charged Fireballs from Charged Blast pierce enemies.");
+        addSkillTooltip(SBSkills.CLUSTER_STRIKE, "Increases the max charges of Volatile Cluster");
+        addSkillTooltip(SBSkills.AUTO_TARGETING, "Homing Missile no longer needs a direct target and will track the nearest enemy to the caster.");
 
         addSkillTooltip(SBSkills.FLAME_JET, "Releases a short, concentrated burst of fire in front of the caster.");
         addSkillTooltip(SBSkills.JET_ENGINE, "Propels the caster in the direction they are facing, dealing Fire damage to enemies behind.");
@@ -542,22 +655,34 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.AFTERSHOCK_COMPRESSION, "If Flame Jet is recast within a short duration, its damage is increased.");
         addSkillTooltip(SBSkills.IRON_MAN, "Consume a Smoldering Shard. Flame Jet can be channeled to continuously propel the caster.");
 
-        addSkillTooltip(SBSkills.SOLAR_RAY, "Fire a thin beam of light that deals 5 fire damage per second.");
+        addSkillTooltip(SBSkills.SOLAR_RAY, "Fire a beam of fire that deals continuous damage.");
         addSkillTooltip(SBSkills.SUNSHINE, "Doubles the range of Solar Ray.");
-        addSkillTooltip(SBSkills.HEALING_LIGHT, "Allies hit by the ray are healed for 2 health per second.");
+        addSkillTooltip(SBSkills.HEALING_LIGHT, "Allies hit by the ray are healed.");
         addSkillTooltip(SBSkills.OVERPOWER, "Gain the ability to slowly move while casting Solar Ray.");
-        addSkillTooltip(SBSkills.CONCENTRATED_HEAT, "After 5 seconds of hitting the same target, the damage doubles.");
-        addSkillTooltip(SBSkills.OVERHEAT, "After using Solar Ray for 5 seconds, the caster emits intense heat, dealing 3 fire damage per seconds to nearby enemies.");
-        addSkillTooltip(SBSkills.SOLAR_BURST, "Every 3 seconds, both ends of the beam release a small solar burst that deals an additional 3 fire damage around both areas.");
-        addSkillTooltip(SBSkills.SOLAR_BORE, "The end of the Solar Ray opposite of the caster explodes once per second, setting the ground ablaze.");
-        addSkillTooltip(SBSkills.BLINDING_LIGHT, "Enemies hit by the beam are blinded for 3 seconds.");
-        addSkillTooltip(SBSkills.AFTERGLOW, "Enemies hit are marked with a glow for 5 seconds. While marked, they take 20% extra fire damage.");
-        addSkillTooltip(SBSkills.POWER_OF_THE_SUN, "Solar Ray deals 50% more damage during the day.");
+        addSkillTooltip(SBSkills.CONCENTRATED_HEAT, "Continuously hitting the same target increases the damage of Solar Ray.");
+        addSkillTooltip(SBSkills.OVERHEAT, "Continuous use of Solar Ray causes the caster to emit intense heat, dealing fire damage to nearby enemies.");
+        addSkillTooltip(SBSkills.SOLAR_BURST, "Both ends of the beam periodically release a small Solar Burst that deals additional fire damage.");
+        addSkillTooltip(SBSkills.SOLAR_BORE, "The end of the Solar Ray opposite of the caster periodically explodes, setting the ground ablaze.");
+        addSkillTooltip(SBSkills.BLINDING_LIGHT, "Enemies hit by the beam are blinded.");
+        addSkillTooltip(SBSkills.AFTERGLOW, "Enemies hit are marked with a glow. Marked enemies take extra fire damage.");
+        addSkillTooltip(SBSkills.POWER_OF_THE_SUN, "Solar Ray deals more damage during the day.");
 
         addSkillTooltip(SBSkills.VOLCANO, "Create a volcanic eruption that spits out 8 lava bombs per second for 10 seconds.");
         addSkillTooltip(SBSkills.INFERNO_CORE, "After the eruption ends, the volcano drops a Smoldering Shard.");
         addSkillTooltip(SBSkills.EXPLOSIVE_BARRAGE, "Each lava bomb explodes on impact.");
         addSkillTooltip(SBSkills.LAVA_FLOW, "Lava bombs turn into lava pools on impact.");
+
+        addSkillTooltip(SBSkills.SHATTERING_CRYSTAL, "Creates a crystal of ice. Cast again to detonate it, dealing damage to nearby enemies.");
+        addSkillTooltip(SBSkills.FRIGID_BLAST, "Enemies hit by the blast are significantly slowed.");
+        addSkillTooltip(SBSkills.ICE_SHARD, "Recast on a crystal: destroy it to make it drop a frozen shard.");
+        addSkillTooltip(SBSkills.CHILL, "Crystal passively emits a freezing aura, dealing frost damage every second.");
+        addSkillTooltip(SBSkills.FROZEN_SHRAPNEL, "The crystal now sends out ice shards that deal extra frost damage.");
+        addSkillTooltip(SBSkills.HYPOTHERMIA, "Enemies hit by the explosion have their frost resistance reduced.");
+        addSkillTooltip(SBSkills.CRYSTAL_ECHO, "After detonation, the crystal temporarily reforms in its original location (once per crystal).");
+        addSkillTooltip(SBSkills.THIN_ICE, "Enemies that walk near the crystal will instantly trigger the detonation.");
+        addSkillTooltip(SBSkills.CHAOTIC_SHATTER, "Detonating one crystal will detonate others in the area.");
+        addSkillTooltip(SBSkills.LINGERING_FROST, "After detonation, the crystal leaves a damaging mist behind, dealing frost damage and significant frost build up.");
+        addSkillTooltip(SBSkills.GLACIAL_IMPACT, "Recast with a Frozen Shard to mark a crystal. Marked crystal's explosion applies Frozen and Permafrost to enemies hit.");
 
         addSkillTooltip(SBSkills.STORMSTRIKE, "Send out a bolt of lightning that charges a target");
         addSkillTooltip(SBSkills.STATIC_SHOCK, "Hitting a block now creates a small explosion that applies Stormstrike to anyone it hits.");
@@ -565,35 +690,35 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.SHOCK_FACTOR, "Deals extra damage scaling with the caster's mana.");
         addSkillTooltip(SBSkills.PURGE, "Deals extra damage to summoned targets, scaling with the caster's mana.");
         addSkillTooltip(SBSkills.REFRACTION, "Restores mana back to the caster when the target takes Shock damage from sources other than Stormstrike.");
-        addSkillTooltip(SBSkills.PULSATION, "Chance to paralyze the target for 1 second each damage tick.");
+        addSkillTooltip(SBSkills.PULSATION, "Chance to paralyze the target each damage tick.");
         addSkillTooltip(SBSkills.STORM_SHARD, "If the target dies while affected by Stormstrike, the caster is awarded a Storm Shard.");
         addSkillTooltip(SBSkills.CHARGED_ATMOSPHERE, "Decreases the mana cost of Shock spells for a duration.");
         addSkillTooltip(SBSkills.DISARM, "Chance to disarm the target each damage tick.");
-        addSkillTooltip(SBSkills.SUPERCHARGE, "Increases the potency of Shock spells for a duration if the target dies while affected by Stormstrike.");
+        addSkillTooltip(SBSkills.SUPERCHARGE, "Increases the potency of Shock spells if the target dies while affected by Stormstrike.");
 
         addSkillTooltip(SBSkills.ELECTRIC_CHARGE, "Sneakily apply an electric charge to the target. Recast to discharge.");
         addSkillTooltip(SBSkills.ELECTRIFICATION, "Applies Stormstrike on discharge.");
-        addSkillTooltip(SBSkills.SUPERCONDUCTOR, "Decreases target's shock resistance by 33% for 10 seconds on discharge.");
-        addSkillTooltip(SBSkills.PIEZOELECTRIC, "If killed by Electric Charge, the enemy drops a storm shard. 30 sec. cooldown.");
-        addSkillTooltip(SBSkills.OSCILLATION, "Increases the discharge damage by 5% for each storm shard in the caster's inventory. All shards are destroyed on discharge.");
-        addSkillTooltip(SBSkills.HIGH_VOLTAGE, "Recast with a storm shard to stun the target for 2 seconds. Enemies that come in range of the target are also stunned. 30 sec. cooldown.");
-        addSkillTooltip(SBSkills.UNLEASHED_STORM, "If killed by Electric Charge, the target will explode dealing half the base shock damage.");
-        addSkillTooltip(SBSkills.STORM_SURGE, "If killed by Electric Charge, 10 to 20 mana is restored to the caster.");
+        addSkillTooltip(SBSkills.SUPERCONDUCTOR, "Decreases target's shock resistance on discharge.");
+        addSkillTooltip(SBSkills.PIEZOELECTRIC, "If killed by Electric Charge, the enemy drops a storm shard.");
+        addSkillTooltip(SBSkills.OSCILLATION, "Increases the discharge damage for each storm shard in the caster's inventory. All shards are destroyed on discharge.");
+        addSkillTooltip(SBSkills.HIGH_VOLTAGE, "Recast with a storm shard to instantly stun the target.");
+        addSkillTooltip(SBSkills.UNLEASHED_STORM, "If killed by Electric Charge, the target will explode, damaging nearby enemies.");
+        addSkillTooltip(SBSkills.STORM_SURGE, "If killed by Electric Charge, mana is restored to the caster.");
         addSkillTooltip(SBSkills.CHAIN_REACTION, "The discharge applies Electric Charge to all nearby enemies, including the caster. The secondary charge is discharged immediately.");
-        addSkillTooltip(SBSkills.AMPLIFY, "Electric Charge can be held for 3 seconds to increase the damage up to 100%.");
-        addSkillTooltip(SBSkills.ALTERNATING_CURRENT, "The discharge has a small chance to instantly kill the target. Does not work on target with more than twice the caster's current health. On failure, the caster takes damage equal to 5% of their max health.");
+        addSkillTooltip(SBSkills.AMPLIFY, "Electric Charge can be Channeled seconds to increase the damage");
+        addSkillTooltip(SBSkills.ALTERNATING_CURRENT, "The discharge has a small chance to instantly kill the target. Does not work on target with more than twice the caster's current health. On failure, the caster takes damage proportional to their max health.");
 
-        addSkillTooltip(SBSkills.STORM_RIFT, "Creates a storm portal for 20 seconds. If two portals are active, those approaching either get warped across and take 5 shock damage to health and mana.");
+        addSkillTooltip(SBSkills.STORM_RIFT, "Creates a storm portal. If two portals are active, those approaching either get warped across and take shock damage to health and mana.");
         addSkillTooltip(SBSkills.STORM_FURY, "The vortex doubles in size and damage.");
-        addSkillTooltip(SBSkills.DISPLACEMENT_FIELD, "A single portal can now teleport enemies to a random location within 10 blocks.");
-        addSkillTooltip(SBSkills.MAGNETIC_FIELD, "The vortex has twice the pull strength. Enemies caught in the field have their armor reduced by 25%.");
+        addSkillTooltip(SBSkills.DISPLACEMENT_FIELD, "A single portal can now teleport enemies to a random location.");
+        addSkillTooltip(SBSkills.MAGNETIC_FIELD, "The vortex has twice the pull strength. Enemies caught in the field have their armor reduced.");
         addSkillTooltip(SBSkills.EVENT_HORIZON, "When a target is warped, they pull nearby enemies towards the warp field.");
-        addSkillTooltip(SBSkills.CHARGED_RIFT, "Each warp between portals charges the storm, increasing shock damage 1 up to a max of 5.");
-        addSkillTooltip(SBSkills.MOTION_SICKNESS, "Warped enemies have their movement, attack, and mining speed reduced by 40% for 10 seconds.");
+        addSkillTooltip(SBSkills.CHARGED_RIFT, "Each warp between portals charges the storm, increasing shock damage.");
+        addSkillTooltip(SBSkills.MOTION_SICKNESS, "Warped enemies have their movement, attack, and mining speed reduced.");
         addSkillTooltip(SBSkills.FORCED_WARP, "Upon being warped, targets are launched out of the portal with a high velocity, potentially dealing damage on impact.");
-        addSkillTooltip(SBSkills.STORM_CALLER, "Generate a cloud above both portals that discharge lightning periodically dealing for 5 shock damage.");
+        addSkillTooltip(SBSkills.STORM_CALLER, "Generate a cloud above both portals that discharge lightning periodically dealing shock damage.");
         addSkillTooltip(SBSkills.IMPLOSION, "Recast while targeting a portal with a storm shard to detonate the portal, applying Stormstrike to anyone in the area.");
-        addSkillTooltip(SBSkills.ORBITAL_SHELL, "Recast while targeting a portal with a shard to mark a portal. Marked portals will move in a 3-block radius circle centered around the origin.");
+        addSkillTooltip(SBSkills.ORBITAL_SHELL, "Recast while targeting a portal with a shard to mark a portal. Marked portals will orbit around the origin.");
 
 //        addSkillTooltip(SBSkills.CYCLONE, "Fire a tornado that blows away enemies with a 5-block radius for 10 seconds.");
 //        addSkillTooltip(SBSkills.WHIRLING_TEMPEST, "The tornado now pulls enemies towards the center before launching them.");
@@ -607,16 +732,16 @@ public class ModLangProvider extends LanguageProvider {
 //        addSkillTooltip(SBSkills.STATIC_CHARGE, "Enemies caught take 4 shock damage per second");
 //        addSkillTooltip(SBSkills.HAILSTORM, "Casting Cyclone triggers a hailstorm (requires both Static Charge and Frostfront).");
 
-        addSkillTooltip(SBSkills.STRIDE, "Movement speed is increased by 25% for 30 seconds.");
-        addSkillTooltip(SBSkills.QUICK_SPRINT, "For the first 10 seconds, movement speed is increased by an additional 15%.");
-        addSkillTooltip(SBSkills.GALLOPING_STRIDE, "Speed is increased by another 25%.");
+        addSkillTooltip(SBSkills.STRIDE, "Increases the caster's movement speed");
+        addSkillTooltip(SBSkills.QUICK_SPRINT, "Speed is additionally increased by a short amount at the start of the spell.");
+        addSkillTooltip(SBSkills.GALLOPING_STRIDE, "Base spell speed is increased permanently.");
         addSkillTooltip(SBSkills.RIDERS_RESILIENCE, "All movement benefits are applied to mounts.");
-        addSkillTooltip(SBSkills.FLEETFOOTED, "Nearby allies gain 15% movement speed while near the caster.");
+        addSkillTooltip(SBSkills.FLEETFOOTED, "Nearby allies gain movement speed while near the caster.");
         addSkillTooltip(SBSkills.SUREFOOTED, "Step height is increased.");
         addSkillTooltip(SBSkills.AQUA_TREAD, "Gain the ability to walk on water.");
-        addSkillTooltip(SBSkills.ENDURANCE, "Duration is increased by 30 seconds.");
-        addSkillTooltip(SBSkills.MOMENTUM, "For each second travelled, your attack speed is increased by 4%, up to a max of 20%, for 5 seconds.");
-        addSkillTooltip(SBSkills.STAMPEDE, "You can charge through enemies, knocking them back and dealing 3 damage.");
+        addSkillTooltip(SBSkills.ENDURANCE, "Spell duration is doubled.");
+        addSkillTooltip(SBSkills.MOMENTUM, "For each second travelled, the caster gains additional attack speed.");
+        addSkillTooltip(SBSkills.STAMPEDE, "You can charge through enemies, knocking them back and dealing magic damage.");
         addSkillTooltip(SBSkills.MARATHON, "Food consumption is halted.");
 
         addSkillTooltip(SBSkills.DOLPHINS_FIN, "Increases the caster's swim speed and water movement efficiency. Also reduces the caster's water speed reduction.");
@@ -631,41 +756,89 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.HAMMERHEAD, "Underwater mining speed reduction is negated.");
         addSkillTooltip(SBSkills.OCEAN_DWELLER, "Gain the ability to breathe underwater.");
 
+        addSkillTooltip(SBSkills.COBBLED_HIDE, "Increases the caster's armor.");
+        addSkillTooltip(SBSkills.IRON_HIDE, "Additionally increases the caster's armor and gain projectile damage reduction.");
+        addSkillTooltip(SBSkills.DIAMOND_HIDE, "Additionally increases the caster's armor and gain spell damage reduction.");
+        addSkillTooltip(SBSkills.DRAGON_HIDE, "Additionally increases the caster's armor and gain fire resistance.");
+        addSkillTooltip(SBSkills.GRANITE_GRIP, "Increases the caster's knockback resistance.");
+        addSkillTooltip(SBSkills.BEDROCK_BASTION, "Falling below a certain HP threshold grants the caster temporary invulnerability until the next hit, reducing spell duration.");
+        addSkillTooltip(SBSkills.STONE_WALL, "Increases the spell's duration.");
+        addSkillTooltip(SBSkills.SHATTER_SKIN, "Recast to explode the rocky shell, dealing damage proportional to the armor bonus to nearby enemies.");
+        addSkillTooltip(SBSkills.MASONRY_WARD, "Automatically block a portion of spell damage every few seconds.");
+        addSkillTooltip(SBSkills.BOULDERBACK, "Retaliate a spray of gravel when struck by melee damage, reflecting a portion of the damage back to the attacker.");
+        addSkillTooltip(SBSkills.INFUSED_STONE, "Receiving spell damage increases mana regeneration.");
+
         addSkillTooltip(SBSkills.SHADOW_GATE, "Deploy 2 shadow portals (must be in a low light level), allowing passage in both directions with 50 blocks.");
         addSkillTooltip(SBSkills.REACH, "Double the range of the portals");
-        addSkillTooltip(SBSkills.BLINK, "Passing through the portals increases the caster's movement speed for 25 seconds.");
-        addSkillTooltip(SBSkills.SHADOW_ESCAPE, "When the caster enters the portal below 50% health, they gain invisibility for 10 seconds after exiting.");
+        addSkillTooltip(SBSkills.BLINK, "Passing through the portals increases the caster's movement speed.");
+        addSkillTooltip(SBSkills.SHADOW_ESCAPE, "When the caster enters the portal at low health, they gain invisibility after exiting.");
         addSkillTooltip(SBSkills.OPEN_INVITATION, "Anyone can pass through the portals.");
-        addSkillTooltip(SBSkills.QUICK_RECHARGE, "The caster receives 20 mana any time someone passes through a portal.");
-        addSkillTooltip(SBSkills.UNWANTED_GUESTS, "Enemies that pass through a portal have their attack and spell damage reduced by 10%.");
-        addSkillTooltip(SBSkills.BAIT_AND_SWITCH, "Enemies passing through a portal take 5 damage to health and mana.");
+        addSkillTooltip(SBSkills.QUICK_RECHARGE, "The caster receives mana any time someone passes through a portal.");
+        addSkillTooltip(SBSkills.UNWANTED_GUESTS, "Enemies that pass through a portal have their attack and spell damage reduced.");
+        addSkillTooltip(SBSkills.BAIT_AND_SWITCH, "Enemies passing through a portal take damage to health and mana.");
         addSkillTooltip(SBSkills.DARKNESS_PREVAILS, "Portals can be spawned in any light level.");
         addSkillTooltip(SBSkills.GRAVITY_SHIFT, "Exiting the portal launches entities in the air, applying slow falling to the caster and allies, if applicable.");
         addSkillTooltip(SBSkills.DUAL_DESTINATION, "Can now deploy an additional portal. Order of travel goes by order placed.");
 
-        addSkillTooltip(SBSkills.MYSTIC_ARMOR, "Reduces incoming spell damage by 15% for 60 seconds (+3% per level on the Transfiguration Path, up to 30% max).");
-        addSkillTooltip(SBSkills.FORESIGHT, "Decreases mana cost by 15%.");
-        addSkillTooltip(SBSkills.ARCANE_VENGEANCE, "Increases attack damage by 15% for 10 seconds after you block an attack.");
-        addSkillTooltip(SBSkills.EQUILIBRIUM, "When you get hit, deals damage equal to 10% of your total health back to the attacker.");
-        addSkillTooltip(SBSkills.PLANAR_DEFLECTION, "Deflects 30% of melee damage taken back to the attacker.");
-        addSkillTooltip(SBSkills.PURSUIT, "Movement speed is increased by 15%.");
+        addSkillTooltip(SBSkills.MYSTIC_ARMOR, "Reduces incoming spell damage, scaling with Path level.");
+        addSkillTooltip(SBSkills.FORESIGHT, "Decreases spell's mana cost");
+        addSkillTooltip(SBSkills.ARCANE_VENGEANCE, "Increases attack damage after the caster blocks an attack.");
+        addSkillTooltip(SBSkills.EQUILIBRIUM, "When the caster gets hit, reflect damage scaling with health back to the attacker.");
+        addSkillTooltip(SBSkills.PLANAR_DEFLECTION, "Reflects a portion of melee damage taken back to the attacker.");
+        addSkillTooltip(SBSkills.PURSUIT, "Increases the caster's movement speed.");
         addSkillTooltip(SBSkills.COMBAT_PERCEPTION, "Chance to dodge a melee attack.");
-        addSkillTooltip(SBSkills.CRYSTALLINE_ARMOR, "Increase armor points by 25%.");
-        addSkillTooltip(SBSkills.ELDRITCH_INTERVENTION, "Restores caster's health to 50% if it drops below 20%. 2 min. cooldown.");
-        addSkillTooltip(SBSkills.SUBLIME_BEACON, "Restores health equal to 25% of your armor points every 3 seconds.");
-        addSkillTooltip(SBSkills.SOUL_RECHARGE, "Restores you to full health if your health drops below 10%, consuming a filled soul shard in the caster's inventory. 3 min. cooldown.");
+        addSkillTooltip(SBSkills.CRYSTALLINE_ARMOR, "Increases the caster's armor.");
+        addSkillTooltip(SBSkills.ELDRITCH_INTERVENTION, "Restores caster to half health if below a certain HP threshold.");
+        addSkillTooltip(SBSkills.SUBLIME_BEACON, "Periodically restores health scaling with the caster's armor.");
+        addSkillTooltip(SBSkills.SOUL_RECHARGE, "Restores the caster to full health if below a certain HP threshold, consuming a flux shard in the caster's inventory.");
 
-        addSkillTooltip(SBSkills.WILD_MUSHROOM, "Plants a wild mushroom at the target location, expelling poisonous spores every 3 seconds, dealing 4 damage to all nearby enemies.");
+        addSkillTooltip(SBSkills.SUMMON_UNDEAD, "Summons a Zombie to fight for the caster.");
+        addSkillTooltip(SBSkills.SUMMON_SKELETON, "Summons a Skeleton.");
+        addSkillTooltip(SBSkills.SUMMON_DROWNED, "Summons a Drowned.");
+        addSkillTooltip(SBSkills.SUMMON_ZOMBIFIED_PIGLIN, "Summons a Zombified Piglin.");
+        addSkillTooltip(SBSkills.SUMMON_PHANTOM, "Summons a Phantom.");
+        addSkillTooltip(SBSkills.ROTTEN_SOLDIERS, "Zombies inflict disease build up.");
+        addSkillTooltip(SBSkills.HALL_OF_THE_DEAD, "Upon death, Skeletons fall into a pile of bones. If not hit with Fire Damage, they come back to life.");
+        addSkillTooltip(SBSkills.SUNKEN_BREATH, "Drowned grant caster water breathing.");
+        addSkillTooltip(SBSkills.CRIMSON_PACT, "Zombified Piglin deal bonus damage to any target that recently damaged the caster and negate Fire Damage.");
+        addSkillTooltip(SBSkills.SILENT_NIGHT, "Phantom hits silence targets.");
+        addSkillTooltip(SBSkills.CORPSE_EXPLOSION, "Recast on an undead summon to explode it, dealing magic damage to nearby enemies and healing the caster.");
+
+        addSkillTooltip(SBSkills.SUMMON_VILLAGER, "Summons a Villager without a profession, scaling with charge.");
+        addSkillTooltip(SBSkills.FARMER_VILLAGER, "Summons a Farmer Villager.");
+        addSkillTooltip(SBSkills.LIBRARIAN_VILLAGER, "Summons a Librarian Villager.");
+        addSkillTooltip(SBSkills.TOOLSMITH_VILLAGER, "Summons a Toolsmith Villager.");
+        addSkillTooltip(SBSkills.CARTOGRAPHER_VILLAGER, "Summons a Cartographer Villager.");
+        addSkillTooltip(SBSkills.CLERIC_VILLAGER, "Summons a Cleric Villager.");
+        addSkillTooltip(SBSkills.EXTENDED_SERVICE, "Increases the Villager duration.");
+        addSkillTooltip(SBSkills.WHOLESALE, "Reduces summoned Villager trade costs.");
+        addSkillTooltip(SBSkills.BOUNTIFUL, "Villagers killed by enemies have a chance to drop a random trade.");
+        addSkillTooltip(SBSkills.LOYAL_PROTECTOR, "Spawn an Iron Golem alongside the Villager.");
+        addSkillTooltip(SBSkills.SHOW_ME_THE_ROPES, "Each Villager grants the caster a unique passive.");
+
+        addSkillTooltip(SBSkills.WILD_MUSHROOM, "Plants a wild mushroom at the target location, periodically expelling magic spores, dealing damage to nearby enemies.");
         addSkillTooltip(SBSkills.VILE_INFLUENCE, "Increases the spore radius.");
-        addSkillTooltip(SBSkills.HASTENED_GROWTH, "Decreases the explosion interval by 1 second.");
-        addSkillTooltip(SBSkills.ENVENOM, "Spores now poison targets for 4 seconds.");
-        addSkillTooltip(SBSkills.PARASITIC_FUNGUS, "Enemies hit by a mushroom explosion are taunted for 3 seconds.");
-        addSkillTooltip(SBSkills.NATURES_DOMINANCE, "Each active mushroom increases the spell's damage by 10%.");
+        addSkillTooltip(SBSkills.HASTENED_GROWTH, "Decreases the explosion interval.");
+        addSkillTooltip(SBSkills.ENVENOM, "Spores now poison enemies.");
+        addSkillTooltip(SBSkills.PARASITIC_FUNGUS, "Enemies hit by a mushroom explosion are taunted.");
+        addSkillTooltip(SBSkills.NATURES_DOMINANCE, "Each active mushroom increases the spell's damage.");
         addSkillTooltip(SBSkills.FUNGAL_HARVEST, "When 3 mushrooms are active, gain increased mana regeneration.");
-        addSkillTooltip(SBSkills.POISON_ESSENCE, "If a target dies to a mushroom, the spell deals 25% more damage for 10 seconds.");
-        addSkillTooltip(SBSkills.SYNTHESIS, "If a target dies to a mushroom, the casting cost of the spell is decreased by 100% for 5 seconds.");
-        addSkillTooltip(SBSkills.LIVING_FUNGUS, "Recast on a mushroom to spawn a Mini Mushroom minion for 5 minutes.");
+        addSkillTooltip(SBSkills.POISON_ESSENCE, "If a target dies to a mushroom, the spell temporarily gains potency.");
+        addSkillTooltip(SBSkills.SYNTHESIS, "If a target dies to a mushroom, the casting cost of the spell is temporarily decreased.");
+        addSkillTooltip(SBSkills.LIVING_FUNGUS, "Recast on a mushroom to spawn a Mini Mushroom minion.");
         addSkillTooltip(SBSkills.PROLIFERATION, "Mini Mushroom minions can be bonemealed to spawn a Giant Mushroom.");
+
+/*        addSkillTooltip(SBSkills.WILD_MUSHROOM, "Plants a wild mushroom at the target location, periodically expelling magic spores, dealing damage to nearby enemies.");
+        addSkillTooltip(SBSkills.VILE_INFLUENCE, "Increases the spore radius.");
+        addSkillTooltip(SBSkills.HASTENED_GROWTH, "Decreases the explosion interval.");
+        addSkillTooltip(SBSkills.ENVENOM, "Spores now poison enemies.");
+        addSkillTooltip(SBSkills.PARASITIC_FUNGUS, "Enemies hit by a mushroom explosion are taunted.");
+        addSkillTooltip(SBSkills.NATURES_DOMINANCE, "Each active mushroom increases the spell's damage.");
+        addSkillTooltip(SBSkills.FUNGAL_HARVEST, "When 3 mushrooms are active, gain increased mana regeneration.");
+        addSkillTooltip(SBSkills.POISON_ESSENCE, "If a target dies to a mushroom, the spell temporarily gains potency.");
+        addSkillTooltip(SBSkills.SYNTHESIS, "If a target dies to a mushroom, the casting cost of the spell is temporarily decreased.");
+        addSkillTooltip(SBSkills.LIVING_FUNGUS, "Recast on a mushroom to spawn a Mini Mushroom minion.");
+        addSkillTooltip(SBSkills.PROLIFERATION, "Mini Mushroom minions can be bonemealed to spawn a Giant Mushroom.");*/
 
         addSkillTooltip(SBSkills.SUMMON_CAT_SPIRIT, "Summons a totem spirit for 60 seconds. It changes between warrior form (fighting stance) and cat form (healing stance).");
         addSkillTooltip(SBSkills.CATS_AGILITY, "In cat form, the spirit gains increased movement speed.");
@@ -679,66 +852,101 @@ public class ModLangProvider extends LanguageProvider {
         addSkillTooltip(SBSkills.TWIN_SPIRITS, "The caster gains the ability to summon a second spirit, allowing for two spirits to fight simultaneously - one in warrior form, the other in cat form.");
         addSkillTooltip(SBSkills.NINE_LIVES, "If the spirit is killed, it will instantly revive with 50% health (only once per summoning).");
 
-        addSkillTooltip(SBSkills.HEALING_TOUCH, "Heals the caster 2 health per second for 5 seconds.");
-        addSkillTooltip(SBSkills.BLASPHEMY, "When the caster is hit, applies Disease to the attacker for 3 seconds. 5 sec. cooldown");
-        addSkillTooltip(SBSkills.CONVALESCENCE, "Restores 1 health when the caster attacks a target affected by poison or disease.");
-        addSkillTooltip(SBSkills.DIVINE_BALANCE, "Increases the duration of the spell by 100% and the mana cost by 50%.");
-        addSkillTooltip(SBSkills.NATURES_TOUCH, "Instantly restores 4 health to the caster.");
+        addSkillTooltip(SBSkills.HEALING_TOUCH, "Heals the caster for a short duration.");
+        addSkillTooltip(SBSkills.BLASPHEMY, "Inflicts Disease buildup on the attacker when struck by melee.");
+        addSkillTooltip(SBSkills.CONVALESCENCE, "Grants immunity to Disease.");
+        addSkillTooltip(SBSkills.DIVINE_BALANCE, "Increases the duration and the mana cost.");
+        addSkillTooltip(SBSkills.NATURES_TOUCH, "Instantly restores a small portion of health to the caster.");
         addSkillTooltip(SBSkills.CLEANSING_TOUCH, "Removes a random negative effect from the caster.");
-        addSkillTooltip(SBSkills.ACCELERATED_GROWTH, "Instantly restores 2 hunger to the caster.");
-        addSkillTooltip(SBSkills.HEALING_STREAM, "Each tick restores extra health equal to 2% of the caster's missing mana.");
-        addSkillTooltip(SBSkills.TRANQUILITY_OF_WATER, "Increases mana regeneration by 25%");
-        addSkillTooltip(SBSkills.OVERGROWTH, "While at full health, each heal tick applies a stack of Overgrowth (up to a max of 5 stacks). When hit, Overgrowth restores 4 health, consuming 1 stack.");
-        addSkillTooltip(SBSkills.OAK_BLESSING, "Increases armor by 15% for 10 seconds if the caster's health drops below 30% while Healing Touch is active. 30 sec. cooldown.");
+        addSkillTooltip(SBSkills.ACCELERATED_GROWTH, "Instantly restores a small portion of hunger to the caster.");
+        addSkillTooltip(SBSkills.HEALING_STREAM, "Each tick restores extra health scaling with the caster's missing mana.");
+        addSkillTooltip(SBSkills.TRANQUILITY_OF_WATER, "Increases mana regeneration");
+        addSkillTooltip(SBSkills.OVERGROWTH, "While at full health, each heal tick increases the caster's max health.");
+        addSkillTooltip(SBSkills.OAK_BLESSING, "Temporarily increases armor if the caster's health drops below a certain threshold.");
 
-        addSkillTooltip(SBSkills.HEALING_BLOSSOM, "Plants a divine blossom. The blossom blooms 10 seconds after casting and last 10 seconds. The blossom heals the caster 2 health per seconds when within 5 blocks.");
-        addSkillTooltip(SBSkills.THORNY_VINES, "Enemies within the range of the blossom take 4 damage per second.");
+        addSkillTooltip(SBSkills.BLESSING, "Grants a small regeneration buff to the target.");
+        addSkillTooltip(SBSkills.COURAGE, "Increases the targets armor.");
+        addSkillTooltip(SBSkills.ARCANE_RESTORATION, "Coverts the regeneration to mana.");
+        addSkillTooltip(SBSkills.SATIATING_BLESSING, "Converts the regeneration to hunger.");
+        addSkillTooltip(SBSkills.AIR_BUBBLE, "Converts the regeneration to air supply.");
+        addSkillTooltip(SBSkills.PURIFYING_WARD, "Removes a random negative effect from the target.");
+        addSkillTooltip(SBSkills.EXTENDED_GRACE, "Increases the duration and amplifies the regeneration effect.");
+        addSkillTooltip(SBSkills.SHARED_BOON, "Allows Blessing to target two allies within a small radius if cast near another target.");
+        addSkillTooltip(SBSkills.OVERFLOWING_AID, "Grants damage reduction to the target if the relevant resource is full.");
+        addSkillTooltip(SBSkills.CONSECRATED_PRESENCE, "Allies within a short distance of a blessed target receive half the benefits.");
+        addSkillTooltip(SBSkills.UPLIFTING_CHORUS, "If the target takes a fatal blow, they are revived. The caster takes half their current HP in damage.");
+
+        addSkillTooltip(SBSkills.SIPHON, "Channel on to link to a target. While linked, the caster gains a portion of the target's health.");
+        addSkillTooltip(SBSkills.GRIM_REACH, "Doubles the link range");
+        addSkillTooltip(SBSkills.GLUTTONY, "If the caster is at full health, the spell restores hunger instead.");
+        addSkillTooltip(SBSkills.WITHERING, "The target suffers Slowness II while being siphoned.");
+        addSkillTooltip(SBSkills.SOUL_TAP, "You now drain mana instead of health (mana is not absorbed).");
+        addSkillTooltip(SBSkills.PARASITIC_LINK, "When the target casts a spell, the caster receives a portion of the mana cost.");
+        addSkillTooltip(SBSkills.UNRELENTING, "The link can persist through walls/blocks for a short duration before breaking.");
+        addSkillTooltip(SBSkills.OVERHEAL, "If health and hunger are full, Siphon temporarily increases the caster's max health.");
+        addSkillTooltip(SBSkills.IRON_MAIDEN, "Attacks from the target deal less damage to the caster.");
+        addSkillTooltip(SBSkills.ARCANE_FEEDBACK, "If the target runs out of mana, they are Silenced and take damage instead.");
+        addSkillTooltip(SBSkills.HARVEST, "The caster links to all nearby enemies, draining from them simultaneously.");
+
+        addSkillTooltip(SBSkills.HEALING_BLOSSOM, "Plants a divine blossom. After blooming, the blossom heals the caster when nearby.");
+        addSkillTooltip(SBSkills.THORNY_VINES, "Enemies within the range of the blossom take magic damage.");
         addSkillTooltip(SBSkills.BLOOM, "The blossom now activates immediately after casting.");
-        addSkillTooltip(SBSkills.ETERNAL_SPRING, "The healing duration is increased to 15 seconds.");
+        addSkillTooltip(SBSkills.ETERNAL_SPRING, "The blossom duration is increased.");
         addSkillTooltip(SBSkills.FLOWER_FIELD, "Allies receive half the healing from the blossom.");
-        addSkillTooltip(SBSkills.FLOURISHING_GROWTH, "If the caster's health reaches full, the excess health is converted into 5 points of mana per second.");
+        addSkillTooltip(SBSkills.FLOURISHING_GROWTH, "If the caster's health reaches full, the excess health is converted into mana.");
         addSkillTooltip(SBSkills.HEALING_WINDS, "The blossom now follows the caster.");
-        addSkillTooltip(SBSkills.BURST_OF_LIFE, "Instantly heals the caster 4 health upon activation.");
-        addSkillTooltip(SBSkills.PETAL_SHIELD, "The caster gains 20% damage resistance.");
+        addSkillTooltip(SBSkills.BURST_OF_LIFE, "Instantly heals the caster upon activation.");
+        addSkillTooltip(SBSkills.PETAL_SHIELD, "The caster gains extra armor when near the blossom.");
         addSkillTooltip(SBSkills.VERDANT_RENEWAL, "Cleanses all negative effects from the caster");
-        addSkillTooltip(SBSkills.REBIRTH, "Mark a blossom with a holy shard. If the caster takes fatal damage near the blossom, half of their health is automatically restored.");
+        addSkillTooltip(SBSkills.REBIRTH, "If the caster takes fatal damage near the blossom, half of their health is automatically restored.");
 
-        addSkillTooltip(SBSkills.SHADOWBOND, "Caster and target gain invisibility for 10 seconds. When the invisibility is broken, the caster and target swap places.");
-        addSkillTooltip(SBSkills.EVERLASTING_BOND, "Increases the duration of invisibility to 20 seconds.");
-        addSkillTooltip(SBSkills.SHADOW_STEP, "After the swap, the caster's movement speed is increased by 30% for 5 seconds");
-        addSkillTooltip(SBSkills.SNEAK_ATTACK, "After the swap, the caster's first attack within 5 seconds deals 50% more damage.");
-        addSkillTooltip(SBSkills.SILENT_EXCHANGE, "After the swap, the target is Silenced for 5 seconds.");
+        addSkillTooltip(SBSkills.FLICKER, "Instantly teleports the caster half of their cast range. Can be used directionally.");
+        addSkillTooltip(SBSkills.DISTANT_FLICKER, "Increases the range to the caster's full cast range.");
+        addSkillTooltip(SBSkills.SWIFT_SHADOWS, "Can be cast while walking or sprinting.");
+        addSkillTooltip(SBSkills.STEP_INTO_SHADOW, "The caster gains invisibility after teleporting.");
+        addSkillTooltip(SBSkills.SILENT_STEP, "The caster gives off no sound after teleporting.");
+        addSkillTooltip(SBSkills.CONFUSION, "Creates a Doppelgänger at the cast location.");
+        addSkillTooltip(SBSkills.BLINDING_MIRAGE, "Enemies that damage the decoy are blinded.");
+        addSkillTooltip(SBSkills.PHANTOM_LURE, "Nearby enemies are taunted towards the decoy.");
+        addSkillTooltip(SBSkills.SHADOW_FEINT, "The decoy can move a short distance in a random direction.");
+        addSkillTooltip(SBSkills.LOOK_OVER_HERE, "The caster no longer teleports, but immediately turns invisible, sending a decoy in a chosen direction.");
+        addSkillTooltip(SBSkills.HALL_OF_MIRRORS, "Recast to swap places with the decoy, ending the invisibility.");
+
+        addSkillTooltip(SBSkills.CURSED_RUNE, "Place a rune at the target location. Enemies who step on it take a small amount of magic damage.");
+        addSkillTooltip(SBSkills.MAGE_WRECK, "Drains mana from enemies who step on the rune.");
+        addSkillTooltip(SBSkills.DISARMING_CURSE, "Disarms the target.");
+        addSkillTooltip(SBSkills.MIRROR_CURSE, "Summons a Doppelgänger of the target");
+        addSkillTooltip(SBSkills.CURSE_OF_PAIN, "The target takes extra physical damage.");
+        addSkillTooltip(SBSkills.CURSE_OF_SILENCE, "The target is silenced.");
+        addSkillTooltip(SBSkills.VANISHING_CURSE, "Teleports the target away from the location.");
+        addSkillTooltip(SBSkills.CURSE_OF_WEAKNESS, "Reduces the target's attack damage.");
+        addSkillTooltip(SBSkills.CURSE_OF_SUSCEPTIBILITY, "The target takes extra magic damage.");
+        addSkillTooltip(SBSkills.TANGLEFOOT_CURSE, "The target is rooted.");
+        addSkillTooltip(SBSkills.HIDDEN_RUNE, "The Rune is invisible to everyone but the caster.");
+
+        addSkillTooltip(SBSkills.SHADOWBOND, "Caster and target gain invisibility. When the invisibility is broken, the caster and target swap places.");
+        addSkillTooltip(SBSkills.EVERLASTING_BOND, "Increases the duration of invisibility.");
+        addSkillTooltip(SBSkills.SHADOW_STEP, "After the swap, the caster's movement speed is increased.");
+        addSkillTooltip(SBSkills.SNEAK_ATTACK, "After the swap, the caster's first attack within a short duration deals more damage.");
+        addSkillTooltip(SBSkills.SILENT_EXCHANGE, "After the swap, the target is Silenced.");
         addSkillTooltip(SBSkills.SNARE, "After the swap, the target is rooted.");
-        addSkillTooltip(SBSkills.DISORIENTED, "After the swap, the target gets dizzy and deals 20% less damage for 5 seconds.");
+        addSkillTooltip(SBSkills.DISORIENTED, "After the swap, the target gets dizzy and temporarily deals less damage.");
         addSkillTooltip(SBSkills.OBSERVANT, "The target is outlined to the caster while invisible.");
-        addSkillTooltip(SBSkills.REVERSAL, "After the swap, the caster can recast within 5 seconds to swap back with the target.");
-        addSkillTooltip(SBSkills.LIVING_SHADOW, "After the swap, the caster remains invisible for another 5 seconds and leaves behind a decoy for up to 10 seconds.");
+        addSkillTooltip(SBSkills.REVERSAL, "After the swap, the caster can recast to swap back with the target.");
+        addSkillTooltip(SBSkills.LIVING_SHADOW, "After the swap, the caster remains invisible and leaves behind a decoy.");
         addSkillTooltip(SBSkills.SHADOW_CHAIN, "The spell can now affect an additional target. Swapping order is in the order of targets affected.");
 
         addSkillTooltip(SBSkills.PURGE_MAGIC, "Stops all of the targets active spells.");
         addSkillTooltip(SBSkills.RADIO_WAVES, "Purge Magic is now cast in an AoE.");
-        addSkillTooltip(SBSkills.COUNTER_MAGIC, "(Choice) Gain a magic shield that negates any spell cast on the caster for 10 seconds.");
+        addSkillTooltip(SBSkills.COUNTER_MAGIC, "Gain a magic shield that negates any spell cast on the caster.");
         addSkillTooltip(SBSkills.CLEANSE, "Removes all harmful effects.");
-        addSkillTooltip(SBSkills.AVERSION, "Counter Magic reflects 100% of the spell damage back to the attacker.");
-        addSkillTooltip(SBSkills.DOMINANT_MAGIC, "Silence the target for 10 seconds.");
-        addSkillTooltip(SBSkills.RESIDUAL_DISRUPTION, "Targets hit with Purge Magic have a 50% chance to fail spells cast within the next 5 seconds.");
-        addSkillTooltip(SBSkills.UNFOCUSED, "Reduces the target's spell power by 10% for 20 seconds.");
-        addSkillTooltip(SBSkills.MAGIC_POISONING, "Mana is reduced by 20 points for each active spell purged.");
+        addSkillTooltip(SBSkills.MANA_SPONGE, "Absorbs a portion of the mana cost if attacked by a spell.");
+        addSkillTooltip(SBSkills.DOMINANT_MAGIC, "Silences the target.");
+        addSkillTooltip(SBSkills.RESIDUAL_DISRUPTION, "Targets hit with Purge Magic have reduced cast chance.");
+        addSkillTooltip(SBSkills.UNFOCUSED, "Reduces the target's spell power.");
+        addSkillTooltip(SBSkills.MAGIC_POISONING, "Mana is reduced for each active spell purged.");
         addSkillTooltip(SBSkills.NULLIFICATION, "Removes a random enchantment from the target's equipment");
-        addSkillTooltip(SBSkills.EXPUNGE, "Cast with a fool's shard to remove a spell from the target's knowledge. Can only be used once a day.");
-
-        addSkillTooltip(SBSkills.SHATTERING_CRYSTAL, "Creates a crystal of Ice. Cast again to detonate it, dealing damage to nearby enemies.");
-        addSkillTooltip(SBSkills.FRIGID_BLAST, "Enemies hit by the blast are slower by 50% for 5 seconds.");
-        addSkillTooltip(SBSkills.ICE_SHARD, "Recast on a crystal: destroy it to make it drop a frozen shard. 1 day cooldown.");
-        addSkillTooltip(SBSkills.CHILL, "Crystal passively emits a freezing aura, dealing frost damage every second.");
-        addSkillTooltip(SBSkills.FROZEN_SHRAPNEL, "The crystal now sends out ice shards that deal extra frost damage.");
-        addSkillTooltip(SBSkills.HYPOTHERMIA, "Enemies hit by the explosion have their frost resistance reduced by 10% for 10 seconds.");
-        addSkillTooltip(SBSkills.CRYSTAL_ECHO, "After detonation, the crystal reforms in its original location for 10 seconds (once per crystal).");
-        addSkillTooltip(SBSkills.THIN_ICE, "Enemies that walk near the crystal will instantly trigger the detonation.");
-        addSkillTooltip(SBSkills.CHAOTIC_SHATTER, "Detonating one crystal will detonate others in the area.");
-        addSkillTooltip(SBSkills.LINGERING_FROST, "After detonation, the crystal leaves a damaging mist behind. Enemies caught in the mist for 3 seconds will get frozen.");
-        addSkillTooltip(SBSkills.GLACIAL_IMPACT, "Recast with a frozen shard to mark a crystal. Marked crystal's explosion applies freeze and Permafrost to enemies hit.");
-
+        addSkillTooltip(SBSkills.EXPUNGE, "Removes a spell from the target's knowledge.");
     }
 
     protected void addSkillTooltip(Holder<Skill> skill, String description) {

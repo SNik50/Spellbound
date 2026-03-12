@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.magic;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import com.ombremoon.spellbound.client.MovementData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.PlayerSpellActions;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
@@ -15,6 +16,7 @@ import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.common.magic.tree.UpgradeTree;
 import com.ombremoon.spellbound.main.ConfigHandler;
 import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.main.Keys;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -35,6 +37,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.ClipContext;
@@ -113,7 +116,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      * Syncs spells handler data from the server to the client.
      */
     public void sync() {
-        if (this.caster instanceof Player player && !player.level().isClientSide)
+        if (this.caster instanceof Player player && !this.isClientSide())
             PayloadHandler.syncHandlerToClient(player);
     }
 
@@ -143,8 +146,6 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
         if (!this.isClientSide()) {
             this.getSpellActions();
-            if (this.caster instanceof Player player)
-                PayloadHandler.syncMana(player);
         }
 
         this.initialized = true;
@@ -225,7 +226,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         } else if (currentMana < amount) {
             return false;
         } else {
-            if (forceConsume)
+            if (forceConsume && this.caster.level().getGameRules().getBoolean(Keys.CONSUME_MANA))
                 this.awardMana(-amount);
 
             return true;
@@ -238,8 +239,6 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      */
     public void awardMana(float mana) {
         this.caster.setData(SBData.MANA, Mth.clamp(caster.getData(SBData.MANA) + mana, 0, this.getMaxMana()));
-        if (this.caster instanceof Player player && !player.level().isClientSide)
-            PayloadHandler.syncMana(player);
     }
 
     /**
@@ -267,6 +266,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
                 this.selectedSpell = this.equippedSpellSet.iterator().next();
             }
         }
+        this.setCurrentlyCastingSpell(null);
     }
 
     public Set<SpellType<?>> getEquippedSpells() {
@@ -517,7 +517,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private void removeBuffEffect(SkillBuff<?> skillBuff) {
         skillBuff.removeBuff(this.caster);
 
-        if (this.caster instanceof Player player && !player.level().isClientSide)
+        if (this.caster instanceof Player player && !this.isClientSide())
             PayloadHandler.updateSkillBuff((ServerPlayer) player, skillBuff, 0, true);
 
     }
@@ -591,7 +591,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      */
     public void playAnimation(Player player, SpellAnimation animation, float animationSpeed) {
         this.animationForLayer.put(animation.type().getAnimationLayer(), animation);
-        if (!player.level().isClientSide) {
+        if (!isClientSide()) {
             PayloadHandler.handleAnimation(player, animation, animationSpeed, false);
         }
     }
@@ -601,16 +601,20 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      * The target remains cached for 1/2 second (10 ticks) unless a new target is found.
      */
     private void updateTargetEntity() {
-        Entity newTarget = getTargetEntity(SpellUtil.getCastRange(this.caster));
+        if (this.caster instanceof Player) {
+            Entity newTarget = getTargetEntity(SpellUtil.getCastRange(this.caster));
 
-        if (newTarget != null) {
-            this.cachedTarget = newTarget;
-            //Change to config
-            this.cachedTargetTimer = 10;
-        } else if (this.cachedTargetTimer > 0) {
-            this.cachedTargetTimer--;
-        } else {
-            this.cachedTarget = null;
+            if (newTarget != null) {
+                this.cachedTarget = newTarget;
+                //Change to config
+                this.cachedTargetTimer = 10;
+            } else if (this.cachedTargetTimer > 0) {
+                this.cachedTargetTimer--;
+            } else {
+                this.cachedTarget = null;
+            }
+        } else if (this.caster instanceof Mob mob) {
+            this.cachedTarget = mob.getTarget();
         }
     }
 
@@ -687,7 +691,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
 
     public void stopAnimation(Player player, SpellAnimation animation) {
         this.animationForLayer.remove(animation.type().getAnimationLayer());
-        if (!player.level().isClientSide) {
+        if (!isClientSide()) {
             PayloadHandler.handleAnimation(player, animation, 0.0F, true);
         }
     }
@@ -720,7 +724,9 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     }
 
     public boolean isMoving() {
-        return this.forwardImpulse != 0 || this.leftImpulse != 0;
+//        return this.forwardImpulse != 0 || this.leftImpulse != 0;
+        MovementData movementData = this.caster.getData(SBData.MOVEMENT_DATA.get());
+        return movementData.isMoving();
     }
 
     /**
@@ -754,7 +760,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
      */
     public void setChargingOrChannelling(boolean channelling) {
         this.channelling = channelling;
-        if (this.caster instanceof Player player && !this.caster.level().isClientSide)
+        if (this.caster instanceof Player player && !this.isClientSide())
             PayloadHandler.setChargeOrChannel(player, channelling);
     }
 
@@ -854,7 +860,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         compoundTag.putBoolean("Channeling", this.channelling);
         ListTag spellList = new ListTag();
         ListTag equippedSpellList = new ListTag();
-        ListTag skillBuffList = new ListTag();
+//        ListTag skillBuffList = new ListTag();
         ListTag arenaList = new ListTag();
 
         if (this.selectedSpell != null)
@@ -876,7 +882,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         }
         compoundTag.put("EquippedSpells", equippedSpellList);
 
-        if (!this.skillBuffs.isEmpty()) {
+/*        if (!this.skillBuffs.isEmpty()) {
             for (var entry : this.skillBuffs.entrySet()) {
                 CompoundTag nbt = new CompoundTag();
                 nbt.put("SkillBuff", entry.getKey().save());
@@ -884,7 +890,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
                 skillBuffList.add(nbt);
             }
         }
-        compoundTag.put("SkillBuffs", skillBuffList);
+        compoundTag.put("SkillBuffs", skillBuffList);*/
 
         if (!openArenas.isEmpty()) {
             for (Integer i : this.openArenas) {
@@ -927,7 +933,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
                 set.add(AbstractSpell.getSpellByName(SpellUtil.getSpellId(compoundTag, "Spell")));
             }
             this.equippedSpellSet = set;
-        }
+        }/*
         if (nbt.contains("SkillBuffs", 9)) {
             ListTag skillBuffs = nbt.getList("SkillBuffs", 10);
             for (int i = 0; i < skillBuffs.size(); i++) {
@@ -936,7 +942,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
                 int duration = compoundTag.getInt("Duration");
                 this.skillBuffs.put(skillBuff, duration);
             }
-        }
+        }*/
         if (nbt.contains("OpenArenas", 9)) {
             ListTag arenas = nbt.getList("OpenArenas", 10);
             IntOpenHashSet set = new IntOpenHashSet();
