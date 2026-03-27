@@ -19,6 +19,8 @@ import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.ints.IntIntPair;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -312,6 +314,8 @@ public class ShatteringCrystalSpell extends AnimatedSpell {
             } else {
                 endSpell();
             }
+            level.playSound(null, context.getCaster().blockPosition(), SoundEvents.GLASS_BREAK,
+                    SoundSource.PLAYERS, 0.6F, 0.8F);
         }
 
         this.primed = false;

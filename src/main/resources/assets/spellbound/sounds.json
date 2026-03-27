@@ -47,5 +47,18 @@
     "sounds": [
       "spellbound:interference_zap"
     ]
+  },
+  "shadow_place": {
+    "subtitle": "sounds.spellbound.shadow_place",
+    "sounds": [
+      "spellbound:shadow_place"
+    ]
+  },
+  "res_stone_open": {
+    "subtitle": "sounds.spellbound.res_stone_open",
+    "sounds": [
+      "spellbound:res_stone_open1",
+      "spellbound:res_stone_open2"
+    ]
   }
 }
