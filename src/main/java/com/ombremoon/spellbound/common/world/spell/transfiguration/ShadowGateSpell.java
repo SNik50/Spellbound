@@ -11,6 +11,8 @@ import com.ombremoon.spellbound.common.magic.api.RadialSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.*;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.entity.spell.ShadowGate;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
+import com.ombremoon.spellbound.common.world.spell.deception.CursedRuneSpell;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import com.ombremoon.spellbound.util.portal.PortalMap;
@@ -18,6 +20,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -40,6 +43,8 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
     private static final ResourceLocation SHADOW_ESCAPE = CommonClass.customLocation("shadow_escape");
     private static final ResourceLocation GRAVITY_SHIFT = CommonClass.customLocation("gravity_shift");
     private final PortalMap<ShadowGate> portalMap = new PortalMap<>();
+
+
 
     private static Builder<ShadowGateSpell> createShadowGateBuilder() {
         return createSimpleSpellBuilder(ShadowGateSpell.class)
@@ -117,6 +122,7 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
 
                 this.portalMap.createOrShiftPortal(shadowGate, maxPortals, 20);
             });
+            playCastSound(level, context, CursedRuneSpell.CastSoundType.PLACE);
         }
     }
 
@@ -227,6 +233,27 @@ public class ShadowGateSpell extends AnimatedSpell implements RadialSpell {
                 if (entity instanceof ShadowGate shadowGate)
                     shadowGate.setEndTick(20);
             });
+            playCastSound(level, context, CursedRuneSpell.CastSoundType.DISCHARGE);
+        }
+    }
+
+    public void playCastSound(Level level, SpellContext context, CursedRuneSpell.CastSoundType type){
+       float volume = 0.15F + level.random.nextFloat() * 0.2F;
+       float pitch = 0.5F + level.random.nextFloat() * 0.2F;
+
+        if (type == CursedRuneSpell.CastSoundType.PLACE) {
+            level.playSound(null, context.getBlockPos(),
+                    SpellboundSounds.CURSED_RUNE_ACTIVATED.get(),
+                    SoundSource.PLAYERS, 0.8F * volume , 0.8F * pitch);
+
+            level.playSound(null, context.getBlockPos(),
+                    SpellboundSounds.SHADOW_PLACE.get(),
+                    SoundSource.PLAYERS, volume, pitch);
+
+        } else if(type== CursedRuneSpell.CastSoundType.DISCHARGE){
+            level.playSound(null, context.getBlockPos(),
+                    SpellboundSounds.CURSED_RUNE_ACTIVATED.get(),
+                    SoundSource.PLAYERS, volume, pitch);
         }
     }
 

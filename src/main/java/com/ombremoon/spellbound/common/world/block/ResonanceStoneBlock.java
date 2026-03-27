@@ -2,11 +2,14 @@ package com.ombremoon.spellbound.common.world.block;
 
 import com.ombremoon.spellbound.client.gui.WorkbenchScreen;
 import com.ombremoon.spellbound.client.gui.resonance_stone.ResonanceStoneScreen;
+import com.ombremoon.spellbound.common.magic.SpellContext;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -38,10 +41,14 @@ public class ResonanceStoneBlock extends Block {
 
         if (level.isClientSide()) {
             RenderUtil.openResonanceStone();
+                level.playSound(player, pos , SpellboundSounds.RES_STONE_OPEN.get(), SoundSource.PLAYERS,
+                        0.5F + level.random.nextFloat() * 0.2F, 0.8F + level.random.nextFloat() * 0.2F );
         }
 
         return InteractionResult.CONSUME;
     }
+
+
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {

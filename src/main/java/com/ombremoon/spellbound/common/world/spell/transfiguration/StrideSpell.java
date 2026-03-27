@@ -9,9 +9,11 @@ import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.world.DamageTranslation;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.LivingEntity;
@@ -62,6 +64,8 @@ public class StrideSpell extends AnimatedSpell {
                 if (context.hasSkill(SBSkills.MOMENTUM))
                     this.currentPos = caster.position();
             }
+            level.playSound(null, context.getCaster().blockPosition(), SoundEvents.ARMOR_EQUIP_LEATHER.value(),
+                    SoundSource.PLAYERS, 0.6F, 0.8F);
         }
     }
 
