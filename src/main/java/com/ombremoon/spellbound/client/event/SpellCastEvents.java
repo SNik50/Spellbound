@@ -33,7 +33,7 @@ public class SpellCastEvents {
     private static boolean wasCastKeyPressed = false;
 
     @SubscribeEvent
-    public static void onSpellMode(InputEvent.InteractionKeyMappingTriggered event) {
+     public static void onSpellMode(InputEvent.InteractionKeyMappingTriggered event) {
         if (event.isCanceled()) return;
 
         Player player = Minecraft.getInstance().player;
@@ -75,8 +75,10 @@ public class SpellCastEvents {
             }
 
             if (!handler.inCastMode()) {
-                spell.resetCast(handler, spell.getCastContext());
-                return;
+                    if (handler.castTick > 0 && handler.getCurrentlyCastSpell() != null) {
+                        spell.resetCast(handler, spell.getCastContext());
+                    }
+                    return;
             }
 
             boolean isCastKeyPressed = KeyBinds.getSpellCastMapping().isDown();
