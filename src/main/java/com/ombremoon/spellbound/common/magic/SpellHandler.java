@@ -66,10 +66,8 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     public LivingEntity caster;
     private Level level;
     private SkillHolder skillHolder;
-    private FamiliarHandler familiarHandler;
     private EffectManager effectManager;
     private UpgradeTree upgradeTree;
-    private FamiliarHandler familiars;
     private PlayerSpellActions divineActions;
     protected boolean castMode;
     private Set<SpellType<?>> spellSet = new ObjectOpenHashSet<>();
@@ -140,11 +138,8 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         this.listener = new SpellEventListener(caster);
         this.skillHolder = SpellUtil.getSkills(this.caster);
         this.skillHolder.init(caster);
-        this.familiarHandler = SpellUtil.getFamiliarHandler(this.caster);
-        this.familiarHandler.init(caster, this);
         this.effectManager = SpellUtil.getSpellEffects(this.caster);
         this.effectManager.init(caster);
-        this.familiars = SpellUtil.getFamiliarHandler(caster);
         this.upgradeTree = this.caster.getData(SBData.UPGRADE_TREE);
         this.glowEntities.clear();
         this.skillBuffs.forEach((skillBuff, integer) -> this.removeSkillBuff(skillBuff));

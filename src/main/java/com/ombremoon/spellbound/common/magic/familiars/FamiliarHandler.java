@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.magic.familiars;
 
+import com.mojang.logging.LogUtils;
 import com.ombremoon.spellbound.common.init.SBFamiliars;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
@@ -16,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.jetbrains.annotations.Nullable;
@@ -35,13 +37,13 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
     private SpellHandler spellHandler;
     private Level level;
     private LivingEntity owner;
-    private Set<FamiliarHolder<?, ?>> ownedFamiliars = new HashSet<>();
-    private Map<FamiliarHolder<?, ?>, Integer> familiarRebirths = new HashMap<>();
-    private Map<FamiliarHolder<?, ?>, Float> familiarBond = new HashMap<>();
+    private final Set<FamiliarHolder<?, ?>> ownedFamiliars = new HashSet<>();
+    private final Map<FamiliarHolder<?, ?>, Integer> familiarRebirths = new HashMap<>();
+    private final Map<FamiliarHolder<?, ?>, Float> familiarBond = new HashMap<>();
     private FamiliarHolder<?, ?> selectedFamiliar = null;
     private LivingEntity summonedEntity = null;
     private Familiar<?> summonedFamiliar = null;
-    private Map<FamiliarAffinity, Integer> skillCooldowns = new HashMap<>();
+    private final Map<FamiliarAffinity, Integer> skillCooldowns = new HashMap<>();
     private int familiarHpPercent = 1;
 
     public LivingEntity getOwner() {
@@ -81,6 +83,10 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
             unlockFamiliars(SpellMastery.values()[i]);
         }
 
+        if (owner instanceof ServerPlayer player) {
+            PayloadHandler.syncFamiliarHandler(player);
+        }
+
         this.isInitialised = true;
     }
 
@@ -107,7 +113,7 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
      * @return true if the familiar was unlocked and selected, false otherwise
      */
     public boolean selectFamiliar(FamiliarHolder<?, ?> holder) {
-        if (!this.familiarBond.containsKey(holder)) return false;
+        if (!this.ownedFamiliars.contains(holder)) return false;
 
         if (this.summonedEntity != null) {
             BlockPos pos = this.summonedEntity.blockPosition();
@@ -204,6 +210,8 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
 
         if (this.summonedFamiliar != null)
             this.summonedFamiliar.tick(this, this.summonedEntity.tickCount);
+
+
     }
 
     /**
@@ -352,6 +360,10 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
             entryTag.putString("familiar", entry.getKey().getIdentifier().toString());
             entryTag.putInt("rebirths", entry.getValue());
             rebirths.add(entryTag);
+
+            if (this.owner instanceof Player) {
+                LogUtils.getLogger().debug(String.valueOf(entryTag.getInt("rebirths")));
+            }
         }
 
         for (var entry : familiarBond.entrySet()) {
@@ -396,6 +408,7 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
             this.familiarBond.put(
                     SBFamiliars.REGISTRY.get(ResourceLocation.parse(tag.getString("familiar"))),
                     tag.getFloat("bond"));
+
         }
 
         for (int i =0; i < familiars.size(); i++) {
@@ -408,6 +421,6 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
         this.selectedFamiliar = familiarId.isEmpty() ? null : SBFamiliars.REGISTRY.get(ResourceLocation.parse(familiarId));
 
         int entityId = compoundTag.getInt("entity");
-        if (entityId != 0) loadFamiliar(entityId);
+        if (entityId != 0 && this.isInitialised()) loadFamiliar(entityId);
     }
 }
