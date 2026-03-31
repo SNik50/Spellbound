@@ -608,6 +608,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         handler.setChargingOrChannelling(false);
         PayloadHandler.castReset(this.spellType(), this.isRecast);
         this.onCastReset(context);
+        System.out.println("Reset cast called");
     }
 
     /**
