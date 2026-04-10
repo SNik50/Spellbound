@@ -197,7 +197,7 @@ public class BlessingSpell extends AnimatedSpell {
     }
 
     public void playCastSound(Level level, SpellContext context) {
-        float volume = 0.1F + level.random.nextFloat() * 0.1F;
+        float volume = 0.05F + level.random.nextFloat() * 0.1F;
         float pitch = 0.8F + level.random.nextFloat() * 0.1F;
         level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.BLESSING.get(),
                 SoundSource.PLAYERS, volume, pitch);

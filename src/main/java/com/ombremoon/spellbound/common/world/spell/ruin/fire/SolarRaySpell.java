@@ -179,6 +179,7 @@ public class SolarRaySpell extends ChanneledSpell {
                 this.setSolarRay(solarRay.getId());
                 solarRay.setPos(caster.position());
             });
+            playCastSound(context.getLevel(), context);
         }
     }
 
@@ -224,13 +225,12 @@ public class SolarRaySpell extends ChanneledSpell {
                         new ModifierData(Attributes.JUMP_STRENGTH, new AttributeModifier(OVERPOWER_JUMP, -1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))
                 );
             }
-            playCastSound(context.getLevel(), context);
         }
     }
 
     public void playCastSound(Level level, SpellContext context) {
-        float volume = 0.4F + level.random.nextFloat() * 0.3F;
-        float pitch = 1.0F + level.random.nextFloat() * 0.2F;
+        float volume = 0.2F + level.random.nextFloat() * 0.3F;
+        float pitch = 0.8F + level.random.nextFloat() * 0.2F;
         level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.SOLAR_RAY.get(),
                 SoundSource.PLAYERS, volume, pitch);
     }

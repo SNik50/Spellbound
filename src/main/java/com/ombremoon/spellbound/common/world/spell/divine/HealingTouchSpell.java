@@ -146,13 +146,14 @@ public class HealingTouchSpell extends AnimatedSpell {
             }
             playCastSound(context.getLevel(), context);
         }
+
     }
 
     public void playCastSound(Level level, SpellContext context) {
         float volume = 0.2F + level.random.nextFloat() * 0.2F;
         float pitch = 0.8F + level.random.nextFloat() * 0.2F;
         level.playSound(null, context.getCaster().blockPosition(), SpellboundSounds.MAGIC_SPARKLES.get(),
-                SoundSource.PLAYERS, volume*0.3F, pitch);
+                SoundSource.PLAYERS, volume*0.15F, 0.2F*pitch);
         level.playSound(null, context.getCaster().blockPosition(), SoundEvents.ENCHANTMENT_TABLE_USE,
                 SoundSource.PLAYERS, volume, pitch);
 
