@@ -34,6 +34,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel(SBItems.SMOLDERING_SHARD);
         simpleGeneratedModel(SBItems.STORM_SHARD);
         simpleGeneratedModel(SBItems.HOLY_SHARD);
+        simpleGeneratedModel(SBItems.FLUX_SHARD);
+        simpleGeneratedModel(SBItems.CORRUPTED_SHARD);
 
         simpleGeneratedModel(SBBlocks.MAGI_WORKBENCH);
         simpleGeneratedModel(SBBlocks.RESONANCE_STONE);
