@@ -25,6 +25,7 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         SBItems.SIMPLE_ITEM_LIST.stream().map(Supplier::get).forEach(this::tempItem);
+
 //        tempItem(SBItems.DEBUG.get());
         simpleGeneratedModel(SBBlocks.ARCANTHUS.get().asItem());
 

@@ -10,18 +10,21 @@ import com.ombremoon.spellbound.common.world.entity.spell.Fireball;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.List;
-
 public abstract class EffectBuilder<T extends FXEffectExecutor> {
+    public static final StreamCodec<RegistryFriendlyByteBuf, EffectBuilder<?>> STREAM_CODEC = EffectType.STREAM_CODEC.dispatch(EffectBuilder::type, EffectType::streamCodec);
     protected final ResourceLocation location;
-
+/*What can I do to avoid the class loading deadlock warned on line 21 of EffectType*/
     public EffectBuilder(ResourceLocation location) {
         this.location = location;
     }
+
+    public abstract EffectType<?> type();
 
     public abstract T build();
 
@@ -32,6 +35,7 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
     }
 
     public static class Block extends EffectBuilder<BlockEffectExecutor> {
+        public static final ResourceLocation LOCATION = CommonClass.customLocation("block");
         private final BlockPos blockPos;
         private Vec3 offset = Vec3.ZERO;
         private Vec3 rotation = Vec3.ZERO;
@@ -44,6 +48,11 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
         Block(ResourceLocation location, BlockPos blockPos) {
             super(location);
             this.blockPos = blockPos;
+        }
+
+        @Override
+        public EffectType<?> type() {
+            return null;
         }
 
         @Override
@@ -111,6 +120,7 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
     }
 
     public static class Entity extends EffectBuilder<EntityEffectExecutor> {
+        public static final ResourceLocation LOCATION = CommonClass.customLocation("entity");
         private final int entityId;
         private final EntityEffectExecutor.AutoRotate rotate;
         private Vec3 offset = Vec3.ZERO;
@@ -161,6 +171,11 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
         }
 
         @Override
+        public ResourceLocation location() {
+            return LOCATION;
+        }
+
+        @Override
         public EntityEffectExecutor build() {
             Level level = Minecraft.getInstance().level;
             if (level != null) {
@@ -188,6 +203,7 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
     }
 
     public static class StaticEntity extends EffectBuilder<StaticEntityEffect> {
+        public static final ResourceLocation LOCATION = CommonClass.customLocation("static_entity");
         private final int entityId;
         private final EntityEffectExecutor.AutoRotate rotate;
         private Vec3 effectPos = Vec3.ZERO;
@@ -249,6 +265,11 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
         }
 
         @Override
+        public ResourceLocation location() {
+            return LOCATION;
+        }
+
+        @Override
         public StaticEntityEffect build() {
             Level level = Minecraft.getInstance().level;
             if (level != null) {
@@ -277,6 +298,7 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
     }
 
     public static class FireballBuilder extends EffectBuilder<FireballEffect> {
+        public static final ResourceLocation LOCATION = CommonClass.customLocation("fireball");
         private final int entityId;
 
         FireballBuilder(ResourceLocation location, int entityId) {
@@ -285,7 +307,12 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
         }
 
         public static FireballBuilder of(int entityId) {
-            return new FireballBuilder(CommonClass.customLocation("fireball"), entityId);
+            return new FireballBuilder(LOCATION, entityId);
+        }
+
+        @Override
+        public ResourceLocation location() {
+            return LOCATION;
         }
 
         @Override

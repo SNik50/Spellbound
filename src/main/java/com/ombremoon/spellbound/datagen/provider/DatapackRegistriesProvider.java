@@ -22,7 +22,8 @@ public class DatapackRegistriesProvider extends DatapackBuiltinEntriesProvider {
             .add(Registries.PLACED_FEATURE, SBPlacedFeatures::bootstrap)
             .add(Registries.CONFIGURED_FEATURE, SBConfiguredFeatures::bootstrap)
             .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, SBBiomeModifiers::bootstrap)
-            .add(Registries.DAMAGE_TYPE, SBDamageTypes::bootstrap);
+            .add(Registries.DAMAGE_TYPE, SBDamageTypes::bootstrap)
+            .add(Registries.PAINTING_VARIANT, SBPaintingVariants::bootstrap);
 
     public DatapackRegistriesProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, BUILDER, Set.of(Constants.MOD_ID));

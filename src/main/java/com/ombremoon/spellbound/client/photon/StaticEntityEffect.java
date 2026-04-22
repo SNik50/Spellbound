@@ -101,7 +101,4 @@ public class StaticEntityEffect extends EntityEffectExecutor {
         this.runtime.emmit(this, delay);
         effects.add(this);
     }
-
-    public static class Vec3EffectExecutor {
-    }
 }
