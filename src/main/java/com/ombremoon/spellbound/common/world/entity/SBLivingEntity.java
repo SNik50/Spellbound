@@ -1,9 +1,8 @@
 package com.ombremoon.spellbound.common.world.entity;
 
-import com.ombremoon.spellbound.client.particle.EffectCache;
-import com.ombremoon.spellbound.client.particle.FXEmitter;
+import com.ombremoon.spellbound.client.photon.EffectCache;
+import com.ombremoon.spellbound.client.photon.FXEmitter;
 import com.ombremoon.spellbound.common.init.SBAttributes;
-import com.ombremoon.spellbound.common.init.SBDamageTypes;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBMemoryTypes;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
@@ -14,7 +13,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;

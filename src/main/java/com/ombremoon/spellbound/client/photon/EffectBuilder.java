@@ -1,30 +1,23 @@
-package com.ombremoon.spellbound.client.particle;
+package com.ombremoon.spellbound.client.photon;
 
 import com.lowdragmc.photon.client.fx.BlockEffectExecutor;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXHelper;
-import com.ombremoon.spellbound.client.photon.FireballEffect;
-import com.ombremoon.spellbound.client.photon.StaticEntityEffect;
 import com.ombremoon.spellbound.common.world.entity.spell.Fireball;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class EffectBuilder<T extends FXEffectExecutor> {
-    public static final StreamCodec<RegistryFriendlyByteBuf, EffectBuilder<?>> STREAM_CODEC = EffectType.STREAM_CODEC.dispatch(EffectBuilder::type, EffectType::streamCodec);
     protected final ResourceLocation location;
-/*What can I do to avoid the class loading deadlock warned on line 21 of EffectType*/
+
     public EffectBuilder(ResourceLocation location) {
         this.location = location;
     }
-
-    public abstract EffectType<?> type();
 
     public abstract T build();
 
@@ -35,48 +28,18 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
     }
 
     public static class Block extends EffectBuilder<BlockEffectExecutor> {
-        public static final ResourceLocation LOCATION = CommonClass.customLocation("block");
-        private final BlockPos blockPos;
-        private Vec3 offset = Vec3.ZERO;
-        private Vec3 rotation = Vec3.ZERO;
-        private Vec3 scale = new Vec3(1, 1, 1);
-        private int delay;
-        private boolean forcedDeath;
-        private boolean allowMulti;
-        private boolean checkState;
+        public final BlockPos blockPos;
+        public Vec3 offset = Vec3.ZERO;
+        public Vec3 rotation = Vec3.ZERO;
+        public Vec3 scale = new Vec3(1, 1, 1);
+        public int delay;
+        public boolean forcedDeath;
+        public boolean allowMulti;
+        public boolean checkState;
 
         Block(ResourceLocation location, BlockPos blockPos) {
             super(location);
             this.blockPos = blockPos;
-        }
-
-        @Override
-        public EffectType<?> type() {
-            return null;
-        }
-
-        @Override
-        public BlockEffectExecutor build() {
-            Level level = Minecraft.getInstance().level;
-            if (level != null && level.isLoaded(this.blockPos)) {
-                var fx = FXHelper.getFX(this.location);
-                if (fx != null) {
-                    var effect = new BlockEffectExecutor(fx, level, blockPos);
-                    var offset = this.offset;
-                    var rotation = this.rotation;
-                    var scale = this.scale;
-                    effect.setOffset(offset.x, offset.y, offset.z);
-                    effect.setRotation(rotation.x, rotation.y, rotation.z);
-                    effect.setScale(scale.x, scale.y, scale.z);
-                    effect.setDelay(this.delay);
-                    effect.setForcedDeath(this.forcedDeath);
-                    effect.setAllowMulti(this.allowMulti);
-                    effect.setCheckState(this.checkState);
-                    return effect;
-                }
-            }
-
-            return null;
         }
 
         public static Block of(ResourceLocation effect, BlockPos blockPos) {
@@ -117,10 +80,33 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
             this.checkState = checkState;
             return this;
         }
+
+        @Override
+        public BlockEffectExecutor build() {
+            Level level = Minecraft.getInstance().level;
+            if (level != null && level.isLoaded(this.blockPos)) {
+                var fx = FXHelper.getFX(this.location);
+                if (fx != null) {
+                    var effect = new BlockEffectExecutor(fx, level, blockPos);
+                    var offset = this.offset;
+                    var rotation = this.rotation;
+                    var scale = this.scale;
+                    effect.setOffset(offset.x, offset.y, offset.z);
+                    effect.setRotation(rotation.x, rotation.y, rotation.z);
+                    effect.setScale(scale.x, scale.y, scale.z);
+                    effect.setDelay(this.delay);
+                    effect.setForcedDeath(this.forcedDeath);
+                    effect.setAllowMulti(this.allowMulti);
+                    effect.setCheckState(this.checkState);
+                    return effect;
+                }
+            }
+
+            return null;
+        }
     }
 
     public static class Entity extends EffectBuilder<EntityEffectExecutor> {
-        public static final ResourceLocation LOCATION = CommonClass.customLocation("entity");
         private final int entityId;
         private final EntityEffectExecutor.AutoRotate rotate;
         private Vec3 offset = Vec3.ZERO;
@@ -171,11 +157,6 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
         }
 
         @Override
-        public ResourceLocation location() {
-            return LOCATION;
-        }
-
-        @Override
         public EntityEffectExecutor build() {
             Level level = Minecraft.getInstance().level;
             if (level != null) {
@@ -203,7 +184,6 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
     }
 
     public static class StaticEntity extends EffectBuilder<StaticEntityEffect> {
-        public static final ResourceLocation LOCATION = CommonClass.customLocation("static_entity");
         private final int entityId;
         private final EntityEffectExecutor.AutoRotate rotate;
         private Vec3 effectPos = Vec3.ZERO;
@@ -265,11 +245,6 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
         }
 
         @Override
-        public ResourceLocation location() {
-            return LOCATION;
-        }
-
-        @Override
         public StaticEntityEffect build() {
             Level level = Minecraft.getInstance().level;
             if (level != null) {
@@ -308,11 +283,6 @@ public abstract class EffectBuilder<T extends FXEffectExecutor> {
 
         public static FireballBuilder of(int entityId) {
             return new FireballBuilder(LOCATION, entityId);
-        }
-
-        @Override
-        public ResourceLocation location() {
-            return LOCATION;
         }
 
         @Override

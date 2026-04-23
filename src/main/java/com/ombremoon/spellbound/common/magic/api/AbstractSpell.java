@@ -6,8 +6,9 @@ import com.mojang.serialization.Codec;
 import com.ombremoon.spellbound.client.CameraEngine;
 import com.ombremoon.spellbound.client.KeyBinds;
 import com.ombremoon.spellbound.client.gui.SkillTooltipProvider;
-import com.ombremoon.spellbound.client.particle.EffectCache;
-import com.ombremoon.spellbound.client.particle.FXEmitter;
+import com.ombremoon.spellbound.client.photon.EffectCache;
+import com.ombremoon.spellbound.client.photon.FXEmitter;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.client.renderer.layer.GenericSpellLayer;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerModel;
 import com.ombremoon.spellbound.client.renderer.layer.SpellLayerRenderer;
@@ -1483,6 +1484,12 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         return entity.getBoundingBox().inflate(range);
     }
 
+    protected void triggerSpellFX(EffectData builder) {
+        if (!this.level.isClientSide) {
+            PayloadHandler.triggerFx(this.caster, this, builder);
+        }
+    }
+
     protected void createSurroundingParticles(Entity entity, ParticleOptions particle, double scale) {
         double d0 = entity.getRandom().nextGaussian() * 0.02;
         double d1 = entity.getRandom().nextGaussian() * 0.02;
@@ -1935,3 +1942,5 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         INSTANT, CHANNEL
     }
 }
+
+

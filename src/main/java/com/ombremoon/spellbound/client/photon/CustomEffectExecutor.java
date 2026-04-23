@@ -1,4 +1,4 @@
-package com.ombremoon.spellbound.client.particle;
+package com.ombremoon.spellbound.client.photon;
 
 import com.lowdragmc.photon.client.fx.FX;
 import com.lowdragmc.photon.client.fx.FXEffectExecutor;
@@ -17,7 +17,7 @@ public abstract class CustomEffectExecutor<T> extends FXEffectExecutor {
 
     protected abstract Map<T, ? extends List<? extends FXEffectExecutor>> getCache();
 
-    protected List<? extends FXEffectExecutor> getEffects() {
+    public List<? extends FXEffectExecutor> getEffects() {
         return this.getCache().get(this.emitter);
     }
 

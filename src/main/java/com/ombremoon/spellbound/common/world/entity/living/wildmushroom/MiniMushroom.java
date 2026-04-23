@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.common.world.entity.living.wildmushroom;
 
-import com.ombremoon.spellbound.client.particle.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
 import com.ombremoon.spellbound.common.world.entity.ai.attack.MushroomExplosion;

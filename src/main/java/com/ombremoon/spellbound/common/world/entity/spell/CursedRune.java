@@ -2,11 +2,12 @@ package com.ombremoon.spellbound.common.world.entity.spell;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXEffectExecutor;
-import com.ombremoon.spellbound.client.particle.EffectBuilder;
-import com.ombremoon.spellbound.common.init.SBEntityDataSerializers;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.lowdragmc.photon.client.fx.FXEffectExecutor;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
-import com.ombremoon.spellbound.common.magic.effects.MagicEffect;
 import com.ombremoon.spellbound.common.world.entity.VFXSpellEntity;
 import com.ombremoon.spellbound.common.world.spell.deception.CursedRuneSpell;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -17,17 +18,13 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 public class CursedRune extends VFXSpellEntity<CursedRuneSpell> {
@@ -39,7 +36,7 @@ public class CursedRune extends VFXSpellEntity<CursedRuneSpell> {
     }
 
     @Override
-    protected EffectBuilder<? extends FXEffectExecutor> getEffect() {
+    protected EffectBuilder getEffect() {
         return EffectBuilder.StaticEntity.of(CommonClass.customLocation("cursed_rune_place"), this.getId(), EntityEffectExecutor.AutoRotate.NONE)
                 .setOffset(0, 0.1, 0);
     }

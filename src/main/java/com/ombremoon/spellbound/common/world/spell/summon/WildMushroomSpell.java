@@ -1,7 +1,7 @@
 package com.ombremoon.spellbound.common.world.spell.summon;
 
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
-import com.ombremoon.spellbound.client.particle.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.SummonSpell;

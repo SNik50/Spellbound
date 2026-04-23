@@ -1,9 +1,8 @@
-package com.ombremoon.spellbound.client.particle;
+package com.ombremoon.spellbound.client.photon;
 
 import com.lowdragmc.photon.client.fx.BlockEffectExecutor;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXEffectExecutor;
-import com.ombremoon.spellbound.main.Constants;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.resources.ResourceLocation;
 
@@ -13,6 +12,7 @@ import java.util.Map;
 public class EffectCache {
     private final Map<ResourceLocation, FXEffectExecutor> cache = new Object2ObjectOpenHashMap<>();
 
+    @SuppressWarnings("unchecked")
     public void addFX(EffectBuilder<?> builder) {
         var fx = builder.build();
         if (fx != null) {

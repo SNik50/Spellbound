@@ -74,13 +74,13 @@ public class RitualHelper extends SimpleJsonResourceReloadListener {
                 builder.put(location, ritual);
                 builder1.put(ritual.definition().tier(), ritual);
             } catch (IllegalArgumentException | JsonParseException jsonParseException) {
-                LOGGER.error("Parsing error loading multiblock {}", location, jsonParseException);
+                LOGGER.error("Parsing error loading ritual {}", location, jsonParseException);
             }
         }
 
         RITUALS = builder.build();
         byTier = builder1.build();
-        LOGGER.info("Loaded {} multiblocks", RITUALS.size());
+        LOGGER.info("Loaded {} rituals", RITUALS.size());
     }
 
     public static Optional<TransfigurationRitual> getRitualFor(TransfigurationMultiblock multiblock, List<ItemStack> items) {
@@ -98,6 +98,7 @@ public class RitualHelper extends SimpleJsonResourceReloadListener {
     }
 
     public static TransfigurationRitual getRitualFor(ResourceKey<TransfigurationRitual> ritual) {
+//        Constants.LOG.info("{}", RITUALS);
         return RITUALS.get(ritual.location());
     }
 

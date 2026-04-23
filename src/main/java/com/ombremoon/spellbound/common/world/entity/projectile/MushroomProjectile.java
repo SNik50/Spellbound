@@ -2,9 +2,11 @@ package com.ombremoon.spellbound.common.world.entity.projectile;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXEffectExecutor;
-import com.ombremoon.spellbound.client.particle.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
+import com.lowdragmc.photon.client.fx.FXEffectExecutor;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.common.init.SBEntities;
-import com.ombremoon.spellbound.common.world.entity.SpellProjectile;
 import com.ombremoon.spellbound.common.world.entity.VFXSpellProjectile;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
 import com.ombremoon.spellbound.common.world.entity.spell.WildMushroom;
@@ -27,9 +29,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.tslat.smartbrainlib.util.RandomUtil;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class MushroomProjectile extends VFXSpellProjectile<WildMushroomSpell> {
     private boolean primaryProjectile;
@@ -39,7 +38,7 @@ public class MushroomProjectile extends VFXSpellProjectile<WildMushroomSpell> {
     }
 
     @Override
-    protected EffectBuilder<? extends FXEffectExecutor> getEffect() {
+    protected EffectBuilder getEffect() {
         return EffectBuilder.Entity.of(this.getEffectLocation(), this.getId(), EntityEffectExecutor.AutoRotate.LOOK)
                 .setRotation(180, 180, 0)
                 .setOffset(0, -0.5, 0);

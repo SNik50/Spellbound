@@ -1,9 +1,9 @@
 package com.ombremoon.spellbound.common.world.entity.spell;
 
-import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FXEffectExecutor;
-import com.ombremoon.spellbound.client.particle.EffectBuilder;
-import com.ombremoon.spellbound.common.world.entity.SpellProjectile;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
+import com.lowdragmc.photon.client.fx.FXEffectExecutor;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.common.world.entity.VFXSpellProjectile;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FireballSpell;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -27,7 +27,7 @@ public class Fireball extends VFXSpellProjectile<FireballSpell> {
     }
 
     @Override
-    protected EffectBuilder<? extends FXEffectExecutor> getEffect() {
+    protected EffectBuilder getEffect() {
         return EffectBuilder.FireballBuilder.of(this.getId());
     }
 

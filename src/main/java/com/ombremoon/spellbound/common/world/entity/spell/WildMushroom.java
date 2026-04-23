@@ -1,15 +1,13 @@
 package com.ombremoon.spellbound.common.world.entity.spell;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
-import com.ombremoon.spellbound.client.particle.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.common.world.entity.SpellEntity;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.MiniMushroom;
 import com.ombremoon.spellbound.common.world.spell.summon.WildMushroomSpell;
 import com.ombremoon.spellbound.common.init.SBEntities;
 import com.ombremoon.spellbound.main.CommonClass;
-import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -18,7 +16,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
 import java.util.List;

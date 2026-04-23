@@ -1,7 +1,6 @@
 package com.ombremoon.spellbound.common.world.entity;
 
-import com.lowdragmc.photon.client.fx.FXEffectExecutor;
-import com.ombremoon.spellbound.client.particle.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -13,7 +12,7 @@ public abstract class VFXSpellEntity<T extends AbstractSpell> extends SpellEntit
         super(entityType, level);
     }
 
-    protected abstract EffectBuilder<? extends FXEffectExecutor> getEffect();
+    protected abstract EffectBuilder<?> getEffect();
 
     protected abstract ResourceLocation getEffectLocation();
 

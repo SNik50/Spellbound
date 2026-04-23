@@ -3,10 +3,10 @@ package com.ombremoon.spellbound.common.world.spell.deception;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.KeyBinds;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
-import com.ombremoon.spellbound.client.particle.EffectBuilder;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AnimatedSpell;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
@@ -15,7 +15,6 @@ import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.entity.living.LivingShadow;
 import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -160,12 +159,11 @@ public class FlickerSpell extends AnimatedSpell implements RadialSpell {
 
                 if (!context.hasSkill(SBSkills.SILENT_STEP))
                     level.playSound(null, caster.xo, caster.yo, caster.zo, SoundEvents.ENDERMAN_TELEPORT, caster.getSoundSource(), 1.0F, 1.0F);
+
+                this.triggerSpellFX(EffectData.StaticEntity.of(CommonClass.customLocation("shadow_teleport"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                        .setPos(Vec3.atBottomCenterOf(context.getBlockPos()))
+                );
             }
-        } else {
-            this.addFX(
-                    EffectBuilder.StaticEntity.of(CommonClass.customLocation("shadow_teleport"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
-                            .setPos(Vec3.atBottomCenterOf(context.getBlockPos()))
-            );
         }
     }
 

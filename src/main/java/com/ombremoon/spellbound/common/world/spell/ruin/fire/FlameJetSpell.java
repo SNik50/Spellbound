@@ -7,7 +7,8 @@ import com.ombremoon.sentinellib.api.box.SentinelBox;
 import com.ombremoon.sentinellib.common.ISentinel;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
-import com.ombremoon.spellbound.client.particle.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBDataTypes;
 import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.init.SBSkills;
@@ -253,6 +254,8 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 }
             }
 
+            EffectData effectData = EffectData.StaticEntity.of(CommonClass.customLocation("flame_jet1"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                            .setOffset(0, 0.75, -2);
             if (this.isChoice(SBSkills.FLAME_JET) || this.isChoice(SBSkills.TURBO_CHARGE)) {
                 int index = Math.min(charges, 6);
                 SentinelBox rayBox = FLAME_JET_BOXES.get(index);
@@ -263,42 +266,27 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 }
             } else if (this.isChoice(SBSkills.JET_ENGINE)) {
                 boxOwner.triggerSentinelBox(REAR_JET_BOX);
+                effectData = EffectData.StaticEntity.of(CommonClass.customLocation("flame_jet1"), caster.getId(), EntityEffectExecutor.AutoRotate.FORWARD)
+                        .setOffset(0, -0.5, 2)
+                        .setRotation(0, 180, 0);
             } else if (this.isChoice(SBSkills.FLAME_INFERNO)) {
                 boxOwner.triggerSentinelBox(createFlameInferno(Math.min(charges, 3)));
+                float size = 1.5F + Math.min(this.getTurbulenceCharges(), 3) * 0.5F;
+                effectData = EffectData.StaticEntity.of(CommonClass.customLocation("flame_inferno"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                                .setOffset(0, 1, 0)
+                                .setScale(size, size, size);
             } else if (this.isChoice(SBSkills.FLAME_GEYSER)) {
                 SentinelBox geyserBox = FLAME_GEYSER_BOXES.get(Math.min(charges, 3));
                 boxOwner.triggerSentinelBox(geyserBox);
-            }
-
-        } else {
-            if (this.isChoice(SBSkills.FLAME_JET) || this.isChoice(SBSkills.TURBO_CHARGE)) {
-                this.addFX(
-                        EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_jet1"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
-                                .setOffset(0, 0.75, -2)
-                );
-            } else if (this.isChoice(SBSkills.JET_ENGINE)) {
-                this.addFX(
-                        EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_jet1"), caster.getId(), EntityEffectExecutor.AutoRotate.FORWARD)
-                                .setOffset(0, -0.5, 2)
-                                .setRotation(0, 180, 0)
-                );
-            } else if (this.isChoice(SBSkills.FLAME_GEYSER)) {
                 float size = 0.5F + Math.min(this.getTurbulenceCharges(), 3) * 0.5F;
-                this.addFX(
-                        EffectBuilder.Block.of(CommonClass.customLocation("flame_jet"), BlockPos.containing(this.getGeyserPosition()))
+                effectData = EffectData.Block.of(CommonClass.customLocation("flame_jet"), BlockPos.containing(this.getGeyserPosition()))
                                 .setOffset(0, -2.0, 0)
                                 .setRotation(0, 0, 90)
-                                .setScale(1, size, size)
-                );
-            } else if (this.isChoice(SBSkills.FLAME_INFERNO)) {
-                float size = 1.5F + Math.min(this.getTurbulenceCharges(), 3) * 0.5F;
-                this.addFX(
-                        EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_inferno"), caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
-                                .setOffset(0, 1, 0)
-                                .setScale(size, size, size)
-                );
+                                .setScale(1, size, size);
             }
+            this.triggerSpellFX(effectData);
         }
+
         //sound
         playCastSound(context.getLevel(), context);
     }
@@ -329,6 +317,14 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 if (this.tickCount % 20 == 0) {
                     this.consumeMana(caster, 5);
                 }
+
+                if (this.tickCount % 5 == 0) {
+                    this.triggerSpellFX(
+                            EffectData.StaticEntity.of(CommonClass.customLocation("flame_jet1"), caster.getId(), EntityEffectExecutor.AutoRotate.FORWARD)
+                                    .setOffset(0, -0.5, 2)
+                                    .setRotation(0, 180, 0)
+                    );
+                }
             } else if (this.tickCount == 5 && this.isChoice(SBSkills.JET_ENGINE)) {
                 Vec3 lookVec = caster.getLookAngle();
                 caster.setDiscardFriction(true);
@@ -336,14 +332,6 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                 Vec3 motion = new Vec3(lookVec.x * strength, lookVec.y * strength, lookVec.z * strength);
                 caster.setDeltaMovement(caster.getDeltaMovement().add(motion));
                 caster.hurtMarked = true;
-            }
-        } else {
-            if (this.isChoice(SBSkills.IRON_MAN) && this.tickCount % 5 == 0) {
-                this.addFX(
-                        EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_jet1"), caster.getId(), EntityEffectExecutor.AutoRotate.FORWARD)
-                                .setOffset(0, -0.5, 2)
-                                .setRotation(0, 180, 0)
-                );
             }
         }
     }
@@ -531,15 +519,14 @@ public class FlameJetSpell extends AnimatedSpell implements ChargeableSpell, Rad
                         Vec3 vec3 = instance.getCenter();
                         if (!level.isClientSide) {
                             level.explode(livingEntity, Explosion.getDefaultDamageSource(level, livingEntity), null, vec3.x(), vec3.y(), vec3.z(), 2.0F, false, Level.ExplosionInteraction.NONE);
-                        } else {
                             var handler = SpellUtil.getSpellHandler(livingEntity);
                             FlameJetSpell spell = handler.getSpell(SBSpells.FLAME_JET.get());
                             if (spell != null) {
-                                spell.addFX(
-                                        EffectBuilder.StaticEntity.of(CommonClass.customLocation("flame_inferno"), entity.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                                spell.triggerSpellFX(
+                                        EffectData.StaticEntity.of(CommonClass.customLocation("flame_inferno"), entity.getId(), EntityEffectExecutor.AutoRotate.NONE)
                                                 .setOffset(0, 1, 0)
                                                 .setPos(vec3)
-                                                .setScale(0.75F, 0.75F, 0.75F)
+//                                                .setScale(0.75F, 0.75F, 0.75F)
                                 );
                             }
                         }

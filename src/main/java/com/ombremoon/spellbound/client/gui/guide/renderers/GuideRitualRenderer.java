@@ -6,6 +6,7 @@ import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualHelper;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -22,6 +23,9 @@ public class GuideRitualRenderer implements IPageElementRenderer<Transfiguration
         RenderUtil.renderItem(graphics, item, leftPos + itemOffset - 48, topPos + 20, 5.3F);
 
         TransfigurationRitual ritual = RitualHelper.getRitualFor(element.ritual());
+        if (ritual == null)
+            return;
+
         ItemStack stack = new GuideGhostItem(buildIngredientFromValues(ritual.clientMaterials()), 30, 30).getItem(tickCount);
         RenderUtil.renderItem(graphics, stack, leftPos + itemOffset + 9, topPos + 22, 2.3F, 200);
         graphics.drawString(Minecraft.getInstance().font,

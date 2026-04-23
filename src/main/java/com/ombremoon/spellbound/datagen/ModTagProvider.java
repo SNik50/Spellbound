@@ -1,10 +1,8 @@
 package com.ombremoon.spellbound.datagen;
 
-import com.ombremoon.spellbound.client.particle.EffectBuilder;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
 import com.ombremoon.spellbound.main.Constants;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -16,7 +14,6 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
