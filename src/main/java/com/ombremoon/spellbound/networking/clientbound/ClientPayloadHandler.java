@@ -1,6 +1,8 @@
 package com.ombremoon.spellbound.networking.clientbound;
 
 import com.ombremoon.spellbound.client.AnimationHelper;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.converter.EffectDataConverter;
 import com.ombremoon.spellbound.client.renderer.SpellDimensionDebugRenderer;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBEffects;
@@ -192,6 +194,21 @@ public class ClientPayloadHandler {
         context.enqueueWork(() -> {
             var level = context.player().level();
             level.addParticle(payload.particle(), payload.x(), payload.y(), payload.z(), payload.xSpeed(), payload.ySpeed(), payload.zSpeed());
+        });
+    }
+
+    public static void handleTriggerFX(TriggerSpellFXPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            var level = context.player().level();
+            Entity entity = level.getEntity(payload.entityId());
+            if (entity instanceof LivingEntity livingEntity) {
+                var handler = SpellUtil.getSpellHandler(livingEntity);
+                AbstractSpell spell = handler.getSpell(payload.spellType(), payload.castId());
+                if (spell != null) {
+                    EffectBuilder<?> effectBuilder = EffectDataConverter.convertToBuilder(payload.effectData());
+                    spell.addFX(effectBuilder);
+                }
+            }
         });
     }
 

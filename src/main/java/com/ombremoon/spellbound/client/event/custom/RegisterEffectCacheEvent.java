@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.client.event.custom;
 
-import com.ombremoon.spellbound.client.particle.CustomEffectExecutor;
+import com.ombremoon.spellbound.client.photon.CustomEffectExecutor;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.neoforged.bus.api.Event;
 import net.neoforged.fml.event.IModBusEvent;

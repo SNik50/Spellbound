@@ -1,14 +1,11 @@
 package com.ombremoon.spellbound.common.world.sound;
 
-import com.mojang.datafixers.kinds.Const;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
-import com.ombremoon.spellbound.main.Spellbound;
-import net.minecraft.client.resources.sounds.Sound;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.util.DeferredSoundType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -42,7 +39,7 @@ public class SpellboundSounds {
 
 
     private static Supplier<SoundEvent> registerSoundEvent(String name){
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name);
+        ResourceLocation id = CommonClass.customLocation(name);
         return SOUND_EVENTS.register(name, ()-> SoundEvent.createVariableRangeEvent(id));
     }
 

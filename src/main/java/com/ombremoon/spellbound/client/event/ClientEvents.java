@@ -12,6 +12,8 @@ import com.ombremoon.spellbound.client.gui.guide.renderers.init.ElementRenderDis
 import com.ombremoon.spellbound.client.particle.CircleAroundPositionParticle;
 import com.ombremoon.spellbound.client.particle.GenericParticle;
 import com.ombremoon.spellbound.client.particle.SparkParticle;
+import com.ombremoon.spellbound.client.photon.converter.EffectDataConverter;
+import com.ombremoon.spellbound.client.photon.converter.EffectTypes;
 import com.ombremoon.spellbound.client.renderer.SpellDimensionDebugRenderer;
 import com.ombremoon.spellbound.client.renderer.blockentity.*;
 import com.ombremoon.spellbound.client.renderer.entity.*;
@@ -184,6 +186,8 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent event) {
         registerElementRenderers();
+        EffectTypes.initEffectTypes();
+        EffectDataConverter.initConverters();
 
         event.enqueueWork(() -> {
             PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(
@@ -194,7 +198,6 @@ public class ClientEvents {
                         if (handler.inCastMode()) {
                             ResourceLocation id = CommonClass.customLocation("idle");
                             MovementData movementData = player.getData(SBData.MOVEMENT_DATA.get());
-//                            if (EntityUtil.isMoving(player)) {
                             if (movementData.isMoving()) {
                                 if (movementData.zza() < 0) {
                                     id = CommonClass.customLocation("walk_backwards");

@@ -1,24 +1,19 @@
 package com.ombremoon.spellbound.datagen;
 
-import com.ombremoon.spellbound.client.particle.EffectBuilder;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.world.multiblock.type.TransfigurationMultiblock;
 import com.ombremoon.spellbound.main.Constants;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.EntityTypeTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.TagKey;
+import net.minecraft.tags.*;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -144,6 +139,35 @@ public class ModTagProvider {
             this.tag(DamageTypeTags.IS_FIRE)
                     .add(SBDamageTypes.RUIN_FIRE);
 
+        }
+    }
+
+    public static class PaintingVariants extends TagsProvider<PaintingVariant> {
+        public PaintingVariants(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+            super(output, Registries.PAINTING_VARIANT, provider, Constants.MOD_ID, existingFileHelper);
+        }
+
+        @Override
+        protected void addTags(HolderLookup.Provider provider) {
+            this.tag(PaintingVariantTags.PLACEABLE)
+                    .add(
+                            SBPaintingVariants.DECEPTION,
+                            SBPaintingVariants.DIVINE,
+                            SBPaintingVariants.FIRE,
+                            SBPaintingVariants.FISH,
+                            SBPaintingVariants.FROG,
+                            SBPaintingVariants.NUN,
+                            SBPaintingVariants.RUIN,
+                            SBPaintingVariants.SNOWY_LAMPION,
+                            SBPaintingVariants.STRIX,
+                            SBPaintingVariants.SUMMON,
+                            SBPaintingVariants.TRANSFIG,
+                            SBPaintingVariants.VALKYR,
+                            SBPaintingVariants.VALKYR2,
+                            SBPaintingVariants.VILLAGE,
+                            SBPaintingVariants.WITCH,
+                            SBPaintingVariants.WITCH2
+                    );
         }
     }
 }

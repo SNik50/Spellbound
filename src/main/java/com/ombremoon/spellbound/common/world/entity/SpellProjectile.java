@@ -1,6 +1,6 @@
 package com.ombremoon.spellbound.common.world.entity;
 
-import com.ombremoon.spellbound.client.particle.EffectCache;
+import com.ombremoon.spellbound.client.photon.EffectCache;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.SpellType;

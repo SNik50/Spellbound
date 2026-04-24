@@ -9,10 +9,12 @@ import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.Holder;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemNameBlockItem;
@@ -51,6 +53,7 @@ public class ModLangProvider extends LanguageProvider {
         SBEffects.EFFECTS.getEntries().forEach(this::effectLang);
         SBAttributes.ATTRIBUTES.getEntries().forEach(this::attributeLang);
         SBAffinities.REGISTRY.values().forEach(this::affinityLang);
+        SBPaintingVariants.PAINTINGS.forEach(this::defaultPaintingLang);
 
         pathLang();
         manualEntries();
@@ -94,6 +97,14 @@ public class ModLangProvider extends LanguageProvider {
 
     protected void effectLang(DeferredHolder<MobEffect, ? extends MobEffect> entry) {
         addEffect(entry, checkReplace(entry));
+    }
+
+    protected void defaultPaintingLang(ResourceKey<PaintingVariant> entry) {
+        ResourceLocation location = entry.location();
+        String key = location.getNamespace();
+        String path = location.getPath();
+        add("painting." + key + "." + path + ".title", checkReplace(location));
+        add("painting." + key + "." + path + ".author", "PiediLerci");
     }
 
     protected void manualEntries() {

@@ -1,16 +1,18 @@
 package com.ombremoon.spellbound.networking;
 
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
-import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
-import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
-import com.ombremoon.spellbound.common.magic.familiars.FamiliarHolder;
-import com.ombremoon.spellbound.common.world.multiblock.MultiblockHolder;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
+import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
+import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
+import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
+import com.ombremoon.spellbound.common.magic.familiars.FamiliarHolder;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.multiblock.MultiblockHolder;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.clientbound.*;
 import com.ombremoon.spellbound.networking.serverbound.*;
@@ -194,6 +196,10 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new CreateParticlesPayload(particle, x, y, z, xSpeed, ySpeed, zSpeed));
     }
 
+    public static void triggerFx(LivingEntity entity, AbstractSpell spell, EffectData builder) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new TriggerSpellFXPayload(entity.getId(), spell.spellType(), spell.getId(), builder));
+    }
+
     public static void updateAbilities(ServerPlayer player) {
         PacketDistributor.sendToPlayer(player, new UpdateAbilitiesPayload());
     }
@@ -317,6 +323,11 @@ public class PayloadHandler {
                 CreateParticlesPayload.TYPE,
                 CreateParticlesPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleCreateParticles
+        );
+        registrar.playToClient(
+                TriggerSpellFXPayload.TYPE,
+                TriggerSpellFXPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleTriggerFX
         );
         registrar.playToClient(
                 UpdateAbilitiesPayload.TYPE,

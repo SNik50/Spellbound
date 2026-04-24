@@ -1,7 +1,7 @@
 package com.ombremoon.spellbound.common.world.entity.living.wildmushroom;
 
 import com.mojang.datafixers.util.Pair;
-import com.ombremoon.spellbound.client.particle.EffectBuilder;
+import com.ombremoon.spellbound.client.photon.EffectBuilder;
 import com.ombremoon.spellbound.common.init.SBAttributes;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;

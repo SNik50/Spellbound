@@ -66,7 +66,7 @@ public class CastModeOverlay implements LayeredDraw.Layer {
 
         ResourceLocation texture = this.getSpellTexture(player, spell.createSpell());
         guiGraphics.blit(texture, x, y, 0, 0, 24, 24, 24, 24);
-        guiGraphics.blit(BACKGROUND, x - 1, y - 1, 0, 0, 26, 26, 26, 26);
+        guiGraphics.blit(BACKGROUND, x - 2, y - 2, 0, 0, 28, 28, 28, 28);
         guiGraphics.drawString(Minecraft.getInstance().font,
                 this.getSpellName(player, spell.createSpell()),
                 guiGraphics.guiWidth() / 2 - 173, guiGraphics.guiHeight() - 57,
@@ -115,7 +115,7 @@ public class CastModeOverlay implements LayeredDraw.Layer {
 
         for (var entry : sortedSpellTypes) {
             List<AbstractSpell> spellsOfType = entry.getValue();
-            AbstractSpell spell = spellsOfType.get(0); // Use first spell as representative
+            AbstractSpell spell = spellsOfType.getFirst(); // Use first spell as representative
             int count = spellsOfType.size();
 
             int i = 1;
