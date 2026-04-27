@@ -54,6 +54,10 @@ public class SpellUtil {
         return new SpellDamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(SBDamageTypes.SB_GENERIC), spell, attackEntity, ownerEntity);
     }
 
+    public static DamageSource magicDamageSource(Level level, Entity ownerEntity, Entity attackEntity) {
+        return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(SBDamageTypes.SB_GENERIC), attackEntity, ownerEntity);
+    }
+
     public static DamageSource damageSource(Level level, ResourceKey<DamageType> damageType, Entity ownerEntity, Entity attackEntity) {
         return new DamageSource(level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(damageType), attackEntity, ownerEntity);
     }

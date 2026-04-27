@@ -18,10 +18,13 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.Tags;
 
 public interface SBPuzzleConfigs {
     ResourceKey<PuzzleConfiguration> FLICKER = key("flicker");
+    ResourceKey<PuzzleConfiguration> SHADOW_VEIL = key("shadow_veil");
     ResourceKey<PuzzleConfiguration> CURSED_RUNE = key("cursed_rune");
+    ResourceKey<PuzzleConfiguration> NIGHTBLADE = key("nightblade");
 
     static void bootstrap(BootstrapContext<PuzzleConfiguration> context) {
         register(context,
@@ -35,7 +38,47 @@ public interface SBPuzzleConfigs {
                                                         .addCriterion(
                                                                 "interact_with_altar",
                                                                 InteractWithBlockTrigger.Instance
-                                                                        .interactedWithBlock(BlockPredicate.Builder.block().of(Blocks.CHEST).build())
+                                                                        .interactedWithBlock(BlockPredicate.Builder.block().of(SBBlocks.DARK_ALTAR.get()).build())
+                                                        )
+                                        )
+                                        .resetOn(
+                                                SpellAction.Builder.action()
+                                                        .addCriterion(
+                                                                "hurt_by_fall",
+                                                                PlayerHurtTrigger.Instance
+                                                                        .entityHurtPlayer(DamagePredicate.Builder.damageInstance().type(
+                                                                                DamageSourcePredicate.Builder.damageType().tag(
+                                                                                        TagPredicate.is(DamageTypeTags.IS_FALL)
+                                                                                )
+                                                                        ))
+                                                        )
+                                                        .cooldown(5))
+                                        .maxResetCount(3)
+                                        .spawnData(
+                                                DynamicLevelSpawnData.Builder.create()
+                                                        .playerOffset(new Vec3(-14, -5, 0))
+                                                        .playerRotation(-90F)
+                                                        .spellOffset(new Vec3(14, -4, 0))
+                                        )
+                                        .addRule(DungeonRules.NO_INTERACT)
+                                        .addRule(DungeonRules.NO_BUILDING)
+                                        .addRule(DungeonRules.NO_FLYING)
+                                        .addRule(DungeonRules.NO_PVE_OR_PVP)
+                                        .addRule(DungeonRules.NO_SPELL_CASTING)
+                        )
+        );
+        register(context,
+                SHADOW_VEIL,
+                PuzzleConfiguration.Builder.configuration()
+                        .addPuzzle(
+                                PuzzleDefinition.Builder
+                                        .define(CommonClass.customLocation("shadow_veil"))
+                                        .withObjective(
+                                                SpellAction.Builder.action()
+                                                        .addCriterion(
+                                                                "interact_with_altar",
+                                                                InteractWithBlockTrigger.Instance
+                                                                        .interactedWithBlock(BlockPredicate.Builder.block().of(SBBlocks.DARK_ALTAR.get()).build())
                                                         )
                                         )
                                         .resetOn(
@@ -45,7 +88,7 @@ public interface SBPuzzleConfigs {
                                                                 PlayerHurtTrigger.Instance
                                                                         .entityHurtPlayer(DamagePredicate.Builder.damageInstance().type(
                                                                                 DamageSourcePredicate.Builder.damageType().tag(
-                                                                                        TagPredicate.is(DamageTypeTags.IS_FIRE)
+                                                                                        TagPredicate.is(Tags.DamageTypes.IS_MAGIC)
                                                                                 )
                                                                         ))
                                                         )
@@ -61,7 +104,8 @@ public interface SBPuzzleConfigs {
                                         .addRule(DungeonRules.NO_FLYING)
                                         .addRule(DungeonRules.NO_PVE_OR_PVP)
                                         .addRule(DungeonRules.NO_SPELL_CASTING)
-                        ));
+                        )
+        );
         register(context,
                 CURSED_RUNE,
                 PuzzleConfiguration.Builder.configuration()
@@ -73,7 +117,7 @@ public interface SBPuzzleConfigs {
                                                         .addCriterion(
                                                                 "interact_with_altar",
                                                                 InteractWithBlockTrigger.Instance
-                                                                        .interactedWithBlock(BlockPredicate.Builder.block().of(Blocks.CHEST).build())
+                                                                        .interactedWithBlock(BlockPredicate.Builder.block().of(SBBlocks.DARK_ALTAR.get()).build())
                                                         )
                                         )
                                         .resetOn(
@@ -83,7 +127,7 @@ public interface SBPuzzleConfigs {
                                                                 PlayerHurtTrigger.Instance
                                                                         .entityHurtPlayer(DamagePredicate.Builder.damageInstance().type(
                                                                                 DamageSourcePredicate.Builder.damageType().tag(
-                                                                                        TagPredicate.is(DamageTypeTags.IS_FIRE)
+                                                                                        TagPredicate.is(Tags.DamageTypes.IS_MAGIC)
                                                                                 )
                                                                         ))
                                                         )

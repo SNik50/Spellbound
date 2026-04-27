@@ -23,10 +23,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
@@ -66,9 +68,7 @@ public class DebugItem extends Item implements Loggable {
 
     private void ombreDebug(Level level, Player player, InteractionHand usedHand, SpellHandler spellHandler, SkillHolder skillHolder) {
         if (!level.isClientSide) {
-//            PuzzleDungeonData data = PuzzleDungeonData.get((ServerLevel) level);
-//            log(data.getCurrentDungeon());
-            log(SBSkills.REGISTRY.get(CommonClass.customLocation("flame_jet")));
+
         }
     }
 

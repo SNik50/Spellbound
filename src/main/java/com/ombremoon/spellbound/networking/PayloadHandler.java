@@ -12,6 +12,7 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHolder;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
+import com.ombremoon.spellbound.common.world.entity.living.SpellBroker;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockHolder;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.clientbound.*;
@@ -30,6 +31,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -116,6 +118,14 @@ public class PayloadHandler {
 
     public static void unlockSkill(Skill skill) {
         PacketDistributor.sendToServer(new UnlockSkillPayload(skill));
+    }
+
+    public static void setBrokerTrades(int containerId, int merchantId, boolean isRiddle) {
+        PacketDistributor.sendToServer(new SetBrokerTradesPayload(merchantId, containerId, isRiddle));
+    }
+
+    public static void selectRiddleTrade(int item) {
+        PacketDistributor.sendToServer(new SelectRiddleTradePayload(item));
     }
 
     public static void updateMovement(float forwardImpulse, float leftImpulse) {
@@ -218,6 +228,10 @@ public class PayloadHandler {
 
     public static void updateMultiblocks(MinecraftServer server, List<MultiblockHolder<?>> multiblocks) {
         sendToAll(server, new UpdateMultiblocksPayload(multiblocks));
+    }
+
+    public static void setupBrokerMenu(ServerPlayer player, int containerId, int merchantId, @Nullable MerchantOffers offers) {
+        PacketDistributor.sendToPlayer(player, new SetupBrokerMenuPayload(containerId, merchantId, Optional.ofNullable(offers)));
     }
 
     public static void sendScrapToast(ServerPlayer player, ResourceLocation scrap) {
@@ -359,6 +373,11 @@ public class PayloadHandler {
                 UpdateMultiblocksPayload.STREAM_CODEC,
                 ClientPayloadHandler::handleUpdateMultiblocks
         );
+        registrar.playToClient(
+                SetupBrokerMenuPayload.TYPE,
+                SetupBrokerMenuPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleSetupBrokerMenu
+        );
 
         registrar.playToServer(
                 SwitchModePayload.TYPE,
@@ -409,6 +428,16 @@ public class PayloadHandler {
                 UnlockSkillPayload.TYPE,
                 UnlockSkillPayload.STREAM_CODEC,
                 ServerPayloadHandler::handleNetworkUnlockSkill
+        );
+        registrar.playToServer(
+                SetBrokerTradesPayload.TYPE,
+                SetBrokerTradesPayload.STREAM_CODEC,
+                ServerPayloadHandler::handleSetBrokerTrades
+        );
+        registrar.playToServer(
+                SelectRiddleTradePayload.TYPE,
+                SelectRiddleTradePayload.STREAM_CODEC,
+                ServerPayloadHandler::handleSelectRiddleTrade
         );
         registrar.playToServer(
                 PlayerMovementPayload.TYPE,

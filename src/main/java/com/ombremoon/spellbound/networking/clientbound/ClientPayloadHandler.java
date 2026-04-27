@@ -10,10 +10,13 @@ import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.acquisition.guides.GuideBookManager;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
+import com.ombremoon.spellbound.common.world.entity.living.SpellBroker;
+import com.ombremoon.spellbound.common.world.inventory.RiddleTradeMenu;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
 import com.ombremoon.spellbound.common.world.weather.HailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.util.MerchantAccessor;
 import com.ombremoon.spellbound.networking.serverbound.ChargeOrChannelPayload;
 import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -25,6 +28,8 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MerchantMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -294,6 +299,33 @@ public class ClientPayloadHandler {
                 final Set<ResourceKey<Level>> dimensionList = localPlayer.connection.levels();
                 Consumer<ResourceKey<Level>> keyConsumer = payload.add() ? dimensionList::add : dimensionList::remove;
                 payload.keys().forEach(keyConsumer);
+            }
+        });
+    }
+
+    public static void handleSetupBrokerMenu(SetupBrokerMenuPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            Player player = context.player();
+            AbstractContainerMenu containerMenu = player.containerMenu;
+            if (payload.containerId() == containerMenu.containerId) {
+                if (payload.offers().isPresent() && containerMenu instanceof RiddleTradeMenu tradeMenu) {
+                    tradeMenu.setOffers(payload.offers().get());
+                    tradeMenu.setMerchantId(payload.merchantId());
+                } else if (containerMenu instanceof MerchantMenu menu) {
+                    MerchantAccessor access = (MerchantAccessor) menu;
+                    access.spellbound$setBroker(true);
+                    access.spellbound$setMerchantId(payload.merchantId());
+                }
+            }
+        });
+    }
+
+    public static void handleSetBrokerTrades(SetupBrokerMenuPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            Player player = context.player();
+            AbstractContainerMenu containerMenu = player.containerMenu;
+            if (payload.containerId() == containerMenu.containerId && payload.offers().isPresent() && containerMenu instanceof MerchantMenu menu) {
+                menu.setOffers(payload.offers().get());
             }
         });
     }

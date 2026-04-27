@@ -66,10 +66,13 @@ public class DynamicDimensionFactory {
         BlockPos center = structure.getStructureCenter();
         if (center != null) {
             level.getChunkAt(center);
-            Vec3 spawnOffset = puzzle.spawnData().playerOffset();
+            var spawnData = puzzle.spawnData();
+            Vec3 spawnOffset = spawnData.playerOffset();
             BlockPos offsetPos = center.offset((int) spawnOffset.x, (int) spawnOffset.y, (int) spawnOffset.z);
             Vec3 targetVec = Vec3.atBottomCenterOf(offsetPos);
             player.setData(SBData.PUZZLE_RULES, puzzle.rules());
+            player.setYRot(spawnData.playerRotation());
+            player.setXRot(0);
             sendToDimension(player, level, targetVec);
         }
     }
