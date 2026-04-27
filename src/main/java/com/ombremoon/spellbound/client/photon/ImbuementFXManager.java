@@ -9,12 +9,12 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Quaternionf;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -85,14 +85,18 @@ public class ImbuementFXManager {
         }
 
         int entityId = living.getId();
-        Function<Float, Vec3> positionSupplier = partialTicks -> heldItemPosition(living, hand, partialTicks);
+        Function<Float, Vec3> positionSupplier = partialTicks -> heldItemPosition(entityId, hand, partialTicks);
+        Function<Float, Quaternionf> rotationSupplier = partialTicks -> {
+            HeldItemTransformCapture.Captured c = HeldItemTransformCapture.get(entityId, hand);
+            return c == null ? null : c.rotation();
+        };
         BooleanSupplier validitySupplier = () -> {
             Entity e = Minecraft.getInstance().level == null ? null : Minecraft.getInstance().level.getEntity(entityId);
             if (!(e instanceof LivingEntity le) || !le.isAlive()) return false;
             ResourceLocation cur = resolveFXLocation(le.getItemInHand(hand));
             return Objects.equals(cur, fxLoc);
         };
-        startFX(fxLoc, living.level(), positionSupplier, validitySupplier, key);
+        startFX(fxLoc, living.level(), positionSupplier, rotationSupplier, validitySupplier, key);
     }
 
     private static void visitItemEntity(ItemEntity itemEntity) {
@@ -119,54 +123,32 @@ public class ImbuementFXManager {
             ResourceLocation cur = resolveFXLocation(ie.getItem());
             return Objects.equals(cur, fxLoc);
         };
-        startFX(fxLoc, itemEntity.level(), positionSupplier, validitySupplier, key);
+        startFX(fxLoc, itemEntity.level(), positionSupplier, null, validitySupplier, key);
     }
 
-    private static void startFX(ResourceLocation fxLoc, net.minecraft.world.level.Level level,
-                                Function<Float, Vec3> positionSupplier, BooleanSupplier validitySupplier, Key key) {
+    private static void startFX(ResourceLocation fxLoc, Level level,
+                                Function<Float, Vec3> positionSupplier,
+                                Function<Float, Quaternionf> rotationSupplier,
+                                BooleanSupplier validitySupplier, Key key) {
         var fx = FXHelper.getFX(fxLoc);
         if (fx == null) return;
-        ImbuementFX effect = new ImbuementFX(fx, level, positionSupplier, validitySupplier);
+        ImbuementFX effect = new ImbuementFX(fx, level, positionSupplier, rotationSupplier, validitySupplier);
         effect.start();
         ACTIVE.put(key, effect);
     }
 
-    private static Vec3 heldItemPosition(LivingEntity living, InteractionHand hand, float partialTicks) {
+    private static Vec3 heldItemPosition(int entityId, InteractionHand hand, float partialTicks) {
+        HeldItemTransformCapture.Captured captured = HeldItemTransformCapture.get(entityId, hand);
+        if (captured != null) return captured.worldPos();
+
+        Entity e = Minecraft.getInstance().level == null ? null : Minecraft.getInstance().level.getEntity(entityId);
+        if (!(e instanceof LivingEntity living)) return Vec3.ZERO;
+        return fallbackHeldItemPosition(living, hand, partialTicks);
+    }
+
+    private static Vec3 fallbackHeldItemPosition(LivingEntity living, InteractionHand hand, float partialTicks) {
         Vec3 base = living.getPosition(partialTicks);
-        float yawRad = (float) Math.toRadians(lerp(partialTicks, living.yBodyRotO, living.yBodyRot));
-        float pitchRad = (float) Math.toRadians(lerp(partialTicks, living.xRotO, living.getXRot()));
-
-        double sinYaw = Math.sin(yawRad);
-        double cosYaw = Math.cos(yawRad);
-        double sinPitch = Math.sin(pitchRad);
-        double cosPitch = Math.cos(pitchRad);
-
-        double rightX = -cosYaw;
-        double rightZ = -sinYaw;
-        double forwardX = -sinYaw * cosPitch;
-        double forwardY = -sinPitch;
-        double forwardZ = cosYaw * cosPitch;
-
-        boolean rightSide = isRightSide(living, hand);
-        double sideMul = rightSide ? 0.4 : -0.4;
-        double forwardMul = 0.45;
-        double upMul = living.getEyeHeight() - 0.3;
-
-        return new Vec3(
-                base.x + rightX * sideMul + forwardX * forwardMul,
-                base.y + upMul + forwardY * forwardMul,
-                base.z + rightZ * sideMul + forwardZ * forwardMul
-        );
-    }
-
-    private static boolean isRightSide(LivingEntity living, InteractionHand hand) {
-        HumanoidArm mainArm = living instanceof Player p ? p.getMainArm() : HumanoidArm.RIGHT;
-        boolean mainIsRight = mainArm == HumanoidArm.RIGHT;
-        return hand == InteractionHand.MAIN_HAND ? mainIsRight : !mainIsRight;
-    }
-
-    private static float lerp(float t, float a, float b) {
-        return a + (b - a) * t;
+        return base.add(0, living.getEyeHeight() - 0.3, 0);
     }
 
     private record Key(int kind, int entityId, int hand) {
