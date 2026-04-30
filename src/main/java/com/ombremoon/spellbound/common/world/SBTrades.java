@@ -54,11 +54,9 @@ public class SBTrades {
                 dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.SHADOW_VEIL),
                 dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.CURSED_RUNE)
         }, 2, new MerchantOffer[]{
-                spellTrade(48, Items.COOKIE, 16, SBSpells.SHATTERING_CRYSTAL.get()),
-                spellTrade(48, Items.COOKIE, 32, SBSpells.SOLAR_RAY.get()),
-                spellTrade(64, Items.COOKIE, 32, SBSpells.STORM_RIFT.get()),
-                spellTrade(32, Items.COOKIE, 2, SBSpells.SHADOWBOND.get()),
-                spellTrade(32, Items.COOKIE, 1, SBSpells.PURGE_MAGIC.get())
+                dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.FLICKER),
+                dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.SHADOW_VEIL),
+                dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.CURSED_RUNE)
         })));
     });
 

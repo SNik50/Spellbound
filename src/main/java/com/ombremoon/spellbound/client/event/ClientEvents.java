@@ -123,6 +123,7 @@ public class ClientEvents {
         event.registerEntityRenderer(SBEntities.VALKYR.get(), GenericLivingEntityRenderer::new);
         event.registerEntityRenderer(SBEntities.MINI_MUSHROOM.get(), MiniMushroomRenderer::new);
         event.registerEntityRenderer(SBEntities.GIANT_MUSHROOM.get(), GiantMushroomRenderer::new);
+        event.registerEntityRenderer(SBEntities.WATCHFUL_EYE.get(), GenericLivingEntityRenderer::new);
         event.registerEntityRenderer(SBEntities.LIVING_SHADOW.get(), LivingShadowRenderer::new);
         event.registerEntityRenderer(SBEntities.DUNGEON_SHADOW.get(), GenericLivingEntityRenderer::new);
 

@@ -1,8 +1,7 @@
-package com.ombremoon.spellbound.common.world.entity.spell;
+package com.ombremoon.spellbound.common.world.entity.misc;
 
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.photon.EffectBuilder;
-import com.ombremoon.spellbound.client.photon.EffectCache;
 import com.ombremoon.spellbound.common.init.SBEffects;
 import com.ombremoon.spellbound.common.world.entity.VFXEntity;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -11,6 +10,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -47,7 +47,8 @@ public class ShadowMist extends VFXEntity {
             List<LivingEntity> list = this.level().getEntitiesOfClass(LivingEntity.class, this.getBoundingBox());
             for (LivingEntity entity : list) {
                 if (entity.isAlive() && !entity.isSpectator() && !this.isPassengerOfSameVehicle(entity)) {
-                    entity.addEffect(new MobEffectInstance(SBEffects.MAGI_INVISIBILITY, 20));
+                    entity.addEffect(new MobEffectInstance(SBEffects.MAGI_INVISIBILITY, 50));
+                    entity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 200));
                 }
             }
         }

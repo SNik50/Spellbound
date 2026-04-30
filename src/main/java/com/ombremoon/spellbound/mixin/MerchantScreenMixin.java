@@ -1,6 +1,8 @@
 package com.ombremoon.spellbound.mixin;
 
+import com.ombremoon.spellbound.common.init.SBItems;
 import com.ombremoon.spellbound.common.world.entity.SBMerchant;
+import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.MerchantAccessor;
 import net.minecraft.client.gui.GuiGraphics;
@@ -13,17 +15,21 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.MerchantMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.trading.MerchantOffers;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MerchantScreen.class)
 public abstract class MerchantScreenMixin extends AbstractContainerScreen<MerchantMenu> implements MerchantAccessor {
     private static final WidgetSprites DUNGEON_BUTTON_SPRITES = new WidgetSprites(
-            ResourceLocation.withDefaultNamespace("dungeon/dungeon_key_button"),
-            ResourceLocation.withDefaultNamespace("dungeon/dungeon_key_button_highlighted")
+            CommonClass.customLocation("dungeon/dungeon_key_button"),
+            CommonClass.customLocation("dungeon/dungeon_key_button_highlighted")
     );
 
     @Unique
@@ -31,6 +37,9 @@ public abstract class MerchantScreenMixin extends AbstractContainerScreen<Mercha
 
     @Unique
     private int spellbound$merchantId;
+
+    @Unique
+    private boolean spellbound$isRiddle;
 
     public MerchantScreenMixin(MerchantMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -54,10 +63,21 @@ public abstract class MerchantScreenMixin extends AbstractContainerScreen<Mercha
         }
     }
 
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/client/gui/GuiGraphics;renderFakeItem(Lnet/minecraft/world/item/ItemStack;II)V"))
+    private ItemStack renderMysteryItem(ItemStack stack) {
+        if (this.spellbound$isRiddle) {
+            return new ItemStack(SBItems.DEBUG_ITEM.get());
+        }
+
+        return stack;
+    }
+
     private void spellbound$initializeBrokerButton() {
         this.addRenderableWidget(new ImageButton(this.leftPos + 245, this.height / 2 - 78, 20, 20, DUNGEON_BUTTON_SPRITES, p_313433_ -> {
             Entity entity = this.minecraft.level.getEntity(this.spellbound$getMerchantId());
             if (entity instanceof SBMerchant merchant) {
+                this.spellbound$isRiddle = !merchant.getTradeType();
+                this.menu.setOffers(new MerchantOffers());
                 PayloadHandler.setBrokerTrades(this.menu.containerId, merchant.getId(), !merchant.getTradeType());
             }
         }));

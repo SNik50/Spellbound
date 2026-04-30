@@ -1491,7 +1491,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     protected void triggerSpellFX(LivingEntity source, EffectData builder) {
         Level level = source.level();
         if (!level.isClientSide) {
-            PayloadHandler.triggerFx(source, this, builder);
+            PayloadHandler.triggerSpellFx(source, this, builder);
         }
     }
 

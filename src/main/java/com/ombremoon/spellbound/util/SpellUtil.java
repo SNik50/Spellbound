@@ -3,7 +3,7 @@ package com.ombremoon.spellbound.util;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
-import com.ombremoon.spellbound.common.magic.acquisition.deception.DungeonRules;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.RuleType;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
@@ -105,10 +105,9 @@ public class SpellUtil {
         if (livingEntity instanceof Player player && player.getAbilities().instabuild) return true;
         if (EffectManager.isSilenced(livingEntity)) return false;
 
-        if (!level.isClientSide && PuzzleDungeonData.hasRule((ServerLevel) level, DungeonRules.NO_SPELL_CASTING))
+        if (!level.isClientSide && PuzzleDungeonData.hasRule((ServerLevel) level, RuleType.NO_SPELL_CASTING, spell.spellType()))
             return false;
 
-//        return handler.consumeMana(spell.getManaCost(livingEntity), false);
         return handler.consumeMana(spell.getManaCost(), false);
     }
 

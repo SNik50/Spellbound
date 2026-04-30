@@ -2,7 +2,9 @@ package com.ombremoon.spellbound.common.init;
 
 import com.mojang.serialization.Codec;
 import com.ombremoon.spellbound.client.MovementData;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.DungeonRule;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
@@ -93,10 +95,10 @@ public class SBData {
             "effect_heal_target", () -> AttachmentType.builder(() -> 0).serialize(Codec.INT).build());
     public static final Supplier<AttachmentType<Boolean>> INVISIBILITY_DIRTY = ATTACHMENT_TYPES.register(
             "invisibility_dirty", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
-    public static final Supplier<AttachmentType<List<ResourceLocation>>> PUZZLE_RULES = ATTACHMENT_TYPES.register(
-            "puzzle_rules", () -> AttachmentType.<List<ResourceLocation>>builder(() -> new ArrayList<>())
-                    .serialize(ResourceLocation.CODEC.listOf())
-                    .sync(ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()))
+    public static final Supplier<AttachmentType<PuzzleDefinition>> CLIENT_PUZZLE = ATTACHMENT_TYPES.register(
+            "client_puzzle", () -> AttachmentType.builder(() -> PuzzleDefinition.DEFAULT)
+                    .serialize(PuzzleDefinition.CODEC)
+                    .sync(PuzzleDefinition.STREAM_CODEC)
                     .build()
     );
     public static final Supplier<AttachmentType<Boolean>> NO_FLY_DUNGEON = ATTACHMENT_TYPES.register(

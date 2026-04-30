@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.networking;
 
+import com.mojang.datafixers.util.Either;
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -12,7 +13,6 @@ import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHolder;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
-import com.ombremoon.spellbound.common.world.entity.living.SpellBroker;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockHolder;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.clientbound.*;
@@ -31,7 +31,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -124,10 +123,6 @@ public class PayloadHandler {
         PacketDistributor.sendToServer(new SetBrokerTradesPayload(merchantId, containerId, isRiddle));
     }
 
-    public static void selectRiddleTrade(int item) {
-        PacketDistributor.sendToServer(new SelectRiddleTradePayload(item));
-    }
-
     public static void updateMovement(float forwardImpulse, float leftImpulse) {
         PacketDistributor.sendToServer(new PlayerMovementPayload(PlayerMovementPayload.Movement.MOVE, forwardImpulse, leftImpulse, 0));
     }
@@ -206,8 +201,16 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new CreateParticlesPayload(particle, x, y, z, xSpeed, ySpeed, zSpeed));
     }
 
-    public static void triggerFx(LivingEntity entity, AbstractSpell spell, EffectData builder) {
+    public static void triggerSpellFx(LivingEntity entity, AbstractSpell spell, EffectData builder) {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new TriggerSpellFXPayload(entity.getId(), spell.spellType(), spell.getId(), builder));
+    }
+
+    public static void triggerEntityFx(Entity entity, EffectData builder) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new TriggerEntityFXPayload(entity.getId(), Either.left(builder)));
+    }
+
+    public static void removeEntityFX(Entity entity, ResourceLocation effect) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new TriggerEntityFXPayload(entity.getId(), Either.right(effect)));
     }
 
     public static void updateAbilities(ServerPlayer player) {
@@ -230,8 +233,8 @@ public class PayloadHandler {
         sendToAll(server, new UpdateMultiblocksPayload(multiblocks));
     }
 
-    public static void setupBrokerMenu(ServerPlayer player, int containerId, int merchantId, @Nullable MerchantOffers offers) {
-        PacketDistributor.sendToPlayer(player, new SetupBrokerMenuPayload(containerId, merchantId, Optional.ofNullable(offers)));
+    public static void setupBrokerMenu(ServerPlayer player, int containerId, int merchantId) {
+        PacketDistributor.sendToPlayer(player, new SetupBrokerMenuPayload(containerId, merchantId));
     }
 
     public static void sendScrapToast(ServerPlayer player, ResourceLocation scrap) {
@@ -341,7 +344,12 @@ public class PayloadHandler {
         registrar.playToClient(
                 TriggerSpellFXPayload.TYPE,
                 TriggerSpellFXPayload.STREAM_CODEC,
-                ClientPayloadHandler::handleTriggerFX
+                ClientPayloadHandler::handleTriggerSpellFX
+        );
+        registrar.playToClient(
+                TriggerEntityFXPayload.TYPE,
+                TriggerEntityFXPayload.STREAM_CODEC,
+                ClientPayloadHandler::handleTriggerEntityFX
         );
         registrar.playToClient(
                 UpdateAbilitiesPayload.TYPE,
@@ -433,11 +441,6 @@ public class PayloadHandler {
                 SetBrokerTradesPayload.TYPE,
                 SetBrokerTradesPayload.STREAM_CODEC,
                 ServerPayloadHandler::handleSetBrokerTrades
-        );
-        registrar.playToServer(
-                SelectRiddleTradePayload.TYPE,
-                SelectRiddleTradePayload.STREAM_CODEC,
-                ServerPayloadHandler::handleSelectRiddleTrade
         );
         registrar.playToServer(
                 PlayerMovementPayload.TYPE,

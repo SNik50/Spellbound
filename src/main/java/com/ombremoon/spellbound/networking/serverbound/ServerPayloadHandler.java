@@ -3,15 +3,12 @@ package com.ombremoon.spellbound.networking.serverbound;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.world.entity.SBMerchant;
-import com.ombremoon.spellbound.common.world.entity.living.SpellBroker;
-import com.ombremoon.spellbound.common.world.inventory.RiddleTradeMenu;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MerchantMenu;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class ServerPayloadHandler {
@@ -97,15 +94,6 @@ public class ServerPayloadHandler {
         if (payload.containerId() == menu.containerId && menu instanceof MerchantMenu && entity instanceof SBMerchant merchant) {
             merchant.setTradeType(payload.isRiddle());
             player.sendMerchantOffers(menu.containerId, merchant.getOffers(), merchant.getMerchantLevel(), merchant.getVillagerXp(), false, false);
-        }
-    }
-
-    public static void handleSelectRiddleTrade(final SelectRiddleTradePayload payload, final IPayloadContext context) {
-        Player player = context.player();
-        int i = payload.item();
-        if (player.containerMenu instanceof RiddleTradeMenu menu) {
-            menu.setSelectionHint(i);
-            menu.tryMoveItems(i);
         }
     }
 

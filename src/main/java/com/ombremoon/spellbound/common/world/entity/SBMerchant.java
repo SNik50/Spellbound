@@ -2,11 +2,9 @@ package com.ombremoon.spellbound.common.world.entity;
 
 import com.google.common.collect.Lists;
 import com.mojang.serialization.DataResult;
-import com.ombremoon.spellbound.common.world.entity.living.SpellBroker;
-import com.ombremoon.spellbound.common.world.inventory.RiddleTradeMenu;
-import com.ombremoon.spellbound.main.Constants;
-import com.ombremoon.spellbound.common.world.SBTrades;
 import com.ombremoon.spellbound.common.events.custom.ModifySpellTradesEvent;
+import com.ombremoon.spellbound.common.world.SBTrades;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -38,7 +36,10 @@ import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.OptionalInt;
 
 public abstract class SBMerchant extends SBLivingEntity implements Merchant {
     private static final EntityDataAccessor<Boolean> RIDDLES = SynchedEntityData.defineId(SBMerchant.class, EntityDataSerializers.BOOLEAN);
@@ -177,6 +178,7 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
                 compound.put("Offers", (Tag)MerchantOffers.CODEC.encodeStart(this.registryAccess().createSerializationContext(NbtOps.INSTANCE), merchantoffers).getOrThrow());
             }
         }
+        compound.putBoolean("TradeType", this.getTradeType());
     }
 
     /**
@@ -208,6 +210,7 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
                 this.trades = (MerchantOffers) p_323775_;
             });
         }
+        this.setTradeType(compound.getBoolean("TradeType"));
     }
 
     /**
@@ -250,29 +253,14 @@ public abstract class SBMerchant extends SBLivingEntity implements Merchant {
 
     @Override
     public void openTradingScreen(Player player, Component displayName, int level) {
-        this.entityData.set(RIDDLES, false);
         OptionalInt optionalint = player.openMenu(
                 new SimpleMenuProvider((p_45298_, p_45299_, p_45300_) -> new MerchantMenu(p_45298_, p_45299_, this), displayName)
         );
         if (optionalint.isPresent()) {
-            this.setTradeType(false);
             MerchantOffers merchantoffers = this.getOffers();
             if (!merchantoffers.isEmpty()) {
-                PayloadHandler.setupBrokerMenu((ServerPlayer) player, optionalint.getAsInt(), this.getId(), null);
+                PayloadHandler.setupBrokerMenu((ServerPlayer) player, optionalint.getAsInt(), this.getId());
                 player.sendMerchantOffers(optionalint.getAsInt(), merchantoffers, level, this.getVillagerXp(), this.showProgressBar(), this.canRestock());
-            }
-        }
-    }
-
-    public void openRiddleTrades(Player player, Component displayName) {
-        this.entityData.set(RIDDLES, true);
-        OptionalInt optionalint = player.openMenu(
-                new SimpleMenuProvider((p_45298_, p_45299_, p_45300_) -> new RiddleTradeMenu(p_45298_, p_45299_, this), Component.literal("Hi"))
-        );
-        if (optionalint.isPresent()) {
-            MerchantOffers merchantoffers = this.getOffers();
-            if (!merchantoffers.isEmpty()) {
-                PayloadHandler.setupBrokerMenu((ServerPlayer) player, optionalint.getAsInt(), this.getId(), merchantoffers);
             }
         }
     }
