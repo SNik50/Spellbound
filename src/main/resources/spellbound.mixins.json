@@ -28,6 +28,7 @@
     "EntityRenderDispatcherMixin",
     "GameRendererMixin",
     "HumanoidModelMixin",
+    "ItemInHandLayerMixin",
     "LevelRendererMixin",
     "LivingEntityRendererMixin",
     "LocalPlayerMixin",

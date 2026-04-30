@@ -129,6 +129,12 @@ public class SBData {
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
     public static final Supplier<DataComponentType<Boolean>> SPECIAL_PICKUP = COMPONENT_TYPES.registerComponentType("special_pickup",
             builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+    public static final Supplier<DataComponentType<SpellType<?>>> DUNGEON_SPELL = COMPONENT_TYPES.registerComponentType("dungeon_spell",
+            builder -> builder.persistent(SBSpells.REGISTRY.byNameCodec()).networkSynchronized(ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)));
+    public static final Supplier<DataComponentType<SpellType<?>>> IMBUEMENT = COMPONENT_TYPES.registerComponentType("imbuement",
+            builder -> builder.persistent(SBSpells.REGISTRY.byNameCodec()).networkSynchronized(ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)));
+    public static final Supplier<DataComponentType<ResourceLocation>> IMBUEMENT_FX_OVERRIDE = COMPONENT_TYPES.registerComponentType("imbuement_fx_override",
+            builder -> builder.persistent(ResourceLocation.CODEC).networkSynchronized(ResourceLocation.STREAM_CODEC));
     public static final Supplier<DataComponentType<ResourceKey<PuzzleConfiguration>>> PUZZLE = COMPONENT_TYPES.registerComponentType("puzzle",
             builder -> builder.persistent(ResourceKey.codec(Keys.PUZZLE_CONFIG)).networkSynchronized(ResourceKey.streamCodec(Keys.PUZZLE_CONFIG)));
     public static final Supplier<DataComponentType<Boolean>> ENCRYPTED_KEY = COMPONENT_TYPES.registerComponentType("encrypted_key",
