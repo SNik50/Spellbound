@@ -4,12 +4,13 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
 import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
-import com.ombremoon.spellbound.common.magic.acquisition.deception.DungeonRules;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.RuleType;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
 import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
 import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
 import com.ombremoon.spellbound.common.world.commands.SpellboundCommand;
+import com.ombremoon.spellbound.common.world.commands.TestImbuementCommand;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
@@ -46,6 +47,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -76,6 +78,10 @@ public class NeoForgeEvents {
         new LearnSkillsCommand(dispatcher, context);
         new LearnSpellCommand(dispatcher, context);
         new SpellboundCommand(dispatcher, context);
+
+        if (!FMLEnvironment.production) {
+            new TestImbuementCommand(dispatcher);
+        }
 
         ConfigCommand.register(dispatcher);
     }
@@ -412,7 +418,7 @@ public class NeoForgeEvents {
         if (entity.level().isClientSide) return;
 
         LivingEntity target = event.getNewAboutToBeSetTarget();
-        if (target != null && target.hasEffect(SBEffects.MAGI_INVISIBILITY)) {
+        if (target != null && target.hasEffect(SBEffects.MAGI_INVISIBILITY) /*&& !(entity instanceof Nightblade)*/) {
             event.setNewAboutToBeSetTarget(null);
             return;
         }
@@ -442,11 +448,10 @@ public class NeoForgeEvents {
 
     @SubscribeEvent
     public static void onItemInteract(PlayerInteractEvent.RightClickItem event) {
-        if (event.getEntity() instanceof Player player && !player.level().isClientSide) {
-            /*if (PuzzleDungeonData.hasRule((ServerLevel) player.level(), DungeonRules.NO_INTERACT)) {
-                event.setCancellationResult(InteractionResult.SUCCESS_NO_ITEM_USED);
-                event.setCanceled(true);
-            }*/
+        ItemStack stack = event.getItemStack();
+        Player player = event.getEntity();
+        if (PuzzleDungeonData.hasRule(player.level(), player, RuleType.NO_INTERACT, stack.getItem())) {
+            event.setCanceled(true);
         }
     }
 
@@ -480,14 +485,14 @@ public class NeoForgeEvents {
         if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY))
             return;
 
-        if (!level.isClientSide) {
+        if (!level.isClientSide && PuzzleDungeonData.isDungeon(level)) {
             ServerLevel serverLevel = (ServerLevel) level;
             boolean flag =  source.getEntity() != null;
-            if (PuzzleDungeonData.hasRule(serverLevel, DungeonRules.NO_PVE_OR_PVP) && flag) {
+            if (PuzzleDungeonData.hasRule(serverLevel, RuleType.NO_PVE_OR_PVP, livingEntity.getType()) && flag) {
                 event.setCanceled(true);
-            } else if (PuzzleDungeonData.hasRule(serverLevel, DungeonRules.NO_PVP) && source.getEntity() instanceof Player) {
+            } else if (PuzzleDungeonData.hasRule(serverLevel, RuleType.NO_PVP) && source.getEntity() instanceof Player) {
                 event.setCanceled(true);
-            } else if (PuzzleDungeonData.hasRule(serverLevel, DungeonRules.NO_PVE) && flag) {
+            } else if (PuzzleDungeonData.hasRule(serverLevel, RuleType.NO_PVE, livingEntity.getType()) && flag) {
                 event.setCanceled(true);
             }
         }
