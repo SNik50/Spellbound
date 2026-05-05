@@ -128,7 +128,7 @@ public class HealingBlossomSpell extends AnimatedSpell {
 
                 this.setBlossom(healingBlossom);
                 level.playSound(null, context.getCaster().blockPosition(), SoundEvents.CHORUS_FLOWER_GROW,
-                        SoundSource.PLAYERS, 0.6F, 0.8F);
+                        SoundSource.PLAYERS, 0.9F, 0.7F);
             });
 
             if (context.hasSkill(SBSkills.REBIRTH)) {
