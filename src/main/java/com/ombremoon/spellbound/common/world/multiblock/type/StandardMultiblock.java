@@ -23,7 +23,7 @@ public class StandardMultiblock extends Multiblock {
     public static class Builder extends MultiblockBuilder {
 
         protected Builder() {
-            this.key.put(' ', BuildingBlock.EMPTY);
+//            this.key.put(' ', BuildingBlock.EMPTY);
             this.activeIndex = MultiblockIndex.ORIGIN;
         }
 

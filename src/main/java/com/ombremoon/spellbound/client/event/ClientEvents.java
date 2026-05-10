@@ -1,49 +1,48 @@
 package com.ombremoon.spellbound.client.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.ombremoon.spellbound.client.ImbuementRenderers;
 import com.ombremoon.spellbound.client.KeyBinds;
 import com.ombremoon.spellbound.client.MovementData;
 import com.ombremoon.spellbound.client.gui.CastModeOverlay;
-import com.ombremoon.spellbound.client.gui.screens.SpellSelectScreen;
 import com.ombremoon.spellbound.client.gui.guide.GuideTooltipRenderer;
 import com.ombremoon.spellbound.client.gui.guide.elements.*;
 import com.ombremoon.spellbound.client.gui.guide.renderers.*;
 import com.ombremoon.spellbound.client.gui.guide.renderers.init.ElementRenderDispatcher;
+import com.ombremoon.spellbound.client.gui.screens.SpellSelectScreen;
 import com.ombremoon.spellbound.client.particle.CircleAroundPositionParticle;
 import com.ombremoon.spellbound.client.particle.GenericParticle;
 import com.ombremoon.spellbound.client.particle.SparkParticle;
-import com.ombremoon.spellbound.client.photon.HeldItemTransformCapture;
-import com.ombremoon.spellbound.client.photon.ImbuementFXManager;
 import com.ombremoon.spellbound.client.photon.converter.EffectDataConverter;
 import com.ombremoon.spellbound.client.photon.converter.EffectTypes;
 import com.ombremoon.spellbound.client.renderer.SpellDimensionDebugRenderer;
 import com.ombremoon.spellbound.client.renderer.blockentity.*;
-import com.ombremoon.spellbound.client.renderer.entity.*;
+import com.ombremoon.spellbound.client.renderer.entity.LivingShadowRenderer;
+import com.ombremoon.spellbound.client.renderer.entity.SBModelLayerLocs;
+import com.ombremoon.spellbound.client.renderer.entity.SpellBrokerRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.CatModel;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.CatRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.FrogModel;
-import com.ombremoon.spellbound.client.renderer.entity.LivingShadowRenderer;
-import com.ombremoon.spellbound.client.renderer.entity.SpellBrokerRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.familiar.FrogRenderer;
-import com.ombremoon.spellbound.client.renderer.types.*;
 import com.ombremoon.spellbound.client.renderer.entity.projectile.StormstrikeBoltRenderer;
 import com.ombremoon.spellbound.client.renderer.entity.spell.*;
 import com.ombremoon.spellbound.client.renderer.layer.FrozenLayer;
 import com.ombremoon.spellbound.client.renderer.layer.GenericSpellLayer;
 import com.ombremoon.spellbound.client.renderer.layer.SpellCastRenderLayer;
+import com.ombremoon.spellbound.client.renderer.types.*;
 import com.ombremoon.spellbound.client.shader.SBShaders;
+import com.ombremoon.spellbound.common.init.*;
+import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.SpellPath;
+import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
+import com.ombremoon.spellbound.common.magic.api.events.MouseInputEvent;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.block.entity.RuneBlockEntity;
 import com.ombremoon.spellbound.common.world.weather.ClientHailstormData;
 import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
-import com.ombremoon.spellbound.common.init.*;
-import com.ombremoon.spellbound.common.magic.SpellHandler;
-import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
-import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
-import com.ombremoon.spellbound.common.magic.api.events.MouseInputEvent;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
@@ -139,6 +138,7 @@ public class ClientEvents {
         event.registerBlockEntityRenderer(SBBlockEntities.RUNE.get(), RuneBlockRenderer::new);
         event.registerBlockEntityRenderer(SBBlockEntities.SUMMON_PORTAL.get(), SummonPortalRenderer::new);
         event.registerBlockEntityRenderer(SBBlockEntities.TRANSFIGURATION_DISPLAY.get(), TransfigurationDisplayRenderer::new);
+        event.registerBlockEntityRenderer(SBBlockEntities.DARK_ALTAR.get(), DarkAltarRenderer::new);
     }
 
     @SubscribeEvent
@@ -185,6 +185,12 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onRegisterBlockColorHandlers(RegisterColorHandlersEvent.Block event) {
         event.register((state, level, pos, tintIndex) ->  level != null && pos != null && level.getBlockEntity(pos) instanceof RuneBlockEntity runeBlock ? runeBlock.getData(SBData.RUNE_COLOR.get()) : -1, SBBlocks.RUNE.get());
+    }
+
+    @SubscribeEvent
+    public static void onRegisterRenderBuffers(RegisterRenderBuffersEvent event) {
+        event.registerRenderBuffer(ImbuementRenderers.getSmiteGlintDirect());
+        event.registerRenderBuffer(ImbuementRenderers.getSmiteEntityGlintDirect());
     }
 
     @SubscribeEvent
@@ -411,23 +417,6 @@ public class ClientEvents {
     public static void onComputeFogColor(ViewportEvent.ComputeFogColor event) {
         ClientHailstormData data = (ClientHailstormData) HailstormSavedData.get(Minecraft.getInstance().level);
 //        data.renderHailstormFog(event);
-    }
-
-    @SubscribeEvent
-    public static void onClientTick(ClientTickEvent.Post event) {
-        ImbuementFXManager.clientTick();
-    }
-
-    @SubscribeEvent
-    public static void onRenderFramePre(RenderFrameEvent.Pre event) {
-        HeldItemTransformCapture.onFrameStart();
-    }
-
-    @SubscribeEvent
-    public static void onRenderHand(RenderHandEvent event) {
-        Minecraft mc = Minecraft.getInstance();
-        if (mc.player == null || event.getItemStack().isEmpty()) return;
-        HeldItemTransformCapture.capture(mc.player.getId(), event.getHand(), event.getPoseStack());
     }
 
     @SubscribeEvent

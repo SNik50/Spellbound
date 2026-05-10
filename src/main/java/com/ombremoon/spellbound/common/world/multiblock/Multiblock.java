@@ -18,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
@@ -123,9 +124,12 @@ public abstract class Multiblock implements Loggable {
     }
 
     public boolean tryCreateMultiblock(Level level, Player player, BlockPos blockPos, Direction facing) {
+        player.sendSystemMessage(Component.literal("Checking For Assignment"));
         if (!this.checkForMultiblock(level, blockPos)) {
             Multiblock.MultiblockPattern pattern = this.findPattern(level, blockPos, facing);
+            player.sendSystemMessage(Component.literal("Checking For Pattern"));
             if (pattern != null) {
+                player.sendSystemMessage(Component.literal("Pattern Found"));
                 pattern.assignMultiblock(level);
                 this.onActivate(player, level, pattern);
                 return true;
@@ -199,7 +203,7 @@ public abstract class Multiblock implements Loggable {
         protected MultiblockIndex activeIndex;
 
         protected MultiblockBuilder() {
-            this.key.put(' ', BuildingBlock.EMPTY);
+//            this.key.put(' ', BuildingBlock.EMPTY);
             this.activeIndex = MultiblockIndex.ORIGIN;
         }
     }
@@ -232,7 +236,7 @@ public abstract class Multiblock implements Loggable {
                 for (String s : array) {
                     for (int l = 0; l < s.length(); l++) {
                         char c0 = s.charAt(l);
-                        BuildingBlock block = c0 == ' ' ? BuildingBlock.EMPTY : data.key.get(c0);
+                        BuildingBlock block = /*c0 == ' ' ? BuildingBlock.EMPTY : */data.key.get(c0);
                         if (block == null) {
                             return DataResult.error(() -> "Pattern references symbol '" + c0 + "' but it's not defined in the key");
                         }

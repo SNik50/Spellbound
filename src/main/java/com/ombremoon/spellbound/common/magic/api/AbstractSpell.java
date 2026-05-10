@@ -600,6 +600,9 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         }
     }
 
+    public void onClientCastTick(SpellContext context) {
+    }
+
     public void resetCast(SpellHandler handler) {
         this.resetCast(handler, this.castContext);
     }

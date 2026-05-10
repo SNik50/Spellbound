@@ -14,14 +14,20 @@ import com.ombremoon.spellbound.common.world.DamageTranslation;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.BlockParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,6 +37,8 @@ import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.monster.ZombifiedPiglin;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
@@ -50,7 +58,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 .duration(2400)
                 .isSpecialChoice()
                 .additionalCondition((context, summonUndeadSpell) -> !summonUndeadSpell.skipEndOnRecast(context) && context.getLevel().getDifficulty() != Difficulty.PEACEFUL)
-                .castAnimation((context, spell) -> new SpellAnimation(shouldExplodeCorpse(context) || spell.hasSpecialChoice(spell, context) ? "instant_cast" : "summon", SpellAnimation.Type.CAST, true))
+                .castAnimation((context, spell) -> new SpellAnimation(shouldExplodeCorpse(context) || spell.hasSpecialChoice(context) ? "instant_cast" : "summon", SpellAnimation.Type.CAST, true))
                 .skipEndOnRecast(context -> {
                     LivingEntity caster = context.getCaster();
                     var handler = context.getSpellHandler();
@@ -140,7 +148,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
 
     @Override
     public int getCastTime(SpellContext context) {
-        return shouldExplodeCorpse(context) || this.hasSpecialChoice(this, context) ? 1 : this.maxCharges(context) * 20;
+        return shouldExplodeCorpse(context) || this.hasSpecialChoice(context) ? 1 : this.maxCharges(context) * 20;
     }
 
     @Override
@@ -156,8 +164,9 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
     protected void onSpellStart(SpellContext context) {
         super.onSpellStart(context);
         LivingEntity caster = context.getCaster();
+        Level level = context.getLevel();
         int charges = this.getCharges() + 1;
-        if (!context.getLevel().isClientSide) {
+        if (!level.isClientSide) {
             EntityType<?> undead = EntityType.ZOMBIE;
             if (context.isChoice(SBSkills.SUMMON_ZOMBIFIED_PIGLIN)) {
                 undead = EntityType.ZOMBIFIED_PIGLIN;
@@ -176,7 +185,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                 Vec3 spawnOffset = this.getSurroundingSpawnPosition(origin, yaw, radius, i, charges);
                 this.summonEntity(context, undead, spawnOffset);
             }
-            (context.getLevel()).playSound(null, context.getCaster().blockPosition(), SoundEvents.TRIAL_SPAWNER_AMBIENT,
+            level.playSound(null, context.getCaster().blockPosition(), SoundEvents.TRIAL_SPAWNER_AMBIENT,
                     SoundSource.PLAYERS, 1F, 0.8F);
         }
 
@@ -253,6 +262,12 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
     }
 
     @Override
+    public void onClientCastTick(SpellContext context) {
+        super.onClientCastTick(context);
+        log(this.getCharges());
+    }
+
+    @Override
     public int maxCharges(SpellContext context) {
         int defaultMax = context.getSpellLevel() + 1;
         int currentSummonSize = this.getSummonSize(context);
@@ -261,7 +276,20 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
 
     @Override
     public boolean canCharge(SpellContext context) {
-        return !shouldExplodeCorpse(context);
+        return !this.hasSpecialChoice(context) && !shouldExplodeCorpse(context);
+    }
+
+    private void clientDiggingParticles(Level level, BlockPos pos) {
+        RandomSource randomsource = level.getRandom();
+        BlockState blockstate = level.getBlockState(pos);
+        if (blockstate.getRenderShape() != RenderShape.INVISIBLE) {
+            for (int i = 0; i < 30; i++) {
+                double d0 = pos.getX() + (double) Mth.randomBetween(randomsource, -0.7F, 0.7F);
+                double d1 = pos.getY();
+                double d2 = pos.getZ() + (double)Mth.randomBetween(randomsource, -0.7F, 0.7F);
+                level.addParticle(new BlockParticleOption(ParticleTypes.BLOCK, blockstate), d0, d1, d2, 0.0, 0.0, 0.0);
+            }
+        }
     }
 
     public void setExploding(boolean exploding) {

@@ -121,7 +121,7 @@ public class TransfigurationMultiblock extends StandardMultiblock {
 
         public Builder() {
             this.key.put('*', BuildingBlock.ANY);
-            this.key.put(' ', BuildingBlock.EMPTY);
+//            this.key.put(' ', BuildingBlock.EMPTY);
             this.key.put('^', BuildingBlock.of(SBBlocks.RUNE.get()));
             this.key.put('$', BuildingBlock.of(SBBlocks.TRANSFIGURATION_DISPLAY.get()));
             this.key.put('#', BuildingBlock.of(SBBlocks.TRANSFIGURATION_PEDESTAL.get()));
@@ -134,23 +134,24 @@ public class TransfigurationMultiblock extends StandardMultiblock {
         public Builder rings(int rings) {
             if (rings == 1) {
                 this.pattern("**^^^**",
-                             "*$   $*",
-                             "^     ^",
-                             "^  #  ^",
-                             "^     ^",
-                             "*$   $*",
+                             "*$***$*",
+                             "^*****^",
+                             "^**#**^",
+                             "^*****^",
+                             "*$***$*",
                              "**^^^**");
                 this.index(3, 0, 3);
                 this.rings = 1;
             } else if (rings == 2) {
+                this.key(' ', BuildingBlock.EMPTY);
                 this.pattern("***********",
                              "***********",
                              "****^^^****",
-                             "***$   $***",
-                             "**^     ^**",
-                             "**^  #  ^**",
-                             "**^     ^**",
-                             "***$   $***",
+                             "***$***$***",
+                             "**^*****^**",
+                             "**^**#**^**",
+                             "**^*****^**",
+                             "***$***$***",
                              "****^^^****",
                              "***********",
                              "***********");
@@ -168,6 +169,7 @@ public class TransfigurationMultiblock extends StandardMultiblock {
                 this.rings = 2;
                 this.index(5, 0, 5);
             } else if (rings == 3) {
+                this.key(' ', BuildingBlock.EMPTY);
                 this.pattern("***************",
                              "***************",
                              "***************",

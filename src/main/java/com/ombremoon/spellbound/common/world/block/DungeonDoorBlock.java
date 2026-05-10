@@ -2,13 +2,10 @@ package com.ombremoon.spellbound.common.world.block;
 
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBItems;
-import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
-import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.world.dimension.DynamicDimensionFactory;
 import com.ombremoon.spellbound.main.Keys;
-import com.ombremoon.spellbound.mixin.ConnectionAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -19,13 +16,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class DeceptionTestBlock extends Block {
-    public DeceptionTestBlock(BlockBehaviour.Properties properties) {
-        super(properties);
+public class DungeonDoorBlock extends DoorBlock {
+
+    public DungeonDoorBlock(Properties properties) {
+        super(BlockSetType.OAK, properties);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class DeceptionTestBlock extends Block {
             }
         }
 
-        return ItemInteractionResult.FAIL;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     private void sendToDungeon(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player) {

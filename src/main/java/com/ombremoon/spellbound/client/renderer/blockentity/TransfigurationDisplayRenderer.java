@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.client.renderer.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import com.ombremoon.spellbound.common.world.block.entity.TransfigurationDisplayBlockEntity;
+import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -46,7 +47,8 @@ public class TransfigurationDisplayRenderer implements BlockEntityRenderer<Trans
                 poseStack.translate(vec3.x, vec3.y, vec3.z);
             }
 
-            this.itemRenderer.renderStatic(itemstack, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, blockEntity.getLevel(), 0);
+            int k = LevelRenderer.getLightColor(blockEntity.getLevel(), blockEntity.getBlockState(), blockEntity.getBlockPos().above());
+            this.itemRenderer.renderStatic(itemstack, ItemDisplayContext.GROUND, k, OverlayTexture.NO_OVERLAY, poseStack, bufferSource, blockEntity.getLevel(), 0);
         }
 
         poseStack.popPose();

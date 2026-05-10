@@ -1,9 +1,12 @@
 package com.ombremoon.spellbound.common.world.block;
 
 import com.mojang.serialization.MapCodec;
+import com.ombremoon.spellbound.common.world.block.entity.DarkAltarBlockEntity;
 import com.ombremoon.spellbound.common.world.block.entity.TransfigurationDisplayBlockEntity;
 import com.ombremoon.spellbound.common.init.SBBlockEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
@@ -36,7 +39,7 @@ public class TransfigurationDisplayBlock extends BaseEntityBlock {
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         BlockEntity entity = level.getBlockEntity(pos);
         if (entity instanceof TransfigurationDisplayBlockEntity display && !display.active) {
-            if (display.currentItem == null) {
+            if (display.currentItem.isEmpty()) {
                 return InteractionResult.CONSUME;
             } else {
                 ItemStack itemstack = display.currentItem;
@@ -44,7 +47,7 @@ public class TransfigurationDisplayBlock extends BaseEntityBlock {
                     player.drop(itemstack, false);
                 }
 
-                display.setItem(null);
+                display.setItem(ItemStack.EMPTY);
                 level.sendBlockUpdated(pos, state, state, 3);
                 level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
                 return InteractionResult.sidedSuccess(level.isClientSide);
@@ -60,7 +63,7 @@ public class TransfigurationDisplayBlock extends BaseEntityBlock {
         if (entity instanceof TransfigurationDisplayBlockEntity display) {
             if (stack.isEmpty()) {
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-            } else if (display.currentItem != null) {
+            } else if (!display.currentItem.isEmpty()) {
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             } else if (!display.active) {
                 display.setItem(stack.copyWithCount(1));
@@ -72,6 +75,20 @@ public class TransfigurationDisplayBlock extends BaseEntityBlock {
         }
 
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock())) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof TransfigurationDisplayBlockEntity display && !display.currentItem.isEmpty()) {
+                NonNullList<ItemStack> list = NonNullList.create();
+                list.add(display.currentItem);
+                Containers.dropContents(level, pos, list);
+            }
+
+            super.onRemove(state, level, pos, newState, movedByPiston);
+        }
     }
 
     @Override

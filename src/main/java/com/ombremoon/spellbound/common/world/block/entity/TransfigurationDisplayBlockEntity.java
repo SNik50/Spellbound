@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblockPart {
-    public ItemStack currentItem;
+    public ItemStack currentItem = ItemStack.EMPTY;
     public float rot;
     public float oRot;
     public float tRot;
@@ -94,7 +94,7 @@ public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblock
     }
 
     private static void resetDisplay(TransfigurationDisplayBlockEntity display) {
-        display.setItem(null);
+        display.setItem(ItemStack.EMPTY);
         display.centerDistX = 0;
         display.centerDistY = 0;
         display.centerDistZ = 0;
@@ -155,7 +155,7 @@ public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblock
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        if (this.currentItem != null && !this.currentItem.isEmpty()) {
+        if (!this.currentItem.isEmpty()) {
             ItemStack.CODEC
                     .encodeStart(NbtOps.INSTANCE, this.currentItem)
                     .resultOrPartial(LOGGER::error)
@@ -178,7 +178,7 @@ public class TransfigurationDisplayBlockEntity extends TransfigurationMultiblock
             DataResult<ItemStack> dataResult = ItemStack.CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("CurrentItem")));
             dataResult.resultOrPartial(LOGGER::error).ifPresent(this::setItem);
         } else {
-            this.currentItem = null;
+            this.currentItem = ItemStack.EMPTY;
         }
 
         this.pedestalPos = BlockPos.containing(tag.getInt("CenterX"), tag.getInt("CenterY"), tag.getInt("CenterZ"));

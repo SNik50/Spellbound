@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
+import com.ombremoon.spellbound.common.magic.effects.types.Nothing;
 import com.ombremoon.spellbound.common.world.multiblock.Multiblock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.RegistrationInfo;
@@ -29,6 +30,8 @@ import java.util.Optional;
 import java.util.function.Supplier;
 
 public record EffectHolder(MagicEffect effect, Optional<LootItemCondition> requirement, TickProvider tickProvider, Optional<RangeProvider> range, DataComponentMap components, BuffCategory category, int effectDuration) {
+    public static final EffectHolder EMPTY = new EffectHolder(new Nothing(), Optional.empty(), new TickProvider.NoTick(), Optional.empty(), DataComponentMap.EMPTY, BuffCategory.NEUTRAL, 0);
+
     public static final Codec<EffectHolder> CODEC = RecordCodecBuilder.create(inst -> inst.group(
             MagicEffect.CODEC.fieldOf("effect").forGetter(EffectHolder::effect),
             LootItemCondition.DIRECT_CODEC.optionalFieldOf("requirement").forGetter(EffectHolder::requirement),

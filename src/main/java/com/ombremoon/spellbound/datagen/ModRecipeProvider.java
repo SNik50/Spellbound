@@ -1,10 +1,15 @@
 package com.ombremoon.spellbound.datagen;
 
-import com.ombremoon.spellbound.common.init.SBBlocks;
-import com.ombremoon.spellbound.common.init.SBData;
-import com.ombremoon.spellbound.common.init.SBItems;
-import com.ombremoon.spellbound.common.init.SBTags;
+import com.ombremoon.spellbound.common.init.*;
+import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
+import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
+import com.ombremoon.spellbound.common.magic.effects.TickProvider;
+import com.ombremoon.spellbound.common.magic.effects.types.ApplyMobEffect;
+import com.ombremoon.spellbound.common.magic.effects.types.DamageEntity;
+import com.ombremoon.spellbound.common.world.recipe.RuneCraftingRecipeBuilder;
+import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
@@ -13,6 +18,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class ModRecipeProvider extends RecipeProvider {
@@ -172,5 +178,35 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("###")
                 .unlockedBy("has_magic_essence", has(SBItems.MAGIC_ESSENCE.get()))
                 .save(output);
+
+
+        RuneCraftingRecipeBuilder.createRune(
+                EffectHolder.simple(
+                        new ApplyMobEffect(HolderSet.direct(SBEffects.ROOTED), 3, 3, 0, 0),
+                        Optional.empty(),
+                        new TickProvider.AtTick(0),
+                        BuffCategory.HARMFUL,
+                        1
+                )
+        )
+                .requires(Items.OAK_LOG)
+                .requires(Items.OAK_SLAB)
+                .requires(Items.OAK_PLANKS)
+                .requires(Items.OAK_FENCE)
+                .save(output, CommonClass.customLocation("tanglefoot"));
+        RuneCraftingRecipeBuilder.createRune(
+                EffectHolder.simple(
+                        new DamageEntity(SBDamageTypes.SB_GENERIC, 2),
+                        Optional.empty(),
+                        new TickProvider.AtTick(0),
+                        BuffCategory.HARMFUL,
+                        1
+                )
+        )
+                .requires(Items.SUGAR)
+                .requires(Items.SUGAR)
+                .requires(Items.SUGAR)
+                .requires(Items.SUGAR)
+                .save(output, CommonClass.customLocation("curse"));
     }
 }

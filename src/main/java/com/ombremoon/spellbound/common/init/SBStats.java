@@ -15,6 +15,7 @@ public class SBStats {
     public static final Supplier<ResourceLocation> SPELLS_LEARNED = registerStat("spells_learned");
     public static final Supplier<ResourceLocation> SPELLS_CAST = registerStat("spells_cast");
     public static final Supplier<ResourceLocation> INTERACT_WITH_BENCH = registerStat("interact_with_bench");
+    public static final Supplier<ResourceLocation> INTERACT_WITH_DARK_ALTAR = registerStat("interact_with_dark_altar");
 
     public static Supplier<ResourceLocation> registerStat(String name) {
         return STATS.register(name, () -> CommonClass.customLocation(name));

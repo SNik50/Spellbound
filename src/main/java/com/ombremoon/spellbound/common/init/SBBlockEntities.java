@@ -17,6 +17,7 @@ public class SBBlockEntities {
     public static final Supplier<BlockEntityType<TransfigurationDisplayBlockEntity>> TRANSFIGURATION_DISPLAY = BLOCK_ENTITY_TYPE.register("transfiguration_display", () -> BlockEntityType.Builder.of(TransfigurationDisplayBlockEntity::new, SBBlocks.TRANSFIGURATION_DISPLAY.get()).build(null));
     public static final Supplier<BlockEntityType<PedestalBlockEntity>> PEDESTAL = BLOCK_ENTITY_TYPE.register("pedestal", () -> BlockEntityType.Builder.of(PedestalBlockEntity::new, SBBlocks.TRANSFIGURATION_PEDESTAL.get()).build(null));
     public static final Supplier<BlockEntityType<ValkyrBlockEntity>> VALKY_STATUE = BLOCK_ENTITY_TYPE.register("valkyr_statue", () -> BlockEntityType.Builder.of(ValkyrBlockEntity::new, SBBlocks.VALKYR_STATUE.get()).build(null));
+    public static final Supplier<BlockEntityType<DarkAltarBlockEntity>> DARK_ALTAR = BLOCK_ENTITY_TYPE.register("dark_altar", () -> BlockEntityType.Builder.of(DarkAltarBlockEntity::new, SBBlocks.DARK_ALTAR.get()).build(null));
 
     public static void register(IEventBus modEventBus) {
         BLOCK_ENTITY_TYPE.register(modEventBus);
