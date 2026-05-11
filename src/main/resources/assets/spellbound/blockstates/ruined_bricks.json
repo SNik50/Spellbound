@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "ruin_path=none": {
+      "model": "spellbound:block/ruined_bricks"
+    },
+    "ruin_path=air": {
+      "model": "spellbound:block/ruined_bricks_air"
+    },
+    "ruin_path=earth": {
+      "model": "spellbound:block/ruined_bricks_earth"
+    },
+    "ruin_path=fire": {
+      "model": "spellbound:block/ruined_bricks_fire"
+    },
+    "ruin_path=frost": {
+      "model": "spellbound:block/ruined_bricks_ice"
+    },
+    "ruin_path=shock": {
+      "model": "spellbound:block/ruined_bricks_shock"
+    },
+    "ruin_path=water": {
+      "model": "spellbound:block/ruined_bricks_water"
+    }
+  }
+}

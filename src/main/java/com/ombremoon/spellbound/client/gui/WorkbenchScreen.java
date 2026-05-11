@@ -179,7 +179,7 @@ public class WorkbenchScreen extends Screen {
                 }
             }
         }
-        if (isHovering(5, 29 + (scrollIndex * 15), 12, 104, mouseX, mouseY)) {
+        if (isHovering(5, 29, 12, 104, mouseX, mouseY)) {
             this.scrolling = true;
             return true;
         }

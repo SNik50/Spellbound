@@ -17,6 +17,7 @@ public class SBMagicEffects {
     public static final Registry<MagicEffect.Serializer<? extends MagicEffect>> REGISTRY = new RegistryBuilder<>(RITUAL_EFFECT_REGISTRY_KEY).sync(true).create();
     public static final DeferredRegister<MagicEffect.Serializer<? extends MagicEffect>> RITUAL_EFFECTS = DeferredRegister.create(REGISTRY, Constants.MOD_ID);
 
+    public static final Supplier<MagicEffect.Serializer<Nothing>> NOTHING = RITUAL_EFFECTS.register("nothing", Nothing.Serializer::new);
     public static final Supplier<MagicEffect.Serializer<CreateItem>> CREATE_ITEM = RITUAL_EFFECTS.register("create_item", CreateItem.Serializer::new);
     public static final Supplier<MagicEffect.Serializer<CreateSpellTome>> CREATE_SPELL_TOME = RITUAL_EFFECTS.register("create_spell_tome", CreateSpellTome.Serializer::new);
     public static final Supplier<MagicEffect.Serializer<DamageEntity>> DAMAGE_ENTITY = RITUAL_EFFECTS.register("damage_entity", DamageEntity.Serializer::new);

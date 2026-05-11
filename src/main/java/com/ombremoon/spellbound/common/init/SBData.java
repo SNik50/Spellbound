@@ -6,7 +6,9 @@ import com.ombremoon.spellbound.common.magic.acquisition.deception.DungeonRule;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleConfiguration;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDefinition;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
@@ -131,14 +133,14 @@ public class SBData {
             builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
     public static final Supplier<DataComponentType<SpellType<?>>> DUNGEON_SPELL = COMPONENT_TYPES.registerComponentType("dungeon_spell",
             builder -> builder.persistent(SBSpells.REGISTRY.byNameCodec()).networkSynchronized(ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)));
-    public static final Supplier<DataComponentType<SpellType<?>>> IMBUEMENT = COMPONENT_TYPES.registerComponentType("imbuement",
-            builder -> builder.persistent(SBSpells.REGISTRY.byNameCodec()).networkSynchronized(ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY)));
-    public static final Supplier<DataComponentType<ResourceLocation>> IMBUEMENT_FX_OVERRIDE = COMPONENT_TYPES.registerComponentType("imbuement_fx_override",
-            builder -> builder.persistent(ResourceLocation.CODEC).networkSynchronized(ResourceLocation.STREAM_CODEC));
+    public static final Supplier<DataComponentType<Imbuement>> IMBUEMENT = COMPONENT_TYPES.registerComponentType("imbuement",
+            builder -> builder.persistent(Imbuement.CODEC).networkSynchronized(Imbuement.STREAM_CODEC));
     public static final Supplier<DataComponentType<ResourceKey<PuzzleConfiguration>>> PUZZLE = COMPONENT_TYPES.registerComponentType("puzzle",
             builder -> builder.persistent(ResourceKey.codec(Keys.PUZZLE_CONFIG)).networkSynchronized(ResourceKey.streamCodec(Keys.PUZZLE_CONFIG)));
     public static final Supplier<DataComponentType<Boolean>> ENCRYPTED_KEY = COMPONENT_TYPES.registerComponentType("encrypted_key",
             builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+    public static final Supplier<DataComponentType<List<EffectHolder>>> RUNE_EFFECTS = COMPONENT_TYPES.registerComponentType("rune_effects",
+            builder -> builder.persistent(EffectHolder.CODEC.listOf()).networkSynchronized(EffectHolder.STREAM_CODEC.apply(ByteBufCodecs.list())));
 
     //Spell Components
     public static final Supplier<DataComponentType<Unit>> POD_LEADER = COMPONENT_TYPES.registerComponentType("pod_leader", builder -> builder.persistent(Unit.CODEC));

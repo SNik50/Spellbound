@@ -29,7 +29,6 @@ import net.nikdo53.tinymultiblocklib.components.SharedStatePropertiesBuilder;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 public class ValkyrStatueBlock extends AbstractMultiBlock implements IPreviewableMultiblock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;

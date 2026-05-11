@@ -114,6 +114,7 @@ public class CursedRune extends VFXSpellEntity<CursedRuneSpell> {
                     }
                 }
 
+                this.removeEntityFX(this.getEffectLocation());
                 this.triggerFX(
                         EffectData.StaticEntity.of(CommonClass.customLocation("cursed_rune_discharge"), this.getId(), EntityEffectExecutor.AutoRotate.NONE)
                                 .setOffset(0, 0.1, 0)
@@ -124,7 +125,7 @@ public class CursedRune extends VFXSpellEntity<CursedRuneSpell> {
 
             var list1 = this.level().getEntitiesOfClass(Projectile.class, this.getBoundingBox().inflate(0.25, 0.5, 0.25));
             if (!list1.isEmpty()) {
-                this.removeEntityFX(this.getEffectLocation());
+//                this.removeEntityFX(this.getEffectLocation());
                 this.triggerFX(
                         EffectData.StaticEntity.of(CommonClass.customLocation("cursed_rune_discharge"), this.getId(), EntityEffectExecutor.AutoRotate.NONE)
                                 .setOffset(0, 0.1, 0)

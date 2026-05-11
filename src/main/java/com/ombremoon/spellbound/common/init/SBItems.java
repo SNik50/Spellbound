@@ -62,6 +62,7 @@ public class SBItems {
     public static final Supplier<Item> MANA_TEAR = registerItem("mana_tear", () -> new ManaTearItem(getItemProperties()));
     public static final Supplier<Item> CHALK = registerItem("chalk", () -> new ChalkItem(getItemProperties().stacksTo(16)));
     public static final Supplier<Item> SPIRIT_WHISTLE = registerItem("spirit_whistle",  () -> new SpiritWhistleItem(getItemProperties()), true);
+    public static final Supplier<Item> ARCANE_EYE = registerItem("arcane_eye",  () -> new ArcaneEyeItem(getItemProperties().stacksTo(1)));
     public static final Supplier<Item> DUNGEON_KEY = registerItem("dungeon_key",  () -> new DungeonKeyItem(getItemProperties().stacksTo(1)));
 
     //Guide Books

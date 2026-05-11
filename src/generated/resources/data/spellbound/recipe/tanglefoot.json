@@ -1,0 +1,33 @@
+{
+  "type": "spellbound:rune_crafting",
+  "effect": {
+    "category": "harmful",
+    "effect": {
+      "type": "spellbound:apply_mob_effect",
+      "max_amplifier": 0,
+      "max_duration": 3,
+      "min_amplifier": 0,
+      "min_duration": 3,
+      "to_apply": "spellbound:rooted"
+    },
+    "effect_duration": 1,
+    "tick_provider": {
+      "type": "spellbound:at_tick",
+      "tick": 0
+    }
+  },
+  "ingredients": [
+    {
+      "item": "minecraft:oak_log"
+    },
+    {
+      "item": "minecraft:oak_slab"
+    },
+    {
+      "item": "minecraft:oak_planks"
+    },
+    {
+      "item": "minecraft:oak_fence"
+    }
+  ]
+}
