@@ -189,7 +189,7 @@ public class ClientEvents {
 
     @SubscribeEvent
     public static void onRegisterRenderBuffers(RegisterRenderBuffersEvent event) {
-        event.registerRenderBuffer(ImbuementRenderers.getSmiteGlintDirect());
+        event.registerRenderBuffer(ImbuementRenderers.getSmiteGlint());
         event.registerRenderBuffer(ImbuementRenderers.getSmiteEntityGlintDirect());
     }
 
