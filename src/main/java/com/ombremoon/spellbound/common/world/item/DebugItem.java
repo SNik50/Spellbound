@@ -54,8 +54,8 @@ public class DebugItem extends Item implements Loggable {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-//        if (!CommonClass.isDevEnv())
-//            return InteractionResultHolder.fail(player.getItemInHand(usedHand));
+        if (!CommonClass.isDevEnv())
+            return InteractionResultHolder.fail(player.getItemInHand(usedHand));
 
         var handler = SpellUtil.getSpellHandler(player);
         var skillHandler = SpellUtil.getSkills(player);
@@ -72,8 +72,8 @@ public class DebugItem extends Item implements Loggable {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
-//        if (!CommonClass.isDevEnv())
-//             return InteractionResult.FAIL;
+        if (!CommonClass.isDevEnv())
+             return InteractionResult.FAIL;
 
         BlockPos blockPos = context.getClickedPos();
         if (!level.isClientSide) {
@@ -99,7 +99,7 @@ public class DebugItem extends Item implements Loggable {
 
     private void ombreDebug(Level level, Player player, InteractionHand usedHand, SpellHandler spellHandler, SkillHolder skillHolder) {
         ItemStack stack = player.getItemInHand(InteractionHand.OFF_HAND);
-        stack.set(SBData.IMBUEMENT, new Imbuement(SBSpells.SUMMON_UNDEAD.get(), player.tickCount + 1000));
+        stack.set(SBData.IMBUEMENT, null);
     }
 
     private void duckDebug(Level level, Player player, InteractionHand hand, SpellHandler spellHandler, SkillHolder skillHolder) {

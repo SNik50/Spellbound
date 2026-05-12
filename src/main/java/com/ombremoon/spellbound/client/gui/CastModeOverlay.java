@@ -8,6 +8,7 @@ import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.RenderUtil;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -76,7 +77,7 @@ public class CastModeOverlay implements LayeredDraw.Layer {
     private Component getSpellName(Player player, AbstractSpell spell) {
         if (spell instanceof RadialSpell) {
             var skills = SpellUtil.getSkills(player);
-            Skill skill = skills.getChoice(spell.spellType());
+            SkillProvider skill = skills.getChoice(spell.spellType());
             return skill.getName();
         }
         return spell.getName();
@@ -85,7 +86,7 @@ public class CastModeOverlay implements LayeredDraw.Layer {
     private ResourceLocation getSpellTexture(Player player, AbstractSpell spell) {
         if (spell instanceof RadialSpell) {
             var skills = SpellUtil.getSkills(player);
-            Skill skill = skills.getChoice(spell.spellType());
+            SkillProvider skill = skills.getChoice(spell.spellType());
             return skill.getTexture();
         }
         return spell.getTexture();

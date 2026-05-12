@@ -5,10 +5,7 @@ import com.ombremoon.spellbound.common.world.spell.deception.CursedRuneSpell;
 import com.ombremoon.spellbound.common.world.spell.deception.FlickerSpell;
 import com.ombremoon.spellbound.common.world.spell.deception.PurgeMagicSpell;
 import com.ombremoon.spellbound.common.world.spell.deception.ShadowbondSpell;
-import com.ombremoon.spellbound.common.world.spell.divine.BlessingSpell;
-import com.ombremoon.spellbound.common.world.spell.divine.HealingBlossomSpell;
-import com.ombremoon.spellbound.common.world.spell.divine.HealingTouchSpell;
-import com.ombremoon.spellbound.common.world.spell.divine.SiphonSpell;
+import com.ombremoon.spellbound.common.world.spell.divine.*;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FireballSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
@@ -125,6 +122,10 @@ public class SBSpells {
             .skills(SBSkills.BLESSING, SBSkills.COURAGE, SBSkills.ARCANE_RESTORATION, SBSkills.SATIATING_BLESSING,
                     SBSkills.AIR_BUBBLE, SBSkills.PURIFYING_WARD, SBSkills.EXTENDED_GRACE, SBSkills.SHARED_BOON,
                     SBSkills.OVERFLOWING_AID, SBSkills.CONSECRATED_PRESENCE, SBSkills.UPLIFTING_CHORUS));
+    public static final Supplier<SpellType<SmiteSpell>> SMITE = registerSpell("smite", divineBuilder(SpellMastery.NOVICE, SmiteSpell::new)
+            .skills(SBSkills.SMITE, SBSkills.PRAYERFUL_STRIKE, SBSkills.SACRED_BLADE, SBSkills.GOLDEN_PARRY,
+                    SBSkills.OATHSWORN, SBSkills.GOLDEN_LAND, SBSkills.SHARDS_OF_PURITY, SBSkills.BLESSED_ARC,
+                    SBSkills.REFLECTIVE_JUDGEMENT, SBSkills.SACRED_PARRY, SBSkills.BLACK_BLADE));
     public static final Supplier<SpellType<SiphonSpell>> SIPHON = registerSpell("siphon", divineBuilder(SpellMastery.NOVICE, SiphonSpell::new)
             .skills(SBSkills.SIPHON, SBSkills.GRIM_REACH, SBSkills.GLUTTONY, SBSkills.WITHERING,
                     SBSkills.SOUL_TAP, SBSkills.PARASITIC_LINK, SBSkills.UNRELENTING, SBSkills.OVERHEAL,

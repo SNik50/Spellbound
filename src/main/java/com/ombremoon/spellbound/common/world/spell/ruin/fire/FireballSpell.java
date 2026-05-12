@@ -39,7 +39,7 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
                 .manaCost(30)
                 .baseDamage(3)
                 .castCondition((context, fireballSpell) -> {
-                    fireballSpell.choice = context.getChoice();
+//                    fireballSpell.choice = context.getChoice();
                     if (fireballSpell.isChoice(SBSkills.HOMING_MISSILE)) {
                         return context.hasSkill(SBSkills.AUTO_TARGETING) || context.getTarget() instanceof LivingEntity;
                     }
@@ -47,7 +47,6 @@ public class FireballSpell extends AnimatedSpell implements RadialSpell, Chargea
                     return true;
                 });
     }
-    private Skill choice;
     private float fireballRange;
     private int pierceCount;
 

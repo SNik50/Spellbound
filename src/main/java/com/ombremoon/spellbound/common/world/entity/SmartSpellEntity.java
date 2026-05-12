@@ -119,7 +119,7 @@ public abstract class SmartSpellEntity<T extends AbstractSpell> extends SBLiving
         if (this.spell != null) {
             flag = this.spell.hurt(this, target, source, hurtAmount);
         } else {
-            if (target.isAlliedTo(this))
+            if (SpellUtil.IS_ALLIED.test(target, this))
                 return false;
 
             flag = target.hurt(source, hurtAmount);

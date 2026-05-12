@@ -208,10 +208,6 @@ public abstract class SummonSpell extends AnimatedSpell {
         return new Vec3(origin.x + xOffset, origin.y, origin.z + zOffset);
     }
 
-    public Skill getSpecialChoice() {
-        return this.choice;
-    }
-
     @Override
     public <T extends Entity> T summonEntity(SpellContext context, EntityType<T> entityType, Vec3 spawnPos, Consumer<T> extraData) {
         T entity = super.summonEntity(context, entityType, spawnPos, extraData);

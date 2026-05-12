@@ -10,6 +10,7 @@ import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.common.world.SpellDamageSource;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.SBLivingEntity;
@@ -118,7 +119,7 @@ public class SpellUtil {
         }
     }
 
-    public static <T extends Skill> void cycleChoices(SkillHolder skills, T activeChoice) {
+    public static <T extends SkillProvider> void cycleChoices(SkillHolder skills, T activeChoice) {
         SpellType<?> skillSpell = activeChoice.getSpell();
         var choice = findNextSpellInList(skills.getChoices(skillSpell), activeChoice);
         if (choice != activeChoice) {

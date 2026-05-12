@@ -37,6 +37,11 @@ public class MobMixin {
         }
     }
 
+    @Inject(method = "doHurtTarget", at = @At("HEAD"))
+    private void setAttackStartTick(Entity entity, CallbackInfoReturnable<Boolean> cir) {
+        self().setData(SBData.ATTACK_START, self().level().getGameTime());
+    }
+
     private Mob self() {
         return (Mob) (Object) this;
     }

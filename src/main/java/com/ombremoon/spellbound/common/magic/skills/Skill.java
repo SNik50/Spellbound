@@ -1,11 +1,10 @@
 package com.ombremoon.spellbound.common.magic.skills;
 
-import com.mojang.serialization.Codec;
 import com.ombremoon.spellbound.common.init.SBSkills;
-import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.main.CommonClass;
-import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -13,7 +12,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -75,6 +73,7 @@ public class Skill implements SkillProvider {
         return this.getOrCreateDescriptionId();
     }
 
+    @Override
     public MutableComponent getName() {
         return Component.translatable(this.getNameId());
     }
@@ -83,6 +82,7 @@ public class Skill implements SkillProvider {
         return Component.translatable(this.getDescriptionId());
     }
 
+    @Override
     public ResourceLocation getTexture() {
         String root = getSpell().location().getPath();
         return CommonClass.customLocation("textures/gui/skills/" + root + "/" + location().getPath() + ".png");
@@ -96,6 +96,10 @@ public class Skill implements SkillProvider {
 
     public boolean isRadial() {
         return false;
+    }
+
+    public ObjectArrayList<SkillProvider> getPseudoChoices() {
+        return ObjectArrayList.of();
     }
 
     public boolean isRoot() {
@@ -117,6 +121,7 @@ public class Skill implements SkillProvider {
         return SBSkills.REGISTRY.get(resourceLocation);
     }
 
+    @Override
     public SpellType<?> getSpell() {
         return AbstractSpell.getSpellByName(CommonClass.customLocation(getRoot().location().getPath()));
     }
@@ -136,8 +141,8 @@ public class Skill implements SkillProvider {
     }
 
     @Override
-    public Type getType() {
-        return Type.SPELL;
+    public Entry<Skill> getEntry() {
+        return SkillProviderRegistry.SKILL;
     }
 
     @Override

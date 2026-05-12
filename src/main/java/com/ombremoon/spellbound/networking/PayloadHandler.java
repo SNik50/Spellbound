@@ -12,6 +12,7 @@ import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHolder;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockHolder;
 import com.ombremoon.spellbound.main.Constants;
@@ -107,7 +108,7 @@ public class PayloadHandler {
         PacketDistributor.sendToServer(new StopChanneledSpellPayload(spellType));
     }
 
-    public static void updateChoice(SpellType<?> spellType, Skill skill) {
+    public static void updateChoice(SpellType<?> spellType, SkillProvider skill) {
         PacketDistributor.sendToServer(new UpdateChoicePayload(spellType, skill));
     }
 
@@ -201,8 +202,12 @@ public class PayloadHandler {
         PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new CreateParticlesPayload(particle, x, y, z, xSpeed, ySpeed, zSpeed));
     }
 
-    public static void triggerSpellFx(LivingEntity entity, AbstractSpell spell, EffectData builder) {
-        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new TriggerSpellFXPayload(entity.getId(), spell.spellType(), spell.getId(), builder));
+    public static void triggerSpellFx(Entity entity, AbstractSpell spell, EffectData builder) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new TriggerSpellFXPayload(entity.getId(), spell.spellType(), spell.getId(), Either.left(builder)));
+    }
+
+    public static void removeSpellFX(LivingEntity entity, AbstractSpell spell, ResourceLocation effect) {
+        PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new TriggerSpellFXPayload(entity.getId(), spell.spellType(), spell.getId(), Either.right(effect)));
     }
 
     public static void triggerEntityFx(Entity entity, EffectData builder) {

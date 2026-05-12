@@ -156,13 +156,13 @@ public abstract class ChanneledSpell extends AnimatedSpell {
             return this;
         }
 
-        public Builder<T> negativeScaling(Predicate<SpellContext> negativeScaling) {
+        public Builder<T> negativeScaling(BiPredicate<SpellContext, T> negativeScaling) {
             this.negativeScaling = negativeScaling;
             return this;
         }
 
         public Builder<T> negativeScaling() {
-            this.negativeScaling = context -> true;
+            this.negativeScaling = (context, spell) -> true;
             return this;
         }
     }

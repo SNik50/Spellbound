@@ -103,6 +103,12 @@ public class SBData {
                     .sync(PuzzleDefinition.STREAM_CODEC)
                     .build()
     );
+    public static final Supplier<AttachmentType<Long>> ATTACK_START = ATTACHMENT_TYPES.register(
+            "attack_start", () -> AttachmentType.builder(() -> 0L).serialize(Codec.LONG).sync(ByteBufCodecs.VAR_LONG).build()
+    );
+    public static final Supplier<AttachmentType<Long>> BLOCK_START = ATTACHMENT_TYPES.register(
+            "block_start", () -> AttachmentType.builder(() -> 0L).serialize(Codec.LONG).sync(ByteBufCodecs.VAR_LONG).build()
+    );
     public static final Supplier<AttachmentType<Boolean>> NO_FLY_DUNGEON = ATTACHMENT_TYPES.register(
             "no_fly_dungeon", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build()
     );

@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.common.magic.skills;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.ombremoon.spellbound.common.init.SBAffinities;
 import com.ombremoon.spellbound.main.CommonClass;
@@ -12,6 +13,19 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 
 public class FamiliarAffinity implements SkillProvider {
+    public static final MapCodec<FamiliarAffinity> MAP_CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(
+                    ResourceLocation.CODEC.fieldOf("identifier").forGetter(FamiliarAffinity::location),
+                    Codec.INT.fieldOf("cooldown").forGetter(FamiliarAffinity::getCooldown),
+                    Codec.INT.fieldOf("required_bond").forGetter(FamiliarAffinity::getRequiredBond)
+            ).apply(instance, FamiliarAffinity::new)
+    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, FamiliarAffinity> STREAM_CODEC = StreamCodec.composite(
+            ResourceLocation.STREAM_CODEC, FamiliarAffinity::location,
+            ByteBufCodecs.VAR_INT, FamiliarAffinity::getCooldown,
+            ByteBufCodecs.VAR_INT, FamiliarAffinity::getRequiredBond,
+            FamiliarAffinity::new
+    );
     private final ResourceLocation identifier;
     private final int cooldown;
     private final int requiredBond;
@@ -34,6 +48,7 @@ public class FamiliarAffinity implements SkillProvider {
         return requiredBond;
     }
 
+    @Override
     public Component getName() {
         return Component.translatable(identifier.getNamespace() + ".affinity." + identifier.getPath());
     }
@@ -48,8 +63,8 @@ public class FamiliarAffinity implements SkillProvider {
     }
 
     @Override
-    public Type getType() {
-        return Type.FAMILIAR;
+    public Entry<FamiliarAffinity> getEntry() {
+        return SkillProviderRegistry.AFFINITY;
     }
 
     @Override

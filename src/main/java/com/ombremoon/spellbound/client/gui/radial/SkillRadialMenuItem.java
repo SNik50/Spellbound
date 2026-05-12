@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.client.gui.radial;
 
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -40,9 +41,9 @@ import java.util.Optional;
 
 public class SkillRadialMenuItem extends RadialMenuItem {
     private final SpellType<?> spellType;
-    private final Skill skill;
+    private final SkillProvider skill;
 
-    public SkillRadialMenuItem(RadialMenu owner, SpellType<?> spellType, Skill skill) {
+    public SkillRadialMenuItem(RadialMenu owner, SpellType<?> spellType, SkillProvider skill) {
         super(owner);
         this.spellType = spellType;
         this.skill = skill;
@@ -52,7 +53,7 @@ public class SkillRadialMenuItem extends RadialMenuItem {
         return this.spellType;
     }
 
-    public Skill getSkill() {
+    public SkillProvider getSkill() {
         return this.skill;
     }
 
