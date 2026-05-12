@@ -13,7 +13,7 @@ public class ImbuementRenderers extends RenderType {
             "smite_glint",
             DefaultVertexFormat.POSITION_TEX,
             VertexFormat.Mode.QUADS,
-            256,
+            1536,
             false,
             false,
             RenderType.CompositeState.builder()
@@ -25,11 +25,11 @@ public class ImbuementRenderers extends RenderType {
                     .setTransparencyState(GLINT_TRANSPARENCY)
                     .setTexturingState(GLINT_TEXTURING)
                     .createCompositeState(false));
-    private static final RenderType SMITE_GLINT_DIRECT = create(
-            "smite_glint_direct",
+    private static final RenderType SMITE_ENTITY_GLINT_DIRECT = create(
+            "smite_entity_glint_direct",
             DefaultVertexFormat.POSITION_TEX,
             VertexFormat.Mode.QUADS,
-            256,
+            1536,
             false,
             false,
             RenderType.CompositeState.builder()
@@ -39,18 +39,18 @@ public class ImbuementRenderers extends RenderType {
                     .setCullState(NO_CULL)
                     .setDepthTestState(EQUAL_DEPTH_TEST)
                     .setTransparencyState(GLINT_TRANSPARENCY)
-                    .setTexturingState(GLINT_TEXTURING)
+                    .setTexturingState(ENTITY_GLINT_TEXTURING)
                     .createCompositeState(false));
 
     public ImbuementRenderers(String name, VertexFormat format, VertexFormat.Mode mode, int bufferSize, boolean affectsCrumbling, boolean sortOnUpload, Runnable setupState, Runnable clearState) {
         super(name, format, mode, bufferSize, affectsCrumbling, sortOnUpload, setupState, clearState);
     }
 
-    public static RenderType getSmiteGlintDirect() {
+    public static RenderType getSmiteGlint() {
         return SMITE_GLINT;
     }
 
     public static RenderType getSmiteEntityGlintDirect() {
-        return SMITE_GLINT_DIRECT;
+        return SMITE_ENTITY_GLINT_DIRECT;
     }
 }
