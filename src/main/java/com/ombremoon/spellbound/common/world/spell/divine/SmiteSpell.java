@@ -1,31 +1,31 @@
 package com.ombremoon.spellbound.common.world.spell.divine;
 
-import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
-import com.ombremoon.spellbound.client.photon.EffectBuilder;
-import com.ombremoon.spellbound.client.photon.converter.EffectData;
+import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.ImbuementSpell;
-import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
 public class SmiteSpell extends ImbuementSpell {
-    private static final ResourceLocation SACRED_PARRY = CommonClass.customLocation("sacred_parry");
+    private static final ResourceLocation GOLDEN_PARRY = CommonClass.customLocation("golden_parry");
+    private long parryTick;
+
     public static Builder<SmiteSpell> createSmiteBuilder() {
         return createImbuementSpellBuilder(SmiteSpell.class)
-                .duration(200)
+                .duration(1200)
                 .negativeScaling((context, smiteSpell) -> smiteSpell.isChoice(SBSkills.BLACK_BLADE))
-                .imbuementEffect((context, smiteSpell) -> EffectData.Entity.of(
+                /*.imbuementEffect((context, smiteSpell) -> EffectData.Entity.of(
                                 CommonClass.customLocation("shadow_mist"),
                                 context.getCaster().getId(),
                                 EntityEffectExecutor.AutoRotate.NONE)
-                        .setOffset(0, -1.5, 0));
+                        .setOffset(0, -1.5, 0))*/;
     }
 
     public SmiteSpell() {
@@ -43,15 +43,19 @@ public class SmiteSpell extends ImbuementSpell {
         LivingEntity caster = context.getCaster();
         Level level = context.getLevel();
         if (!level.isClientSide) {
-            if (context.hasSkill(SBSkills.SACRED_PARRY)) {
+            if (context.hasSkill(SBSkills.GOLDEN_PARRY)) {
                 this.addEventBuff(
                         caster,
-                        SBSkills.SACRED_PARRY,
+                        SBSkills.GOLDEN_PARRY,
                         BuffCategory.BENEFICIAL,
-                        SpellEventListener.Events.PRE_DAMAGE,
-                        SACRED_PARRY,
-                        pre -> {
-
+                        SpellEventListener.Events.INCOMING_DAMAGE,
+                        GOLDEN_PARRY,
+                        incomingDamage -> {
+                            Entity source = incomingDamage.getSource().getEntity();
+                            if (source instanceof LivingEntity living && Math.abs(this.parryTick - living.getData(SBData.ATTACK_START)) < 20) {
+                                log(living.getData(SBData.ATTACK_START));
+                                incomingDamage.cancelEvent();
+                            }
                         }
                 );
             }
@@ -60,8 +64,12 @@ public class SmiteSpell extends ImbuementSpell {
 
     @Override
     protected void onUseImbuement(SpellContext context) {
-        if (context.isChoice(SBSkills.SACRED_PARRY)) {
-
+        Level level = context.getLevel();
+        if (!level.isClientSide) {
+            if (context.isChoice(SBSkills.GOLDEN_PARRY)) {
+                this.parryTick = level.getGameTime();
+//                log(this.parryTick);
+            }
         }
     }
 }

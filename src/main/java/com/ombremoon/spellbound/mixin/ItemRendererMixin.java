@@ -28,16 +28,16 @@ public abstract class ItemRendererMixin implements ResourceManagerReloadListener
             if (imbuement != null) {
                 int endTick = imbuement.endTick();
                 if (endTick > 0 && endTick > player.tickCount) {
-                    return getImbuementFoilBufferDirect(bufferSource, renderType, noEntity);
+                    return getImbuementFoilBufferDirect(imbuement, bufferSource, renderType, true);
                 }
             }
         }
         return ItemRenderer.getFoilBufferDirect(bufferSource, renderType, noEntity, withGlint);
     }
 
-    private static VertexConsumer getImbuementFoilBufferDirect(MultiBufferSource bufferSource, RenderType renderType, boolean noEntity) {
+    private static VertexConsumer getImbuementFoilBufferDirect(Imbuement imbuement, MultiBufferSource bufferSource, RenderType renderType, boolean noEntity) {
         return VertexMultiConsumer.create(
-                bufferSource.getBuffer(noEntity ? ImbuementRenderers.getSmiteGlint() : ImbuementRenderers.getSmiteEntityGlintDirect()),
+                bufferSource.getBuffer(noEntity ? ImbuementRenderers.getGlint(imbuement.spellType()) : ImbuementRenderers.getSmiteEntityGlintDirect()),
                 bufferSource.getBuffer(renderType));
     }
 }

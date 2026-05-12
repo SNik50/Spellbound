@@ -190,6 +190,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onRegisterRenderBuffers(RegisterRenderBuffersEvent event) {
         event.registerRenderBuffer(ImbuementRenderers.getSmiteGlint());
+        event.registerRenderBuffer(ImbuementRenderers.getNightbladeGlint());
         event.registerRenderBuffer(ImbuementRenderers.getSmiteEntityGlintDirect());
     }
 
@@ -198,6 +199,7 @@ public class ClientEvents {
         registerElementRenderers();
         EffectTypes.initEffectTypes();
         EffectDataConverter.initConverters();
+        ImbuementRenderers.registerImbuements();
 
         event.enqueueWork(() -> {
             PlayerAnimationFactory.ANIMATION_DATA_FACTORY.registerFactory(

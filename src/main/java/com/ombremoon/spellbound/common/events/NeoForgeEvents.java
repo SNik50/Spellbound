@@ -494,6 +494,11 @@ public class NeoForgeEvents {
             }
         }
 
+        if (!level.isClientSide) {
+            var handler = SpellUtil.getSpellHandler(livingEntity);
+            handler.getListener().fireEvent(SpellEventListener.Events.INCOMING_DAMAGE, new IncomingDamageEvent(livingEntity, event));
+        }
+
         if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY))
             return;
 

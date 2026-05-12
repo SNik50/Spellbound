@@ -29,13 +29,17 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
                 .castCondition((context, imbuementSpell) -> {
                     LivingEntity caster = context.getCaster();
                     ItemStack itemStack = context.getMainHandItem();
+                    var handler = context.getSpellHandler();
                     Imbuement imbuement = imbuementSpell.createImbuement(context);
                     if (itemStack.isEmpty()) {
                         return false;
                     } else if (!imbuement.canImbueStack(itemStack)) {
                         return false;
                     } else if (context.isRecast() && !imbuementSpell.isMainChoice()) {
-                        imbuementSpell.onUseImbuement(context);
+                        ImbuementSpell spell = (ImbuementSpell) handler.getSpell(imbuementSpell.spellType());
+                        if (spell != null)
+                            spell.onUseImbuement(context);
+
                         return false;
                     } else if (imbuementSpell.isMainChoice()) {
                         imbuementSpell.stack = itemStack;
