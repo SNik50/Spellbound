@@ -9,6 +9,7 @@ import com.ombremoon.spellbound.common.world.spell.divine.*;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FireballSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
+import com.ombremoon.spellbound.common.world.spell.ruin.ice.IceSkateSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.ice.ShatteringCrystalSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.ElectricChargeSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.shock.StormRiftSpell;
@@ -52,6 +53,10 @@ public class SBSpells {
 //            .skills(SBSkills.VOLCANO, SBSkills.INFERNO_CORE, SBSkills.LAVA_FLOW, SBSkills.EXPLOSIVE_BARRAGE,
 //                    SBSkills.SHRAPNEL, SBSkills.HEATWAVE, SBSkills.SCORCHED_EARTH, SBSkills.SEISMIC_SHOCK,
 //                    SBSkills.MOLTEN_SHIELD, SBSkills.PYROCLASTIC_CLOUD, SBSkills.APOCALYPSE));
+    public static final Supplier<SpellType<IceSkateSpell>> ICE_SKATE = registerSpell("ice_skate", iceRuinBuilder(SpellMastery.NOVICE, IceSkateSpell::new)
+            .skills(SBSkills.ICE_SKATE, SBSkills.FRICTIONLESS, SBSkills.ICE_CLEATS, SBSkills.FROZEN_FEET,
+                    SBSkills.ICE_SNARE, SBSkills.SNOW_BOOTS, SBSkills.POLAR_PIROUETTE, SBSkills.FROST_SPRINT,
+                    SBSkills.SHARDS_OF_MOMENTUM, SBSkills.CRYSTAL_CLEATS, SBSkills.GLACIAL_GLIDE));
     public static final Supplier<SpellType<ShatteringCrystalSpell>> SHATTERING_CRYSTAL = registerSpell("shattering_crystal", iceRuinBuilder(SpellMastery.EXPERT, ShatteringCrystalSpell::new)
             .skills(SBSkills.SHATTERING_CRYSTAL, SBSkills.ICE_SHARD, SBSkills.FRIGID_BLAST, SBSkills.CHILL,
                     SBSkills.FROZEN_SHRAPNEL, SBSkills.HYPOTHERMIA, SBSkills.THIN_ICE, SBSkills.CHAOTIC_SHATTER,

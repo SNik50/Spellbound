@@ -76,6 +76,19 @@ public class SBSkills {
     public static final Holder<Skill> PYROCLASTIC_CLOUD = registerSkill("pyroclastic_cloud", 0, 100, preReqs(INFERNO_CORE));
     public static final Holder<Skill> APOCALYPSE = registerSkill("apocalypse", 0, 175, preReqs(SHRAPNEL, PYROCLASTIC_CLOUD, SCORCHED_EARTH));
 
+    //Ice Skate
+    public static final Holder<Skill> ICE_SKATE = registerSkill("ice_skate");
+    public static final Holder<Skill> FRICTIONLESS = registerSkill("frictionless", 0, 50, preReqs(ICE_SKATE));
+    public static final Holder<Skill> ICE_CLEATS = registerSkill("ice_cleats", 50, 50, preReqs(ICE_SKATE));
+    public static final Holder<Skill> FROZEN_FEET = registerSkill("frozen_feet", -50, 50, preReqs(ICE_SKATE));
+    public static final Holder<Skill> ICE_SNARE = registerSkill("ice_snare", -50, 100, preReqs(FROZEN_FEET));
+    public static final Holder<Skill> SNOW_BOOTS = registerSkill("snow_boots", 50, 100, preReqs(ICE_CLEATS));
+    public static final Holder<Skill> POLAR_PIROUETTE = registerSkill("polar_pirouette", 0, 100, preReqs(FRICTIONLESS));
+    public static final Holder<Skill> FROST_SPRINT = registerSkill("frost_sprint", 0, 150, preReqs(POLAR_PIROUETTE));
+    public static final Holder<Skill> SHARDS_OF_MOMENTUM = registerSkill("shards_of_momentum", -50, 150, preReqs(POLAR_PIROUETTE));
+    public static final Holder<Skill> CRYSTAL_CLEATS = registerSkill("crystal_cleats", 50, 150, preReqs(POLAR_PIROUETTE));
+    public static final Holder<Skill> GLACIAL_GLIDE = registerSkill("glacial_glide", 0, 200, preReqs(FROST_SPRINT, SHARDS_OF_MOMENTUM, CRYSTAL_CLEATS));
+
     //Shattering Crystal
     public static final Holder<Skill> SHATTERING_CRYSTAL = registerSkill("shattering_crystal");
     public static final Holder<Skill> ICE_SHARD = registerSkill("ice_shard", 0, 50, preReqs(SHATTERING_CRYSTAL));

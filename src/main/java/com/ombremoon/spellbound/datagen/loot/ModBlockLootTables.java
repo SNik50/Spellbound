@@ -53,6 +53,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         this.dropWhenSilkTouch(SBBlocks.LARGE_STORM_CRYSTAL_BUD.get());
         this.dropWhenSilkTouch(SBBlocks.MEDIUM_STORM_CRYSTAL_BUD.get());
         this.dropWhenSilkTouch(SBBlocks.SMALL_STORM_CRYSTAL_BUD.get());
+        this.dropWhenSilkTouch(SBBlocks.ICE_SHEET.get());
         this.dropSelf(SBBlocks.TRANSFIGURATION_PEDESTAL.get());
         this.dropSelf(SBBlocks.TRANSFIGURATION_DISPLAY.get());
         this.dropSelf(SBBlocks.RESONANCE_STONE.get());

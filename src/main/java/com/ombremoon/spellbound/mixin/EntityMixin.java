@@ -1,20 +1,41 @@
 package com.ombremoon.spellbound.mixin;
 
+import com.ombremoon.spellbound.common.init.SBBlocks;
 import com.ombremoon.spellbound.common.init.SBEffects;
+import com.ombremoon.spellbound.common.init.SBSpells;
+import com.ombremoon.spellbound.common.world.spell.ruin.ice.IceSkateSpell;
+import com.ombremoon.spellbound.main.Constants;
+import com.ombremoon.spellbound.util.SpellUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public class EntityMixin {
+public abstract class EntityMixin {
+
+    @Shadow
+    public abstract BlockPos getOnPos();
 
     @Inject(method = "canSpawnSprintParticle", at = @At("RETURN"), cancellable = true)
     private void disableSprintParticles(CallbackInfoReturnable<Boolean> cir) {
         if (this.self() instanceof LivingEntity living && living.hasEffect(SBEffects.MAGI_INVISIBILITY))
             cir.setReturnValue(false);
+    }
+
+    @Inject(method = "getBlockPosBelowThatAffectsMyMovement", at = @At("RETURN"), cancellable = true)
+    private void getLowerPositionWhenSkating(CallbackInfoReturnable<BlockPos> cir) {
+        BlockPos blockPos = this.getOnPos();
+        BlockState state = this.self().level().getBlockState(blockPos);
+        if (state.is(SBBlocks.ICE_SHEET.get())) {
+            cir.setReturnValue(blockPos);
+        }
+
     }
 
     private Entity self() {
