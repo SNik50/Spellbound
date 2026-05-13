@@ -1,6 +1,8 @@
 package com.ombremoon.spellbound.common.world.spell.divine;
 
+import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.ombremoon.spellbound.client.gui.SkillTooltip;
+import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellContext;
@@ -144,6 +146,9 @@ public class HealingTouchSpell extends AnimatedSpell {
                         }
                 );
             }
+            //VFX
+           /* triggerSpellFX(EffectData.StaticEntity.of(CommonClass.customLocation("healing_touch_cast"), caster.getId(),
+                    EntityEffectExecutor.AutoRotate.NONE)*/
             playCastSound(context.getLevel(), context);
         }
 
@@ -158,6 +163,7 @@ public class HealingTouchSpell extends AnimatedSpell {
                 SoundSource.PLAYERS, volume, pitch);
 
     }
+
     @Override
     protected void onSpellTick(SpellContext context) {
         super.onSpellTick(context);
@@ -171,6 +177,16 @@ public class HealingTouchSpell extends AnimatedSpell {
                 heal += (float) (maxMana - handler.getMana()) * potency(0.02F);
 
             this.heal(caster, heal);
+
+            //VFX
+            if (this.shouldTickSpellEffect(context)) {
+                this.triggerSpellFX(EffectData.Entity.of(
+                        CommonClass.customLocation("healing_touch_pulse"), caster.getId(),
+                        EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.8,0));
+
+
+            }
+
 
             if (context.hasSkill(SBSkills.OVERGROWTH) && this.overgrowthStacks <= 5 && caster.getHealth() >= caster.getMaxHealth()) {
                 this.addSkillBuff(
@@ -197,10 +213,6 @@ public class HealingTouchSpell extends AnimatedSpell {
                 );
                 this.addCooldown(SBSkills.OAK_BLESSING, 6000);
             }
-        }
-
-        for (int j = 0; j < 5; j++) {
-            this.createSurroundingParticles(caster, SBParticles.GOLD_HEART.get(), 1);
         }
     }
 
