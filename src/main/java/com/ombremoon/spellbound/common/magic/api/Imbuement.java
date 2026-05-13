@@ -8,18 +8,19 @@ import com.ombremoon.spellbound.common.init.SBTags;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-public record Imbuement(SpellType<?> spellType, int endTick) {
+public record Imbuement(SpellType<?> spellType, ResourceLocation glint) {
     public static final Codec<Imbuement> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
-                    SBSpells.REGISTRY.byNameCodec().fieldOf("spell_type").forGetter(Imbuement::spellType),
-                    Codec.INT.fieldOf("end_tick").forGetter(Imbuement::endTick
-            )
-    ).apply(instance, Imbuement::new));
+                    SBSpells.REGISTRY.byNameCodec().fieldOf("spell").forGetter(Imbuement::spellType),
+                    ResourceLocation.CODEC.fieldOf("glint").forGetter(Imbuement::glint)
+            ).apply(instance, Imbuement::new)
+    );
     public static final StreamCodec<RegistryFriendlyByteBuf, Imbuement> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.registry(SBSpells.SPELL_TYPE_REGISTRY_KEY), Imbuement::spellType,
-            ByteBufCodecs.VAR_INT, Imbuement::endTick,
+            ResourceLocation.STREAM_CODEC, Imbuement::glint,
             Imbuement::new
     );
 

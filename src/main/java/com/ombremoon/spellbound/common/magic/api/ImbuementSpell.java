@@ -4,6 +4,8 @@ import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
+import com.ombremoon.spellbound.main.CommonClass;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -35,13 +37,13 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
                         return false;
                     } else if (!imbuement.canImbueStack(itemStack)) {
                         return false;
-                    } else if (context.isRecast() && !imbuementSpell.isMainChoice()) {
+                    } else if (context.isRecast() && !imbuementSpell.isMainChoice(context)) {
                         ImbuementSpell spell = (ImbuementSpell) handler.getSpell(imbuementSpell.spellType());
                         if (spell != null)
                             spell.onUseImbuement(context);
 
                         return false;
-                    } else if (imbuementSpell.isMainChoice()) {
+                    } else if (imbuementSpell.isMainChoice(context)) {
                         imbuementSpell.stack = itemStack;
                         imbuementSpell.imbuement = imbuement;
                         if (caster instanceof Player player) {
@@ -63,7 +65,7 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
     @Override
     protected void onSpellStart(SpellContext context) {
         Level level = context.getLevel();
-        if (!level.isClientSide && this.isMainChoice()) {
+        if (!level.isClientSide && this.isMainChoice(context)) {
             this.stack.set(SBData.IMBUEMENT, this.imbuement);
             var handler = context.getSpellHandler();
             handler.getListener().addListener(
@@ -120,8 +122,7 @@ public abstract class ImbuementSpell extends AnimatedSpell implements RadialSpel
     protected abstract void onUseImbuement(SpellContext context);
 
     protected Imbuement createImbuement(SpellContext context) {
-        LivingEntity caster = context.getCaster();
-        return new Imbuement(this.spellType(), caster.tickCount + this.getDuration());
+        return new Imbuement(this.spellType(), this.location());
     }
 
     protected EffectData getImbuementEffect(SpellContext context) {

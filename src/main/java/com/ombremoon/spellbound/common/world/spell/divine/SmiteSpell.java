@@ -4,6 +4,7 @@ import com.ombremoon.spellbound.common.init.SBData;
 import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellContext;
+import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.magic.api.ImbuementSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
@@ -71,5 +72,15 @@ public class SmiteSpell extends ImbuementSpell {
 //                log(this.parryTick);
             }
         }
+    }
+
+    @Override
+    protected Imbuement createImbuement(SpellContext context) {
+        return context.isChoice(SBSkills.BLACK_BLADE) ? new Imbuement(this.spellType(), CommonClass.customLocation("smite_black_blade")) : super.createImbuement(context);
+    }
+
+    @Override
+    public boolean isMainChoice(SpellContext context) {
+        return super.isMainChoice(context) || context.isChoice(SBSkills.BLACK_BLADE);
     }
 }
