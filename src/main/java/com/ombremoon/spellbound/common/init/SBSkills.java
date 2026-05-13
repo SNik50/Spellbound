@@ -298,7 +298,7 @@ public class SBSkills {
     public static final Holder<Skill> BLESSED_ARC = registerSkill("blessed_arc", 50, 50, preReqs(SMITE));
     public static final Holder<Skill> REFLECTIVE_JUDGEMENT = registerSkill("reflective_judgement", 50, 100, preReqs(BLESSED_ARC));
     public static final Holder<Skill> SACRED_PARRY = registerSkill("sacred_parry", 50, 150, preReqs(REFLECTIVE_JUDGEMENT));
-    public static final Holder<Skill> BLACK_BLADE = registerSkill("black_blade", 50, 200, preReqs(SACRED_PARRY));
+    public static final Holder<Skill> BLACK_BLADE = registerRadialSkill("black_blade", 50, 200, preReqs(SACRED_PARRY));
 
     //Siphon
     public static final Holder<Skill> SIPHON = registerRadialSkill("siphon");

@@ -17,7 +17,7 @@ import java.util.function.Supplier;
 public class ImbuementRenderers extends RenderType {
     public static final ResourceLocation SMITE_GLINT_ID = CommonClass.customLocation("textures/imbuement/smite_glint.png");
     public static final ResourceLocation NIGHTBLADE_GLINT_ID = CommonClass.customLocation("textures/imbuement/nightblade_glint.png");
-    private static final Map<SpellType<?>, RenderType> IMBUEMENTS = new Object2ObjectArrayMap<>();
+    private static final Map<ResourceLocation, RenderType> IMBUEMENTS = new Object2ObjectArrayMap<>();
     private static final RenderType SMITE_GLINT = create(
             "smite_glint",
             DefaultVertexFormat.POSITION_TEX,
@@ -72,16 +72,16 @@ public class ImbuementRenderers extends RenderType {
     }
 
     public static void registerImbuements() {
-//        put(SBSpells.SMITE.get(), getSmiteGlint());
-        put(SBSpells.SMITE.get(), getNightbladeGlint());
+        put(SBSpells.SMITE.get().location(), getSmiteGlint());
+        put(CommonClass.customLocation("smite_black_blade"), getNightbladeGlint());
     }
 
-    public static RenderType getGlint(SpellType<?> spellType) {
-        return IMBUEMENTS.getOrDefault(spellType, RenderType.GLINT);
+    public static RenderType getGlint(ResourceLocation location) {
+        return IMBUEMENTS.getOrDefault(location, RenderType.GLINT);
     }
 
-    private static void put(SpellType<?> spell, RenderType renderType) {
-        IMBUEMENTS.put(spell, renderType);
+    private static void put(ResourceLocation location, RenderType renderType) {
+        IMBUEMENTS.put(location, renderType);
     }
 
     public static RenderType getSmiteGlint() {

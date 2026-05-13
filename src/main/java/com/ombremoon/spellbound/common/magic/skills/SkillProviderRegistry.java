@@ -30,6 +30,7 @@ public class SkillProviderRegistry {
     public static final StreamCodec<RegistryFriendlyByteBuf, SkillProvider.Entry<?>> STREAM_CODEC = SerializationUtil.REGISTRY_RESOURCE_STREAM_CODEC
             .map(SkillProviderRegistry::getSkillProviderEntryFromLocation, SkillProvider.Entry::id);
 
+
     public static final SkillProvider.Entry<Skill> SKILL = createProvider("skill", MapCodec.assumeMapUnsafe(SBSkills.REGISTRY.byNameCodec()), ByteBufCodecs.registry(SBSkills.SKILL_REGISTRY_KEY));
     public static final SkillProvider.Entry<FamiliarAffinity> AFFINITY = createProvider("affinity", FamiliarAffinity.MAP_CODEC, FamiliarAffinity.STREAM_CODEC);
     public static final SkillProvider.Entry<PseudoSkillProvider> PSEUDO = createProvider("psuedo", PseudoSkillProvider.MAP_CODEC, PseudoSkillProvider.STREAM_CODEC);
