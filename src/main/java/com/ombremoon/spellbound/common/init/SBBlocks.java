@@ -189,6 +189,17 @@ public class SBBlocks {
                     CrystalBlock.CrystalType.STORM, 3.0F, 4.0F, BlockBehaviour.Properties.ofLegacyCopy(STORM_CRYSTAL_CLUSTER.get())
             )
     );
+    public static final Supplier<Block> ICE_SHEET = registerBlock(
+            "ice_sheet", () -> new IceSheetBlock(
+                    blockProperties()
+                            .mapColor(MapColor.ICE)
+                            .friction(0.98F)
+                            .randomTicks()
+                            .strength(0.5F)
+                            .forceSolidOn()
+                            .sound(SoundType.GLASS)
+                            .noOcclusion()
+                            .pushReaction(PushReaction.DESTROY)));
     public static final Supplier<Block> TRANSFIGURATION_PEDESTAL = registerBlock(
             "transfiguration_pedestal", () -> new TransfigurationPedestalBlock(
                     blockProperties()

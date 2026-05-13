@@ -1,20 +1,21 @@
 package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
-import com.ombremoon.spellbound.common.magic.skills.ModifierSkill;
-import com.ombremoon.spellbound.common.magic.skills.Skill;
-import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
+import com.ombremoon.spellbound.common.magic.skills.*;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
+import java.util.Optional;
 import java.util.function.BiPredicate;
 
 @SuppressWarnings("unchecked")
@@ -74,6 +75,19 @@ public class SBSkills {
     public static final Holder<Skill> MOLTEN_SHIELD = registerSkill("molten_shield", 100, 100, preReqs(LAVA_FLOW));
     public static final Holder<Skill> PYROCLASTIC_CLOUD = registerSkill("pyroclastic_cloud", 0, 100, preReqs(INFERNO_CORE));
     public static final Holder<Skill> APOCALYPSE = registerSkill("apocalypse", 0, 175, preReqs(SHRAPNEL, PYROCLASTIC_CLOUD, SCORCHED_EARTH));
+
+    //Ice Skate
+    public static final Holder<Skill> ICE_SKATE = registerSkill("ice_skate");
+    public static final Holder<Skill> FRICTIONLESS = registerSkill("frictionless", 0, 50, preReqs(ICE_SKATE));
+    public static final Holder<Skill> ICE_CLEATS = registerSkill("ice_cleats", 50, 50, preReqs(ICE_SKATE));
+    public static final Holder<Skill> FROZEN_FEET = registerSkill("frozen_feet", -50, 50, preReqs(ICE_SKATE));
+    public static final Holder<Skill> ICE_SNARE = registerSkill("ice_snare", -50, 100, preReqs(FROZEN_FEET));
+    public static final Holder<Skill> SNOW_BOOTS = registerSkill("snow_boots", 50, 100, preReqs(ICE_CLEATS));
+    public static final Holder<Skill> POLAR_PIROUETTE = registerSkill("polar_pirouette", 0, 100, preReqs(FRICTIONLESS));
+    public static final Holder<Skill> FROST_SPRINT = registerSkill("frost_sprint", 0, 150, preReqs(POLAR_PIROUETTE));
+    public static final Holder<Skill> SHARDS_OF_MOMENTUM = registerSkill("shards_of_momentum", -50, 150, preReqs(POLAR_PIROUETTE));
+    public static final Holder<Skill> CRYSTAL_CLEATS = registerSkill("crystal_cleats", 50, 150, preReqs(POLAR_PIROUETTE));
+    public static final Holder<Skill> GLACIAL_GLIDE = registerSkill("glacial_glide", 0, 200, preReqs(FROST_SPRINT, SHARDS_OF_MOMENTUM, CRYSTAL_CLEATS));
 
     //Shattering Crystal
     public static final Holder<Skill> SHATTERING_CRYSTAL = registerSkill("shattering_crystal");
@@ -270,6 +284,22 @@ public class SBSkills {
     public static final Holder<Skill> OVERFLOWING_AID = registerSkill("overflowing_aid", 0, 150, preReqs(COURAGE, PURIFYING_WARD, CONSECRATED_PRESENCE, SHARED_BOON));
     public static final Holder<Skill> UPLIFTING_CHORUS = registerSkill("uplifting_chorus", 0, 200, preReqs(OVERFLOWING_AID));
 
+    //Smite
+    public static final Holder<Skill> SMITE = registerRadialSkill("smite");
+    public static final Holder<Skill> PRAYERFUL_STRIKE = registerRadialSkill("prayerful_strike", -50, 50, preReqs(SMITE),
+            createProvider("smite", "test1"),
+            createProvider("smite", "test2"),
+            createProvider("smite", "test3"));
+    public static final Holder<Skill> SACRED_BLADE = registerRadialSkill("sacred_blade", 0, 50, preReqs(SMITE));
+    public static final Holder<Skill> GOLDEN_PARRY = registerRadialSkill("golden_parry", 0, 100, preReqs(SACRED_BLADE));
+    public static final Holder<Skill> OATHSWORN = registerSkill("oathsworn", 0, 150, preReqs(GOLDEN_PARRY));
+    public static final Holder<Skill> GOLDEN_LAND = registerSkill("golden_land", 0, 200, preReqs(OATHSWORN));
+    public static final Holder<Skill> SHARDS_OF_PURITY = registerSkill("shards_of_purity", 0, 250, preReqs(OATHSWORN, GOLDEN_LAND));
+    public static final Holder<Skill> BLESSED_ARC = registerSkill("blessed_arc", 50, 50, preReqs(SMITE));
+    public static final Holder<Skill> REFLECTIVE_JUDGEMENT = registerSkill("reflective_judgement", 50, 100, preReqs(BLESSED_ARC));
+    public static final Holder<Skill> SACRED_PARRY = registerSkill("sacred_parry", 50, 150, preReqs(REFLECTIVE_JUDGEMENT));
+    public static final Holder<Skill> BLACK_BLADE = registerRadialSkill("black_blade", 50, 200, preReqs(SACRED_PARRY));
+
     //Siphon
     public static final Holder<Skill> SIPHON = registerRadialSkill("siphon");
     public static final Holder<Skill> GRIM_REACH = registerSkill("grim_reach", 0, 50, preReqs(SIPHON));
@@ -370,22 +400,36 @@ public class SBSkills {
         return SKILLS.register(name, () -> new Skill(xPos, yPos, prereqs));
     }
 
-    private static Holder<Skill> registerRadialSkill(String name) {
+    private static Holder<Skill> registerRadialSkill(String name, PseudoSkillProvider... pseudoSkills) {
         return SKILLS.register(name, () -> new Skill() {
             @Override
             public boolean isRadial() {
                 return true;
             }
+
+            @Override
+            public ObjectArrayList<SkillProvider> getPseudoChoices() {
+                return ObjectArrayList.of(pseudoSkills);
+            }
         });
     }
 
-    private static Holder<Skill> registerRadialSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs) {
+    private static Holder<Skill> registerRadialSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs, PseudoSkillProvider... pseudoSkills) {
         return SKILLS.register(name, () -> new Skill(xPos, yPos, prereqs) {
             @Override
             public boolean isRadial() {
                 return true;
             }
+
+            @Override
+            public ObjectArrayList<SkillProvider> getPseudoChoices() {
+                return ObjectArrayList.of(pseudoSkills);
+            }
         });
+    }
+
+    public static PseudoSkillProvider createProvider(String spellType, String provider) {
+        return new PseudoSkillProvider(Optional.of(CommonClass.customLocation(spellType)), CommonClass.customLocation(provider));
     }
 
     private static Holder<Skill> registerConditionalSkill(String name, int xPos, int yPos, HolderSet<Skill> prereqs, BiPredicate<Player, SkillHolder> skillCondition) {

@@ -22,22 +22,17 @@ public abstract class ItemRendererMixin implements ResourceManagerReloadListener
 
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/ItemRenderer;getFoilBufferDirect(Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/renderer/RenderType;ZZ)Lcom/mojang/blaze3d/vertex/VertexConsumer;"))
     private VertexConsumer overlayImbuementGlint(MultiBufferSource bufferSource, RenderType renderType, boolean noEntity, boolean withGlint, ItemStack stack, ItemDisplayContext context) {
-        Player player = Minecraft.getInstance().player;
-        if (player != null) {
-            Imbuement imbuement = stack.get(SBData.IMBUEMENT);
-            if (imbuement != null) {
-                int endTick = imbuement.endTick();
-                if (endTick > 0 && endTick > player.tickCount) {
-                    return getImbuementFoilBufferDirect(bufferSource, renderType, noEntity);
-                }
-            }
+        Imbuement imbuement = stack.get(SBData.IMBUEMENT);
+        if (imbuement != null) {
+            return getImbuementFoilBufferDirect(imbuement, bufferSource, renderType, true);
         }
+
         return ItemRenderer.getFoilBufferDirect(bufferSource, renderType, noEntity, withGlint);
     }
 
-    private static VertexConsumer getImbuementFoilBufferDirect(MultiBufferSource bufferSource, RenderType renderType, boolean noEntity) {
+    private static VertexConsumer getImbuementFoilBufferDirect(Imbuement imbuement, MultiBufferSource bufferSource, RenderType renderType, boolean noEntity) {
         return VertexMultiConsumer.create(
-                bufferSource.getBuffer(noEntity ? ImbuementRenderers.getSmiteGlint() : ImbuementRenderers.getSmiteEntityGlintDirect()),
+                bufferSource.getBuffer(noEntity ? ImbuementRenderers.getGlint(imbuement.glint()) : ImbuementRenderers.getSmiteEntityGlintDirect()),
                 bufferSource.getBuffer(renderType));
     }
 }

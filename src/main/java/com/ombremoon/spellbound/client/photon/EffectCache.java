@@ -12,7 +12,6 @@ import java.util.Map;
 public class EffectCache {
     private final Map<ResourceLocation, FXEffectExecutor> cache = new Object2ObjectOpenHashMap<>();
 
-    @SuppressWarnings("unchecked")
     public void addFX(EffectBuilder<?> builder) {
         var fx = builder.build();
         if (fx != null) {
@@ -78,7 +77,7 @@ public class EffectCache {
                     iter.remove();
                     this.removeFX(effect);
                     if (removeObjects)
-                        runtime.destroy(true);
+                        runtime.destroy(false);
                 }
             }
 

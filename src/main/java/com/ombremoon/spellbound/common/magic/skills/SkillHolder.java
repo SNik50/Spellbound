@@ -6,6 +6,7 @@ import com.ombremoon.spellbound.common.events.custom.SpellLevelUpEvent;
 import com.ombremoon.spellbound.common.init.SBSpells;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.magic.api.RadialSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellModifier;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
@@ -29,10 +30,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class SkillHolder implements INBTSerializable<CompoundTag> {
     public static final int MAX_SPELL_LEVEL = ConfigHandler.COMMON.maxSpellLevel.get();
@@ -41,7 +39,7 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
     protected final Map<SpellPath, Float> pathXp = new Object2FloatOpenHashMap<>();
     protected final Map<SpellType<?>, Float> spellXp = new Object2FloatOpenHashMap<>();
     protected final Map<SpellType<?>, Integer> skillPoints = new Object2IntOpenHashMap<>();
-    private final Map<SpellType<?>, Skill> skillChoices = new Object2ObjectOpenHashMap<>();
+    private final Map<SpellType<?>, SkillProvider> skillChoices = new Object2ObjectOpenHashMap<>();
     public final Map<SpellType<?>, Set<Skill>> unlockedSkills = new Object2ObjectOpenHashMap<>();
     private final Set<SpellModifier> permanentModifiers = new ObjectOpenHashSet<>();
     private final Set<SpellModifier> timedModifiers = new ObjectOpenHashSet<>();
@@ -218,15 +216,25 @@ public class SkillHolder implements INBTSerializable<CompoundTag> {
         return hasSkillReady(skill.value());
     }
 
-    public Skill getChoice(SpellType<?> spellType) {
+    public SkillProvider getChoice(SpellType<?> spellType) {
         return this.skillChoices.getOrDefault(spellType, spellType.getRootSkill());
     }
 
-    public List<Skill> getChoices(SpellType<?> spellType) {
-        return this.unlockedSkills.get(spellType).stream().filter(Skill::isRadial).toList();
+    public List<SkillProvider> getChoices(SpellType<?> spellType) {
+        List<Skill> toRemove = new ArrayList<>();
+        List<Skill> list = new ArrayList<>(this.unlockedSkills.get(spellType).stream().filter(Skill::isRadial).toList());
+        List<SkillProvider> skills = new ArrayList<>(list.stream().flatMap(skill -> {
+            if (!skill.getPseudoChoices().isEmpty())
+                toRemove.add(skill);
+
+            return skill.getPseudoChoices().stream();
+        }).toList());
+        list.removeAll(toRemove);
+        skills.addAll(list);
+        return skills;
     }
 
-    public void setChoice(SpellType<?> spellType, Skill skill) {
+    public void setChoice(SpellType<?> spellType, SkillProvider skill) {
         this.skillChoices.put(spellType, skill);
         if (this.caster.level().isClientSide)
             PayloadHandler.updateChoice(spellType, skill);

@@ -191,16 +191,18 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
 
             //VFX
 
-            EffectData effectData = EffectData.StaticEntity.of(CommonClass.customLocation("siphon_cast"), caster.getId(),
-                    EntityEffectExecutor.AutoRotate.LOOK).setOffset(0, 1.7, 2);
-            EffectData effectDataCaster = EffectData.StaticEntity.of(CommonClass.customLocation("siphon_caster"), caster.getId(),
-                    EntityEffectExecutor.AutoRotate.LOOK).setOffset(0, 1.7, 2).setDelay(10);
+            EffectData effectData = EffectData.StaticEntity.of(CommonClass.customLocation("siphon_cast"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                    .setOffset(0, 1.25, 1.5);
+            EffectData effectDataCaster = EffectData.StaticEntity.of(CommonClass.customLocation("siphon_caster"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                    .setOffset(0, 1.25, 1.5)
+                    .setDelay(10);
 
             if (this.isChoice(SBSkills.HARVEST) && context.hasCatalyst(SBItems.CORRUPTED_SHARD.get())) {
-                effectData = EffectData.StaticEntity.of(CommonClass.customLocation("siphon_cast_harvest"), caster.getId(),
-                        EntityEffectExecutor.AutoRotate.LOOK).setOffset(0, 0.1, 0);
-                effectDataCaster = EffectData.StaticEntity.of(CommonClass.customLocation("siphon_caster_harvest"), caster.getId(),
-                        EntityEffectExecutor.AutoRotate.LOOK).setOffset(0, 0.1, 0).setDelay(10);
+                effectData = EffectData.StaticEntity.of(CommonClass.customLocation("siphon_cast_harvest"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                        .setOffset(0, 0.1, 0);
+                effectDataCaster = EffectData.StaticEntity.of(CommonClass.customLocation("siphon_caster_harvest"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
+                        .setOffset(0, 0.1, 0)
+                        .setDelay(10);
             }
 
             this.triggerSpellFX(effectData);
@@ -223,8 +225,6 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
         boolean harvest = this.isChoice(SBSkills.HARVEST) && context.hasCatalyst(SBItems.CORRUPTED_SHARD.get());
 
         if (!level.isClientSide && this.tickCount % 20 == 0) {
-
-            //fill target list
             var targets = new HashSet<LivingEntity>();
             if (harvest) {
                 targets.addAll(this.getAttackableEntities(5));
@@ -273,7 +273,6 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
                 targets.add(this.target);
             }
 
-            //DMG handler
             for (LivingEntity entity : targets) {
                 if (this.isChoice(SBSkills.SOUL_TAP)) {
                     if (!this.consumeMana(entity, potency(1)) && context.hasSkill(SBSkills.ARCANE_FEEDBACK)) {
@@ -301,9 +300,9 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
                         );
                     }
                 }
-                //target vfx
-            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("siphon_target"), entity.getId(),
-                    EntityEffectExecutor.AutoRotate.NONE).setOffset(0, 0.1, 0));
+
+            this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("siphon_target"), entity.getId(), EntityEffectExecutor.AutoRotate.NONE)
+                    .setOffset(0, 0.1, 0));
             }
 
 
@@ -323,8 +322,8 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
                 this.removeSkillBuff(this.target, SBSkills.PARASITIC_LINK);
             }
         }
-        //VFX
-        this.removeFX(CommonClass.customLocation("siphon_caster_harvest"));
-        this.removeFX(CommonClass.customLocation("siphon_caster"));
+
+        this.removeSpellFX(CommonClass.customLocation("siphon_caster_harvest"));
+        this.removeSpellFX(CommonClass.customLocation("siphon_caster"));
         }
     }

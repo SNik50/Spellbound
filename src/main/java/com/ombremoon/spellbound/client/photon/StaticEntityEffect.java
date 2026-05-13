@@ -3,6 +3,7 @@ package com.ombremoon.spellbound.client.photon;
 import com.lowdragmc.photon.client.fx.EntityEffectExecutor;
 import com.lowdragmc.photon.client.fx.FX;
 import com.lowdragmc.photon.client.gameobject.IFXObject;
+import com.lowdragmc.photon.client.gameobject.emitter.particle.ParticleEmitter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -25,7 +26,22 @@ public class StaticEntityEffect extends EntityEffectExecutor {
     }
 
     @Override
-    public void updateFXObjectFrame(IFXObject fxObject, float partialTicks) {}
+    public void updateFXObjectFrame(IFXObject fxObject, float partialTicks) {
+        if (this.runtime != null && fxObject == this.runtime.root && autoRotate == AutoRotate.LOOK) {
+            double yaw = Math.toRadians(entity.getYRot());
+            Vec3 lookAngle = new Vec3(-Math.sin(yaw), 0, Math.cos(yaw));
+            Vec3 rightVector = lookAngle.cross(new Vec3(0, 1, 0)).normalize();
+            Vec3 upVector = rightVector.cross(lookAngle).normalize();
+            Vec3 transformedOffset = rightVector.scale(offset.x)
+                    .add(upVector.scale(offset.y))
+                    .add(lookAngle.scale(offset.z));
+
+            Vector3f pos = this.effectPos != null && !this.effectPos.equals(Vec3.ZERO)
+                    ? this.effectPos.add(transformedOffset).toVector3f()
+                    : entity.position().add(transformedOffset).toVector3f();
+            runtime.root.updatePos(pos);
+        }
+    }
 
     private void applyRotation(Entity entity, AutoRotate autoRotate, IFXObject fxObject) {
         if (this.runtime != null && fxObject == this.runtime.root) {

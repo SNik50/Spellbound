@@ -4,6 +4,7 @@ import com.ombremoon.spellbound.common.magic.api.SpellAnimation;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -137,12 +138,12 @@ public class SpellContext {
         return this.skillHolder.getChoice(this.spellType).equals(skill);
     }
 
-    public boolean isChoice(Holder<Skill> skill) {
-        return this.isChoice(skill.value());
+    public boolean isChoice(SkillProvider skill) {
+        return this.skillHolder.getChoice(this.spellType).equals(skill);
     }
 
-    public Skill getChoice() {
-        return this.skillHolder.getChoice(this.spellType);
+    public boolean isChoice(Holder<Skill> skill) {
+        return this.isChoice(skill.value());
     }
 
     public boolean hasSkillBuff(Holder<Skill> skill) {

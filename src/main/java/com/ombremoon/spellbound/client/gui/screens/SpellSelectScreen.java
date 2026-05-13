@@ -9,6 +9,7 @@ import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
 import com.ombremoon.spellbound.common.magic.api.RadialSpell;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -63,9 +65,10 @@ public class SpellSelectScreen extends Screen {
                     handler.setSelectedSpell(spellType);
                     PayloadHandler.setSpell(spellType);
                     radialMenu.close();
-                    var radialSkills = spellType.getSkills().stream().filter(skill -> skill.isRadial() && handler.getSkillHolder().hasSkill(skill)).toList();
-                    if (spell instanceof RadialSpell && radialSkills.size() > 1)
+                    List<SkillProvider> radialSkills = new ArrayList<>(handler.getSkillHolder().getChoices(spellType));
+                    if (radialSkills.size() > 1) {
                         Minecraft.getInstance().setScreen(new SkillSelectScreen(spellType, radialSkills));
+                    }
 
                     return true;
                 }

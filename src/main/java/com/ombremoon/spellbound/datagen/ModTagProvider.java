@@ -14,6 +14,7 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.decoration.PaintingVariant;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -24,20 +25,22 @@ import java.util.function.Supplier;
 @SuppressWarnings("unchecked")
 public class ModTagProvider {
 
-    public static class Items extends TagsProvider<Item> {
+    public static class ItemTags extends TagsProvider<Item> {
 
-        public Items(PackOutput p_256596_, CompletableFuture<HolderLookup.Provider> p_256513_, @Nullable ExistingFileHelper existingFileHelper) {
+        public ItemTags(PackOutput p_256596_, CompletableFuture<HolderLookup.Provider> p_256513_, @Nullable ExistingFileHelper existingFileHelper) {
             super(p_256596_, Registries.ITEM, p_256513_, Constants.MOD_ID, existingFileHelper);
         }
 
         @Override
         protected void addTags(HolderLookup.Provider pProvider) {
-            populateTag(ItemTags.DYEABLE, SBItems.CHALK);
+            populateTag(net.minecraft.tags.ItemTags.DYEABLE, SBItems.CHALK);
             populateTag(SBTags.Items.MAGIC_SHARD, SBItems.SMOLDERING_SHARD, SBItems.FROZEN_SHARD, SBItems.STORM_SHARD, SBItems.HOLY_SHARD, SBItems.FOOL_SHARD, SBItems.SOUL_SHARD);
             populateTag(SBTags.Items.STAFF, SBItems.FIRE_STAFF, SBItems.ICE_STAFF, SBItems.SHOCK_STAFF, SBItems.CREATIONIST_STAFF);
             populateTagFromBlocks(SBTags.Items.DIVINE_SHRINE, SBBlocks.JUNGLE_DIVINE_SHRINE, SBBlocks.PLAINS_DIVINE_SHRINE, SBBlocks.SANDSTONE_DIVINE_SHRINE);
             populateTagFromBlocks(Tags.Items.MUSHROOMS, SBBlocks.WILD_MUSHROOM);
-            populateTagFromBlocks(SBTags.Items.FROG_LIGHTS, net.minecraft.world.level.block.Blocks.OCHRE_FROGLIGHT, net.minecraft.world.level.block.Blocks.PEARLESCENT_FROGLIGHT, net.minecraft.world.level.block.Blocks.VERDANT_FROGLIGHT);
+            populateTagFromBlocks(SBTags.Items.FROG_LIGHTS, Blocks.OCHRE_FROGLIGHT, Blocks.PEARLESCENT_FROGLIGHT, Blocks.VERDANT_FROGLIGHT);
+            this.tag(SBTags.Items.IMBUEABLE)
+                    .addTags(net.minecraft.tags.ItemTags.WEAPON_ENCHANTABLE);
         }
 
         public void populateTagFromBlocks(TagKey<Item> tag, Supplier<Block>... items){
@@ -59,11 +62,11 @@ public class ModTagProvider {
         }
     }
 
-    public static class Blocks extends TagsProvider<Block> {
+    public static class BlockTags extends TagsProvider<Block> {
 
-        public Blocks(PackOutput pGenerator, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+        public BlockTags(PackOutput pGenerator, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
             super(pGenerator, Registries.BLOCK, provider, Constants.MOD_ID, existingFileHelper);
-            populateTag(BlockTags.MINEABLE_WITH_PICKAXE,
+            populateTag(net.minecraft.tags.BlockTags.MINEABLE_WITH_PICKAXE,
                     SBBlocks.STORM_CRYSTAL_BLOCK.get(),
                     SBBlocks.STORM_CRYSTAL_CLUSTER.get(),
                     SBBlocks.BUDDING_STORM_CRYSTAL.get(),
@@ -96,7 +99,7 @@ public class ModTagProvider {
             for (Block block : TransfigurationMultiblock.EXCLUDED_BLOCKS) {
                 this.populateTag(SBTags.Blocks.RITUAL_COMPATIBLE, block);
             }
-            this.populateTag(BlockTags.FLOWERS, SBBlocks.ARCANTHUS.get());
+            this.populateTag(net.minecraft.tags.BlockTags.FLOWERS, SBBlocks.ARCANTHUS.get());
             this.populateTag(SBTags.Blocks.DIVINE_SHRINE, SBBlocks.JUNGLE_DIVINE_SHRINE.get(), SBBlocks.PLAINS_DIVINE_SHRINE.get(), SBBlocks.SANDSTONE_DIVINE_SHRINE.get());
         }
 
@@ -107,8 +110,8 @@ public class ModTagProvider {
         }
     }
 
-    public static class EntityTypes extends EntityTypeTagsProvider {
-        public EntityTypes(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+    public static class EntityTypeTags extends EntityTypeTagsProvider {
+        public EntityTypeTags(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
             super(output, provider, Constants.MOD_ID, existingFileHelper);
         }
 
@@ -119,8 +122,8 @@ public class ModTagProvider {
         }
     }
 
-    public static class DamageTypes extends TagsProvider<DamageType> {
-        public DamageTypes(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+    public static class DamageTypeTags extends TagsProvider<DamageType> {
+        public DamageTypeTags(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
             super(output, Registries.DAMAGE_TYPE, provider, Constants.MOD_ID, existingFileHelper);
         }
 
@@ -138,14 +141,14 @@ public class ModTagProvider {
         }
     }
 
-    public static class PaintingVariants extends TagsProvider<PaintingVariant> {
-        public PaintingVariants(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
+    public static class PaintingVariantTags extends TagsProvider<PaintingVariant> {
+        public PaintingVariantTags(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, @Nullable ExistingFileHelper existingFileHelper) {
             super(output, Registries.PAINTING_VARIANT, provider, Constants.MOD_ID, existingFileHelper);
         }
 
         @Override
         protected void addTags(HolderLookup.Provider provider) {
-            this.tag(PaintingVariantTags.PLACEABLE)
+            this.tag(net.minecraft.tags.PaintingVariantTags.PLACEABLE)
                     .add(
                             SBPaintingVariants.DECEPTION,
                             SBPaintingVariants.DIVINE,

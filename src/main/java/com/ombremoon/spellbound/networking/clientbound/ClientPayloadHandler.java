@@ -209,9 +209,14 @@ public class ClientPayloadHandler {
             if (entity instanceof LivingEntity livingEntity) {
                 var handler = SpellUtil.getSpellHandler(livingEntity);
                 AbstractSpell spell = handler.getSpell(payload.spellType(), payload.castId());
+                var either = payload.effect();
                 if (spell != null) {
-                    EffectBuilder<?> effectBuilder = EffectDataConverter.convertToBuilder(payload.effectData());
-                    spell.addFX(effectBuilder);
+                    if (either.left().isPresent()) {
+                        EffectBuilder<?> effectBuilder = EffectDataConverter.convertToBuilder(either.left().get());
+                        spell.addFX(effectBuilder);
+                    } else if (either.right().isPresent()) {
+                        spell.removeFX(either.right().get(), true);
+                    }
                 }
             }
         });

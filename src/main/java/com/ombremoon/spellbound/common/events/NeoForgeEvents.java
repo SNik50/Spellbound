@@ -11,6 +11,7 @@ import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeon
 import com.ombremoon.spellbound.common.magic.acquisition.deception.RuleType;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualSavedData;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.SummonSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
@@ -432,7 +433,9 @@ public class NeoForgeEvents {
     public static void onLivingAttack(AttackEntityEvent event) {
         if (event.getEntity().level().isClientSide) return;
 
-        SpellUtil.getSpellHandler(event.getEntity()).getListener().fireEvent(SpellEventListener.Events.ATTACK, new PlayerAttackEvent(event.getEntity(), event));
+        Player player = event.getEntity();
+        player.setData(SBData.ATTACK_START, player.level().getGameTime());
+        SpellUtil.getSpellHandler(event.getEntity()).getListener().fireEvent(SpellEventListener.Events.ATTACK, new PlayerAttackEvent(player, event));
     }
 
     @SubscribeEvent
@@ -447,6 +450,19 @@ public class NeoForgeEvents {
         ItemStack stack = event.getItemStack();
         Player player = event.getEntity();
         if (PuzzleDungeonData.hasRule(player.level(), player, RuleType.NO_INTERACT, stack.getItem())) {
+            event.setCanceled(true);
+        }
+
+        if (!player.level().isClientSide) {
+            SpellUtil.getSpellHandler(player).getListener().fireEvent(SpellEventListener.Events.USE_ITEM, new UseItemEvent(player, event));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onItemSwap(LivingSwapItemsEvent.Hands event) {
+        ItemStack mainHand = event.getItemSwappedToOffHand();
+        Imbuement imbuement = mainHand.get(SBData.IMBUEMENT);
+        if (imbuement != null) {
             event.setCanceled(true);
         }
     }
@@ -476,6 +492,11 @@ public class NeoForgeEvents {
             if (spell instanceof SummonSpell summonSpell) {
                 summonSpell.onMobIncomingHurt(spell.getContext(), event);
             }
+        }
+
+        if (!level.isClientSide) {
+            var handler = SpellUtil.getSpellHandler(livingEntity);
+            handler.getListener().fireEvent(SpellEventListener.Events.INCOMING_DAMAGE, new IncomingDamageEvent(livingEntity, event));
         }
 
         if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY))
