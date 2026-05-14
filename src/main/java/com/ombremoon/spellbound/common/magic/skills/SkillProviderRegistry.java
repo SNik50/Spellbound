@@ -73,4 +73,6 @@ public class SkillProviderRegistry {
         ResourceLocation id = entry.id();
         REGISTRY.put(id, entry);
     }
+
+    public static void init() {}
 }

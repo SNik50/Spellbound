@@ -154,6 +154,13 @@ public class ModLangProvider extends LanguageProvider {
     }
 
     protected void affinityDescriptions() {
+        add("spellbound.affinity.description.nights_eye", "Grants the summoner night vision.");
+        add("spellbound.affinity.description.steel_feathers", "Familiar gains 10% increased health");
+        add("spellbound.affinity.description.phantom_shield", "Phantoms no longer spawn when the summoner doesn't sleep.");
+        add("spellbound.affinity.description.owl_vision", "Summoner gains 20% spell casting range.");
+        add("spellbound.affinity.description.cloudless_speed", "Summoner gains 20% speed when above Y=120.");
+        add("spellbound.affinity.description.twisted_head", "Familiar makes a loud sound when an enemy approaches from behind. (30 second cooldown)");
+
         add("spellbound.affinity.description.spectral_hops", "Increases summoners jump height.");
         add("spellbound.affinity.description.submerged", "Increases familiar damage and regeneration after being submerged in water.");
         add("spellbound.affinity.description.magma_digestion", "Magma cubes have a chance to drop frog lights.");

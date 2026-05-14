@@ -1,6 +1,7 @@
 package com.ombremoon.spellbound.main;
 
 import com.ombremoon.spellbound.common.init.*;
+import com.ombremoon.spellbound.common.magic.skills.SkillProviderRegistry;
 import com.ombremoon.spellbound.common.world.item.MageArmorItem;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.mixin.DuckRangedAttribute;
@@ -14,6 +15,7 @@ import net.neoforged.fml.loading.FMLLoader;
 public class CommonClass {
 
     public static void init(IEventBus modEventBus) {
+        SkillProviderRegistry.init();
         SBAffinities.register();
         SBArmorMaterials.register(modEventBus);
         SBAttributes.register(modEventBus);

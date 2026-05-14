@@ -144,7 +144,10 @@ public abstract class SBFamiliarEntity extends SBLivingEntity {
                 this.setIdle(false);
         }
 
-        if (isIdle() && !ridingSummoner())
+        if (getSummoner() == null) {
+          this.discard();
+          return;
+        } else if (isIdle() && !ridingSummoner())
             this.startRiding(getSummoner());
         else if (!isIdle() && ridingSummoner()) {
             this.stopRiding();

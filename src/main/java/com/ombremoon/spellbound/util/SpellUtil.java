@@ -38,7 +38,8 @@ import java.util.function.BiPredicate;
 
 public class SpellUtil {
     public static final BiPredicate<Entity, LivingEntity> IS_ALLIED = (target, attacker) -> target != null
-            && (attacker.isAlliedTo(target)
+            && (attacker.is(target)
+            || attacker.isAlliedTo(target)
             || target instanceof OwnableEntity ownableTarget && ownableTarget.getOwner() == attacker
             || attacker instanceof OwnableEntity ownableAttacker && ownableAttacker.getOwner() == target
             || isSummonOf(target, attacker));

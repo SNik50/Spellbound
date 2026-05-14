@@ -6,8 +6,10 @@ import com.ombremoon.spellbound.common.magic.skills.FamiliarAffinity;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHolder;
 import com.ombremoon.spellbound.common.world.entity.living.familiars.CatEntity;
 import com.ombremoon.spellbound.common.world.entity.living.familiars.FrogEntity;
+import com.ombremoon.spellbound.common.world.entity.living.familiars.OwlEntity;
 import com.ombremoon.spellbound.common.world.familiars.CatFamiliar;
 import com.ombremoon.spellbound.common.world.familiars.FrogFamiliar;
+import com.ombremoon.spellbound.common.world.familiars.OwlFamiliar;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -27,8 +29,11 @@ public class SBFamiliars {
     public static final FamiliarHolder<CatEntity, CatFamiliar> CAT = createCombatFamiliar(
             "cat", SBEntities.CAT, SpellMastery.NOVICE, CatFamiliar::new,
             SBAffinities.SHARPENED_CLAWS, SBAffinities.NATURAL_PREDATOR, SBAffinities.BLOOD_THIRSTY,
-            SBAffinities.FELINE_POUNCE, SBAffinities.BLOOD_MAGIC, SBAffinities.NINE_LIVES
-    );
+            SBAffinities.FELINE_POUNCE, SBAffinities.BLOOD_MAGIC, SBAffinities.NINE_LIVES);
+    public static final FamiliarHolder<OwlEntity, OwlFamiliar> OWL = createUtilFamiliar(
+            "owl", SBEntities.OWL, SpellMastery.NOVICE, OwlFamiliar::new,
+            SBAffinities.NIGHTS_EYE, SBAffinities.STEEL_FEATHERS, SBAffinities.PHANTOM_SHIELD,
+            SBAffinities.OWL_VISION, SBAffinities.CLOUDLESS_SPEED, SBAffinities.TWISTED_HEAD);
 
     private static <E extends LivingEntity, F extends Familiar<E>> FamiliarHolder<E, F> createUtilFamiliar(String name, Supplier<EntityType<E>> entity, SpellMastery reqMastery, FamiliarHolder.FamiliarBuilder<F> constructor, FamiliarAffinity... affinities) {
         var holder = new FamiliarHolder<>(CommonClass.customLocation(name), entity, reqMastery, FamiliarHolder.Type.UTIL, constructor, affinities);
