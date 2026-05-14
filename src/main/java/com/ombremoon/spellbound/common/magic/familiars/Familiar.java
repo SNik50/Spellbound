@@ -171,9 +171,9 @@ public abstract class Familiar<T extends LivingEntity> {
      */
     public final void refreshAttributes(FamiliarHandler handler) {
         for (FamiliarAffinity affinity : this.OWNER_ATTRIBUTE_MODIFIERS) {
-            removeSkillBuff(getOwner(), affinity);
+            removeSkillBuff(handler.getOwner(), affinity);
         }
-        modifyOwnerAttributes(getOwner(), handler, handler.getRebirths(handler.getSelectedFamiliar()), handler.getLevelForFamiliar(handler.getSelectedFamiliar()));
+        modifyOwnerAttributes(handler.getOwner(), handler, handler.getRebirths(handler.getSelectedFamiliar()), handler.getLevelForFamiliar(handler.getSelectedFamiliar()));
 
         for (FamiliarAffinity affinity : this.FAMILIAR_ATTRIBUTE_MODIFIERS) {
             removeSkillBuff(handler.getActiveEntity(), affinity);

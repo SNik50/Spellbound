@@ -37,13 +37,6 @@ import java.util.List;
 
 public class FrogFamiliar extends Familiar<FrogEntity> {
     private static final ResourceLocation SWAMP_BUFF = CommonClass.customLocation("murky_habitat_buff");
-    private static final ResourceLocation SUBMERGED_HP = CommonClass.customLocation("submerged_hp");
-    private static final ResourceLocation SUBMERGED_ATK = CommonClass.customLocation("submerged_atk");
-    private static final HolderSet<Block> FROG_LIGHTS = HolderSet.direct(
-            Holder.direct(Blocks.VERDANT_FROGLIGHT),
-            Holder.direct(Blocks.OCHRE_FROGLIGHT),
-            Holder.direct(Blocks.PEARLESCENT_FROGLIGHT)
-    );
 
     private boolean hasSwampBuff = false;
 

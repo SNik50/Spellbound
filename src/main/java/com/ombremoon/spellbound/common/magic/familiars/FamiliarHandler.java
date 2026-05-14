@@ -202,7 +202,7 @@ public class FamiliarHandler implements INBTSerializable<CompoundTag> {
      */
     public void tick() {
         for (var entry : skillCooldowns.entrySet()) {
-            if (entry.getValue() >= owner.tickCount) {
+            if (entry.getValue() <= owner.tickCount) {
                 skillCooldowns.remove(entry.getKey());
                 this.summonedFamiliar.onAffinityOffCooldown(this, entry.getKey());
             }

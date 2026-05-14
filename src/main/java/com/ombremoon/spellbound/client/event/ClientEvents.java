@@ -65,6 +65,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.particle.HeartParticle;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -131,9 +132,11 @@ public class ClientEvents {
 
         event.registerEntityRenderer(SBEntities.MUSHROOM_PROJECTILE.get(), VFXProjectileRenderer::new);
         event.registerEntityRenderer(SBEntities.SHADOW_MIST.get(), VFXEntityRenderer::new);
+        event.registerEntityRenderer(SBEntities.SEEKING_PROJECTILE.get(), NoopRenderer::new);
 
         event.registerEntityRenderer(SBEntities.FROG.get(), FrogRenderer::new);
         event.registerEntityRenderer(SBEntities.CAT.get(), CatRenderer::new);
+        event.registerEntityRenderer(SBEntities.OWL.get(), GenericLivingEntityRenderer::new);
 
         event.registerBlockEntityRenderer(SBBlockEntities.VALKY_STATUE.get(), ValkyrStatueRenderer::new);
         event.registerBlockEntityRenderer(SBBlockEntities.RUNE.get(), RuneBlockRenderer::new);
