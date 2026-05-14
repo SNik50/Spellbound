@@ -121,7 +121,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     private final boolean resetDuration;
     private final Predicate<SpellContext> skipEndOnRecast;
     private final boolean hasLayer;
-    private final Predicate<SpellContext> negativeScaling;
+    private final BiPredicate<SpellContext, AbstractSpell> negativeScaling;
     private final int updateInterval;
     protected final SyncedSpellData spellData;
     private final EffectCache effectCache = new EffectCache();
@@ -133,7 +133,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     private SpellContext context;
     private SpellContext castContext;
     private boolean isRecast;
-    protected Skill choice;
+    protected SkillProvider choice;
     private int charges;
     public int tickCount = 0;
     public boolean isInactive = false;
@@ -170,7 +170,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.resetDuration = builder.resetDuration;
         this.skipEndOnRecast = builder.skipEndOnRecast;
         this.hasLayer = builder.hasLayer;
-        this.negativeScaling = builder.negativeScaling;
+        this.negativeScaling = (BiPredicate<SpellContext, AbstractSpell>) builder.negativeScaling;
         this.updateInterval = builder.updateInterval;
         SyncedSpellData.Builder dataBuilder = new SyncedSpellData.Builder(this);
         dataBuilder.define(CAST_POS, BlockPos.ZERO);
@@ -281,7 +281,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      * @return The spells type's resource location
      */
     public ResourceLocation location() {
-        return SBSpells.REGISTRY.getKey(this.spellType);
+        return this.spellType().location();
     }
 
     /**
@@ -520,7 +520,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             if (this.spellData.isDirty() || this.tickCount != 0 && this.tickCount % this.updateInterval == 0)
                 this.sendDirtySpellData();
         } else {
-            this.handleFXRemoval();
+//            this.handleFXRemoval();
         }
     }
 
@@ -600,6 +600,9 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         }
     }
 
+    public void onClientCastTick(SpellContext context) {
+    }
+
     public void resetCast(SpellHandler handler) {
         this.resetCast(handler, this.castContext);
     }
@@ -627,6 +630,13 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     public void onSpellDataUpdated(SpellDataKey<?> dataKey) {
     }
 
+    /**
+     * Returns the skill choice for the spells if the spells is a {@link RadialSpell}.
+     * Specifically returns the choice at the start of casting, unlike {@link SpellContext#isChoice(Skill)}
+     * which can change throughout the spell's duration
+     * @param skill The skill to check the choice of
+     * @return Whether the skill is the spells choice or not
+     */
     public boolean isChoice(Skill skill) {
         return skill.equals(this.choice);
     }
@@ -811,10 +821,9 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      */
     public float getModifiedDamage(LivingEntity ownerEntity, LivingEntity targetEntity, float amount) {
         var skills = SpellUtil.getSkills(ownerEntity);
-        var effects = SpellUtil.getSpellEffects(this.caster);
         SpellPath path = this.spellType().getIdentifiablePath();
         float levelDamage = amount * (1.0F + SPELL_LEVEL_DAMAGE_MODIFIER * skills.getSpellLevel(spellType()));
-        float judgementFactor = this.getPath().isDivine() ? effects.getJudgementFactor(this.negativeScaling.test(this.context)) : 1.0F;
+        float judgementFactor = this.getPath().isDivine() ? this.getJudgementFactor() : 1.0F;
         levelDamage *= 1 + PATH_LEVEL_DAMAGE_MODIFIER * ((float) skills.getPathLevel(path) / 100) * (1.0F + judgementFactor);
         return potency(ownerEntity, targetEntity, levelDamage);
     }
@@ -1084,7 +1093,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     public float getJudgementFactor() {
         var effects = SpellUtil.getSpellEffects(this.caster);
-        return effects.getJudgementFactor(this.negativeScaling.test(this.context));
+        return effects.getJudgementFactor(this.negativeScaling.test(this.context, this));
     }
 
     /**
@@ -1488,10 +1497,21 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         this.triggerSpellFX(this.caster, builder);
     }
 
-    protected void triggerSpellFX(LivingEntity source, EffectData builder) {
+    protected void triggerSpellFX(Entity source, EffectData builder) {
         Level level = source.level();
         if (!level.isClientSide) {
             PayloadHandler.triggerSpellFx(source, this, builder);
+        }
+    }
+
+    protected void removeSpellFX(ResourceLocation effect) {
+        this.removeSpellFX(this.caster, effect);
+    }
+
+    protected void removeSpellFX(LivingEntity source, ResourceLocation effect) {
+        Level level = source.level();
+        if (!level.isClientSide) {
+            PayloadHandler.removeSpellFX(source, this, effect);
         }
     }
 
@@ -1792,7 +1812,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         protected boolean resetDuration;
         protected Predicate<SpellContext> skipEndOnRecast = context -> false;
         protected boolean hasLayer;
-        protected Predicate<SpellContext> negativeScaling = context -> false;
+        protected BiPredicate<SpellContext, T> negativeScaling = (context, spell) -> false;
         protected int updateInterval = 3;
 
         /**
@@ -1922,13 +1942,13 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
          * Determines if a path should scale with negative judgment. Should only be used for Divine spells.
          * @return The spells builder
          */
-        public Builder<T> negativeScaling(Predicate<SpellContext> negativeScaling) {
+        public Builder<T> negativeScaling(BiPredicate<SpellContext, T> negativeScaling) {
             this.negativeScaling = negativeScaling;
             return this;
         }
 
         public Builder<T> negativeScaling() {
-            this.negativeScaling = context -> true;
+            this.negativeScaling = (context, spell) -> true;
             return this;
         }
 

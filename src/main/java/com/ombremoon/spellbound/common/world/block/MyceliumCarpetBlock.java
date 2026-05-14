@@ -15,6 +15,11 @@ import net.minecraft.world.level.block.state.BlockState;
 public class MyceliumCarpetBlock extends CarpetBlock {
     public static final MapCodec<MyceliumCarpetBlock> CODEC = simpleCodec(MyceliumCarpetBlock::new);
 
+    @Override
+    public MapCodec<? extends CarpetBlock> codec() {
+        return CODEC;
+    }
+
     public MyceliumCarpetBlock(Properties properties) {
         super(properties);
     }

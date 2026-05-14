@@ -25,6 +25,7 @@ public class EffectTypes {
         register("block", BLOCK);
         register("entity", ENTITY);
         register("static_entity", STATIC_ENTITY);
+        //TODO: ADD EVENT
     }
 
     public static EffectType<?> getEffectTypeFromLocation(ResourceLocation resourceLocation) {

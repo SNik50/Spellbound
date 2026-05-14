@@ -114,6 +114,7 @@ public class SpellCastEvents {
                         stopChargeOrChannel(player, handler, spell, true);
                     } else {
                         handler.castTick++;
+                        spell.onClientCastTick(spell.getCurrentContext());
                     }
                 } else if (!handler.isChargingOrChannelling()) {
                     if (handler.castTick >= castTime) {

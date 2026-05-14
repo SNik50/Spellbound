@@ -4,6 +4,7 @@ import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
+import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
 import com.ombremoon.spellbound.common.magic.effects.TickProvider;
@@ -71,8 +72,8 @@ public class DebugItem extends Item implements Loggable {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
-//        if (!CommonClass.isDevEnv())
-//             return InteractionResult.FAIL;
+        if (!CommonClass.isDevEnv())
+             return InteractionResult.FAIL;
 
         BlockPos blockPos = context.getClickedPos();
         if (!level.isClientSide) {
@@ -97,12 +98,8 @@ public class DebugItem extends Item implements Loggable {
     }
 
     private void ombreDebug(Level level, Player player, InteractionHand usedHand, SpellHandler spellHandler, SkillHolder skillHolder) {
-        if (!level.isClientSide) {
-            ItemStack stack = new ItemStack(SBItems.DUNGEON_KEY.get());
-            stack.set(SBData.PUZZLE, SBPuzzleConfigs.NIGHTBLADE);
-            stack.set(SBData.ENCRYPTED_KEY, true);
-            player.setInvisible(false);
-        }
+        ItemStack stack = player.getItemInHand(InteractionHand.OFF_HAND);
+        stack.set(SBData.IMBUEMENT, null);
     }
 
     private void duckDebug(Level level, Player player, InteractionHand hand, SpellHandler spellHandler, SkillHolder skillHolder) {

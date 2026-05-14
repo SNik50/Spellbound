@@ -8,6 +8,7 @@ import com.ombremoon.spellbound.common.world.block.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.MushroomBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -41,6 +42,12 @@ public class SBBlocks {
                                 int age = state.getValue(ArcanthusCropBlock.AGE);
                                 return age * 5 / maxAge;
                             })
+            )
+    );
+    public static final Supplier<Block> RUINED_BRICKS = registerBlock(
+            "ruined_bricks", () -> new RuinedBrickBlock(
+                    BlockBehaviour.Properties
+                            .ofLegacyCopy(Blocks.COBBLED_DEEPSLATE).sound(SoundType.DEEPSLATE_BRICKS)
             )
     );
     public static final Supplier<Block> FROZEN_CRYSTAL_BLOCK = registerBlock(
@@ -182,6 +189,17 @@ public class SBBlocks {
                     CrystalBlock.CrystalType.STORM, 3.0F, 4.0F, BlockBehaviour.Properties.ofLegacyCopy(STORM_CRYSTAL_CLUSTER.get())
             )
     );
+    public static final Supplier<Block> ICE_SHEET = registerBlock(
+            "ice_sheet", () -> new IceSheetBlock(
+                    blockProperties()
+                            .mapColor(MapColor.ICE)
+                            .friction(0.98F)
+                            .randomTicks()
+                            .strength(0.5F)
+                            .forceSolidOn()
+                            .sound(SoundType.GLASS)
+                            .noOcclusion()
+                            .pushReaction(PushReaction.DESTROY)));
     public static final Supplier<Block> TRANSFIGURATION_PEDESTAL = registerBlock(
             "transfiguration_pedestal", () -> new TransfigurationPedestalBlock(
                     blockProperties()
@@ -270,7 +288,8 @@ public class SBBlocks {
                         .randomTicks()));
     public static final Supplier<Block> WILD_MUSHROOM_SUMMON_STONE = registerSummonStone("wild_mushroom", BossFights.WILD_MUSHROOM);
 
-    public static final Supplier<Block> DECEPTION_TEST_BLOCK = registerBlock("deception_test_block", () -> new DeceptionTestBlock(blockProperties().noLootTable()));
+    public static final Supplier<Block> DUNGEON_DOOR = registerBlock(
+            "dungeon_door", () -> new DungeonDoorBlock(blockProperties().noLootTable()));
     public static final Supplier<Block> DARK_ALTAR = registerBlock("dark_altar", () -> new DarkAltarBlock(blockProperties().noLootTable()));
     public static final Supplier<Block> MIRAGE_BLOCK = registerBlock("mirage_block", () -> new MirageBlock(blockProperties().noLootTable()));
     public static final Supplier<Block> WOVEN_SHADE = registerBlock("woven_shade", () -> new Block(blockProperties().noLootTable()));

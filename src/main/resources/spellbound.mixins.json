@@ -20,6 +20,7 @@
     "ServerEntityMixin",
     "ServerGamePacketListenerImplMixin",
     "ServerLevelMixin",
+    "SlotMixin",
     "StructureBlockEntityMixin",
     "ZombieVillagerMixin"
   ],
@@ -28,7 +29,7 @@
     "EntityRenderDispatcherMixin",
     "GameRendererMixin",
     "HumanoidModelMixin",
-    "ItemInHandLayerMixin",
+    "ItemRendererMixin",
     "LevelRendererMixin",
     "LivingEntityRendererMixin",
     "LocalPlayerMixin",

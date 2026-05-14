@@ -1,26 +1,23 @@
 package com.ombremoon.spellbound.common.magic.api;
 
-import com.ombremoon.spellbound.client.photon.converter.EffectData;
 import com.ombremoon.spellbound.common.init.SBDataTypes;
+import com.ombremoon.spellbound.common.magic.SpellContext;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.sync.SpellDataKey;
 import com.ombremoon.spellbound.common.magic.sync.SyncedSpellData;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.entity.SmartSpellEntity;
-import com.ombremoon.spellbound.common.magic.SpellContext;
-import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.world.entity.ai.goal.FollowSummonerGoal;
 import com.ombremoon.spellbound.common.world.entity.ai.goal.HurtSummonerGoal;
 import com.ombremoon.spellbound.common.world.entity.ai.goal.SummonerAttackGoal;
-import com.ombremoon.spellbound.common.world.spell.summon.SummonUndeadSpell;
-import com.ombremoon.spellbound.main.CommonClass;
-import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
@@ -30,16 +27,17 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
-import java.util.function.*;
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 public abstract class SummonSpell extends AnimatedSpell {
     private static final SpellDataKey<Set<Integer>> SUMMONS = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.INT_SET.get());
     private static final SpellDataKey<BlockPos> SUMMON_POS = SyncedSpellData.registerDataKey(SummonSpell.class, SBDataTypes.BLOCK_POS.get());
     private boolean summonedEntity;
     private boolean isSpecialChoice;
-    private Skill choice;
 
     @SuppressWarnings("unchecked")
     public static <T extends SummonSpell> Builder<T> createSummonBuilder(Class<T> spellClass) {
@@ -84,19 +82,11 @@ public abstract class SummonSpell extends AnimatedSpell {
         builder.define(SUMMON_POS, BlockPos.ZERO);
     }
 
-    protected boolean hasSpecialChoice(SummonSpell spell, SpellContext context) {
+    protected boolean hasSpecialChoice(SpellContext context) {
         var handler = context.getSpellHandler();
-        var list = handler.getActiveSpells(spell.spellType(), abstractSpell -> abstractSpell instanceof SummonSpell summonSpell && spell.isChoice(summonSpell.choice));
-        return !list.isEmpty();
-    }
-
-    @Override
-    public void onCastStart(SpellContext context) {
         var skills = context.getSkills();
-        if (this.isSpecialChoice)
-            this.choice = skills.getChoice(this.spellType());
-
-        super.onCastStart(context);
+        var list = handler.getActiveSpells(this.spellType(), abstractSpell -> abstractSpell instanceof SummonSpell summonSpell && skills.getChoice(this.spellType()) == summonSpell.choice);
+        return !list.isEmpty();
     }
 
     @Override
@@ -216,10 +206,6 @@ public abstract class SummonSpell extends AnimatedSpell {
         double xOffset = -Math.sin(totalAngle) * radius;
         double zOffset = Math.cos(totalAngle) * radius;
         return new Vec3(origin.x + xOffset, origin.y, origin.z + zOffset);
-    }
-
-    public Skill getSpecialChoice() {
-        return this.choice;
     }
 
     @Override

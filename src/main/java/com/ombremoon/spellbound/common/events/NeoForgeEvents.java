@@ -4,31 +4,31 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.ombremoon.sentinellib.common.event.RegisterPlayerSentinelBoxEvent;
 import com.ombremoon.spellbound.client.event.SpellCastEvents;
 import com.ombremoon.spellbound.common.events.custom.SpellCastEvent;
-import com.ombremoon.spellbound.common.magic.acquisition.deception.RuleType;
-import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
-import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
-import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
-import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
-import com.ombremoon.spellbound.common.world.commands.SpellboundCommand;
-import com.ombremoon.spellbound.common.world.commands.TestImbuementCommand;
-import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
-import com.ombremoon.spellbound.common.world.familiars.OwlFamiliar;
-import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
-import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
-import com.ombremoon.spellbound.common.world.effect.SBEffect;
-import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
-import com.ombremoon.spellbound.common.world.weather.HailstormData;
-import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
-import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
 import com.ombremoon.spellbound.common.init.*;
 import com.ombremoon.spellbound.common.magic.EffectManager;
 import com.ombremoon.spellbound.common.magic.acquisition.bosses.ArenaSavedData;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.PuzzleDungeonData;
+import com.ombremoon.spellbound.common.magic.acquisition.deception.RuleType;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.RitualSavedData;
 import com.ombremoon.spellbound.common.magic.api.AbstractSpell;
+import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.api.SummonSpell;
 import com.ombremoon.spellbound.common.magic.api.buff.SpellEventListener;
 import com.ombremoon.spellbound.common.magic.api.events.*;
+import com.ombremoon.spellbound.common.world.commands.ArenaDevCommand;
+import com.ombremoon.spellbound.common.world.commands.LearnSkillsCommand;
+import com.ombremoon.spellbound.common.world.commands.LearnSpellCommand;
+import com.ombremoon.spellbound.common.world.commands.SpellboundCommand;
+import com.ombremoon.spellbound.common.world.effect.SBEffect;
+import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
+import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
+import com.ombremoon.spellbound.common.world.familiars.OwlFamiliar;
+import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
+import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
+import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
+import com.ombremoon.spellbound.common.world.weather.HailstormData;
+import com.ombremoon.spellbound.common.world.weather.HailstormSavedData;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -42,13 +42,14 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.event.OnDatapackSyncEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -76,10 +77,6 @@ public class NeoForgeEvents {
         new LearnSkillsCommand(dispatcher, context);
         new LearnSpellCommand(dispatcher, context);
         new SpellboundCommand(dispatcher, context);
-
-        if (!FMLEnvironment.production) {
-            new TestImbuementCommand(dispatcher);
-        }
 
         ConfigCommand.register(dispatcher);
     }
@@ -434,7 +431,9 @@ public class NeoForgeEvents {
     public static void onLivingAttack(AttackEntityEvent event) {
         if (event.getEntity().level().isClientSide) return;
 
-        SpellUtil.getSpellHandler(event.getEntity()).getListener().fireEvent(SpellEventListener.Events.ATTACK, new PlayerAttackEvent(event.getEntity(), event));
+        Player player = event.getEntity();
+        player.setData(SBData.ATTACK_START, player.level().getGameTime());
+        SpellUtil.getSpellHandler(event.getEntity()).getListener().fireEvent(SpellEventListener.Events.ATTACK, new PlayerAttackEvent(player, event));
     }
 
     @SubscribeEvent
@@ -449,6 +448,19 @@ public class NeoForgeEvents {
         ItemStack stack = event.getItemStack();
         Player player = event.getEntity();
         if (PuzzleDungeonData.hasRule(player.level(), player, RuleType.NO_INTERACT, stack.getItem())) {
+            event.setCanceled(true);
+        }
+
+        if (!player.level().isClientSide) {
+            SpellUtil.getSpellHandler(player).getListener().fireEvent(SpellEventListener.Events.USE_ITEM, new UseItemEvent(player, event));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onItemSwap(LivingSwapItemsEvent.Hands event) {
+        ItemStack mainHand = event.getItemSwappedToOffHand();
+        Imbuement imbuement = mainHand.get(SBData.IMBUEMENT);
+        if (imbuement != null) {
             event.setCanceled(true);
         }
     }
@@ -480,18 +492,25 @@ public class NeoForgeEvents {
             }
         }
 
+        if (!level.isClientSide) {
+            var handler = SpellUtil.getSpellHandler(livingEntity);
+            handler.getListener().fireEvent(SpellEventListener.Events.INCOMING_DAMAGE, new IncomingDamageEvent(livingEntity, event));
+        }
+
         if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY))
             return;
 
         if (!level.isClientSide && PuzzleDungeonData.isDungeon(level)) {
             ServerLevel serverLevel = (ServerLevel) level;
             boolean flag =  source.getEntity() != null;
-            if (PuzzleDungeonData.hasRule(serverLevel, RuleType.NO_PVE_OR_PVP, livingEntity.getType()) && flag) {
-                event.setCanceled(true);
-            } else if (PuzzleDungeonData.hasRule(serverLevel, RuleType.NO_PVP) && source.getEntity() instanceof Player) {
-                event.setCanceled(true);
-            } else if (PuzzleDungeonData.hasRule(serverLevel, RuleType.NO_PVE, livingEntity.getType()) && flag) {
-                event.setCanceled(true);
+            if (source.getEntity() instanceof Player) {
+                if (PuzzleDungeonData.hasRule(serverLevel, RuleType.NO_PVE_OR_PVP, livingEntity.getType())/* && flag*/) {
+                    event.setCanceled(true);
+                } else if (PuzzleDungeonData.hasRule(serverLevel, RuleType.NO_PVP) && livingEntity instanceof Player/* && source.getEntity() instanceof Player*/) {
+                    event.setCanceled(true);
+                } else if (PuzzleDungeonData.hasRule(serverLevel, RuleType.NO_PVE, livingEntity.getType())/* && flag*/) {
+                    event.setCanceled(true);
+                }
             }
         }
     }

@@ -8,6 +8,7 @@ import com.ombremoon.spellbound.client.gui.radial.SkillRadialMenuItem;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
+import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -32,7 +33,7 @@ public class SkillSelectScreen extends Screen {
     private static final int BACKGROUND_HOVER_COLOR = 0x3FFFFFFF;
     private final Player player;
     private final SpellType<?> spellType;
-    private final List<Skill> radialSkills;
+    private final List<SkillProvider> radialSkills;
     private final SkillHolder skills;
     private final RadialMenu radialMenu;
     private SkillRadialMenuItem[] skillItems = new SkillRadialMenuItem[11];
@@ -40,7 +41,7 @@ public class SkillSelectScreen extends Screen {
     private float x;
     private float y;
 
-    protected SkillSelectScreen(SpellType<?> spellType, List<Skill> radialSkills) {
+    protected SkillSelectScreen(SpellType<?> spellType, List<SkillProvider> radialSkills) {
         super(Component.literal("TEMP SKILL RADIAL SELECTION"));
         this.player = Minecraft.getInstance().player;
         this.spellType = spellType;
@@ -58,7 +59,7 @@ public class SkillSelectScreen extends Screen {
             skillItems[i] = new SkillRadialMenuItem(radialMenu, this.spellType, radialSkills.get(i)) {
                 @Override
                 public boolean onClick() {
-                    Skill choice = this.getSkill();
+                    SkillProvider choice = this.getSkill();
                     if (skills.getChoice(spellType) == choice)
                         return false;
 

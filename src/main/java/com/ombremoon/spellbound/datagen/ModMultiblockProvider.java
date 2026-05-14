@@ -20,7 +20,7 @@ public class ModMultiblockProvider extends MultiblockProvider {
 
     @Override
     protected void buildMultiblocks(MultiblockOutput multiblockOutput) {
-        StandardMultiblock.Builder.of()
+        /*StandardMultiblock.Builder.of()
                 .pattern("^ ^",
                          " $ ",
                          "^$^")
@@ -33,7 +33,7 @@ public class ModMultiblockProvider extends MultiblockProvider {
                 .key('^', BuildingBlock.ANY)
                 .key('$', BuildingBlock.of(Blocks.DIAMOND_BLOCK))
                 .build(multiblockOutput, CommonClass.customLocation("building_block_test"));
-
+*/
         TransfigurationMultiblock.Builder.of()
                 .rings(1)
                 .build(multiblockOutput, CommonClass.customLocation("one_ring"));

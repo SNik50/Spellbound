@@ -34,7 +34,7 @@ public class ModBlockLootTables extends BlockLootSubProvider {
     @Override
     protected void generate() {
         this.multiBlockDropSelf(SBBlocks.MAGI_WORKBENCH.get());
-        this.dropSelf(SBBlocks.RESONANCE_STONE.get());
+        this.dropSelf(SBBlocks.RUINED_BRICKS.get());
         this.dropSelf(SBBlocks.FROZEN_CRYSTAL_BLOCK.get());
         this.dropSelf(SBBlocks.BUDDING_FROZEN_CRYSTAL.get());
         this.add(SBBlocks.FROZEN_CRYSTAL_CLUSTER.get(), block -> this.createShardDrops(block, SBItems.FROZEN_SHARD.get()));
@@ -53,8 +53,10 @@ public class ModBlockLootTables extends BlockLootSubProvider {
         this.dropWhenSilkTouch(SBBlocks.LARGE_STORM_CRYSTAL_BUD.get());
         this.dropWhenSilkTouch(SBBlocks.MEDIUM_STORM_CRYSTAL_BUD.get());
         this.dropWhenSilkTouch(SBBlocks.SMALL_STORM_CRYSTAL_BUD.get());
+        this.dropWhenSilkTouch(SBBlocks.ICE_SHEET.get());
         this.dropSelf(SBBlocks.TRANSFIGURATION_PEDESTAL.get());
         this.dropSelf(SBBlocks.TRANSFIGURATION_DISPLAY.get());
+        this.dropSelf(SBBlocks.RESONANCE_STONE.get());
         this.dropSelf(SBBlocks.SUMMON_STONE.get());
         this.dropSelf(SBBlocks.CRACKED_SUMMON_STONE.get());
         this.dropSelf(SBBlocks.WILD_MUSHROOM_SUMMON_STONE.get());

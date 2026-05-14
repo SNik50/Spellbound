@@ -136,6 +136,7 @@ public class SpellEventListener {
         public static Events<CastSpellEvent> CAST_SPELL = new Events<>(false);
         public static Events<JumpEvent> JUMP = new Events<>(false);
         public static Events<PlayerAttackEvent> ATTACK = new Events<>(false);
+        public static Events<IncomingDamageEvent> INCOMING_DAMAGE = new Events<>(false);
         public static Events<DamageEvent.Post> POST_DAMAGE = new Events<>(false);
         public static Events<DamageEvent.Pre> PRE_DAMAGE = new Events<>(false);
         public static Events<DealtDamageEvent.Post> DEALT_DAMAGE_POST = new Events<>(false);
@@ -146,6 +147,7 @@ public class SpellEventListener {
         public static Events<DeathEvent> DEATH = new Events<>(false);
         public static Events<DeathEvent> ENTITY_KILL = new Events<>(false);
         public static Events<BlockItemDropsEvent> BLOCK_DROPS = new Events<>(false);
+        public static Events<UseItemEvent> USE_ITEM = new Events<>(false);
         public static Events<MouseInputEvent.Pre> PRE_MOUSE_INPUT = new Events<>(true);
         public static Events<MouseInputEvent.Post> POST_MOUSE_INPUT = new Events<>(true);
 

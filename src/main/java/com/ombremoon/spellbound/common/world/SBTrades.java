@@ -52,7 +52,8 @@ public class SBTrades {
         map.put(SBMerchantType.SPELL_BROKER, toIntMap(ImmutableMap.of(1, new MerchantOffer[]{
                 dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.FLICKER),
                 dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.SHADOW_VEIL),
-                dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.CURSED_RUNE)
+                dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.CURSED_RUNE),
+                dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.NIGHTBLADE)
         }, 2, new MerchantOffer[]{
                 dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.FLICKER),
                 dungeonKeyTrade(8, Items.COOKIE, 4, SBPuzzleConfigs.SHADOW_VEIL),

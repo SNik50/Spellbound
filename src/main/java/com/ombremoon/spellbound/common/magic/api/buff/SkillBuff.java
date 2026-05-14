@@ -4,20 +4,18 @@ import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
-import com.ombremoon.spellbound.common.init.SBSkills;
 import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.DataComponentStorage;
-import com.ombremoon.spellbound.common.magic.acquisition.transfiguration.TransfigurationRitual;
 import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
 import com.ombremoon.spellbound.common.magic.skills.Skill;
 import com.ombremoon.spellbound.common.magic.skills.SkillProvider;
+import com.ombremoon.spellbound.common.magic.skills.SkillProviderRegistry;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.util.SpellUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -25,15 +23,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.apache.logging.log4j.util.TriConsumer;
 import org.slf4j.Logger;
 
 import java.util.Map;
 import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
 
 @SuppressWarnings("unchecked")
 public record SkillBuff<T>(SkillProvider skill, ResourceLocation id, BuffCategory category, BuffObject<T> buffObject, T object) {
@@ -124,8 +119,10 @@ public record SkillBuff<T>(SkillProvider skill, ResourceLocation id, BuffCategor
 
     public CompoundTag save() {
         CompoundTag tag = new CompoundTag();
-        tag.putString("SkillProviderType", this.skill.getType().name());
-        tag.putString("Skill", this.skill.location().toString());
+        SkillProvider.CODEC
+                .encodeStart(NbtOps.INSTANCE, this.skill)
+                .resultOrPartial(LOGGER::error)
+                .ifPresent(nbt -> tag.put("Skill", nbt));
         ResourceLocation.CODEC
                 .encodeStart(NbtOps.INSTANCE, this.id)
                 .resultOrPartial(LOGGER::error)
@@ -148,10 +145,10 @@ public record SkillBuff<T>(SkillProvider skill, ResourceLocation id, BuffCategor
     }
 
     public static <T> SkillBuff<T> load(CompoundTag tag) {
-        Skill skill = SkillProvider.getFromId(
-                SkillProvider.Type.valueOf(tag.getString("SkillProviderType")),
-                ResourceLocation.parse(tag.getString("Skill"))
-        );
+        SkillProvider skill = SkillProvider.CODEC
+                .parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("Skill")))
+                .resultOrPartial(LOGGER::error)
+                .orElse(null);
         ResourceLocation id = ResourceLocation.CODEC
                 .parse(new Dynamic<>(NbtOps.INSTANCE, tag.get("Id")))
                 .resultOrPartial(LOGGER::error)
@@ -175,8 +172,7 @@ public record SkillBuff<T>(SkillProvider skill, ResourceLocation id, BuffCategor
     }
 
     private void toNetwork(RegistryFriendlyByteBuf buf) {
-        buf.writeUtf(this.skill.getType().name());
-        this.skill.encode(buf);
+        SkillProvider.STREAM_CODEC.encode(buf, this.skill);
         ResourceLocation.STREAM_CODEC.encode(buf, this.id);
         NeoForgeStreamCodecs.enumCodec(BuffCategory.class).encode(buf, this.category);
         BuffObject.STREAM_CODEC.encode(buf, this.buffObject);
@@ -184,7 +180,7 @@ public record SkillBuff<T>(SkillProvider skill, ResourceLocation id, BuffCategor
     }
 
     private static <T> SkillBuff<T> fromNetwork(RegistryFriendlyByteBuf buf) {
-        SkillProvider skill = SkillProvider.decode(SkillProvider.Type.valueOf(buf.readUtf()), buf);
+        SkillProvider skill = SkillProvider.STREAM_CODEC.decode(buf);
         ResourceLocation id = ResourceLocation.STREAM_CODEC.decode(buf);
         BuffCategory category = NeoForgeStreamCodecs.enumCodec(BuffCategory.class).decode(buf);
         BuffObject<T> buffObject = (BuffObject<T>) BuffObject.STREAM_CODEC.decode(buf);

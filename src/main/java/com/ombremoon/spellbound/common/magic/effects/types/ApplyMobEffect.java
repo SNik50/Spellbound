@@ -33,7 +33,6 @@ import java.util.Optional;
 
 public record ApplyMobEffect(HolderSet<MobEffect> toApply, int minDuration, int maxDuration, int minAmplifier, int maxAmplifier) implements MagicEffect {
 
-
     @Override
     public void onActivated(ServerLevel level, int tier, @Nullable Entity source, LivingEntity target, BlockPos centerPos, Multiblock.MultiblockPattern pattern) {
         RandomSource randomsource = target.getRandom();

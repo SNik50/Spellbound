@@ -16,6 +16,7 @@ public class EffectDataConverter {
         EffectDataConverter.register(EffectTypes.BLOCK, BlockEffectType::convertBlock);
         EffectDataConverter.register(EffectTypes.ENTITY, EntityEffectType::convertEntity);
         EffectDataConverter.register(EffectTypes.STATIC_ENTITY, StaticEntityEffectType::convertStaticEntity);
+        //TODO: ADD EVENT
     }
 
     /**

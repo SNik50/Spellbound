@@ -35,6 +35,7 @@ public class CommonClass {
         SBPageElements.register(modEventBus);
         SBParticles.register(modEventBus);
         SBMagicEffects.register(modEventBus);
+        SBRecipes.register(modEventBus);
         SBSensors.register(modEventBus);
         SBSkills.register(modEventBus);
         SBSpells.register(modEventBus);
