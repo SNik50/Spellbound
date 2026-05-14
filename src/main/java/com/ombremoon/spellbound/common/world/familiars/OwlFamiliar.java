@@ -44,7 +44,7 @@ public class OwlFamiliar extends Familiar<OwlEntity> {
                 .activeTicks(((entity, integer) -> integer % 10 == 0))
                 .attackCondition(((entity, livingEntity) -> false))
                 .onCollisionTick(((entity, livingEntity) -> {
-                    if (entity instanceof LivingEntity caster && !SpellUtil.isSummonOf(livingEntity, caster) && (livingEntity instanceof Enemy || livingEntity instanceof Player)) {
+                    if (entity instanceof LivingEntity caster && !SpellUtil.IS_ALLIED.test(livingEntity, caster) && (livingEntity instanceof Enemy || livingEntity instanceof Player)) {
                         caster.level().playSound(null, livingEntity.blockPosition(), SoundEvents.ALLAY_DEATH, SoundSource.HOSTILE, 1F, 1F);
                         var handler = SpellUtil.getFamiliarHandler(caster);
                         handler.getActiveFamiliar().useAffinity(handler, SBAffinities.TWISTED_HEAD);
