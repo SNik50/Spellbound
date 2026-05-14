@@ -70,9 +70,8 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
                         if (spell != null && spell.isSpellType(SBSpells.SUMMON_UNDEAD) && spell.isCaster(caster) && spell1 instanceof SummonUndeadSpell summonUndeadSpell && summonUndeadSpell.canExplode()) {
                             spell.heal(caster, livingEntity.getHealth() * spell.potency(0.1F));
 
-                            //EXPLOSION VFX
-                            summonUndeadSpell.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation("corpse_explosion"),
-                                    livingEntity.getId(), EntityEffectExecutor.AutoRotate.NONE));
+                            //VFX MARK
+                            livingEntity.getPersistentData().putBoolean("CorpseExplode", true);
 
                             livingEntity.kill();
 
@@ -162,6 +161,7 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
     public void onCastStart(SpellContext context) {
         if (shouldExplodeCorpse(context)) {
             this.setExploding(true);
+
         }
 
         super.onCastStart(context);
@@ -269,6 +269,12 @@ public class SummonUndeadSpell extends SummonSpell implements ChargeableSpell, R
     public void onMobRemoved(LivingEntity entity, SpellContext context, @Nullable DamageSource source, Entity.RemovalReason reason) {
         if (reason == Entity.RemovalReason.KILLED) {
             //Spawn pile of bones
+
+
+            if (entity.getPersistentData().getBoolean("CorpseExplode")) {
+                this.triggerSpellFX(EffectData.Block.of(CommonClass.customLocation("summon_undead_corpse_explosion"),
+                        entity.blockPosition()));
+            }
         }
     }
 

@@ -15,6 +15,7 @@ import com.ombremoon.spellbound.common.magic.api.events.DamageEvent;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
 import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.ConfigHandler;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -147,8 +148,9 @@ public class HealingTouchSpell extends AnimatedSpell {
                 );
             }
             //VFX
-           /* triggerSpellFX(EffectData.StaticEntity.of(CommonClass.customLocation("healing_touch_cast"), caster.getId(),
-                    EntityEffectExecutor.AutoRotate.NONE)*/
+            this.triggerSpellFX(EffectData.Entity.of( CommonClass.customLocation("healing_touch_cast"),
+                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.8,0));
+
             playCastSound(context.getLevel(), context);
         }
 
@@ -177,15 +179,6 @@ public class HealingTouchSpell extends AnimatedSpell {
                 heal += (float) (maxMana - handler.getMana()) * potency(0.02F);
 
             this.heal(caster, heal);
-
-            //VFX
-            if (this.shouldTickSpellEffect(context)) {
-                this.triggerSpellFX(EffectData.Entity.of(
-                        CommonClass.customLocation("healing_touch_pulse"), caster.getId(),
-                        EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.8,0));
-
-
-            }
 
 
             if (context.hasSkill(SBSkills.OVERGROWTH) && this.overgrowthStacks <= 5 && caster.getHealth() >= caster.getMaxHealth()) {
@@ -220,6 +213,7 @@ public class HealingTouchSpell extends AnimatedSpell {
     protected void onSpellStop(SpellContext context) {
         LivingEntity caster = context.getCaster();
         this.removeSkillBuff(caster, SBSkills.TRANQUILITY_OF_WATER);
+        this.removeSpellFX(CommonClass.customLocation("healing_touch_cast"));
     }
 
     @Override

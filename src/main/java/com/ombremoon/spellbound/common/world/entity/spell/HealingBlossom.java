@@ -34,7 +34,6 @@ public class HealingBlossom extends SpellEntity<HealingBlossomSpell> {
 
     public void tick() {
         super.tick();
-        if (level().isClientSide) animateTick(level(), blockPosition(), getRandom());
         this.move(MoverType.SELF, this.getDeltaMovement());
 
         //Bloom completed
@@ -53,31 +52,6 @@ public class HealingBlossom extends SpellEntity<HealingBlossomSpell> {
         this.entityData.set(FULLY_BLOOMED, bloomed);
     }
 
-    public void animateTick(Level p_222504_, BlockPos p_222505_, RandomSource p_222506_) {
-        int i = p_222505_.getX();
-        int j = p_222505_.getY();
-        int k = p_222505_.getZ();
-        double d0 = (double)i + p_222506_.nextDouble();
-        double d1 = (double)j + 0.7;
-        double d2 = (double)k + p_222506_.nextDouble();
-        BlockPos.MutableBlockPos blockpos$mutableblockpos = new BlockPos.MutableBlockPos();
-
-        for (int l = 0; l < 2; l++) {
-            blockpos$mutableblockpos.set(i + Mth.nextInt(p_222506_, -5, 5), j - p_222506_.nextInt(5), k + Mth.nextInt(p_222506_, -5, 5));
-            BlockState blockstate = p_222504_.getBlockState(blockpos$mutableblockpos);
-            if (!blockstate.isCollisionShapeFullBlock(p_222504_, blockpos$mutableblockpos)) {
-                p_222504_.addParticle(
-                        ParticleTypes.CHERRY_LEAVES,
-                        (double)blockpos$mutableblockpos.getX() + p_222506_.nextDouble(),
-                        (double)blockpos$mutableblockpos.getY() + p_222506_.nextDouble(),
-                        (double)blockpos$mutableblockpos.getZ() + p_222506_.nextDouble(),
-                        0.0,
-                        0.0,
-                        0.0
-                );
-            }
-        }
-    }
 
     public void teleportToAroundBlockPos(BlockPos pos) {
         for(int i = 0; i < 10; ++i) {
