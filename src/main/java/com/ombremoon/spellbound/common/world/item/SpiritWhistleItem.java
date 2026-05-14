@@ -24,16 +24,11 @@ public class SpiritWhistleItem extends Item {
         return super.use(level, player, usedHand);
     }
 
-    @Override
-    public InteractionResult useOn(UseOnContext context) {
-        summon(context.getPlayer(), context.getClickedPos());
-        return super.useOn(context);
-    }
-
     private void summon(Player player, BlockPos pos) {
         var handler = SpellUtil.getFamiliarHandler(player);
         if (handler.hasActiveFamiliar()) {
             handler.discardFamiliar();
+            return;
         }
 
         handler.summonFamiliar(pos);

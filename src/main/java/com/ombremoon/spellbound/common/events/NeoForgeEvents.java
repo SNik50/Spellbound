@@ -23,6 +23,7 @@ import com.ombremoon.spellbound.common.world.commands.SpellboundCommand;
 import com.ombremoon.spellbound.common.world.effect.SBEffect;
 import com.ombremoon.spellbound.common.world.effect.SBEffectInstance;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
+import com.ombremoon.spellbound.common.world.familiars.OwlFamiliar;
 import com.ombremoon.spellbound.common.world.multiblock.MultiblockManager;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.FlameJetSpell;
 import com.ombremoon.spellbound.common.world.spell.ruin.fire.SolarRaySpell;
@@ -54,10 +55,7 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
-import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
-import net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.entity.player.*;
 import net.neoforged.neoforge.event.level.BlockDropsEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
@@ -597,6 +595,14 @@ public class NeoForgeEvents {
 
         effects.doPreDamageEffects(event);
         rituals.ACTIVE_RITUALS.forEach(instance -> instance.doPreDamageEffects(event));
+    }
+
+    @SubscribeEvent
+    public static void onPhantomSpawn(PlayerSpawnPhantomsEvent event) {
+        var famHandler = SpellUtil.getFamiliarHandler(event.getEntity());
+        if (famHandler.getActiveFamiliar() instanceof OwlFamiliar owl && owl.hasAffinity(famHandler, SBAffinities.PHANTOM_SHIELD)) {
+            event.setResult(PlayerSpawnPhantomsEvent.Result.DENY);
+        }
     }
 
     @SubscribeEvent

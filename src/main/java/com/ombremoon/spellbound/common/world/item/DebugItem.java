@@ -104,8 +104,8 @@ public class DebugItem extends Item implements Loggable {
 
     private void duckDebug(Level level, Player player, InteractionHand hand, SpellHandler spellHandler, SkillHolder skillHolder) {
         var handler = SpellUtil.getFamiliarHandler(player);
-        handler.awardBond(SBFamiliars.CAT, handler.getMaxXPForFamiliar(SBFamiliars.CAT));
-        player.sendSystemMessage(handler.selectFamiliar(SBFamiliars.CAT) ? Component.literal("Selected cat") : Component.literal("Failed to set familiar"));
+        handler.awardBond(SBFamiliars.FROG, handler.getMaxXPForFamiliar(SBFamiliars.FROG));
+        player.sendSystemMessage(handler.selectFamiliar(SBFamiliars.OWL) ? Component.literal("Selected owl") : Component.literal("Failed to set familiar"));
     }
 
     @Override

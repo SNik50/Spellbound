@@ -35,7 +35,8 @@ public class SpellTomeItem extends Item {
             if (handler.getSpellList().contains(spell)) {
                 player.displayClientMessage(Component.translatable("chat.spelltome.awardxp"), true);
                 SpellUtil.getSkills(player).awardSpellXp(spell, 10);
-                itemStack.shrink(1);
+                if (!player.getAbilities().instabuild)
+                    itemStack.shrink(1);
                 return InteractionResultHolder.fail(itemStack);
             }
 

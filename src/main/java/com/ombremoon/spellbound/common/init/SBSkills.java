@@ -339,6 +339,19 @@ public class SBSkills {
     public static Holder<Skill> HALL_OF_MIRRORS = registerSkill("hall_of_mirrors", -50, 150, preReqs(CONFUSION));
     public static Holder<Skill> LOOK_OVER_HERE = registerConditionalRadialSkill("look_over_here", 50, 200, preReqs(SHADOW_FEINT), (player, holder) -> holder.hasSkill(SBSkills.STEP_INTO_SHADOW));
 
+    //Shadow Veil
+    public static Holder<Skill> SHADOW_VEIL = registerSkill("shadow_veil");
+    public static Holder<Skill> DARK_SHROUD = registerModifierSkill("dark_shroud", 0, 50, preReqs(SHADOW_VEIL), SpellModifier.DARK_SHADOW);
+    public static Holder<Skill> EXPANDING_SHADOWS = registerSkill("expanding_shadows", 0, 100, preReqs(DARK_SHROUD));
+    public static Holder<Skill> IN_THE_SHADOWS = registerSkill("in_the_shadows", 0, 150, preReqs(EXPANDING_SHADOWS));
+    //Ombre cant count to 4 so 4th skill needed.
+    public static Holder<Skill> DECEPTIVE_ECHOES = registerSkill("deceptive_echoes", 0, 200, preReqs(IN_THE_SHADOWS));
+    public static Holder<Skill> WEIGHTED_VEILS = registerSkill("weighted_veils", 0, 250, preReqs(DECEPTIVE_ECHOES));
+    public static Holder<Skill> SAPPING_FEAR = registerSkill("sapping_fear", 0, 300, preReqs(WEIGHTED_VEILS));
+    public static Holder<Skill> CLOUDED_SENSES = registerSkill("clouded_senses", 0, 350, preReqs(SAPPING_FEAR));
+    public static Holder<Skill> DEEP_NIGHT = registerSkill("deep_night", 0, 400, preReqs(CLOUDED_SENSES));
+    public static Holder<Skill> SHADOW_DOMAIN = registerSkill("shadow_domain", 0, 450, preReqs(DEEP_NIGHT));
+
     //Cursed Rune
     public static Holder<Skill> CURSED_RUNE = registerRadialSkill("cursed_rune");
     public static Holder<Skill> MAGE_WRECK = registerRadialSkill("mage_wreck", -25, 50, preReqs(CURSED_RUNE));

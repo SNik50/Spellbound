@@ -3,11 +3,13 @@ package com.ombremoon.spellbound.common.init;
 import com.ombremoon.spellbound.common.world.entity.living.*;
 import com.ombremoon.spellbound.common.world.entity.living.familiars.CatEntity;
 import com.ombremoon.spellbound.common.world.entity.living.familiars.FrogEntity;
+import com.ombremoon.spellbound.common.world.entity.living.familiars.OwlEntity;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.GiantMushroom;
 import com.ombremoon.spellbound.common.world.entity.living.wildmushroom.MiniMushroom;
 import com.ombremoon.spellbound.common.world.entity.misc.ShadowMist;
 import com.ombremoon.spellbound.common.world.entity.misc.WatchfulEye;
 import com.ombremoon.spellbound.common.world.entity.projectile.MushroomProjectile;
+import com.ombremoon.spellbound.common.world.entity.projectile.SeekingMagicProjectile;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.world.entity.spell.*;
 import net.minecraft.core.registries.Registries;
@@ -30,7 +32,10 @@ public class SBEntities {
 
     public static final Supplier<EntityType<SpellBroker>> SPELL_BROKER = registerMob("spell_broker", SpellBroker::new, MobCategory.CREATURE, 0.9F, 1.95F, 8, SpellBroker::createAttributes);
 
+    public static final Supplier<EntityType<SeekingMagicProjectile>> SEEKING_PROJECTILE = registerEntity("seeking_projectile", SeekingMagicProjectile::new, 1f, 1f);
+
     //Familiars
+    public static final Supplier<EntityType<OwlEntity>> OWL = registerMob("owl", OwlEntity::new, MobCategory.MISC, 1f, 1f, 8, OwlEntity::createAttributes, false);
     public static final Supplier<EntityType<FrogEntity>> FROG = registerMob("frog", FrogEntity::new, MobCategory.MISC, 1f, 1f, 8, FrogEntity::createAttributes, false);
     public static final Supplier<EntityType<CatEntity>> CAT = registerMob("cat", CatEntity::new, MobCategory.MISC, 1f, 1f, 8, CatEntity::createAttributes, false);
 
