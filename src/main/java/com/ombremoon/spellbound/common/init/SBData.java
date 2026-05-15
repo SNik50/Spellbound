@@ -10,6 +10,7 @@ import com.ombremoon.spellbound.common.magic.api.Imbuement;
 import com.ombremoon.spellbound.common.magic.api.SpellType;
 import com.ombremoon.spellbound.common.magic.effects.EffectHolder;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
+import com.ombremoon.spellbound.common.world.item.components.SatchelContents;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.common.magic.skills.SkillHolder;
@@ -149,6 +150,8 @@ public class SBData {
             builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
     public static final Supplier<DataComponentType<List<EffectHolder>>> RUNE_EFFECTS = COMPONENT_TYPES.registerComponentType("rune_effects",
             builder -> builder.persistent(EffectHolder.CODEC.listOf()).networkSynchronized(EffectHolder.STREAM_CODEC.apply(ByteBufCodecs.list())));
+    public static final Supplier<DataComponentType<SatchelContents>> SATCHEL_CONTENTS = COMPONENT_TYPES.registerComponentType("satchel_contents",
+            builder -> builder.persistent(SatchelContents.CODEC).networkSynchronized(SatchelContents.STREAM_CODEC));
 
     //Spell Components
     public static final Supplier<DataComponentType<Unit>> POD_LEADER = COMPONENT_TYPES.registerComponentType("pod_leader", builder -> builder.persistent(Unit.CODEC));
