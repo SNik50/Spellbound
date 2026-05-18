@@ -105,5 +105,35 @@
   "sounds": [
     "spellbound:solar_ray"
   ]
-}
+},
+  "smite": {
+    "subtitle": "sounds.spellbound.smite",
+    "sounds": [
+      "spellbound:smite_imbuement"
+    ]
+  },
+  "smite_parry": {
+    "subtitle": "sounds.spellbound.smite_parry",
+    "sounds": [
+      "spellbound:smite_parry"
+    ]
+  },
+  "smite_dark_blade": {
+    "subtitle": "sounds.spellbound.smite_dark_blade",
+    "sounds": [
+      "spellbound:smite_dark_blade_imbuement"
+    ]
+  },
+  "nightblade": {
+    "subtitle": "sounds.spellbound.nighblade_imbuement",
+    "sounds": [
+      "spellbound:nightblade_imbuement"
+    ]
+  },
+  "corpse_explosion": {
+    "subtitle": "sounds.spellbound.corpse_explosion",
+    "sounds": [
+      "spellbound:corpse_explosion"
+    ]
+  }
 }
