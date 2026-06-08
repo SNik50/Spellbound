@@ -37,7 +37,8 @@ public class SmiteSpell extends ImbuementSpell {
                     }
 
                     return EffectData.Entity.of(effect, caster.getId(), EntityEffectExecutor.AutoRotate.NONE)
-                            .setOffset(0, -caster.getEyeHeight(), 0);
+                            .setOffset(0, -caster.getEyeHeight(), 0)
+                            .setAllowMulti(true);
                     }
                 );
     }
@@ -117,6 +118,9 @@ public class SmiteSpell extends ImbuementSpell {
             if (context.isChoice(SBSkills.GOLDEN_PARRY)) {
                 this.parryTick = level.getGameTime();
             }
+        } else {
+            var cache = this.getFXCache();
+            log(cache.getFX(CommonClass.customLocation("smite_cast")));
         }
     }
 

@@ -208,16 +208,16 @@ public class SBSkills {
 
     //Create Object
     public static final Holder<Skill> CREATE_OBJECT = registerRadialSkill("create_object");
-    public static final Holder<Skill> LUMBERJACK = registerRadialSkill("lumberjack", 0, 50, preReqs(CREATE_OBJECT));
-    public static final Holder<Skill> EXCAVATOR = registerRadialSkill("excavator", -50, 50, preReqs(CREATE_OBJECT));
-    public static final Holder<Skill> HARVESTER = registerRadialSkill("harvester", 50, 50, preReqs(CREATE_OBJECT));
-    public static final Holder<Skill> ADVENTURER = registerRadialSkill("adventurer", 0, 100, preReqs(LUMBERJACK, EXCAVATOR, HARVESTER));
-    public static final Holder<Skill> SCOUT = registerRadialSkill("scout", -50, 100, preReqs(LUMBERJACK, EXCAVATOR, HARVESTER));
-    public static final Holder<Skill> EMERGENCY_RATIONS = registerRadialSkill("emergency_rations", 50, 100, preReqs(LUMBERJACK, EXCAVATOR, HARVESTER));
-    public static final Holder<Skill> LASTING_PROVISIONS = registerSkill("lasting_provisions", 0, 150, preReqs(ADVENTURER, SCOUT, EMERGENCY_RATIONS));
-    public static final Holder<Skill> ARTISANS_TOUCH = registerSkill("artisans_touch", -50, 150, preReqs(ADVENTURER, SCOUT, EMERGENCY_RATIONS));
-    public static final Holder<Skill> MASTERWORK_GEAR = registerSkill("masterwork_gear", 50, 150, preReqs(ADVENTURER, SCOUT, EMERGENCY_RATIONS));
-    public static final Holder<Skill> MYSTIC_TOOLSMITH = registerSkill("mystic_toolsmith", 0, 200, preReqs(LASTING_PROVISIONS, ARTISANS_TOUCH, MASTERWORK_GEAR));
+    public static final Holder<Skill> LUMBERJACK = registerRadialSkill("lumberjack", -75, 50, preReqs(CREATE_OBJECT));
+    public static final Holder<Skill> EXCAVATOR = registerRadialSkill("excavator", -25, 50, preReqs(CREATE_OBJECT));
+    public static final Holder<Skill> HARVESTER = registerRadialSkill("harvester", 25, 50, preReqs(CREATE_OBJECT));
+    public static final Holder<Skill> SCOUT = registerRadialSkill("scout", 75, 50, preReqs(CREATE_OBJECT));
+    public static final Holder<Skill> ADVENTURER = registerRadialSkill("adventurer", -50, 100, preReqs(CREATE_OBJECT));
+    public static final Holder<Skill> EMERGENCY_RATIONS = registerRadialSkill("emergency_rations", 50, 100, preReqs(CREATE_OBJECT));
+    public static final Holder<Skill> LASTING_PROVISIONS = registerSkill("lasting_provisions", 0, 150, preReqs(CREATE_OBJECT));
+    public static final Holder<Skill> ARTISANS_TOUCH = registerSkill("artisans_touch", 0, 200, preReqs(LASTING_PROVISIONS));
+    public static final Holder<Skill> MASTERWORK_GEAR = registerSkill("masterwork_gear", 0, 250, preReqs(ARTISANS_TOUCH));
+    public static final Holder<Skill> MYSTIC_TOOLSMITH = registerSkill("mystic_toolsmith", 0, 300, preReqs(MASTERWORK_GEAR));
 
     //Shadow Gate
     public static final Holder<Skill> SHADOW_GATE = registerRadialSkill("shadow_gate");
@@ -286,19 +286,19 @@ public class SBSkills {
 
     //Bound Bow
     public static final Holder<Skill> BOUND_BOW = registerRadialSkill("bound_bow");
-    public static final Holder<Skill> QUICKDRAW = registerSkill("quickdraw", -50, 50, preReqs(BOUND_BOW));
-    public static final Holder<Skill> SPECTRAL_VOLLEY = registerSkill("spectral_volley", 0, 50, preReqs(BOUND_BOW));
-    public static final Holder<Skill> PIERCING_SHOT = registerSkill("piercing_shot", 50, 50, preReqs(BOUND_BOW));
-    public static final Holder<Skill> INFUSED_SHOT = registerRadialSkill("infused_shot", 0, 100, preReqs(QUICKDRAW, SPECTRAL_VOLLEY, PIERCING_SHOT),
+    public static final Holder<Skill> SPECTRAL_VOLLEY = registerSkill("spectral_volley", -75, 50, preReqs(BOUND_BOW));
+    public static final Holder<Skill> QUICKDRAW = registerSkill("quickdraw", -25, 50, preReqs(BOUND_BOW));
+    public static final Holder<Skill> PIERCING_SHOT = registerSkill("piercing_shot", 25, 50, preReqs(BOUND_BOW));
+    public static final Holder<Skill> INFUSED_SHOT = registerRadialSkill("infused_shot", 75, 50, preReqs(BOUND_BOW),
             createProvider("bound_bow", "fire_arrow"),
             createProvider("bound_bow", "ice_arrow"),
             createProvider("bound_bow", "shock_arrow"));
-    public static final Holder<Skill> MYSTIC_MARKSMAN = registerSkill("mystic_marksman", -50, 100, preReqs(QUICKDRAW, SPECTRAL_VOLLEY, PIERCING_SHOT));
-    public static final Holder<Skill> BOUND_ARROW = registerSkill("bound_arrow", 50, 100, preReqs(QUICKDRAW, SPECTRAL_VOLLEY, PIERCING_SHOT));
-    public static final Holder<Skill> ARCHERY_PROWESS = registerSkill("archery_prowess", 0, 150, preReqs(INFUSED_SHOT, MYSTIC_MARKSMAN, BOUND_ARROW));
-    public static final Holder<Skill> WRAITH_SHOT = registerSkill("wraith_shot", 0, 200, preReqs(INFUSED_SHOT, MYSTIC_MARKSMAN, BOUND_ARROW));
-    public static final Holder<Skill> HEATSEEKER = registerSkill("heatseeker", -50, 200, preReqs(INFUSED_SHOT, MYSTIC_MARKSMAN, BOUND_ARROW));
-    public static final Holder<Skill> BOUND_MARKSMAN = registerRadialSkill("bound_marksman", 50, 150, preReqs(INFUSED_SHOT, MYSTIC_MARKSMAN, BOUND_ARROW));
+    public static final Holder<Skill> MYSTIC_MARKSMAN = registerSkill("mystic_marksman", -50, 100, preReqs(SPECTRAL_VOLLEY, QUICKDRAW));
+    public static final Holder<Skill> BOUND_ARROW = registerSkill("bound_arrow", -50, 150, preReqs(MYSTIC_MARKSMAN));
+    public static final Holder<Skill> ARCHERY_PROWESS = registerSkill("archery_prowess", 50, 100, preReqs(PIERCING_SHOT, INFUSED_SHOT));
+    public static final Holder<Skill> WRAITH_SHOT = registerSkill("wraith_shot", 50, 150, preReqs(ARCHERY_PROWESS));
+    public static final Holder<Skill> HEATSEEKER = registerSkill("heatseeker", 0, 200, preReqs(BOUND_ARROW, WRAITH_SHOT));
+    public static final Holder<Skill> BOUND_MARKSMAN = registerRadialSkill("bound_marksman", 0, 250, preReqs(HEATSEEKER));
 
     //Wild Mushroom
     public static final Holder<Skill> WILD_MUSHROOM = registerSkill("wild_mushroom");
