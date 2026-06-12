@@ -114,7 +114,7 @@ public class ModLangProvider extends LanguageProvider {
 
         add("item.spellbound.shard_satchel.limit", "Can hold up to %s of each catalyst shard.");
         add("item.spellbound.shard_satchel.total_limit", "Currently holding %s/%s shards");
-        add("spellbound.item.chalk", "Chalk");
+        add("item.spellbound.chalk", "Chalk");
 
         add("spellbound.familiars.equipped", "Familiar Equipped: %1$s");
         add("spellbound.familiars.rebirthed", "Familiar Rebirthed: %1$s");
@@ -179,6 +179,13 @@ public class ModLangProvider extends LanguageProvider {
     }
 
     protected void guideContents() {
+        add("guide.general.novice_spells", "Novice Spells");
+        add("guide.general.apprentice_spells", "Apprentice Spells");
+        add("guide.general.adept_spells", "Adept Spells");
+        add("guide.general.expert_spells", "Expert Spells");
+        add("guide.general.master_spells", "Master Spells");
+
+        add("guide.contents.title", "Table of Spells:");
         add("guide.general.table_contents", "Table of Contents:");
         add("guide.element.spell_info", "Spell Info");
         add("guide.element.spell_info.spell_mastery", "Spell Mastery: %1$s");
@@ -327,6 +334,7 @@ public class ModLangProvider extends LanguageProvider {
     }
 
     protected void transfigContents() {
+        add("guide.transfig.spell_list", "Transfiguration Spells");
         add("guide.transfiguration.description", "Transfiguration & Rituals");
         add("guide.transfiguration.blocks", "Ritual Blocks");
         add("guide.transfiguration.items", "Ritual Items");
