@@ -23,6 +23,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -73,6 +74,7 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
             sound = SpellboundSounds.DARK_DIVINE_ACTION.get();
         }
 
+        Entity scroll = null;
         if (blockState != null) {
             BlockPos pos = blockState.getFirst();
             int shrineId = pos.hashCode();
@@ -90,7 +92,7 @@ public record ActionRewards(int experience, int judgementGranted, int judgementR
                     SpellType<?> spellType = SBSpells.REGISTRY.get(location);
                     if (spellType != null) {
                         ItemStack itemStack = SpellTomeItem.createWithSpell(spellType);
-                        RitualHelper.createItem(player.level(), Vec3.atBottomCenterOf(blockState.getFirst().above()), itemStack);
+                        scroll = RitualHelper.createItem(player.level(), Vec3.atBottomCenterOf(blockState.getFirst().above()), itemStack);
                     }
                 }
             }
