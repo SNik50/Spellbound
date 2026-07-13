@@ -117,8 +117,8 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
         super.onSpellStart(context);
         Level level = context.getLevel();
         LivingEntity caster = context.getCaster();
+        boolean harvest = this.isChoice(SBSkills.HARVEST) && context.hasCatalyst(SBItems.CORRUPTED_SHARD.get());
         if (!level.isClientSide) {
-            boolean flag = this.isChoice(SBSkills.HARVEST) && context.hasCatalyst(SBItems.CORRUPTED_SHARD.get());
             this.target = context.getTarget() instanceof LivingEntity livingEntity && !this.isChoice(SBSkills.HARVEST) ? livingEntity : null;
             if (context.hasSkill(SBSkills.PARASITIC_LINK) && this.target != null) {
                 var targetHandler = SpellUtil.getSpellHandler(this.target);
@@ -193,16 +193,12 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
             EffectData effectData = EffectData.StaticEntity.of(CommonClass.customLocation("siphon_caster"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
                     .setOffset(0, 1.25, 1.5)
                     .setDelay(10);
-
-            if (this.isChoice(SBSkills.HARVEST) && context.hasCatalyst(SBItems.CORRUPTED_SHARD.get())) {
+            if (harvest) {
                 effectData = EffectData.StaticEntity.of(CommonClass.customLocation("siphon_caster_harvest"), caster.getId(), EntityEffectExecutor.AutoRotate.LOOK)
                         .setOffset(0, 0.1, 0)
                         .setDelay(10);
             }
-
             this.triggerSpellFX(effectData);
-
-            //sound
             level.playSound(null, context.getCaster().blockPosition(), SoundEvents.APPLY_EFFECT_BAD_OMEN,
                     SoundSource.PLAYERS, 0.6F, 0.6F);
 
@@ -298,6 +294,7 @@ public class SiphonSpell extends ChanneledSpell implements RadialSpell {
 
                     this.triggerSpellFX(EffectData.Entity.of(CommonClass.customLocation(fxLocation), entity.getId(), EntityEffectExecutor.AutoRotate.NONE)
                             .setOffset(0, 0.1, 0));
+
                 }
 
 

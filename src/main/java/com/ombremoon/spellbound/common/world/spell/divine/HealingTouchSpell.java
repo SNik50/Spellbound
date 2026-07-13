@@ -149,7 +149,7 @@ public class HealingTouchSpell extends AnimatedSpell {
             }
             //VFX
             this.triggerSpellFX(EffectData.Entity.of( CommonClass.customLocation("healing_touch_cast"),
-                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.8,0));
+                    caster.getId(), EntityEffectExecutor.AutoRotate.NONE).setOffset(0, -0.6,0));
 
             playCastSound(context.getLevel(), context);
         }

@@ -24,6 +24,12 @@
       "spellbound:stormstrike_use2"
     ]
   },
+  "stormstrike_impact": {
+    "subtitle": "sounds.spellbound.stormstrike_impact",
+    "sounds": [
+      "spellbound:stormstrike_impact"
+    ]
+  },
   "electric_charge_use": {
     "subtitle": "sounds.spellbound.electric_charge_use",
     "sounds": [
@@ -105,5 +111,78 @@
   "sounds": [
     "spellbound:solar_ray"
   ]
-}
+},
+  "smite": {
+    "subtitle": "sounds.spellbound.smite",
+    "sounds": [
+      "spellbound:smite_imbuement"
+    ]
+  },
+  "smite_parry": {
+    "subtitle": "sounds.spellbound.smite_parry",
+    "sounds": [
+      "spellbound:smite_parry"
+    ]
+  },
+  "smite_strike": {
+    "subtitle": "sounds.spellbound.smite_strike",
+    "sounds": [
+      "spellbound:smite_strike1",
+      "spellbound:smite_strike2"
+    ]
+  },
+  "smite_swoosh": {
+    "subtitle": "sounds.spellbound.smite_swoosh",
+    "sounds": [
+      "spellbound:smite_swoosh1",
+      "spellbound:smite_swoosh2"
+    ]
+  },
+  "smite_dark_blade": {
+    "subtitle": "sounds.spellbound.smite_dark_blade",
+    "sounds": [
+      "spellbound:smite_dark_blade_imbuement"
+    ]
+  },
+  "nightblade": {
+    "subtitle": "sounds.spellbound.nighblade_imbuement",
+    "sounds": [
+      "spellbound:nightblade_imbuement"
+    ]
+  },
+  "corpse_explosion": {
+    "subtitle": "sounds.spellbound.corpse_explosion",
+    "sounds": [
+      "spellbound:corpse_explosion"
+    ]
+  },
+  "uplifting_chorus": {
+    "subtitle": "sounds.spellbound.uplifting_chorus",
+    "sounds": [
+      "spellbound:uplifting_chorus"
+    ]
+  },
+  "purge_magic_expunge": {
+    "subtitle": "sounds.spellbound.purge_expunge",
+    "sounds": [
+      "spellbound:risata2",
+      "spellbound:risata1",
+      "spellbound:risata3",
+      "spellbound:risata4",
+      "spellbound:risata5",
+      "spellbound:risata6"
+    ]
+  },
+  "rock_build_up": {
+    "subtitle": "rock_build_up",
+    "sounds": [
+      "spellbound:rock_build_up"
+    ]
+  },
+  "shatter_skin": {
+    "subtitle": "sounds.spellbound.shatter_skin",
+    "sounds": [
+      "spellbound:shatter_skin"
+    ]
+  }
 }

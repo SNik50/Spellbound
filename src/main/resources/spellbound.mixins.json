@@ -9,6 +9,7 @@
     "BundleItemMixin",
     "BlockItemMixin",
     "ConnectionAccessor",
+    "DuckLivingEntityFXEmitter",
     "DuckRangedAttribute",
     "EntityMixin",
     "HealOrHarmMobEffectMixin",
