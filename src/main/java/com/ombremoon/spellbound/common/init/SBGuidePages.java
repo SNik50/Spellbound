@@ -87,6 +87,8 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> SHADOW_GATE = key("shadow_gate");
     ResourceKey<GuideBookPage> SHADOW_GATE_RITUAL = key("shadow_gate_page_ritual");
     ResourceKey<GuideBookPage> MYSTIC_ARMOR = key("mystic_armor");
+    ResourceKey<GuideBookPage> CREATE_OBJECT = key("create_object");
+    ResourceKey<GuideBookPage> CREATE_OBJECT_RITUAL = key("create_object_ritual");
     ResourceKey<GuideBookPage> MYSTIC_ARMOR_RITUAL = key("mystic_armor_ritual");
 
     //Summon Book
@@ -101,6 +103,8 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> SUMMON_VILLAGER = key("summon_villager");
     ResourceKey<GuideBookPage> WILD_MUSHROOM = key("wild_mushroom");
     ResourceKey<GuideBookPage> MUSHROOM_ACQ = key("mushroom_page_acq");
+    ResourceKey<GuideBookPage> SUMMON_WOLF = key("summon_wolf");
+    ResourceKey<GuideBookPage> BOUND_BOW = key("bound_bow");
 
     //Divine Book
     ResourceKey<GuideBookPage> DIVINE_COVER_PAGE = key("divine_cover_page");
@@ -131,6 +135,7 @@ public interface SBGuidePages {
     ResourceKey<GuideBookPage> CURSED_RUNE = key("cursed_rune");
     ResourceKey<GuideBookPage> SHADOWBOND = key("shadowbond");
     ResourceKey<GuideBookPage> PURGE_MAGIC = key("purge_magic");
+    ResourceKey<GuideBookPage> NIGHTBLADE = key("nightblade");
 
     //Basic
     ResourceKey<GuideBookPage> SPELLBOUND_COVER_PAGE = key("basic_cover_page");
@@ -492,6 +497,11 @@ public interface SBGuidePages {
                 new ContentsEntry(translatable("guide.general.path_items"), TRANSFIG_ARMOR_STAFF),
                 new ContentsEntry(translatable("guide.transfiguration.armor_recipe"), TRANSFIG_HELM_RITUAL),
                 new ContentsEntry(translatable("guide.transfiguration.staff_recipe"), TRANSFIG_STAFF_RITUAL),
+                new ContentsEntry(spellName(SBSpells.STRIDE.get()), STRIDE),
+                new ContentsEntry(spellName(SBSpells.SHADOW_GATE.get()), SHADOW_GATE),
+                new ContentsEntry(spellName(SBSpells.MYSTIC_ARMOR.get()), MYSTIC_ARMOR),
+                //new ContentsEntry(spellName(SBSpells.CREATE_OBJECT.get()), CREATE_OBJECT),
+                new ContentsEntry(translatable("guide.transfigurations.mana_tear"), MANA_TEAR_RITUAL),
                 new ContentsEntry(translatable("guide.transfigurations.mana_tear"), MANA_TEAR_RITUAL),
                 new ContentsEntry(translatable("guide.general.novice_spells"), STRIDE),
                 new ContentsEntry(translatable("guide.general.apprentice_spells"), null),
@@ -713,6 +723,8 @@ public interface SBGuidePages {
         createSpellPage(context, SUMMON_VILLAGER, SUMMON_UNDEAD, Book.SUMMONS, SBSpells.SUMMON_VILLAGER);
         createSpellPage(context, WILD_MUSHROOM, SUMMON_VILLAGER, Book.SUMMONS, SBSpells.WILD_MUSHROOM);
         createSummonAcqPage(context, SUMMON_BOOK, MUSHROOM_ACQ, WILD_MUSHROOM, SBEntities.GIANT_MUSHROOM.get(), SBSpells.WILD_MUSHROOM.get());
+        //createSpellPage(context, SUMMON_WOLF, WILD_MUSHROOM, Book.SUMMONS, SBSpells.SUMMON_WOLF);
+
 
         //Divine
         createCoverPage(context, DIVINE_BOOK, DIVINE_COVER_PAGE, SpellPath.DIVINE,
@@ -825,6 +837,7 @@ public interface SBGuidePages {
                 new ImageActionEntry(SBDivineActions.GROW_AMBROSIA_BUSH, SBPageScraps.GROW_AMBROSIA_BUSH, SBPageScraps.GROW_AMBROSIA_BUSH_LORE, 10, 12000, 15, new ImageEntryWithScale(defaultNameSpace("textures/block/sweet_berry_bush_stage3.png"), -15, 0)),
                 new ItemActionEntry(SBDivineActions.PURIFY_WITHER_ROSE, SBPageScraps.PURIFY_WITHER_ROSE, SBPageScraps.PURIFY_WITHER_ROSE_LORE, 15, 6000, 35, Ingredient.of(Items.WITHER_ROSE))
         );
+        //createDivineSpellPage(context, SMITE, HEALING_BLOSSOM_ACTIONS, DIVINE_BOOK, SBSpells.SMITE, 50);
 
         //Deception
         createCoverPage(context, DECEPTION_BOOK, DECEPTION_COVER_PAGE, SpellPath.DECEPTION,
@@ -850,6 +863,7 @@ public interface SBGuidePages {
         createSpellPage(context, CURSED_RUNE, FLICKER, Book.DECEPTION, SBSpells.CURSED_RUNE);
         createSpellPage(context, SHADOWBOND, CURSED_RUNE, Book.DECEPTION, SBSpells.SHADOWBOND);
         createSpellPage(context, PURGE_MAGIC, SHADOWBOND, Book.DECEPTION, SBSpells.PURGE_MAGIC);
+        //createSpellPage(context, NIGHTBLADE, PURGE_MAGIC, Book.DECEPTION, SBSpells.NIGHBLADE);
     }
 
     private static void createCoverPage(
