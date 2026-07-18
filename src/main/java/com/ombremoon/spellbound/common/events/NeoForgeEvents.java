@@ -108,7 +108,6 @@ public class NeoForgeEvents {
             if (livingEntity instanceof Player player) {
                 if (!level.isClientSide) {
                     ServerLevel serverLevel = (ServerLevel) level;
-//                    handler.sync();
                     handler.onPlayerSpawn(player);
 
                     var holder = SpellUtil.getSkills(player);

@@ -224,6 +224,7 @@
             "translate": "healing_touch.heal_mob_to_full.lore"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:default",
           "target_page": "spellbound:default"
         },
@@ -232,6 +233,7 @@
             "translate": "healing_touch.use_blessed_bandages.lore"
           },
           "extraOffset": 0,
+          "not_added": false,
           "scrap": "spellbound:use_blessed_bandages_lore",
           "target_page": "spellbound:default"
         },
@@ -240,6 +242,7 @@
             "translate": "healing_touch.use_phial.lore"
           },
           "extraOffset": 10,
+          "not_added": false,
           "scrap": "spellbound:use_phial_lore",
           "target_page": "spellbound:default"
         }
