@@ -190,4 +190,9 @@ public class IceSkateSpell extends ChanneledSpell {
             this.removeSkillBuff(context.getCaster(), SBSkills.ICE_SKATE);
         }
     }
+
+    @Override
+    public boolean inTestingPhase() {
+        return true;
+    }
 }
