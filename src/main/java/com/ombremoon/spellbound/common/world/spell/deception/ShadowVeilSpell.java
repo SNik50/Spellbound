@@ -230,4 +230,9 @@ public class ShadowVeilSpell extends AnimatedSpell {
         super.defineSpellData(builder);
         builder.define(VEIL_ID, 0);
     }
+
+    @Override
+    public boolean inTestingPhase() {
+        return true;
+    }
 }

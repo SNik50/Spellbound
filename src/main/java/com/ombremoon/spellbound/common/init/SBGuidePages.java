@@ -806,7 +806,7 @@ public interface SBGuidePages {
                 false,
                 new ItemActionEntry(SBDivineActions.HEAL_MOB_TO_FULL, null, null, 5, 24000, 0, Ingredient.of(Items.SHEEP_SPAWN_EGG)),
                 new ItemActionEntry(SBDivineActions.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES, SBPageScraps.USE_BLESSED_BANDAGES_LORE, 5, 24000, 0, Ingredient.of(Items.GOLDEN_APPLE)),
-                new ItemActionEntry(SBDivineActions.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE, SBPageScraps.BLESS_SHRINE_LORE, 5, 24000, 10, Ingredient.of(SBItems.RITUAL_TALISMAN.get()))
+                new ItemActionEntry(SBDivineActions.USE_PHIAL, SBPageScraps.USE_PHIAL, SBPageScraps.USE_PHIAL_LORE, 5, 24000, 10, Ingredient.of(SBItems.RITUAL_TALISMAN.get()))
         );
         createDivineSpellPage(context, BLESSING, HEALING_TOUCH_ACTIONS, DIVINE_BOOK, SBSpells.BLESSING, 0);
         createDivineActionPage(
