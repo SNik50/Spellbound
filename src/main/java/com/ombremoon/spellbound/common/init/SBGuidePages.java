@@ -1,5 +1,6 @@
 package com.ombremoon.spellbound.common.init;
 
+import com.ombremoon.spellbound.client.gui.guide.elements.GuideMultiBlockElement;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.SpellPath;
 import com.ombremoon.spellbound.common.magic.acquisition.divine.SpellAction;
@@ -890,6 +891,7 @@ public interface SBGuidePages {
                 .forBook(forBook)
                 .setPreviousPage(prevPage)
                 .addElements(
+                        new GuideMultiBlockElement(CommonClass.customLocation("test")),
                         PageBuilder.Image
                                 .of(loc("textures/gui/paths/" + path.getSerializedName() + ".png"))
                                 .setDimensions(150, 150)

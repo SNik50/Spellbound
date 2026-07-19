@@ -286,6 +286,7 @@ public class ClientEvents {
         ElementRenderDispatcher.register(GuideSpellBorderElement.class, new GuideSpellBorderRenderer());
         ElementRenderDispatcher.register(TransfigurationRitualElement.class, new GuideRitualRenderer());
         ElementRenderDispatcher.register(GuideEquipmentElement.class, new GuideEquipmentRenderer());
+        ElementRenderDispatcher.register(GuideMultiBlockElement.class, new GuideMultiBlockRenderer());
     }
 
     @SubscribeEvent
