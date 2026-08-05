@@ -1,4 +1,4 @@
-package com.ombremoon.spellbound.client.gui.resonance_stone;
+package com.ombremoon.spellbound.client.gui.familiar;
 
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.SpellPath;

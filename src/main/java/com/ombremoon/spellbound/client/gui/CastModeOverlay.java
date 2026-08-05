@@ -96,7 +96,7 @@ public class CastModeOverlay implements LayeredDraw.Layer {
         // Group spells by type and count instances
         var groupedSpells = handler.getActiveSpells()
                 .stream()
-                .filter(spell -> spell.shouldRender(spell.getContext()))
+                .filter(AbstractSpell::shouldRender)
                 .collect(Collectors.groupingBy(
                         AbstractSpell::spellType,
                         Collectors.collectingAndThen(

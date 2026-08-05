@@ -1,11 +1,9 @@
-package com.ombremoon.spellbound.client.gui.resonance_stone;
+package com.ombremoon.spellbound.client.gui.familiar;
 
-import com.lowdragmc.lowdraglib2.gui.ui.utils.ModularUITooltipComponent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
 
 import java.util.Arrays;
 import java.util.List;

@@ -39,7 +39,7 @@ public class Fireball extends VFXSpellProjectile<FireballSpell> {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(SIZE, 0F);
+        builder.define(SIZE, 1F);
         builder.define(STICKY, false);
         builder.define(STICK_TARGET, -1);
     }

@@ -39,7 +39,7 @@ public abstract class AnimatedSpell extends AbstractSpell {
         super.onCastStart(context);
         LivingEntity caster = context.getCaster();
         SpellAnimation animation = this.castAnimation.apply(context, this);
-        if (animation != null && caster instanceof Player player) {
+        if (!this.isSoftCast && animation != null && caster instanceof Player player) {
             this.playAnimation(player, animation);
         }
     }

@@ -1,7 +1,6 @@
-package com.ombremoon.spellbound.client.gui.resonance_stone;
+package com.ombremoon.spellbound.client.gui.familiar;
 
 import com.mojang.datafixers.util.Pair;
-import com.ombremoon.spellbound.common.magic.SpellHandler;
 import com.ombremoon.spellbound.common.magic.SpellMastery;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHandler;
 import com.ombremoon.spellbound.common.magic.familiars.FamiliarHolder;
@@ -11,7 +10,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
 
 public class ResonanceStoneScreen extends Screen {
     public static final ResourceLocation BACKGROUND = CommonClass.customLocation("textures/gui/resonance_stone/bg.png");

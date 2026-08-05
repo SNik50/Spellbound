@@ -26,6 +26,7 @@ import com.ombremoon.spellbound.common.world.effect.SBEffect;
 import com.ombremoon.spellbound.common.world.entity.ISpellEntity;
 import com.ombremoon.spellbound.common.world.item.MageArmorItem;
 import com.ombremoon.spellbound.main.CommonClass;
+import com.ombremoon.spellbound.main.Constants;
 import com.ombremoon.spellbound.networking.PayloadHandler;
 import com.ombremoon.spellbound.util.Loggable;
 import com.ombremoon.spellbound.util.SpellUtil;
@@ -134,6 +135,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     private SpellContext context;
     private SpellContext castContext;
     private boolean isRecast;
+    protected boolean isSoftCast = false;
     protected SkillProvider choice;
     private int charges;
     public int tickCount = 0;
@@ -501,6 +503,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      */
     public final void tick() {
         tickCount++;
+        if (this.spellType == SBSpells.SHATTERING_CRYSTAL.get())
+            log(this.tickCount);
 //        endSpell();
         if (this.init) {
             this.startSpell();
@@ -1390,8 +1394,12 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             CameraEngine.getEngine(player).shakeScreen(player.getRandom().nextInt(), duration, intensity, maxOffset, freq);
     }
 
-    public boolean shouldRender(SpellContext context) {
+    protected boolean shouldRender(SpellContext context) {
         return true;
+    }
+
+    public boolean shouldRender() {
+        return this.shouldRender(this.context) && !this.isSoftCast;
     }
 
     public Vec3 findTeleportLocation(Level level, LivingEntity entity, float maxDistance) {
@@ -1580,8 +1588,8 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Will allow a spells to be recast without calling the end methods of the previously cast spells.
-     * @return Whether the spells should skip the end methods on recast.
+     * Will allow a spell to be recast without calling the end methods of the previously cast spells.
+     * @return Whether the spell should skip the end methods on recast.
      */
     public boolean skipEndOnRecast(SpellContext context) {
         return this.skipEndOnRecast.test(context, this);
@@ -1589,7 +1597,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
     /**
      * Checks if the {@link GenericSpellLayer} should render a vfx layer when the spells is active.
-     * @return Whether the spells has a render layer
+     * @return Whether the spell has a render layer
      */
     public boolean hasLayer() {
         return this.hasLayer;
@@ -1599,8 +1607,29 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         castSpell(caster, caster.level(), caster.getOnPos());
     }
 
+    public void softCastSpell(LivingEntity caster) {
+        this.isSoftCast = true;
+        this.castContext = SpellContext.simple(this.spellType, caster);
+        if (!caster.level().isClientSide) {
+            this.initNoCast(caster, caster.level(), caster.getOnPos());
+            this.castId = SPELL_COUNTER.incrementAndGet();
+
+            CompoundTag initTag = this.initTag(false);
+            PayloadHandler.clientCastSpell(caster, this.spellType, this.castId, initTag, new CompoundTag());
+            awardXp(this.manaCost * this.xpModifier);
+            if (caster instanceof Player player) {
+                player.awardStat(SBStats.SPELLS_CAST.get());
+            }
+
+            this.activateSpell();
+            this.sendDirtySpellData();
+            EventFactory.onSpellCast(caster, this, this.context);
+            this.init = true;
+        }
+    }
+
     /**
-     * Initializes spells data before activation. Will only activate the spells upon a successful cast condition.
+     * Initializes spells data before activation. Will only activate the spell upon a successful cast condition.
      * @param caster The casting living entity
      * @param level The current level
      * @param blockPos The block position the caster is in when the cast timer ends
@@ -1633,10 +1662,9 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             }
 
             this.castId = SPELL_COUNTER.incrementAndGet();
-
             if (!(this.castPredicate.test(this.context, this) && RandomUtil.percentChance(getCastChance())) || !SpellUtil.canCastSpell(caster, this)) {
                 onCastReset(this.context);
-                CompoundTag initTag = this.initTag(this.isRecast, true);
+                CompoundTag initTag = this.initTag(true);
                 PayloadHandler.clientCastSpell(caster, this.spellType, this.castId, initTag, nbt);
                 return;
             }
@@ -1650,7 +1678,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
                 this.endFirstSpell();
             }
 
-            CompoundTag initTag = this.initTag(this.isRecast, false);
+            CompoundTag initTag = this.initTag(false);
             PayloadHandler.clientCastSpell(caster, this.spellType, this.castId, initTag, nbt);
             awardXp(this.manaCost * this.xpModifier);
             if (caster instanceof Player player) {
@@ -1660,7 +1688,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
             handler.setCurrentlyCastingSpell(null);
             handler.previouslyCastSpell = this;
             handler.lastCastTick = level.getGameTime();
-            activateSpell();
+            this.activateSpell();
             this.sendDirtySpellData();
             EventFactory.onSpellCast(caster, this, this.context);
 
@@ -1683,6 +1711,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
         this.isRecast = initTag.getBoolean("isRecast");
         this.charges = initTag.getInt("charges");
+        this.isSoftCast = initTag.getBoolean("softCast");
         this.context = new SpellContext(this.spellType(), this.caster, this.level, this.blockPos, this.isRecast);
 
         if (initTag.getBoolean("forceReset")) {
@@ -1697,14 +1726,14 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         handler.previouslyCastSpell = this;
         handler.lastCastTick = level.getGameTime();
         handler.setCurrentlyCastingSpell(null);
-        activateSpell();
+        this.activateSpell();
         EventFactory.onSpellCast(caster, this, this.context);
 
         this.init = true;
     }
 
     /**
-     * Initializes spells data before activation. Will not activate the path.
+     * Initializes spell data before activation. Will not activate the spell.
      * @param caster The casting living entity
      * @param level The current level
      * @param blockPos The block position the caster is in when the cast timer ends
@@ -1716,7 +1745,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
 
         var handler = SpellUtil.getSpellHandler(caster);
         var list = handler.getActiveSpells(spellType());
-        if (!list.isEmpty())
+        if (!this.isSoftCast && !list.isEmpty())
             this.isRecast = true;
 
         this.context = new SpellContext(this.spellType(), this.caster, this.level, this.blockPos, this.isRecast);
@@ -1727,7 +1756,7 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
     }
 
     /**
-     * Returns the spells cast prior to this one of the same spells type. Necessary for saving/loading data on recast spells.
+     * Returns the spell cast prior to this one of the same spell type. Necessary for saving/loading data on recast spells.
      * @return The previously cast spells
      */
     protected AbstractSpell getPreviouslyCastSpell() {
@@ -1747,11 +1776,12 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
         firstSpell.ifPresent(AbstractSpell::endSpell);
     }
 
-    public CompoundTag initTag(boolean isRecast, boolean forceReset) {
+    public CompoundTag initTag(boolean forceReset) {
         CompoundTag nbt = new CompoundTag();
         nbt.putInt("charges", this.charges);
-        nbt.putBoolean("isRecast", isRecast);
+        nbt.putBoolean("isRecast", this.isRecast);
         nbt.putBoolean("forceReset", forceReset);
+        nbt.putBoolean("softCast", this.isSoftCast);
         return nbt;
     }
 
@@ -1760,9 +1790,10 @@ public abstract class AbstractSpell implements GeoAnimatable, SpellDataHolder, F
      */
     private void activateSpell() {
         var handler = this.context.getSpellHandler();
-        var skills = this.context.getSkills();
         if (this.fullRecast && this.isRecast) {
             handler.recastSpell(this);
+        } else if (this.isSoftCast) {
+            handler.queueSpell(this);
         } else {
             handler.activateSpell(this);
         }

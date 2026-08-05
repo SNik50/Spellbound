@@ -10,8 +10,10 @@ import com.ombremoon.spellbound.common.magic.api.buff.BuffCategory;
 import com.ombremoon.spellbound.common.magic.api.buff.ModifierData;
 import com.ombremoon.spellbound.common.magic.api.buff.SkillBuff;
 import com.ombremoon.spellbound.common.world.block.entity.IceSheetBlockEntity;
+import com.ombremoon.spellbound.common.world.spell.deception.ShadowVeilSpell;
 import com.ombremoon.spellbound.main.CommonClass;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
@@ -45,16 +47,6 @@ public class IceSkateSpell extends ChanneledSpell {
                             BlockPredicate.unobstructed()
                     )
             );
-    private static final BlockPredicate EXTENDED_PREDICATE =
-            BlockPredicate.allOf(
-                    BlockPredicate.anyOf(
-                            BlockPredicate.matchesTag(new Vec3i(0, 0, 0), BlockTags.AIR),
-                            BlockPredicate.replaceable()
-                    ),
-                    BlockPredicate.not(BlockPredicate.matchesTag(new Vec3i(0, -1, 0), BlockTags.AIR)),
-                    BlockPredicate.not(BlockPredicate.matchesBlocks(new Vec3i(0, -1, 0), SBBlocks.ICE_SHEET.get())),
-                    BlockPredicate.unobstructed()
-            );
     private static final BlockPredicate WATER_PREDICATE =
             BlockPredicate.allOf(
                     BlockPredicate.matchesTag(new Vec3i(0, 1, 0), BlockTags.AIR),
@@ -67,6 +59,13 @@ public class IceSkateSpell extends ChanneledSpell {
                     BlockPredicate.matchesTag(new Vec3i(0, 1, 0), BlockTags.AIR),
                     BlockPredicate.matchesBlocks(Blocks.LAVA),
                     BlockPredicate.matchesFluids(Fluids.LAVA),
+                    BlockPredicate.unobstructed()
+            );
+    private static final BlockPredicate AIR_PREDICATE =
+            BlockPredicate.allOf(
+                    BlockPredicate.matchesTag(new Vec3i(0, 1, 0), BlockTags.AIR),
+                    BlockPredicate.matchesBlocks(Blocks.AIR),
+                    BlockPredicate.matchesFluids(Fluids.EMPTY),
                     BlockPredicate.unobstructed()
             );
     private BlockPos position = BlockPos.ZERO;
@@ -111,6 +110,10 @@ public class IceSkateSpell extends ChanneledSpell {
                     iceSheet.setOwner(caster, context.hasSkill(SBSkills.FROZEN_FEET), context.hasSkill(SBSkills.ICE_SNARE));
                 }
             }
+
+//            ShadowVeilSpell spell = SBSpells.SHADOW_VEIL.get().createSpell();
+//            spell.setMistPos(caster.position().relative(Direction.DOWN, 0.5));
+//            spell.softCastSpell(caster);
         }
     }
 
@@ -125,7 +128,7 @@ public class IceSkateSpell extends ChanneledSpell {
             horizontalDirection = horizontalDirection.normalize();
         }
 
-        double speedMod = context.hasSkill(SBSkills.FRICTIONLESS) ? 1.5 : 1.25;
+        double speedMod = context.hasSkill(SBSkills.FRICTIONLESS) ? 1.3 : 1.25;
         double strength = 0.98F * speedMod;
         Vec3 motion = horizontalDirection.scale(strength).add(0, -0.75, 0);
         caster.setDeltaMovement(motion);
@@ -135,6 +138,9 @@ public class IceSkateSpell extends ChanneledSpell {
             Vec3 origin = caster.position();
             BlockPos blockpos = BlockPos.containing(origin);
             int i = 3;
+
+            log(level.getFluidState(blockpos.below()));
+
             if (caster.blockPosition() != this.position) {
                 for (BlockPos blockpos1 : BlockPos.betweenClosed(blockpos.offset(-i, 0, -i), blockpos.offset(i, 0, i))) {
                     if (blockpos1.distToCenterSqr(origin.x(), (double) blockpos1.getY() + 0.5, origin.z()) < (double) Mth.square(i)) {
@@ -142,6 +148,8 @@ public class IceSkateSpell extends ChanneledSpell {
                             level.setBlockAndUpdate(blockpos1.below(), Blocks.ICE.defaultBlockState());
                         } else if (context.hasSkill(SBSkills.GLACIAL_GLIDE) && LAVA_PREDICATE.test((ServerLevel) level, blockpos1.below())) {
                             level.setBlockAndUpdate(blockpos1.below(), Blocks.BASALT.defaultBlockState());
+                        } else if (AIR_PREDICATE.test((ServerLevel) level, blockpos1.below())) {
+                            level.setBlockAndUpdate(blockpos1.below(), Blocks.ICE.defaultBlockState());
                         } else if (BASE_PREDICATE.test((ServerLevel) level, blockpos1)
                                 && level.setBlockAndUpdate(blockpos1, SBBlocks.ICE_SHEET.get().defaultBlockState())) {
                             BlockEntity blockEntity = level.getBlockEntity(blockpos1);
