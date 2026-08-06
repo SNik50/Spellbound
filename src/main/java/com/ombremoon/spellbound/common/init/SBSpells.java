@@ -55,7 +55,7 @@ public class SBSpells {
                     SBSkills.FROSTBITE_SYNERGY, SBSkills.WINTER_IS_COMING, SBSkills.GLACIAL_RESONANCE));
     public static final Supplier<SpellType<IceSkateSpell>> ICE_SKATE = registerSpell("ice_skate", iceRuinBuilder(SpellMastery.NOVICE, IceSkateSpell::new)
             .skills(SBSkills.ICE_SKATE, SBSkills.FRICTIONLESS, SBSkills.ICE_CLEATS, SBSkills.FROZEN_FEET,
-                    SBSkills.ICE_SNARE, SBSkills.SNOW_BOOTS, SBSkills.POLAR_PIROUETTE, SBSkills.FROST_SPRINT,
+                    SBSkills.ICE_SNARE, SBSkills.SNOW_BOOTS, SBSkills.ICE_BRIDGE, SBSkills.KINETIC_FLOW,
                     SBSkills.SHARDS_OF_MOMENTUM, SBSkills.CRYSTAL_CLEATS, SBSkills.GLACIAL_GLIDE));
     public static final Supplier<SpellType<ShatteringCrystalSpell>> SHATTERING_CRYSTAL = registerSpell("shattering_crystal", iceRuinBuilder(SpellMastery.EXPERT, ShatteringCrystalSpell::new)
             .skills(SBSkills.SHATTERING_CRYSTAL, SBSkills.ICE_SHARD, SBSkills.FRIGID_BLAST, SBSkills.CHILL,

@@ -73,6 +73,7 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     private Set<SpellType<?>> spellSet = new ObjectOpenHashSet<>();
     private Set<SpellType<?>> equippedSpellSet = new ObjectOpenHashSet<>();
     private final Multimap<SpellType<?>, AbstractSpell> activeSpells = ArrayListMultimap.create();
+    private List<AbstractSpell> queuedSpells = new ArrayList<>();
     private boolean spellDirty;
     private SpellType<?> selectedSpell;
     private AbstractSpell currentlyCastingSpell;
@@ -169,6 +170,8 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
     public void tick() {
         activeSpells.forEach((spellType, spell) -> spell.tick());
         activeSpells.entries().removeIf(entry -> entry.getValue().isInactive);
+        this.queuedSpells.forEach(this::activateSpell);
+        this.queuedSpells.clear();
 
         if (this.stationaryTicks > 0)
             this.stationaryTicks--;
@@ -347,6 +350,29 @@ public class SpellHandler implements INBTSerializable<CompoundTag>, Loggable {
         this.activeSpells.put(spell.spellType(), spell);
         this.spellDirty = true;
     }
+
+    public void queueSpell(AbstractSpell spell) {
+        this.queuedSpells.add(spell);
+    }
+
+    /*private void activateQueuedSpells() {
+//        if (!this.isClientSide()) {
+            List<AbstractSpell> spellsToActivate = new ArrayList<>();
+            for (var it = queuedSpells.entrySet().iterator(); it.hasNext(); ) {
+                var entry = it.next();
+                int delayRemaining = entry.getValue() - 1;
+
+                if (delayRemaining <= 0) {
+                    spellsToActivate.add(entry.getKey());
+                    it.remove();
+                } else {
+                    entry.setValue(delayRemaining);
+                }
+            }
+
+            spellsToActivate.forEach(this::activateSpell);
+//        }
+    }*/
 
     /**
      * Clears all spells in the active spells map. This will not call {@link AbstractSpell#endSpell()}.

@@ -16,6 +16,7 @@ import com.ombremoon.spellbound.common.world.entity.spell.ShadowVeil;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.util.SpellUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -27,6 +28,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,11 +50,11 @@ public class ShadowVeilSpell extends AnimatedSpell {
 
     private final Map<LivingEntity, Integer> VEIL_ATTENDEES = new HashMap<>();
     private final List<LivingEntity> BEEN_FEARED = new ArrayList<>();
+    private Vec3 mistPos = null;
     private int soundRate = 0;
 
     private static Builder<ShadowVeilSpell> createShadowVeilSpell() {
         return createSimpleSpellBuilder(ShadowVeilSpell.class)
-                .castCondition((context, shadowVeilSpell) -> shadowVeilSpell.hasValidSpawnPos())
                 .manaCost(15)
                 .duration(200)
                 .fullRecast(true);
@@ -67,25 +69,23 @@ public class ShadowVeilSpell extends AnimatedSpell {
 
     }
 
-    //What to do when spell starts
     @Override
     protected void onSpellStart(SpellContext context) {
-        //Gets the caster from the context
         LivingEntity caster = context.getCaster();
-        //Gets the level from the context
         Level level = context.getLevel();
-        //Checks if it is on the server or client
         if (!level.isClientSide()) {
-            //Summons the entity
-            ShadowVeil veil = this.summonEntity(context, SBEntities.SHADOW_VEIL.get(), shadowVeil -> {
-                //Sets the caster on the entity
+            if (this.mistPos == null) {
+                this.mistPos = this.getSpawnVec();
+                if (this.mistPos == null)
+                    this.mistPos = caster.position().relative(Direction.DOWN, 0.5);
+            }
+
+            ShadowVeil veil = this.summonEntity(context, SBEntities.SHADOW_VEIL.get(), this.mistPos, shadowVeil -> {
                 shadowVeil.setCaster(caster);
             });
 
-            //Saves the veil to spell data
             setVeil(veil);
         } else {
-            //Picks a random rate for how often the sounds will play (if skill unlocked)
             this.soundRate = level.getRandom().nextInt(1, 4) * 20;
         }
     }
@@ -223,6 +223,10 @@ public class ShadowVeilSpell extends AnimatedSpell {
     public ShadowVeil getVeil(Level level) {
         if (this.spellData.get(VEIL_ID) == null) return null;
         return (ShadowVeil) level.getEntity(this.spellData.get(VEIL_ID));
+    }
+
+    public void setMistPos(Vec3 pos) {
+        this.mistPos = pos;
     }
 
     @Override

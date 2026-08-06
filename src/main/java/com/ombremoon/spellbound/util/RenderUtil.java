@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.ombremoon.spellbound.client.gui.screens.BasicGuideScreen;
 import com.ombremoon.spellbound.client.gui.screens.GuideBookScreen;
 import com.ombremoon.spellbound.client.gui.WorkbenchScreen;
-import com.ombremoon.spellbound.client.gui.resonance_stone.ResonanceStoneScreen;
+import com.ombremoon.spellbound.client.gui.familiar.ResonanceStoneScreen;
 import com.ombremoon.spellbound.client.gui.toasts.LevelUpToast;
 import com.ombremoon.spellbound.client.gui.toasts.PageScrapUnlockedToast;
 import com.ombremoon.spellbound.client.gui.toasts.SpellboundToasts;
