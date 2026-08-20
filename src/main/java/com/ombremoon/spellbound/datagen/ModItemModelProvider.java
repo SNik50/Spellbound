@@ -76,6 +76,8 @@ public class ModItemModelProvider extends ItemModelProvider {
         simpleGeneratedModel(SBItems.SHARD_SATCHEL);
         simpleGeneratedModel(SBItems.ARCANE_EYE);
 
+        simpleGeneratedModel((SBItems.INTERSTELLARE_DISC));
+        simpleGeneratedModel((SBBlocks.DUNGEON_DOOR));
 
     }
 

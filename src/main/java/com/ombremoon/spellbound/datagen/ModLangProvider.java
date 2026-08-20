@@ -156,6 +156,8 @@ public class ModLangProvider extends LanguageProvider {
         
         add("itemGroup.spellbound", "Spellbound🪄");
         add("spellbound.transfiguration_armor.buff", "+12.5% Transfiguration Spell Duration");
+
+        add("item.spellbound.interstellare_music_disc_desc", "piedilerci - Interstellare");
     }
 
     protected void affinityDescriptions() {

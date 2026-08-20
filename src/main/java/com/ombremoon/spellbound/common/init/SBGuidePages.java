@@ -848,8 +848,7 @@ public interface SBGuidePages {
                 new ImageActionEntry(SBDivineActions.GROW_AMBROSIA_BUSH, SBPageScraps.GROW_AMBROSIA_BUSH, SBPageScraps.GROW_AMBROSIA_BUSH_LORE, 10, 12000, 15, new ImageEntryWithScale(defaultNameSpace("textures/block/sweet_berry_bush_stage3.png"), -15, 0)),
                 new ItemActionEntry(SBDivineActions.PURIFY_WITHER_ROSE, SBPageScraps.PURIFY_WITHER_ROSE, SBPageScraps.PURIFY_WITHER_ROSE_LORE, 15, 6000, 35, Ingredient.of(Items.WITHER_ROSE))
         );
-        
-        createDivineSpellPage(context, SMITE, HEALING_BLOSSOM_ACTIONS, DIVINE_BOOK, SBSpells.SMITE, 50); //JUDGMENT TO BE DEFINE
+
         //NEED ACTIONPAGE
 
         //Deception

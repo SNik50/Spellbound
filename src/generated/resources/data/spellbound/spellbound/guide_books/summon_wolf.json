@@ -11,15 +11,15 @@
         "yOffset": 8
       },
       "translation": {
-        "translate": "spells.spellbound.flame_jet"
+        "translate": "spells.spellbound.summon_wolf_pack"
       }
     },
     {
       "type": "spellbound:spell_border",
-      "colour": -10678496,
+      "colour": -13490312,
       "mastery": "novice",
-      "path": "ruin",
-      "pathTexture": "spellbound:textures/gui/paths/ruin.png"
+      "path": "summons",
+      "pathTexture": "spellbound:textures/gui/paths/summons.png"
     },
     {
       "type": "spellbound:image",
@@ -27,7 +27,7 @@
         "enableCorners": false
       },
       "height": 79,
-      "image": "spellbound:textures/gui/books/images/spells/flame_jet.png",
+      "image": "spellbound:textures/gui/books/images/spells/summon_wolf_pack.png",
       "position": {
         "xOffset": 3,
         "yOffset": 30
@@ -40,7 +40,7 @@
         "yOffset": 115
       },
       "translation": {
-        "translate": "skill.description.spellbound.flame_jet"
+        "translate": "skill.description.spellbound.summon_wolf_pack"
       }
     },
     {
@@ -50,7 +50,7 @@
         "yOffset": 5
       },
       "translation": {
-        "translate": "guide.RUIN.flame_jet.lore"
+        "translate": "guide.SUMMONS.summon_wolf_pack.lore"
       }
     },
     {
@@ -60,7 +60,7 @@
         "yOffset": 68
       },
       "translation": {
-        "translate": "guide.RUIN.flame_jet.boss_lore"
+        "translate": "guide.SUMMONS.summon_wolf_pack.boss_lore"
       }
     },
     {
@@ -68,13 +68,13 @@
       "extras": {
         "alwaysShow": true
       },
-      "path": "spellbound:flame_jet",
+      "path": "spellbound:summon_wolf_pack",
       "position": {
         "xOffset": 172,
         "yOffset": 195
       }
     }
   ],
-  "id": "spellbound:grimoire_of_annihilation",
-  "insertAfter": "spellbound:ice_bolt"
+  "id": "spellbound:the_necronomicon",
+  "insertAfter": "spellbound:mushroom_page_acq"
 }

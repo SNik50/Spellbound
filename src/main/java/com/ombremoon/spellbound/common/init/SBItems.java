@@ -2,6 +2,7 @@ package com.ombremoon.spellbound.common.init;
 
 import com.ombremoon.spellbound.common.world.item.*;
 import com.ombremoon.spellbound.common.magic.SpellPath;
+import com.ombremoon.spellbound.common.world.sound.SpellboundSounds;
 import com.ombremoon.spellbound.main.CommonClass;
 import com.ombremoon.spellbound.main.Constants;
 import net.minecraft.core.Holder;
@@ -27,6 +28,9 @@ public class SBItems {
     public static final List<Supplier<? extends Item>> BLOCK_ITEM_LIST = new ArrayList<>();
 
     public static final Supplier<Item> DEBUG_ITEM = registerItem("debug_item", () -> new DebugItem(getItemProperties()));
+
+    public static final Supplier<Item> INTERSTELLARE_DISC = registerItem("interstellare_music_disc",
+            () -> new Item(new Item.Properties().jukeboxPlayable(SpellboundSounds.INTERSTELLARE_KEY).stacksTo(1)));
 
     public static final Supplier<Item> SHARD_SATCHEL = registerItem("shard_satchel", () -> new ShardSatchel(getItemProperties()));
     public static final Supplier<Item> SMOLDERING_SHARD = registerShardItem("smoldering_shard");
