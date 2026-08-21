@@ -9,7 +9,7 @@
       "item": "minecraft:string"
     },
     "B": {
-      "tag": "minecraft:stone"
+      "tag": "minecraft:stone_tool_materials"
     }
   },
   "pattern": [

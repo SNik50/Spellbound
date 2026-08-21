@@ -9,7 +9,7 @@
       "item": "minecraft:string"
     },
     "B": {
-      "tag": "minecraft:bamboo"
+      "item": "minecraft:bamboo"
     }
   },
   "pattern": [

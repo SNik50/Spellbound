@@ -30,7 +30,7 @@ public class SpiritWhistleItem extends Item {
     private void summon(Player player, BlockPos pos) {
         var handler = SpellUtil.getFamiliarHandler(player);
         Level level = player.level();
-        float volume = 0.05F + level.random.nextFloat() * 0.1F;
+        float volume = 0.01F + level.random.nextFloat() * 0.05F;
         float pitch = 0.8F + level.random.nextFloat() * 0.2F;
 
         if (handler.hasActiveFamiliar()) {

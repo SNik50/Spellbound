@@ -9,7 +9,7 @@
       "item": "minecraft:string"
     },
     "B": {
-      "tag": "minecraft:bone"
+      "item": "minecraft:bone"
     }
   },
   "pattern": [
